@@ -2,9 +2,13 @@ package com.example.eplan.ui
 
 import android.os.Bundle
 import android.view.View
+import android.widget.Button
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.example.eplan.R
+import com.google.android.material.bottomappbar.BottomAppBar
+import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.android.material.navigation.NavigationBarView
 import com.shrikanthravi.collapsiblecalendarview.data.Day
 import com.shrikanthravi.collapsiblecalendarview.widget.CollapsibleCalendar
 import java.util.*
@@ -59,6 +63,7 @@ class MainActivity : AppCompatActivity() {
                 day = collapsibleCalendar.selectedDay
                 collapsibleCalendar.collapse(100)
             }
+
             override fun onItemClick(v: View) {
             }
 
@@ -69,5 +74,17 @@ class MainActivity : AppCompatActivity() {
             }
 
         })
+
+        /*NavigationBarView.OnItemSelectedListener { item ->
+            when(item.itemId) {
+                R.id.page_1 -> {
+                    true
+                }
+                R.id.page_2 -> {
+                    true
+                }
+                else -> false
+            }
+        }*/
     }
 }
