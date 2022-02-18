@@ -74,17 +74,5 @@ class MainActivity : AppCompatActivity() {
             }
 
         })
-
-        /*NavigationBarView.OnItemSelectedListener { item ->
-            when(item.itemId) {
-                R.id.page_1 -> {
-                    true
-                }
-                R.id.page_2 -> {
-                    true
-                }
-                else -> false
-            }
-        }*/
     }
 }
