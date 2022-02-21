@@ -3,14 +3,18 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:id="@+id/page_1"
+        android:id="@+id/ore"
         android:enabled="true"
-        android:icon="@drawable/ic_outline_calendar_today_24"
+        android:icon="@drawable/note_selector"
         android:title="Foglio ore" />
     <item
-        android:id="@+id/page_2"
+        android:id="@+id/appuntamenti"
         android:enabled="true"
-        android:icon="@drawable/ic_outline_calendar_today_24"
+        android:icon="@drawable/range_selector"
         android:title="Appuntamenti" />
-
+    <item
+        android:id="@+id/account"
+        android:enabled="true"
+        android:icon="@drawable/account_selector"
+        android:title="Account" />
 </menu>

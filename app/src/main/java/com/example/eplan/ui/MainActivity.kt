@@ -4,7 +4,13 @@ import android.os.Bundle
 import android.view.View
 import android.widget.Button
 import android.widget.TextView
+import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
+import androidx.compose.foundation.layout.RowScope
+import androidx.compose.material3.*
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.stringResource
 import com.example.eplan.R
 import com.google.android.material.bottomappbar.BottomAppBar
 import com.google.android.material.bottomnavigation.BottomNavigationView
@@ -20,34 +26,14 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
-        setSupportActionBar(findViewById(R.id.toolbar))
 
-        /* starts before 1 month from now *//*
-        *//* starts before 1 month from now *//*
-        val startDate: Calendar = Calendar.getInstance()
-        startDate.add(Calendar.MONTH, -1)
+        /*setContentView(R.layout.activity_main)
+        setSupportActionBar(findViewById(R.id.toolbar))*/
 
-        *//* ends after 1 month from now *//*
+        setContent { PaperContent() }
 
-        *//* ends after 1 month from now *//*
-        val endDate: Calendar = Calendar.getInstance()
-        endDate.add(Calendar.MONTH, 1)
 
-        val horizontalCalendar = HorizontalCalendar.Builder(this, R.id.calendarView)
-            .range(startDate, endDate)
-            .datesNumberOnScreen(5)
-            .build()
-
-        var day: Int?
-        day = java.util.Calendar.getInstance().get(Calendar.DAY_OF_MONTH)
-
-        horizontalCalendar.calendarListener = object : HorizontalCalendarListener() {
-            override fun onDateSelected(date: Calendar?, position: Int) {
-                day = date?.get(Calendar.DAY_OF_MONTH)
-            }
-        }*/
-        var day: Day?
+        /*var day: Day?
         val collapsibleCalendar = findViewById<CollapsibleCalendar>(R.id.calendarView)
         collapsibleCalendar.setCalendarListener(object : CollapsibleCalendar.CalendarListener {
             override fun onClickListener() {
@@ -73,6 +59,26 @@ class MainActivity : AppCompatActivity() {
             override fun onWeekChange(position: Int) {
             }
 
-        })
+        })*/
+    }
+
+    @OptIn(ExperimentalMaterial3Api::class)
+    @Composable
+    fun PaperContent() {
+        Scaffold(topBar = {TopBar()},
+            bottomBar = {BottomNavBar()}) {
+        }
+    }
+
+    @Composable
+    private fun TopBar() {
+        SmallTopAppBar(title = { Text(stringResource(id = R.string.app_name)) })
+    }
+
+    @Composable
+    private fun BottomNavBar() {
+        NavigationBar(containerColor = colorResource(id = R.color.primaryLightColor),
+            contentColor = colorResource(id = R.color.black),
+            content = {})
     }
 }

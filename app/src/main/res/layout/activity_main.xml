@@ -43,7 +43,6 @@
             android:background="@color/primaryColor"
             app:itemTextColor="@color/bottom_nav_color"
             app:itemIconTint="@color/bottom_nav_color"
-            android:itemTextAppearance="@style/MenuItem"
             app:menu="@menu/bottom_navigation_menu" />
 
     </LinearLayout>
