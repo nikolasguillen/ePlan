@@ -16,4 +16,5 @@
     <color name="primaryTextColor">#000000</color>
     <color name="secondaryTextColor">#000000</color>
     <color name="translucentBlack">#99000000</color>
+    <color name="transparent">#00000000</color>
 </resources>

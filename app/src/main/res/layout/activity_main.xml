@@ -14,7 +14,7 @@
         app:selectedItem_textColor="@color/white"
         app:selectedItem_background="@drawable/circle_black_solid_background"
         app:todayItem_textColor="@android:color/holo_blue_dark"
-        app:primaryColor="@color/primaryLightColor"
+        app:primaryColor="@color/primaryColor"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"

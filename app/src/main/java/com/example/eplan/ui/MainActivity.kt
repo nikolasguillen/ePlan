@@ -1,30 +1,26 @@
 package com.example.eplan.ui
 
-import android.content.Context
+import android.graphics.BlendMode
+import android.os.Build
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.TextView
 import androidx.activity.compose.setContent
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
-import androidx.compose.foundation.layout.RowScope
+import androidx.compose.foundation.layout.height
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.viewinterop.AndroidView
-import androidx.compose.ui.viewinterop.AndroidViewBinding
 import com.example.eplan.R
-import com.google.android.material.bottomappbar.BottomAppBar
-import com.google.android.material.bottomnavigation.BottomNavigationView
-import com.google.android.material.navigation.NavigationBarView
 import com.shrikanthravi.collapsiblecalendarview.data.Day
 import com.shrikanthravi.collapsiblecalendarview.widget.CollapsibleCalendar
-import java.util.*
 
 var day: Day? = null
 var selectedDay: Int = 0
@@ -40,17 +36,21 @@ class MainActivity : AppCompatActivity() {
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     fun HomeBars() {
-
-        Scaffold(bottomBar = {BottomNavBar()},
-            topBar = {TopBar()}) {
-            setupCalendar()
-        }
+        Scaffold(bottomBar = { BottomNavBar() },
+            topBar = { TopBar() },
+            content = { setupCalendar() })
     }
 
     @Composable
+    @Preview
     private fun setupCalendar() {
+
         AndroidView(factory = { context ->
             CollapsibleCalendar(context).apply {
+
+                primaryColor = R.color.primaryColor
+                textColor = R.color.white
+
                 setCalendarListener(object : CollapsibleCalendar.CalendarListener {
                     override fun onClickListener() {
                     }
@@ -82,7 +82,7 @@ class MainActivity : AppCompatActivity() {
 
     @Composable
     private fun TopBar() {
-        SmallTopAppBar(title = { Text(stringResource(id = R.string.app_name)) })
+        SmallTopAppBar(title = { Text(stringResource(id = R.string.app_name)) }, )
     }
 
     @Composable
