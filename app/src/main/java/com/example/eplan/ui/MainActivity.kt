@@ -11,12 +11,14 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
@@ -180,6 +182,7 @@ class MainActivity : AppCompatActivity() {
 
         var openDialog = remember { mutableStateOf(false) }
 
+        var value = rememberSaveable { mutableStateOf("") }
         Scaffold(
             topBar = { MediumTopAppBar(
                 title = { Text(text = activityName.replaceFirstChar { it.uppercase() }) },
@@ -209,7 +212,9 @@ class MainActivity : AppCompatActivity() {
                     .fillMaxSize()
                     .padding(horizontal = 16.dp, vertical = 10.dp)) {
 
-                    Text(text = activityDescription.replaceFirstChar { it.uppercase() }, style = MaterialTheme.typography.bodyLarge, modifier = Modifier.padding(bottom = 3.dp))
+                    Row {
+                        Text(text = activityDescription.replaceFirstChar { it.uppercase() }, style = MaterialTheme.typography.bodyLarge, modifier = Modifier.padding(bottom = 3.dp))
+                    }
                     Text(text = start, style =  MaterialTheme.typography.labelLarge)
                     Text(text = end, style =  MaterialTheme.typography.labelLarge)
                 }
