@@ -1,6 +1,8 @@
 package com.example.eplan.ui
 
+import android.graphics.Color
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
@@ -9,22 +11,22 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.capitalize
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import androidx.navigation.findNavController
 import com.example.eplan.R
 import com.shrikanthravi.collapsiblecalendarview.data.Day
 import com.shrikanthravi.collapsiblecalendarview.widget.CollapsibleCalendar
@@ -49,8 +51,14 @@ class MainActivity : AppCompatActivity() {
             composable("home") {
                 BuildContent(navController)
             }
-            composable("test") {
-                Text(text = "CIAOOO")
+            composable("activityDetails/{navController}/{activityName}/{activityDescription}/{start}/{end}") { backStackEntry ->
+                ActivityDetails(
+                    navController,
+                    backStackEntry.arguments?.getString("activityName")!!,
+                    backStackEntry.arguments?.getString("activityDescription")!!,
+                    backStackEntry.arguments?.getString("start")!!,
+                    backStackEntry.arguments?.getString("end")!!
+                )
             }
         }
     }
@@ -64,9 +72,9 @@ class MainActivity : AppCompatActivity() {
                 content = {
                     Column() {
                         setupCalendar()
-                        BuildCard(navController, "attività", "descrizione",
-                            LocalTime.of(15, 30), LocalTime.of(16, 0),
-                            androidx.compose.ui.graphics.Color.Red) }
+                        ActivityCard(navController, "attività", "descrizione",
+                            "15:30", "16:00")
+                        }
                     })
     }
 
@@ -76,9 +84,9 @@ class MainActivity : AppCompatActivity() {
         AndroidView(factory = { context ->
             CollapsibleCalendar(context).apply {
 
-                primaryColor = resources.getColor(R.color.transparent, theme)
-                todayItemTextColor = resources.getColor(R.color.black, theme)
-                selectedItemTextColor = resources.getColor(R.color.white, theme)
+                primaryColor = resources.getColor(R.color.transparent, context.theme)
+                todayItemTextColor = resources.getColor(R.color.black, context.theme)
+                selectedItemTextColor = resources.getColor(R.color.white, context.theme)
                 selectedItemBackgroundDrawable = AppCompatResources.getDrawable(context, R.drawable.black_circle)
                 todayItemBackgroundDrawable = AppCompatResources.getDrawable(context, R.drawable.light_purple_circle)
 
@@ -143,24 +151,93 @@ class MainActivity : AppCompatActivity() {
 
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
-    private fun BuildCard(navController: NavController, activityName: String, activityDescription: String, start: LocalTime, end: LocalTime, cardColor: androidx.compose.ui.graphics.Color) {
+    private fun ActivityCard(navController: NavController, activityName: String, activityDescription: String, start: String, end: String) {
         Card(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 10.dp)
                 .clickable {
-                    navController.navigate("test")
+                    navController.navigate("activityDetails/${navController}/${activityName}/${activityDescription}/${start}/${end}")
                 },
         ) {
             Column(modifier = Modifier.padding(16.dp)) {
                 Text(text = activityName.replaceFirstChar { it.uppercase() }, style = MaterialTheme.typography.titleMedium)
                 Text(text = activityDescription.replaceFirstChar { it.uppercase() }, style = MaterialTheme.typography.bodyMedium, modifier = Modifier.padding(bottom = 3.dp))
-                Text(text = start.toString(), style =  MaterialTheme.typography.labelSmall)
-                Text(text = end.toString(), style =  MaterialTheme.typography.labelSmall)
+                Text(text = start, style =  MaterialTheme.typography.labelSmall)
+                Text(text = end, style =  MaterialTheme.typography.labelSmall)
             }
         }
     }
 
-    /*@Composable
-    private fun Build*/
+    @OptIn(ExperimentalMaterial3Api::class)
+    @Composable
+    private fun ActivityDetails(navController: NavController, activityName: String, activityDescription: String, start: String, end: String) {
+
+        val items = listOf(
+            SaveItems.Save,
+            SaveItems.Cancel
+        )
+
+        var openDialog = remember { mutableStateOf(false) }
+
+        Scaffold(
+            topBar = { MediumTopAppBar(
+                title = { Text(text = activityName.replaceFirstChar { it.uppercase() }) },
+                navigationIcon = {
+                    IconButton(onClick = { navController.popBackStack() }) {
+                        Icon(
+                            imageVector = Icons.Filled.ArrowBack,
+                            contentDescription = "Back")
+                    }
+                }) },
+            bottomBar = {
+                NavigationBar() {
+                    items.forEach { item ->
+                        NavigationBarItem(
+                            selected = false,
+                            onClick = { if (item.title == "Scarta modifiche") openDialog.value = true },
+                            icon = { Icon(painterResource(id = item.icon), contentDescription = item.title)},
+                            label = { Text(text = item.title)},
+                            modifier = Modifier.background(colorResource(id = R.color.transparent),
+                                CircleShape)
+                        )
+                    }
+                }
+            },
+            content = {
+                Column(modifier = Modifier
+                    .fillMaxSize()
+                    .padding(horizontal = 16.dp, vertical = 10.dp)) {
+
+                    Text(text = activityDescription.replaceFirstChar { it.uppercase() }, style = MaterialTheme.typography.bodyLarge, modifier = Modifier.padding(bottom = 3.dp))
+                    Text(text = start, style =  MaterialTheme.typography.labelLarge)
+                    Text(text = end, style =  MaterialTheme.typography.labelLarge)
+                }
+            })
+
+        if (openDialog.value) {
+            AlertDialog(
+                onDismissRequest = {
+                    openDialog.value = false
+                },
+                title = { Text(text = "Sei sicuro di voler uscire senza salvare?")},
+                confirmButton = {
+                    TextButton(onClick = {
+                        openDialog.value = false
+                        navController.popBackStack()
+                    }
+                    ) {
+                        Text(text = "Conferma")
+                    }
+                },
+                dismissButton = {
+                    TextButton(onClick = {
+                        openDialog.value = false
+                    }
+                    ) {
+                        Text(text = "Annulla")
+                    }
+                })
+        }
+    }
 }
