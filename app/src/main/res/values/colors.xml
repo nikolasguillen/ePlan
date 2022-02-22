@@ -17,4 +17,5 @@
     <color name="secondaryTextColor">#000000</color>
     <color name="translucentBlack">#99000000</color>
     <color name="transparent">#00000000</color>
+    <color name="lightPurple">#e7def9</color>
 </resources>
