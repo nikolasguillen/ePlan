@@ -1,8 +1,6 @@
-package com.example.eplan.ui
+package com.example.eplan
 
-import android.graphics.Color
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
@@ -11,7 +9,10 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.text.BasicTextField
+import androidx.compose.foundation.shape.CornerSize
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.TextField
+import androidx.compose.material.TextFieldDefaults
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.*
@@ -20,6 +21,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -29,10 +31,8 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.example.eplan.R
 import com.shrikanthravi.collapsiblecalendarview.data.Day
 import com.shrikanthravi.collapsiblecalendarview.widget.CollapsibleCalendar
-import java.time.LocalTime
 
 var day: Day? = null
 var selectedDay: Int = 0
@@ -181,11 +181,10 @@ class MainActivity : AppCompatActivity() {
         )
 
         var openDialog = remember { mutableStateOf(false) }
-
-        var value = rememberSaveable { mutableStateOf("") }
+        
         Scaffold(
             topBar = { MediumTopAppBar(
-                title = { Text(text = activityName.replaceFirstChar { it.uppercase() }) },
+                title = { Text(text = "Attività") },
                 navigationIcon = {
                     IconButton(onClick = { navController.popBackStack() }) {
                         Icon(
@@ -212,11 +211,10 @@ class MainActivity : AppCompatActivity() {
                     .fillMaxSize()
                     .padding(horizontal = 16.dp, vertical = 10.dp)) {
 
-                    Row {
-                        Text(text = activityDescription.replaceFirstChar { it.uppercase() }, style = MaterialTheme.typography.bodyLarge, modifier = Modifier.padding(bottom = 3.dp))
-                    }
-                    Text(text = start, style =  MaterialTheme.typography.labelLarge)
-                    Text(text = end, style =  MaterialTheme.typography.labelLarge)
+                    CustomTextField(value = activityName, label = "Attività")
+                    CustomTextField(value = activityDescription, label = "Descrizione")
+                    CustomTextField(value = start, label = "Ora inizio")
+                    CustomTextField(value = end, label = "Ora fine")
                 }
             })
 
@@ -244,5 +242,24 @@ class MainActivity : AppCompatActivity() {
                     }
                 })
         }
+    }
+
+    @Composable
+    private fun CustomTextField(value: String, label: String) {
+        var value = value
+        TextField(
+            value = value,
+            onValueChange = { value = it },
+            label = { Text(text = label) },
+            shape = RoundedCornerShape(8.dp),
+            colors = TextFieldDefaults.textFieldColors(
+                backgroundColor = MaterialTheme.colorScheme.surfaceVariant,
+                disabledTextColor = Color.Transparent,
+                focusedIndicatorColor = Color.Transparent,
+                unfocusedIndicatorColor = Color.Transparent,
+                disabledIndicatorColor = Color.Transparent
+            ),
+            modifier = Modifier.fillMaxWidth()
+        )
     }
 }

@@ -1,6 +1,4 @@
-package com.example.eplan.ui
-
-import com.example.eplan.R
+package com.example.eplan
 
 sealed class NavigationItem(var route: String, var icon: Int, var title: String) {
     object Home : NavigationItem("home", R.drawable.ic_baseline_note_add_24, "Foglio ore")

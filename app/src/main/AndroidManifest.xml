@@ -10,7 +10,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.Light.NoActionBar"
         <activity
-            android:name=".ui.MainActivity"
+            android:name=".MainActivity"
             android:label="ePlan"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar"
             android:exported="true">
