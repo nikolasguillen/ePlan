@@ -1,7 +1,10 @@
 package com.example.eplan
 
+import android.app.TimePickerDialog
+import android.content.Context
 import android.os.Bundle
 import android.view.View
+import android.widget.TimePicker
 import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.content.res.AppCompatResources
@@ -17,6 +20,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -33,6 +37,8 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.shrikanthravi.collapsiblecalendarview.data.Day
 import com.shrikanthravi.collapsiblecalendarview.widget.CollapsibleCalendar
+import java.util.*
+import kotlin.math.min
 
 var day: Day? = null
 var selectedDay: Int = 0
@@ -41,7 +47,6 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         setContent { HomeBuilder() }
     }
 
@@ -175,6 +180,16 @@ class MainActivity : AppCompatActivity() {
     @Composable
     private fun ActivityDetails(navController: NavController, activityName: String, activityDescription: String, start: String, end: String) {
 
+        val start = remember { mutableStateOf(start) }
+        val end = remember { mutableStateOf(end) }
+        val newTime = remember { mutableStateOf("") }
+
+        val timePickerDialog = TimePickerDialog(this,
+            { _, hour: Int, minute: Int ->
+                newTime.value = "$hour:$minute"
+            }, 0, 0, true
+        )
+
         val items = listOf(
             SaveItems.Save,
             SaveItems.Cancel
@@ -209,12 +224,27 @@ class MainActivity : AppCompatActivity() {
             content = {
                 Column(modifier = Modifier
                     .fillMaxSize()
-                    .padding(horizontal = 16.dp, vertical = 10.dp)) {
+                    .padding(horizontal = 16.dp, vertical = 16.dp)) {
 
                     CustomTextField(value = activityName, label = "Attività")
+                    Spacer(modifier = Modifier.height(16.dp))
                     CustomTextField(value = activityDescription, label = "Descrizione")
-                    CustomTextField(value = start, label = "Ora inizio")
-                    CustomTextField(value = end, label = "Ora fine")
+                    Spacer(modifier = Modifier.height(16.dp))
+                    Row(horizontalArrangement = Arrangement.SpaceBetween, modifier = Modifier.fillMaxWidth()) {
+                        Text(text = "Orario di inizio: \n" + start.value, style =  MaterialTheme.typography.bodyLarge, modifier = Modifier
+                            .padding(bottom = 5.dp)
+                            .clickable(onClick = {
+                                CustomTimePicker(start)
+                            })
+                        )
+
+                        Text(text = "Orario di fine: \n" + end.value, style =  MaterialTheme.typography.bodyLarge, modifier = Modifier
+                            .padding(bottom = 5.dp)
+                            .clickable(onClick = {
+                                CustomTimePicker(end)
+                            })
+                        )
+                    }
                 }
             })
 
@@ -261,5 +291,17 @@ class MainActivity : AppCompatActivity() {
             ),
             modifier = Modifier.fillMaxWidth()
         )
+    }
+
+    private fun CustomTimePicker(time: MutableState<String>) {
+
+        var newTime = time
+
+        val timePickerDialog = TimePickerDialog(this,
+            { _, hour: Int, minute: Int ->
+                newTime.value = String.format("%02d", hour) + ":" + String.format("%02d", minute)
+            }, Integer.parseInt(newTime.value.split(":")[0]), Integer.parseInt(newTime.value.split(":")[1]), true)
+
+        timePickerDialog.show()
     }
 }
