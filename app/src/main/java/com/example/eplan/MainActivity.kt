@@ -2,6 +2,7 @@ package com.example.eplan
 
 import android.app.TimePickerDialog
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
@@ -10,8 +11,11 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.BottomNavigationDefaults
 import androidx.compose.material.TextField
 import androidx.compose.material.TextFieldDefaults
 import androidx.compose.material.icons.Icons
@@ -31,8 +35,10 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
+import androidx.core.os.bundleOf
 import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -58,13 +64,15 @@ class MainActivity : AppCompatActivity() {
             composable("home") {
                 BuildContent(navController)
             }
-            composable("activityDetails/{navController}/{activityName}/{activityDescription}/{start}/{end}") { backStackEntry ->
+            composable("activityDetails/{navController}/{activityName}/{activityDescription}/{start}/{end}/{oreSpostamento}/{km}") { backStackEntry ->
                 ActivityDetails(
                     navController,
                     backStackEntry.arguments?.getString("activityName")!!,
                     backStackEntry.arguments?.getString("activityDescription")!!,
                     backStackEntry.arguments?.getString("start")!!,
-                    backStackEntry.arguments?.getString("end")!!
+                    backStackEntry.arguments?.getString("end")!!,
+                    backStackEntry.arguments?.getString("oreSpostamento")!!,
+                    backStackEntry.arguments?.getString("km")!!
                 )
             }
         }
@@ -73,20 +81,48 @@ class MainActivity : AppCompatActivity() {
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     private fun BuildContent(navController: NavController) {
+
+        val cards = remember { mutableListOf<List<String>>() }
+
+        cards.add(listOf("commessa", "descrizione commessa", "08:00", "09:00", "2", "180"))
+        cards.add(listOf("commessa", "descrizione commessa", "08:00", "09:00", "2", "180"))
+        cards.add(listOf("commessa", "descrizione commessa", "08:00", "09:00", "2", "180"))
+        cards.add(listOf("commessa", "descrizione commessa", "08:00", "09:00", "2", "180"))
+        cards.add(listOf("commessa", "descrizione commessa", "08:00", "09:00", "2", "180"))
+        cards.add(listOf("commessa", "descrizione commessa", "08:00", "09:00", "2", "180"))
+        cards.add(listOf("commessa", "descrizione commessa", "08:00", "09:00", "2", "180"))
+        cards.add(listOf("commessa", "descrizione commessa", "08:00", "09:00", "2", "180"))
+        cards.add(listOf("commessa", "descrizione commessa", "08:00", "09:00", "2", "180"))
+        cards.add(listOf("commessa", "descrizione commessa", "08:00", "09:00", "2", "180"))
+        cards.add(listOf("commessa", "descrizione commessa", "08:00", "09:00", "2", "180"))
+        cards.add(listOf("commessa", "descrizione commessa", "08:00", "09:00", "2", "180"))
+        cards.add(listOf("commessa", "descrizione commessa", "08:00", "09:00", "2", "180"))
+
+
         Scaffold(modifier = Modifier.padding(horizontal = 2.dp),
-                bottomBar = { BottomNavBar(navController) },
-                topBar = { TopBar() },
-                floatingActionButton = { FloatingActionButton(onClick = { /*TODO*/ }) {
-                    Icon(imageVector = Icons.Outlined.Create, contentDescription = "Aggiungi attività")
+        bottomBar = { BottomNavBar(navController) },
+            topBar = { TopBar() },
+            floatingActionButton = { FloatingActionButton(onClick = { /*TODO*/ }) {
+                Icon(imageVector = Icons.Outlined.Create, contentDescription = "Aggiungi attività")
+                }
+            },
+            content = {
+                Column(modifier = Modifier.padding(bottom = it.calculateBottomPadding())) {
+                    setupCalendar()
+                    LazyColumn() {
+                        items(cards) { card ->
+                            ActivityCard(
+                                navController = navController,
+                                activityName = card[0],
+                                activityDescription = card[1],
+                                start = card[2],
+                                end = card[3]
+                            )
+                        }
                     }
-                },
-                content = {
-                    Column() {
-                        setupCalendar()
-                        ActivityCard(navController, "attività", "descrizione",
-                            "15:30", "16:00")
-                    }
-                })
+                }
+            }
+        )
     }
 
     @Composable
@@ -166,7 +202,7 @@ class MainActivity : AppCompatActivity() {
         Card(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 10.dp)
+                .padding(horizontal = 10.dp, vertical = 5.dp)
                 .clip(RoundedCornerShape(8.dp))
                 .clickable {
                     navController.navigate("activityDetails/${navController}/${activityName}/${activityDescription}/${start}/${end}")
@@ -183,12 +219,14 @@ class MainActivity : AppCompatActivity() {
 
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
-    private fun ActivityDetails(navController: NavController, activityName: String, activityDescription: String, start: String, end: String) {
+    private fun ActivityDetails(navController: NavController, activityName: String, activityDescription: String, start: String, end: String, oreSpostamento: String, km: String) {
 
         val start = remember { mutableStateOf(start) }
         val end = remember { mutableStateOf(end) }
         val name = remember { mutableStateOf(activityName) }
         val desc = remember { mutableStateOf(activityDescription) }
+        val oreSpostamento = remember { mutableStateOf(oreSpostamento) }
+        val km = remember { mutableStateOf(km) }
 
         val items = listOf(
             SaveItems.Save,
@@ -206,7 +244,8 @@ class MainActivity : AppCompatActivity() {
                             imageVector = Icons.Filled.ArrowBack,
                             contentDescription = "Back")
                     }
-                }) },
+                })
+             },
             bottomBar = {
                 NavigationBar() {
                     items.forEach { item ->
@@ -224,33 +263,27 @@ class MainActivity : AppCompatActivity() {
             content = {
                 Column(modifier = Modifier
                     .fillMaxSize()
-                    .padding(horizontal = 16.dp, vertical = 16.dp)) {
+                    .padding(horizontal = 16.dp, vertical = 16.dp),
+                    verticalArrangement = Arrangement.spacedBy(16.dp)) {
 
                     CustomTextField(value = name, label = "Attività")
-                    Spacer(modifier = Modifier.height(16.dp))
                     CustomTextField(value = desc, label = "Descrizione")
-                    Spacer(modifier = Modifier.height(16.dp))
-                    Row(horizontalArrangement = Arrangement.SpaceEvenly, modifier = Modifier.fillMaxWidth()) {
-                        Column() {
-                            Text(text = "Orario inizio:", style =  MaterialTheme.typography.bodyLarge, modifier = Modifier.padding(bottom = 5.dp))
-                            Button(
-                                onClick = { customTimePicker(start) },
-                                shape = RoundedCornerShape(8.dp),
-                                colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.surfaceVariant, contentColor = MaterialTheme.colorScheme.onSurfaceVariant)) {
-                                Text(text = start.value)
-                            }
-                        }
-
-                        Column() {
-                            Text(text = "Orario fine:", style =  MaterialTheme.typography.bodyLarge, modifier = Modifier.padding(bottom = 5.dp))
-                            Button(
-                                onClick = { customTimePicker(end) },
-                                shape = RoundedCornerShape(8.dp),
-                                colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.surfaceVariant, contentColor = MaterialTheme.colorScheme.onSurfaceVariant)) {
-                                Text(text = end.value)
-                            }
-                        }
+                    Button(
+                        modifier = Modifier.width(150.dp),
+                        onClick = { customTimePicker(start) },
+                        shape = RoundedCornerShape(8.dp),
+                        colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.surfaceVariant, contentColor = MaterialTheme.colorScheme.onSurfaceVariant)) {
+                        Text(text = "Ora inizio: " + start.value)
                     }
+                    Button(
+                        modifier = Modifier.width(150.dp),
+                        onClick = { customTimePicker(end) },
+                        shape = RoundedCornerShape(8.dp),
+                        colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.surfaceVariant, contentColor = MaterialTheme.colorScheme.onSurfaceVariant)) {
+                        Text(text = "Ora fine: " + end.value)
+                    }
+                    CustomTextField(value = oreSpostamento, label = "Ore di spostamento")
+                    CustomTextField(value = km, label = "Km percorsi")
                 }
             })
 
