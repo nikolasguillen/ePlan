@@ -17,5 +17,10 @@
     <color name="secondaryTextColor">#000000</color>
     <color name="translucentBlack">#99000000</color>
     <color name="transparent">#00000000</color>
-    <color name="lightPurple">#e7def9</color>
+    <color name="lightPurple">#e8dcec</color>
+    <color name="palettePrimary">#D0BCFF</color>
+    <color name="palettePrimaryContainer">#4F378B</color>
+    <color name="paletteOnPrimary">#381E73</color>
+    <color name="paletteOnPrimaryContainer">#EADDFF</color>
+    <color name="paletteLightBackground">#fffbfe</color>
 </resources>

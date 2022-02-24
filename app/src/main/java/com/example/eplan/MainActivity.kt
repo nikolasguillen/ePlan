@@ -1,30 +1,32 @@
 package com.example.eplan
 
 import android.app.TimePickerDialog
-import android.content.Context
 import android.os.Bundle
 import android.view.View
-import android.widget.TimePicker
 import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.TextField
 import androidx.compose.material.TextFieldDefaults
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Create
+import androidx.compose.material.icons.outlined.Create
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.composed
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
@@ -37,8 +39,6 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.shrikanthravi.collapsiblecalendarview.data.Day
 import com.shrikanthravi.collapsiblecalendarview.widget.CollapsibleCalendar
-import java.util.*
-import kotlin.math.min
 
 var day: Day? = null
 var selectedDay: Int = 0
@@ -76,13 +76,17 @@ class MainActivity : AppCompatActivity() {
         Scaffold(modifier = Modifier.padding(horizontal = 2.dp),
                 bottomBar = { BottomNavBar(navController) },
                 topBar = { TopBar() },
+                floatingActionButton = { FloatingActionButton(onClick = { /*TODO*/ }) {
+                    Icon(imageVector = Icons.Outlined.Create, contentDescription = "Aggiungi attività")
+                    }
+                },
                 content = {
                     Column() {
                         setupCalendar()
                         ActivityCard(navController, "attività", "descrizione",
                             "15:30", "16:00")
-                        }
-                    })
+                    }
+                })
     }
 
     @Composable
@@ -163,6 +167,7 @@ class MainActivity : AppCompatActivity() {
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 10.dp)
+                .clip(RoundedCornerShape(8.dp))
                 .clickable {
                     navController.navigate("activityDetails/${navController}/${activityName}/${activityDescription}/${start}/${end}")
                 },
@@ -182,13 +187,8 @@ class MainActivity : AppCompatActivity() {
 
         val start = remember { mutableStateOf(start) }
         val end = remember { mutableStateOf(end) }
-        val newTime = remember { mutableStateOf("") }
-
-        val timePickerDialog = TimePickerDialog(this,
-            { _, hour: Int, minute: Int ->
-                newTime.value = "$hour:$minute"
-            }, 0, 0, true
-        )
+        val name = remember { mutableStateOf(activityName) }
+        val desc = remember { mutableStateOf(activityDescription) }
 
         val items = listOf(
             SaveItems.Save,
@@ -226,24 +226,30 @@ class MainActivity : AppCompatActivity() {
                     .fillMaxSize()
                     .padding(horizontal = 16.dp, vertical = 16.dp)) {
 
-                    CustomTextField(value = activityName, label = "Attività")
+                    CustomTextField(value = name, label = "Attività")
                     Spacer(modifier = Modifier.height(16.dp))
-                    CustomTextField(value = activityDescription, label = "Descrizione")
+                    CustomTextField(value = desc, label = "Descrizione")
                     Spacer(modifier = Modifier.height(16.dp))
-                    Row(horizontalArrangement = Arrangement.SpaceBetween, modifier = Modifier.fillMaxWidth()) {
-                        Text(text = "Orario di inizio: \n" + start.value, style =  MaterialTheme.typography.bodyLarge, modifier = Modifier
-                            .padding(bottom = 5.dp)
-                            .clickable(onClick = {
-                                CustomTimePicker(start)
-                            })
-                        )
+                    Row(horizontalArrangement = Arrangement.SpaceEvenly, modifier = Modifier.fillMaxWidth()) {
+                        Column() {
+                            Text(text = "Orario inizio:", style =  MaterialTheme.typography.bodyLarge, modifier = Modifier.padding(bottom = 5.dp))
+                            Button(
+                                onClick = { customTimePicker(start) },
+                                shape = RoundedCornerShape(8.dp),
+                                colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.surfaceVariant, contentColor = MaterialTheme.colorScheme.onSurfaceVariant)) {
+                                Text(text = start.value)
+                            }
+                        }
 
-                        Text(text = "Orario di fine: \n" + end.value, style =  MaterialTheme.typography.bodyLarge, modifier = Modifier
-                            .padding(bottom = 5.dp)
-                            .clickable(onClick = {
-                                CustomTimePicker(end)
-                            })
-                        )
+                        Column() {
+                            Text(text = "Orario fine:", style =  MaterialTheme.typography.bodyLarge, modifier = Modifier.padding(bottom = 5.dp))
+                            Button(
+                                onClick = { customTimePicker(end) },
+                                shape = RoundedCornerShape(8.dp),
+                                colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.surfaceVariant, contentColor = MaterialTheme.colorScheme.onSurfaceVariant)) {
+                                Text(text = end.value)
+                            }
+                        }
                     }
                 }
             })
@@ -275,11 +281,11 @@ class MainActivity : AppCompatActivity() {
     }
 
     @Composable
-    private fun CustomTextField(value: String, label: String) {
+    private fun CustomTextField(value: MutableState<String>, label: String) {
         var value = value
         TextField(
-            value = value,
-            onValueChange = { value = it },
+            value = value.value,
+            onValueChange = { value.value = it },
             label = { Text(text = label) },
             shape = RoundedCornerShape(8.dp),
             colors = TextFieldDefaults.textFieldColors(
@@ -293,15 +299,22 @@ class MainActivity : AppCompatActivity() {
         )
     }
 
-    private fun CustomTimePicker(time: MutableState<String>) {
+    private fun customTimePicker(time: MutableState<String>) {
 
         var newTime = time
 
-        val timePickerDialog = TimePickerDialog(this,
+        val timePickerDialog = TimePickerDialog(this, R.style.MyTimePickerDialogStyle,
             { _, hour: Int, minute: Int ->
                 newTime.value = String.format("%02d", hour) + ":" + String.format("%02d", minute)
             }, Integer.parseInt(newTime.value.split(":")[0]), Integer.parseInt(newTime.value.split(":")[1]), true)
 
         timePickerDialog.show()
+    }
+
+    inline fun Modifier.noRippleClickable(crossinline onClick: ()->Unit): Modifier = composed {
+        clickable(indication = null,
+            interactionSource = remember { MutableInteractionSource() }) {
+            onClick()
+        }
     }
 }
