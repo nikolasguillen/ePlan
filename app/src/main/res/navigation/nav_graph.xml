@@ -1,6 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/nav_graph">
-
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/homeFragment">
+    <fragment
+        android:id="@+id/homeFragment"
+        android:name="com.example.eplan.HomeFragment"
+        android:label="HomeFragment" >
+        <action
+            android:id="@+id/viewActivityDetails"
+            app:destination="@id/activityDetailsFragment"
+            app:enterAnim="@anim/fade_in"
+            app:exitAnim="@anim/wait_anim"
+            app:popExitAnim="@anim/fade_out" />
+    </fragment>
+    <fragment
+        android:id="@+id/activityDetailsFragment"
+        android:name="com.example.eplan.ActivityDetailsFragment"
+        android:label="ActivityDetailsFragment" >
+        <argument
+            android:name="activityName"
+            app:argType="string" />
+        <argument android:name="activityDescription"
+            app:argType="string" />
+        <argument
+            android:name="start"
+            app:argType="string" />
+        <argument
+            android:name="end"
+            app:argType="string" />
+        <argument
+            android:name="oreSpostamento"
+            app:argType="string" />
+        <argument
+            android:name="km"
+            app:argType="string" />
+    </fragment>
+    <fragment
+        android:id="@+id/appointmentsFragment"
+        android:name="com.example.eplan.AppointmentsFragment"
+        android:label="AppointmentsFragment" />
 </navigation>

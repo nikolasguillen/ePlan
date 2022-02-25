@@ -2,9 +2,9 @@ package com.example.eplan
 
 import android.app.TimePickerDialog
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
-import androidx.activity.compose.setContent
-import androidx.appcompat.app.AppCompatActivity
+import android.view.ViewGroup
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.compose.foundation.*
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -13,11 +13,8 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.KeyboardActionScope
-import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.OutlinedTextField
-import androidx.compose.material.TextField
 import androidx.compose.material.TextFieldDefaults
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
@@ -31,41 +28,35 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.composed
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
-import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.modifier.modifierLocalConsumer
+import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
+import androidx.fragment.app.Fragment
 import androidx.navigation.NavController
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
-import androidx.navigation.compose.rememberNavController
-import androidx.vectordrawable.graphics.drawable.VectorDrawableCompat
-import com.shrikanthravi.collapsiblecalendarview.data.Day
+import androidx.navigation.fragment.findNavController
 import com.shrikanthravi.collapsiblecalendarview.widget.CollapsibleCalendar
-import com.google.android.material.timepicker.MaterialTimePicker
 
+class HomeFragment: Fragment() {
 
-
-
-var day: Day? = null
-var selectedDay: Int = 0
-
-class MainActivity : AppCompatActivity() {
-
-    @OptIn(ExperimentalFoundationApi::class)
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        return ComposeView(requireContext()).apply {
+            setContent {
+                OurAppTheme {
+                    PageComposer()
+                }
+            }
+        }
     }
-
 
     private val ourDarkColorScheme = darkColorScheme()
 
@@ -84,30 +75,9 @@ class MainActivity : AppCompatActivity() {
         )
     }
 
-    @Composable
-    fun HomeBuilder() {
-        val navController = rememberNavController()
-        NavHost(navController = navController, startDestination = "home") {
-            composable("home") {
-                BuildContent(navController)
-            }
-            composable("activityDetails/{navController}/{activityName}/{activityDescription}/{start}/{end}/{oreSpostamento}/{km}") { backStackEntry ->
-                ActivityDetails(
-                    navController,
-                    backStackEntry.arguments?.getString("activityName")!!,
-                    backStackEntry.arguments?.getString("activityDescription")!!,
-                    backStackEntry.arguments?.getString("start")!!,
-                    backStackEntry.arguments?.getString("end")!!,
-                    backStackEntry.arguments?.getString("oreSpostamento")!!,
-                    backStackEntry.arguments?.getString("km")!!
-                )
-            }
-        }
-    }
-
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
-    private fun BuildContent(navController: NavController) {
+    private fun PageComposer() {
 
         val cards = remember { mutableListOf<List<String>>() }
 
@@ -127,11 +97,11 @@ class MainActivity : AppCompatActivity() {
 
 
         Scaffold(
-        bottomBar = { BottomNavBar(navController) },
+            bottomBar = { BottomNavBar(findNavController()) },
             topBar = { TopBar() },
             floatingActionButton = { FloatingActionButton(onClick = { /*TODO*/ }) {
                 Icon(imageVector = Icons.Outlined.Create, contentDescription = "Aggiungi attività")
-                }
+            }
             },
             content = {
                 Column(modifier = Modifier.padding(bottom = it.calculateBottomPadding())) {
@@ -139,7 +109,6 @@ class MainActivity : AppCompatActivity() {
                     LazyColumn() {
                         items(cards) { card ->
                             ActivityCard(
-                                navController = navController,
                                 activityName = card[0],
                                 activityDescription = card[1],
                                 start = card[2],
@@ -228,25 +197,27 @@ class MainActivity : AppCompatActivity() {
                 NavigationBarItem(
                     selected = (item.title == "Foglio ore"),
                     onClick = {  },
-                    icon = { Icon(painterResource(id = item.icon), contentDescription = item.title)},
-                    label = { Text(text = item.title)},
-                    modifier = Modifier.background(colorResource(id = R.color.transparent),
-                        CircleShape)
+                    icon = { Icon(painterResource(id = item.icon), contentDescription = item.title) },
+                    label = { Text(text = item.title) },
+                    modifier = Modifier.background(
+                        colorResource(id = R.color.transparent),
+                        CircleShape
                     )
+                )
             }
         }
     }
 
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
-    private fun ActivityCard(navController: NavController, activityName: String, activityDescription: String, start: String, end: String, oreSpostamento: String, km: String) {
+    private fun ActivityCard(activityName: String, activityDescription: String, start: String, end: String, oreSpostamento: String, km: String) {
         Card(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 10.dp, vertical = 5.dp)
                 .clip(RoundedCornerShape(8.dp))
                 .clickable {
-                    navController.navigate("activityDetails/${navController}/${activityName}/${activityDescription}/${start}/${end}/${oreSpostamento}/${km}")
+                    findNavController().navigate(HomeFragmentDirections.viewActivityDetails(activityName, activityDescription, start, end, oreSpostamento, km))
                 },
         ) {
             Column(modifier = Modifier.padding(16.dp)) {
@@ -275,7 +246,7 @@ class MainActivity : AppCompatActivity() {
         )
 
         var openDialog = remember { mutableStateOf(false) }
-        
+
         Scaffold(
             topBar = { MediumTopAppBar(
                 title = { Text(text = "Attività") },
@@ -291,7 +262,7 @@ class MainActivity : AppCompatActivity() {
                         Icon(imageVector = Icons.Outlined.Delete, contentDescription = "Elimina commessa")
                     }
                 })
-             },
+            },
             bottomBar = {
                 NavigationBar() {
                     items.forEach { item ->
@@ -299,7 +270,7 @@ class MainActivity : AppCompatActivity() {
                             selected = false,
                             onClick = { navController.popBackStack() },
                             icon = { Icon(painterResource(id = item.icon), contentDescription = item.title) },
-                            label = { Text(text = item.title)},
+                            label = { Text(text = item.title) },
                             modifier = Modifier.background(Color.Transparent, CircleShape)
                         )
                     }
@@ -344,7 +315,7 @@ class MainActivity : AppCompatActivity() {
                 onDismissRequest = {
                     openDialog.value = false
                 },
-                title = { Text(text = "Sei sicuro di voler uscire senza salvare?")},
+                title = { Text(text = "Sei sicuro di voler uscire senza salvare?") },
                 confirmButton = {
                     TextButton(onClick = {
                         openDialog.value = false
@@ -391,7 +362,7 @@ class MainActivity : AppCompatActivity() {
 
         var newTime = time
 
-        val timePickerDialog = TimePickerDialog(this, R.style.MyTimePickerDialogStyle,
+        val timePickerDialog = TimePickerDialog(requireContext(), R.style.MyTimePickerDialogStyle,
             { _, hour: Int, minute: Int ->
                 newTime.value = String.format("%02d", hour) + ":" + String.format("%02d", minute)
             }, Integer.parseInt(newTime.value.split(":")[0]), Integer.parseInt(newTime.value.split(":")[1]), true)
