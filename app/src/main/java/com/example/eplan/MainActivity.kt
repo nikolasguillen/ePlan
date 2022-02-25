@@ -2,26 +2,22 @@ package com.example.eplan
 
 import android.app.TimePickerDialog
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.content.res.AppCompatResources
-import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.*
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.BottomNavigationDefaults
+import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.TextField
 import androidx.compose.material.TextFieldDefaults
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.Create
 import androidx.compose.material.icons.outlined.Create
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
@@ -32,19 +28,26 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.composed
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.toArgb
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.modifier.modifierLocalConsumer
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
-import androidx.core.os.bundleOf
 import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.vectordrawable.graphics.drawable.VectorDrawableCompat
 import com.shrikanthravi.collapsiblecalendarview.data.Day
 import com.shrikanthravi.collapsiblecalendarview.widget.CollapsibleCalendar
+import com.google.android.material.timepicker.MaterialTimePicker
+
+
+
 
 var day: Day? = null
 var selectedDay: Int = 0
@@ -59,23 +62,25 @@ class MainActivity : AppCompatActivity() {
 
     @Composable
     fun HomeBuilder() {
-        val navController = rememberNavController()
-        NavHost(navController = navController, startDestination = "home") {
-            composable("home") {
-                BuildContent(navController)
+//        MaterialTheme(colorScheme = dynamicLightColorScheme(this)) {
+            val navController = rememberNavController()
+            NavHost(navController = navController, startDestination = "home") {
+                composable("home") {
+                    BuildContent(navController)
+                }
+                composable("activityDetails/{navController}/{activityName}/{activityDescription}/{start}/{end}/{oreSpostamento}/{km}") { backStackEntry ->
+                    ActivityDetails(
+                        navController,
+                        backStackEntry.arguments?.getString("activityName")!!,
+                        backStackEntry.arguments?.getString("activityDescription")!!,
+                        backStackEntry.arguments?.getString("start")!!,
+                        backStackEntry.arguments?.getString("end")!!,
+                        backStackEntry.arguments?.getString("oreSpostamento")!!,
+                        backStackEntry.arguments?.getString("km")!!
+                    )
+                }
             }
-            composable("activityDetails/{navController}/{activityName}/{activityDescription}/{start}/{end}/{oreSpostamento}/{km}") { backStackEntry ->
-                ActivityDetails(
-                    navController,
-                    backStackEntry.arguments?.getString("activityName")!!,
-                    backStackEntry.arguments?.getString("activityDescription")!!,
-                    backStackEntry.arguments?.getString("start")!!,
-                    backStackEntry.arguments?.getString("end")!!,
-                    backStackEntry.arguments?.getString("oreSpostamento")!!,
-                    backStackEntry.arguments?.getString("km")!!
-                )
-            }
-        }
+//        }
     }
 
     @OptIn(ExperimentalMaterial3Api::class)
@@ -99,7 +104,7 @@ class MainActivity : AppCompatActivity() {
         cards.add(listOf("commessa", "descrizione commessa", "08:00", "09:00", "2", "180"))
 
 
-        Scaffold(modifier = Modifier.padding(horizontal = 2.dp),
+        Scaffold(
         bottomBar = { BottomNavBar(navController) },
             topBar = { TopBar() },
             floatingActionButton = { FloatingActionButton(onClick = { /*TODO*/ }) {
@@ -116,7 +121,9 @@ class MainActivity : AppCompatActivity() {
                                 activityName = card[0],
                                 activityDescription = card[1],
                                 start = card[2],
-                                end = card[3]
+                                end = card[3],
+                                oreSpostamento = card[4],
+                                km = card[5]
                             )
                         }
                     }
@@ -128,14 +135,26 @@ class MainActivity : AppCompatActivity() {
     @Composable
     private fun setupCalendar() {
 
+        val todayBackgroundColor = MaterialTheme.colorScheme.primary.toArgb()
+        val todayTextColor = MaterialTheme.colorScheme.onPrimary.toArgb()
+        val selectedDayBackgroundColor = MaterialTheme.colorScheme.onSurface.toArgb()
+        val selectedDayTextColor = MaterialTheme.colorScheme.surface.toArgb()
+        val dynamicTextColor = MaterialTheme.colorScheme.onSurface.toArgb()
+
         AndroidView(factory = { context ->
             CollapsibleCalendar(context).apply {
 
                 primaryColor = resources.getColor(R.color.transparent, context.theme)
-                todayItemTextColor = resources.getColor(R.color.black, context.theme)
-                selectedItemTextColor = resources.getColor(R.color.white, context.theme)
-                selectedItemBackgroundDrawable = AppCompatResources.getDrawable(context, R.drawable.black_circle)
-                todayItemBackgroundDrawable = AppCompatResources.getDrawable(context, R.drawable.light_purple_circle)
+                textColor = dynamicTextColor
+                setExpandIconColor(dynamicTextColor)
+
+                // Material dynamic theme
+                AppCompatResources.getDrawable(context, R.drawable.selection_circle)?.setTint(selectedDayBackgroundColor)
+                selectedItemBackgroundDrawable = AppCompatResources.getDrawable(context, R.drawable.selection_circle)
+                selectedItemTextColor = selectedDayTextColor
+                AppCompatResources.getDrawable(context, R.drawable.today_circle)?.setTint(todayBackgroundColor)
+                todayItemBackgroundDrawable = AppCompatResources.getDrawable(context, R.drawable.today_circle)
+                todayItemTextColor = todayTextColor
 
                 setCalendarListener(object : CollapsibleCalendar.CalendarListener {
                     override fun onClickListener() {
@@ -172,7 +191,7 @@ class MainActivity : AppCompatActivity() {
 
     @Composable
     private fun TopBar() {
-        SmallTopAppBar(title = { Text(stringResource(id = R.string.app_name)) }, )
+        SmallTopAppBar(title = { Text(stringResource(id = R.string.app_name)) })
     }
 
     @Composable
@@ -198,14 +217,14 @@ class MainActivity : AppCompatActivity() {
 
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
-    private fun ActivityCard(navController: NavController, activityName: String, activityDescription: String, start: String, end: String) {
+    private fun ActivityCard(navController: NavController, activityName: String, activityDescription: String, start: String, end: String, oreSpostamento: String, km: String) {
         Card(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 10.dp, vertical = 5.dp)
                 .clip(RoundedCornerShape(8.dp))
                 .clickable {
-                    navController.navigate("activityDetails/${navController}/${activityName}/${activityDescription}/${start}/${end}")
+                    navController.navigate("activityDetails/${navController}/${activityName}/${activityDescription}/${start}/${end}/${oreSpostamento}/${km}")
                 },
         ) {
             Column(modifier = Modifier.padding(16.dp)) {
@@ -239,14 +258,22 @@ class MainActivity : AppCompatActivity() {
             topBar = { MediumTopAppBar(
                 title = { Text(text = "Attività") },
                 navigationIcon = {
-                    IconButton(onClick = { navController.popBackStack() }) {
+                    IconButton(onClick = { openDialog.value = true }) {
                         Icon(
                             imageVector = Icons.Filled.ArrowBack,
                             contentDescription = "Back")
                     }
                 })
              },
-            bottomBar = {
+            floatingActionButton = { ExtendedFloatingActionButton(
+                text = { Text("Salva") },
+                onClick = { navController.popBackStack() },
+                icon = {
+                    Icon(imageVector = ImageVector.vectorResource(id = R.drawable.ic_outline_save_24), contentDescription = "Salva modifiche")
+                },
+                modifier = Modifier.padding(bottom = 15.dp))
+            },
+            /*bottomBar = {
                 NavigationBar() {
                     items.forEach { item ->
                         NavigationBarItem(
@@ -259,28 +286,33 @@ class MainActivity : AppCompatActivity() {
                         )
                     }
                 }
-            },
+            },*/
             content = {
                 Column(modifier = Modifier
                     .fillMaxSize()
-                    .padding(horizontal = 16.dp, vertical = 16.dp),
+                    .padding(horizontal = 16.dp, vertical = 16.dp)
+                    .verticalScroll(rememberScrollState()),
                     verticalArrangement = Arrangement.spacedBy(16.dp)) {
 
                     CustomTextField(value = name, label = "Attività")
                     CustomTextField(value = desc, label = "Descrizione")
-                    Button(
-                        modifier = Modifier.width(150.dp),
-                        onClick = { customTimePicker(start) },
-                        shape = RoundedCornerShape(8.dp),
-                        colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.surfaceVariant, contentColor = MaterialTheme.colorScheme.onSurfaceVariant)) {
-                        Text(text = "Ora inizio: " + start.value)
-                    }
-                    Button(
-                        modifier = Modifier.width(150.dp),
-                        onClick = { customTimePicker(end) },
-                        shape = RoundedCornerShape(8.dp),
-                        colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.surfaceVariant, contentColor = MaterialTheme.colorScheme.onSurfaceVariant)) {
-                        Text(text = "Ora fine: " + end.value)
+                    Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceEvenly) {
+                        OutlinedButton(
+                            modifier = Modifier.width(150.dp),
+                            onClick = { customTimePicker(start) },
+                            shape = RoundedCornerShape(8.dp),
+                            colors = ButtonDefaults.outlinedButtonColors(containerColor = Color.Transparent, contentColor = MaterialTheme.colorScheme.onSurfaceVariant))
+                        {
+                            Text(text = "Ora inizio: " + start.value)
+                        }
+                        OutlinedButton(
+                            modifier = Modifier.width(150.dp),
+                            onClick = { customTimePicker(end) },
+                            shape = RoundedCornerShape(8.dp),
+                            colors = ButtonDefaults.outlinedButtonColors(containerColor = Color.Transparent, contentColor = MaterialTheme.colorScheme.onSurfaceVariant))
+                        {
+                            Text(text = "Ora fine: " + end.value)
+                        }
                     }
                     CustomTextField(value = oreSpostamento, label = "Ore di spostamento")
                     CustomTextField(value = km, label = "Km percorsi")
@@ -316,17 +348,18 @@ class MainActivity : AppCompatActivity() {
     @Composable
     private fun CustomTextField(value: MutableState<String>, label: String) {
         var value = value
-        TextField(
+        OutlinedTextField(
             value = value.value,
             onValueChange = { value.value = it },
             label = { Text(text = label) },
             shape = RoundedCornerShape(8.dp),
-            colors = TextFieldDefaults.textFieldColors(
-                backgroundColor = MaterialTheme.colorScheme.surfaceVariant,
-                disabledTextColor = Color.Transparent,
-                focusedIndicatorColor = Color.Transparent,
-                unfocusedIndicatorColor = Color.Transparent,
-                disabledIndicatorColor = Color.Transparent
+            colors = TextFieldDefaults.outlinedTextFieldColors(
+                textColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                cursorColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                focusedBorderColor = MaterialTheme.colorScheme.primary,
+                unfocusedBorderColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                backgroundColor = Color.Transparent,
+                disabledTextColor = Color.Transparent
             ),
             modifier = Modifier.fillMaxWidth()
         )
@@ -342,6 +375,7 @@ class MainActivity : AppCompatActivity() {
             }, Integer.parseInt(newTime.value.split(":")[0]), Integer.parseInt(newTime.value.split(":")[1]), true)
 
         timePickerDialog.show()
+
     }
 
     inline fun Modifier.noRippleClickable(crossinline onClick: ()->Unit): Modifier = composed {
