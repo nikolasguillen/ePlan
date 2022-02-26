@@ -5,6 +5,8 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.OnBackPressedCallback
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -60,7 +62,7 @@ class ActivityDetailsFragment: Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return ComposeView(requireContext()).apply { 
+        return ComposeView(requireContext()).apply {
             setContent {
                 OurAppTheme() {
                     ActivityDetails(
@@ -92,7 +94,7 @@ class ActivityDetailsFragment: Fragment() {
 //            SaveItems.Cancel
         )
 
-        var openDialog = remember { mutableStateOf(false) }
+        val openDialog = remember { mutableStateOf(false) }
 
         Scaffold(
             topBar = { MediumTopAppBar(
@@ -124,6 +126,9 @@ class ActivityDetailsFragment: Fragment() {
                 }
             },
             content = {
+                BackHandler(enabled = true) {
+                    openDialog.value = true
+                }
                 Column(modifier = Modifier
                     .fillMaxSize()
                     .padding(horizontal = 16.dp, vertical = 16.dp)
@@ -166,7 +171,8 @@ class ActivityDetailsFragment: Fragment() {
                 confirmButton = {
                     TextButton(onClick = {
                         openDialog.value = false
-                        findNavController().navigateUp()                    }
+                        findNavController().navigate(ActivityDetailsFragmentDirections.backHome())
+                        }
                     ) {
                         Text(text = "Conferma")
                     }

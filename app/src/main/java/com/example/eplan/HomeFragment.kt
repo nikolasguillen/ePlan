@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.compose.BackHandler
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.compose.foundation.*
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -104,6 +105,9 @@ class HomeFragment: Fragment() {
             }
             },
             content = {
+                BackHandler() {
+                    activity?.finish()
+                }
                 Column(modifier = Modifier.padding(bottom = it.calculateBottomPadding())) {
                     setupCalendar()
                     LazyColumn() {
@@ -217,7 +221,16 @@ class HomeFragment: Fragment() {
                 .padding(horizontal = 10.dp, vertical = 5.dp)
                 .clip(RoundedCornerShape(8.dp))
                 .clickable {
-                    findNavController().navigate(HomeFragmentDirections.viewActivityDetails(activityName, activityDescription, start, end, oreSpostamento, km))
+                    findNavController().navigate(
+                        HomeFragmentDirections.viewActivityDetails(
+                            activityName,
+                            activityDescription,
+                            start,
+                            end,
+                            oreSpostamento,
+                            km
+                        )
+                    )
                 },
         ) {
             Column(modifier = Modifier.padding(16.dp)) {
