@@ -39,9 +39,19 @@
         <action
             android:id="@+id/backHome"
             app:destination="@id/homeFragment" />
+        <action
+            android:id="@+id/action_activityDetailsFragment_to_appointmentsFragment"
+            app:destination="@id/appointmentsFragment" />
+        <action
+            android:id="@+id/action_activityDetailsFragment_to_accountFragment"
+            app:destination="@id/accountFragment" />
     </fragment>
     <fragment
         android:id="@+id/appointmentsFragment"
         android:name="com.example.eplan.AppointmentsFragment"
         android:label="AppointmentsFragment" />
+    <fragment
+        android:id="@+id/accountFragment"
+        android:name="com.example.eplan.AccountFragment"
+        android:label="AccountFragment" />
 </navigation>
