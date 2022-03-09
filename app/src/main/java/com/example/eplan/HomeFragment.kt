@@ -1,6 +1,5 @@
 package com.example.eplan
 
-import com.example.eplan.ui.UIelements
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -12,7 +11,6 @@ import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Create
@@ -24,14 +22,12 @@ import androidx.compose.ui.composed
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.ComposeView
-import androidx.compose.ui.res.colorResource
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
-import com.example.eplan.ui.NavigationItem
+import com.example.eplan.ui.TopBar
+import com.shrikanthravi.collapsiblecalendarview.data.Day
 import com.shrikanthravi.collapsiblecalendarview.widget.CollapsibleCalendar
 
 class HomeFragment: Fragment() {
@@ -89,8 +85,8 @@ class HomeFragment: Fragment() {
 
 
         Scaffold(
-            bottomBar = { UIelements. },
-            topBar = { TopBar() },
+            bottomBar = {  },
+            topBar = { TopBar("Home") },
             floatingActionButton = { FloatingActionButton(onClick = { /*TODO*/ }) {
                 Icon(imageVector = Icons.Outlined.Create, contentDescription = "Aggiungi attività")
             }
@@ -100,7 +96,7 @@ class HomeFragment: Fragment() {
                     activity?.finish()
                 }
                 Column(modifier = Modifier.padding(bottom = it.calculateBottomPadding())) {
-                    setupCalendar()
+                    SetupCalendar()
                     LazyColumn() {
                         items(cards) { card ->
                             ActivityCard(
@@ -119,7 +115,10 @@ class HomeFragment: Fragment() {
     }
 
     @Composable
-    private fun setupCalendar() {
+    private fun SetupCalendar() {
+
+        var day: Day? = null
+        var selectedDay = null
 
         val todayBackgroundColor = MaterialTheme.colorScheme.primary.toArgb()
         val todayTextColor = MaterialTheme.colorScheme.onPrimary.toArgb()
@@ -174,34 +173,6 @@ class HomeFragment: Fragment() {
                 .padding(0.dp, 0.dp, 0.dp, 5.dp))
         )
     }
-
-/*    @Composable
-    private fun TopBar() {
-        SmallTopAppBar(title = { Text(stringResource(id = R.string.app_name)) })
-    }
-
-    @Composable
-    private fun BottomNavBar() {
-        val items = listOf(
-            NavigationItem.Home,
-            NavigationItem.Appointments,
-            NavigationItem.Account
-        )
-        NavigationBar() {
-            items.forEach { item ->
-                NavigationBarItem(
-                    selected = (item.title == "Foglio ore"),
-                    onClick = {  },
-                    icon = { Icon(painterResource(id = item.icon), contentDescription = item.title) },
-                    label = { Text(text = item.title) },
-                    modifier = Modifier.background(
-                        colorResource(id = R.color.transparent),
-                        CircleShape
-                    )
-                )
-            }
-        }
-    }*/
 
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
