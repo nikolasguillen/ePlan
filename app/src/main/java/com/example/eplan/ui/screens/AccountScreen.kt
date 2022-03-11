@@ -1,4 +1,4 @@
-package com.example.eplan
+package com.example.eplan.ui.screens
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -8,25 +8,23 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavController
 import androidx.navigation.NavHostController
-import androidx.navigation.compose.rememberNavController
-import com.example.eplan.ui.TopBar
+import com.example.eplan.ui.items.TopBar
 
 const val name = "Nikolas"
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AccountComposer(navController: NavHostController) {
+fun AccountScreen(navController: NavHostController) {
     Scaffold(
-        topBar = { MediumTopAppBar(title = { Text(text = "Ciao $name!") }) },
+        topBar = { TopBar(title = "Ciao $name!") },
         content = {
             Column(
                 modifier = Modifier.padding(
                     start = 16.dp,
                     end = 16.dp,
+                    top = 16.dp,
                     bottom = it.calculateBottomPadding()
                 )
             ) {

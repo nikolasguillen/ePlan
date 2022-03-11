@@ -2,30 +2,109 @@ package com.example.eplan.navigation
 
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.example.eplan.ActivityDetails
-import com.example.eplan.HomeComposer
+import androidx.navigation.navArgument
+import com.example.eplan.ui.screens.AccountScreen
+import com.example.eplan.model.Appointment
+import com.example.eplan.model.WorkActivity
+import com.example.eplan.model.fromJson
+import com.example.eplan.ui.items.NavigationItem
+import com.example.eplan.ui.screens.ActivityDetailsScreen
+import com.example.eplan.ui.screens.AppointmentsScreen
+import com.example.eplan.ui.screens.HomeScreen
 
 @Composable
 fun ApplicationNavGraph(navController: NavHostController) {
-    NavHost(navController = navController, startDestination = "home") {
-        composable("home") {
-            HomeComposer(navController = navController)
+    NavHost(
+        navController = navController,
+        startDestination = NavigationItem.Home.route
+    ) {
+        //Foglio ore
+        composable(route = NavigationItem.Home.route) {
+            val activities = mutableListOf<WorkActivity>()
+            var i = 0
+            while (i < 10) {
+                activities.add(
+                    WorkActivity(
+                        12345,
+                        "commessa",
+                        "descrizione commessa",
+                        "22-02-2022",
+                        "08:00",
+                        "09:00",
+                        "2",
+                        "180",
+                        false
+                    )
+                )
+                i++
+            }
+            HomeScreen(navController = navController, activities)
         }
-        composable("activityDetails/{activityName}/{activityDesc}/{date}/{start}/{end}/{oreSpostamento}/{km}/{close}") {
-
-            ActivityDetails(
-                activityName = it.arguments?.getString("activityName")!!,
-                activityDescription = it.arguments?.getString("activityDesc")!!,
-                date = it.arguments?.getString("date")!!,
-                start = it.arguments?.getString("start")!!,
-                end = it.arguments?.getString("end")!!,
-                oreSpostamento = it.arguments?.getString("oreSpostamento")!!,
-                km = it.arguments?.getString("km")!!,
-                close = it.arguments?.getBoolean("close")!!,
-                navController = navController
+        // Appuntamenti
+        composable(route = NavigationItem.Appointments.route) {
+            val peopleInput = listOf(
+                "Giampiero Allamprese",
+                "Emanuele Crescentini",
+                "Nikolas Guillen Leon",
+                "Giorgio Pierantoni",
+                "Natalia Diaz",
+                "Marco Zaccheroni",
+                "Nikolas Guillen Leon",
+                "Nikolas Guillen Leon",
+                "Nikolas Guillen Leon",
+                "Nikolas Guillen Leon",
+                "Nikolas Guillen Leon",
+                "Nikolas Guillen Leon",
+                "Nikolas Guillen Leon",
+                "Nikolas Guillen Leon",
+                "Nikolas Guillen Leon",
+                "Nikolas Guillen Leon",
+                "Nikolas Guillen Leon"
             )
+            val appointments = mutableListOf<Appointment>()
+            var i = 0
+            while (i < 10) {
+                appointments.add(
+                    Appointment(
+                        "bomba atomica",
+                        "appuntamento",
+                        "descrizione",
+                        "22-02-2022",
+                        "08:00",
+                        "09:00",
+                        false,
+                        false,
+                        peopleInput,
+                        Appointment.Periodicity.Bimestrale.toString(),
+                        "27-02-2022",
+                        true,
+                        10,
+                        "min"
+                    )
+                )
+                i++
+            }
+            AppointmentsScreen(navController = navController, appointments = appointments)
+        }
+        // Account
+        composable(route = NavigationItem.Account.route) {
+            AccountScreen(navController = navController)
+        }
+        // Dettaglio attività
+        composable(
+            route = "activityDetails/{workActivity}",
+            arguments = listOf(navArgument("workActivity") { type = NavType.StringType })
+        ) {
+            it.arguments?.getString("workActivity")?.let { jsonString ->
+                val workActivity = jsonString.fromJson(WorkActivity::class.java)
+                ActivityDetailsScreen(
+                    workActivity = workActivity,
+                    navController = navController
+                )
+            }
         }
     }
 }

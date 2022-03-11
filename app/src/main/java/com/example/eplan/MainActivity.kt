@@ -4,6 +4,7 @@ import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.ExperimentalFoundationApi
+import com.example.eplan.ui.items.MyAppTheme
 
 
 class MainActivity : AppCompatActivity() {
@@ -12,7 +13,9 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            MainScreen()
+            MyAppTheme() {
+                MainScreen()
+            }
         }
     }
 }

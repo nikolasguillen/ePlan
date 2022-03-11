@@ -1,4 +1,4 @@
-package com.example.eplan
+package com.example.eplan.ui.screens
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
@@ -10,16 +10,14 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.navigation.NavController
 import androidx.navigation.NavHostController
-import com.example.eplan.ui.ActivityCard
-import com.example.eplan.ui.BottomNavBar
-import com.example.eplan.ui.SetupCalendar
-import com.example.eplan.ui.TopBar
+import com.example.eplan.model.Appointment
+import com.example.eplan.model.WorkActivity
+import com.example.eplan.ui.items.*
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AppointmentsComposer(navController: NavHostController) {
+fun AppointmentsScreen(navController: NavHostController, appointments: MutableList<Appointment>) {
 
     val cards = remember { mutableListOf<List<String>>() }
 
@@ -50,14 +48,9 @@ fun AppointmentsComposer(navController: NavHostController) {
             Column(modifier = Modifier.padding(bottom = it.calculateBottomPadding())) {
                 SetupCalendar()
                 LazyColumn() {
-                    items(cards) { card ->
-                        ActivityCard(
-                            activityName = card[0],
-                            activityDescription = card[1],
-                            start = card[2],
-                            end = card[3],
-                            oreSpostamento = card[4],
-                            km = card[5],
+                    items(appointments) { appointment ->
+                        AppointmentCard(
+                            appointment = appointment,
                             navController = navController
                         )
                     }
