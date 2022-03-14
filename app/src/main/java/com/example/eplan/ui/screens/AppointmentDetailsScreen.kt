@@ -7,7 +7,9 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.OutlinedTextField
+import androidx.compose.material.TextFieldDefaults
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.outlined.Delete
@@ -19,13 +21,15 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.Dialog
 import androidx.navigation.NavHostController
 import com.example.eplan.model.Appointment
 import com.example.eplan.ui.items.CustomTextField
+import com.example.eplan.ui.items.CustomTimeButton
 import com.example.eplan.ui.items.SaveItems
-import com.example.eplan.ui.items.customTimePicker
-import java.util.*
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -59,7 +63,7 @@ fun AppointmentDetailsScreen(
     Scaffold(
         topBar = {
             MediumTopAppBar(
-                title = { Text(text = "Attività") },
+                title = { Text(text = "Appuntamento") },
                 navigationIcon = {
                     IconButton(onClick = { backDialog.value = true }) {
                         Icon(
@@ -102,11 +106,14 @@ fun AppointmentDetailsScreen(
             Column(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(horizontal = 16.dp, vertical = 16.dp)
+                    .padding(
+                        start = 16.dp,
+                        end = 16.dp,
+                        bottom = it.calculateBottomPadding() + 8.dp
+                    )
                     .verticalScroll(rememberScrollState()),
-                verticalArrangement = Arrangement.spacedBy(16.dp)
+                verticalArrangement = Arrangement.spacedBy(16.dp),
             ) {
-
                 CustomTextField(value = name, label = "Attività")
                 CustomTextField(value = title, label = "Titolo")
                 CustomTextField(value = desc, label = "Descrizione")
@@ -115,65 +122,97 @@ fun AppointmentDetailsScreen(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
-                    OutlinedButton(
-                        modifier = Modifier.width(150.dp),
-                        onClick = { customTimePicker(start, navController.context) },
-                        shape = RoundedCornerShape(8.dp),
-                        border = BorderStroke(1.dp, MaterialTheme.colorScheme.onSurfaceVariant),
-                        colors = ButtonDefaults.outlinedButtonColors(
-                            containerColor = Color.Transparent,
-                            contentColor = MaterialTheme.colorScheme.onSurfaceVariant
-                        )
+                    CustomTimeButton(
+                        time = start,
+                        label = "Ora inizio",
+                        context = navController.context
                     )
-                    {
-                        Text(
-                            text = "Ora inizio: " + start.value,
-                            style = MaterialTheme.typography.bodyMedium
-                        )
-                    }
-                    OutlinedButton(
-                        modifier = Modifier.width(150.dp),
-                        onClick = { customTimePicker(end, navController.context) },
-                        shape = RoundedCornerShape(8.dp),
-                        border = BorderStroke(1.dp, MaterialTheme.colorScheme.onSurfaceVariant),
-                        colors = ButtonDefaults.outlinedButtonColors(
-                            containerColor = Color.Transparent,
-                            contentColor = MaterialTheme.colorScheme.onSurfaceVariant
-                        )
+                    CustomTimeButton(
+                        time = end,
+                        label = "Ora fine",
+                        context = navController.context
                     )
-                    {
-                        Text(
-                            text = "Ora fine: " + end.value,
-                            style = MaterialTheme.typography.bodyMedium
-                        )
-                    }
                 }
                 Row(
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text(text = "Pianificazione")
-                    Checkbox(checked = planning.value, onCheckedChange = {})
+                    Checkbox(checked = planning.value, onCheckedChange = { planning.value = it })
                 }
                 Row(
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text(text = "Contabilizza come intervento")
-                    Checkbox(checked = intervention.value, onCheckedChange = {})
+                    Checkbox(
+                        checked = intervention.value,
+                        onCheckedChange = { intervention.value = it })
                 }
-                Row() {
-                    Text(text = "Invita anche")
-                    TextButton(onClick = { invitedDialog.value = true }) {
+//                Box(
+//                    modifier = Modifier
+//                        .border(
+//                            BorderStroke(
+//                                1.dp,
+//                                MaterialTheme.colorScheme.onSurface
+//                            ), RoundedCornerShape(8.dp)
+//                        )
+//                        .padding(16.dp)
+//                        .fillMaxWidth()
+//                        .wrapContentHeight()
+//                ) {
+//                    Column() {
+//                        Text(text = "Invita anche:", style = MaterialTheme.typography.displaySmall)
+                        var people = ""
+                        for (person in invited.value) {
+                            people += person + "\n"
+                        }
+//                        Text(text = people)
+                Text(text = "Invita anche")
+                Card() {
+                    Text(text = people)
+                }
+                    
+//                    }
+                }
+//            }
+        }
+    )
 
-                    }
-                }
-                Box() {
-                    LazyColumn() {
-                        items(appointment.invited) { person ->
+
+    if (invitedDialog.value) {
+        Dialog(onDismissRequest = { invitedDialog.value = false }) {
+            Box(
+                modifier = Modifier
+                    .background(MaterialTheme.colorScheme.surface, RoundedCornerShape(8.dp))
+                    .padding(horizontal = 16.dp, vertical = 16.dp)
+                    .height(600.dp)
+            ) {
+                Column() {
+                    LazyColumn(
+                        verticalArrangement = Arrangement.spacedBy(16.dp),
+                        modifier = Modifier
+                            .wrapContentSize()
+                            .weight(1f)
+                            .padding(bottom = 6.dp)
+                    ) {
+                        items(invited.value) { person ->
                             Text(text = person)
+                        }
+                    }
+                    Row(
+                        horizontalArrangement = Arrangement.SpaceEvenly,
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        Button(onClick = { /*TODO*/ }) {
+                            Text(text = "Annulla")
+                        }
+                        Button(onClick = { /*TODO*/ }) {
+                            Text(text = "Conferma")
                         }
                     }
                 }
             }
         }
-    )
+    }
 
     if (backDialog.value) {
         AlertDialog(
@@ -200,38 +239,3 @@ fun AppointmentDetailsScreen(
             })
     }
 }
-
-//PeopleList(peopleInput = peopleInput)
-//Dialog(onDismissRequest = { openDialog.value = false }) {
-//    Box(
-//        modifier = Modifier
-//            .background(MaterialTheme.colorScheme.surface, RoundedCornerShape(8.dp))
-//            .padding(horizontal = 16.dp, vertical = 16.dp)
-//            .height(600.dp)
-//    ) {
-//        Column() {
-//            LazyColumn(
-//                verticalArrangement = Arrangement.spacedBy(16.dp),
-//                modifier = Modifier
-//                    .wrapContentSize()
-//                    .weight(1f)
-//                    .padding(bottom = 6.dp)
-//            ) {
-//                items(people) { person ->
-//                    person.PersonComposer()
-//                }
-//            }
-//            Row(
-//                horizontalArrangement = Arrangement.SpaceEvenly,
-//                modifier = Modifier.fillMaxWidth()
-//            ) {
-//                Button(onClick = { TODO }) {
-//                    Text(text = "Annulla")
-//                }
-//                Button(onClick = { TODO }) {
-//                    Text(text = "Conferma")
-//                }
-//            }
-//        }
-//    }
-//}

@@ -6,12 +6,14 @@ import android.os.Build
 import com.example.eplan.R
 import android.view.View
 import androidx.appcompat.content.res.AppCompatResources
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
@@ -147,7 +149,7 @@ fun AppointmentCard(
             .clip(RoundedCornerShape(8.dp))
             .clickable {
                 val argument = appointment.toJson()
-                navController.navigate("activityDetails/$argument")
+                navController.navigate("appointmentDetails/$argument")
             },
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
@@ -236,7 +238,6 @@ fun CustomTextField(
     label: String,
     numField: Boolean = false
 ) {
-    var value = value
     OutlinedTextField(
         value = value.value,
         onValueChange = { value.value = it },
@@ -256,7 +257,7 @@ fun CustomTextField(
     )
 }
 
-fun customTimePicker(time: MutableState<String>, context: Context) {
+private fun customTimePicker(time: MutableState<String>, context: Context) {
 
     var newTime = time
 
@@ -273,4 +274,24 @@ fun customTimePicker(time: MutableState<String>, context: Context) {
 
     timePickerDialog.show()
 
+}
+
+@Composable
+fun CustomTimeButton(time: MutableState<String>, label: String, context: Context ) {
+    OutlinedButton(
+        modifier = Modifier.width(150.dp),
+        onClick = { customTimePicker(time, context) },
+        shape = RoundedCornerShape(8.dp),
+        border = BorderStroke(1.dp, MaterialTheme.colorScheme.onSurfaceVariant),
+        colors = ButtonDefaults.outlinedButtonColors(
+            containerColor = Color.Transparent,
+            contentColor = MaterialTheme.colorScheme.onSurfaceVariant
+        )
+    )
+    {
+        Text(
+            text = label + ": " + time.value,
+            style = MaterialTheme.typography.bodyMedium
+        )
+    }
 }

@@ -16,9 +16,13 @@ fun MainScreen() {
     val navController = rememberNavController()
     Scaffold(
         bottomBar = {
-            if (currentRoute(navController = navController)?.contains("activityDetails") == false) {
-                BottomNavBar(navController = navController) }
+            val cr = currentRoute(navController = navController)
+            if (cr?.contains("activityDetails") == false && !cr.contains("appointmentDetails")) {
+                BottomNavBar(
+                    navController = navController
+                )
             }
+        }
     ) {
         ApplicationNavGraph(navController = navController)
     }

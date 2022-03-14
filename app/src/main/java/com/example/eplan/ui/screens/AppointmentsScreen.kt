@@ -19,23 +19,6 @@ import com.example.eplan.ui.items.*
 @Composable
 fun AppointmentsScreen(navController: NavHostController, appointments: MutableList<Appointment>) {
 
-    val cards = remember { mutableListOf<List<String>>() }
-
-    cards.add(listOf("appuntamento", "descrizione commessa", "08:00", "09:00", "2", "180"))
-    cards.add(listOf("appuntamento", "descrizione commessa", "08:00", "09:00", "2", "180"))
-    cards.add(listOf("appuntamento", "descrizione commessa", "08:00", "09:00", "2", "180"))
-    cards.add(listOf("appuntamento", "descrizione commessa", "08:00", "09:00", "2", "180"))
-    cards.add(listOf("appuntamento", "descrizione commessa", "08:00", "09:00", "2", "180"))
-    cards.add(listOf("appuntamento", "descrizione commessa", "08:00", "09:00", "2", "180"))
-    cards.add(listOf("appuntamento", "descrizione commessa", "08:00", "09:00", "2", "180"))
-    cards.add(listOf("appuntamento", "descrizione commessa", "08:00", "09:00", "2", "180"))
-    cards.add(listOf("appuntamento", "descrizione commessa", "08:00", "09:00", "2", "180"))
-    cards.add(listOf("appuntamento", "descrizione commessa", "08:00", "09:00", "2", "180"))
-    cards.add(listOf("appuntamento", "descrizione commessa", "08:00", "09:00", "2", "180"))
-    cards.add(listOf("appuntamento", "descrizione commessa", "08:00", "09:00", "2", "180"))
-    cards.add(listOf("appuntamento", "descrizione commessa", "08:00", "09:00", "2", "180"))
-
-
     Scaffold(
         bottomBar = { BottomNavBar(navController = navController) },
         topBar = { TopBar("Appuntamenti") },

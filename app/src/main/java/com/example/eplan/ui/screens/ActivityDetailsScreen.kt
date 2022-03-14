@@ -24,8 +24,8 @@ import androidx.navigation.NavHostController
 import com.example.eplan.model.Person
 import com.example.eplan.model.WorkActivity
 import com.example.eplan.ui.items.CustomTextField
+import com.example.eplan.ui.items.CustomTimeButton
 import com.example.eplan.ui.items.SaveItems
-import com.example.eplan.ui.items.customTimePicker
 
 var people: MutableList<Person> = mutableListOf()
 
@@ -42,12 +42,13 @@ fun ActivityDetailsScreen(
     navController: NavHostController
 ) {
 
-    val start = remember { mutableStateOf(workActivity.start.toString()) }
-    val end = remember { mutableStateOf(workActivity.end.toString()) }
+    val start = remember { mutableStateOf(workActivity.start) }
+    val end = remember { mutableStateOf(workActivity.end) }
     val name = remember { mutableStateOf(workActivity.activityName) }
     val desc = remember { mutableStateOf(workActivity.activityDescription) }
     val movingTime = remember { mutableStateOf(workActivity.movingTime) }
     val km = remember { mutableStateOf(workActivity.km) }
+    val close = remember { mutableStateOf(workActivity.close) }
 
     val items = listOf(
         SaveItems.Save,
@@ -95,6 +96,7 @@ fun ActivityDetailsScreen(
             }
         },
         content = {
+            it.calculateBottomPadding()
             BackHandler(enabled = true) {
                 openDialog.value = true
             }
@@ -106,45 +108,14 @@ fun ActivityDetailsScreen(
                     .verticalScroll(rememberScrollState()),
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
-
                 CustomTextField(value = name, label = "Attività")
                 CustomTextField(value = desc, label = "Descrizione")
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
-                    OutlinedButton(
-                        modifier = Modifier.width(150.dp),
-                        onClick = { customTimePicker(start, navController.context) },
-                        shape = RoundedCornerShape(8.dp),
-                        border = BorderStroke(1.dp, MaterialTheme.colorScheme.onSurfaceVariant),
-                        colors = ButtonDefaults.outlinedButtonColors(
-                            containerColor = Color.Transparent,
-                            contentColor = MaterialTheme.colorScheme.onSurfaceVariant
-                        )
-                    )
-                    {
-                        Text(
-                            text = "Ora inizio: " + start.value,
-                            style = MaterialTheme.typography.bodyMedium
-                        )
-                    }
-                    OutlinedButton(
-                        modifier = Modifier.width(150.dp),
-                        onClick = { customTimePicker(end, navController.context) },
-                        shape = RoundedCornerShape(8.dp),
-                        border = BorderStroke(1.dp, MaterialTheme.colorScheme.onSurfaceVariant),
-                        colors = ButtonDefaults.outlinedButtonColors(
-                            containerColor = Color.Transparent,
-                            contentColor = MaterialTheme.colorScheme.onSurfaceVariant
-                        )
-                    )
-                    {
-                        Text(
-                            text = "Ora fine: " + end.value,
-                            style = MaterialTheme.typography.bodyMedium
-                        )
-                    }
+                    CustomTimeButton(time = start, label = "Ora inizio", context = navController.context)
+                    CustomTimeButton(time = end, label = "Ora fine", context = navController.context)
                 }
                 CustomTextField(
                     value = movingTime,
@@ -152,10 +123,9 @@ fun ActivityDetailsScreen(
                     numField = true
                 )
                 CustomTextField(value = km, label = "Km percorsi", numField = true)
-                var close = workActivity.close
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Text(text = "Chiudi attività")
-                    Checkbox(checked = close, onCheckedChange = { close = it })
+                    Checkbox(checked = close.value, onCheckedChange = { close.value = it })
                 }
             }
         })

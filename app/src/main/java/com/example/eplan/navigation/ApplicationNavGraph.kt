@@ -6,14 +6,11 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
-import com.example.eplan.ui.screens.AccountScreen
 import com.example.eplan.model.Appointment
 import com.example.eplan.model.WorkActivity
 import com.example.eplan.model.fromJson
 import com.example.eplan.ui.items.NavigationItem
-import com.example.eplan.ui.screens.ActivityDetailsScreen
-import com.example.eplan.ui.screens.AppointmentsScreen
-import com.example.eplan.ui.screens.HomeScreen
+import com.example.eplan.ui.screens.*
 
 @Composable
 fun ApplicationNavGraph(navController: NavHostController) {
@@ -102,6 +99,19 @@ fun ApplicationNavGraph(navController: NavHostController) {
                 val workActivity = jsonString.fromJson(WorkActivity::class.java)
                 ActivityDetailsScreen(
                     workActivity = workActivity,
+                    navController = navController
+                )
+            }
+        }
+        // Dettaglio appuntamento
+        composable(
+            route = "appointmentDetails/{appointment}",
+            arguments = listOf(navArgument("appointment") { type = NavType.StringType })
+        ) {
+            it.arguments?.getString("appointment")?.let { jsonString ->
+                val appointment = jsonString.fromJson(Appointment::class.java)
+                AppointmentDetailsScreen(
+                    appointment = appointment,
                     navController = navController
                 )
             }
