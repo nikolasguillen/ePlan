@@ -5,7 +5,7 @@ import java.time.LocalTime
 import java.time.format.DateTimeFormatter
 import java.util.*
 
-class WorkActivity(
+data class WorkActivity(
     val id: Int,
     val activityName: String,
     val activityDescription: String,

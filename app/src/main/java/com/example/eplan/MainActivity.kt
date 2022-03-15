@@ -5,6 +5,7 @@ import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.ExperimentalFoundationApi
 import com.example.eplan.ui.items.MyAppTheme
+import com.google.accompanist.insets.ProvideWindowInsets
 
 
 class MainActivity : AppCompatActivity() {

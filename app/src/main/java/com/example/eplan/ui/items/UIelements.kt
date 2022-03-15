@@ -2,6 +2,7 @@ package com.example.eplan.ui.items
 
 import android.app.TimePickerDialog
 import android.content.Context
+import android.graphics.drawable.shapes.OvalShape
 import android.os.Build
 import com.example.eplan.R
 import android.view.View
@@ -17,26 +18,34 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.OutlinedTextField
-import androidx.compose.material.TextFieldDefaults
+import androidx.compose.material.*
 import androidx.compose.material3.*
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Card
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.navigation.NavController
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavHostController
-import androidx.navigation.NavOptions
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.example.eplan.model.Appointment
 import com.example.eplan.model.WorkActivity
@@ -95,10 +104,7 @@ fun BottomNavBar(navController: NavController) {
                 },
                 icon = { Icon(painterResource(id = item.icon), contentDescription = item.title) },
                 label = { Text(text = item.title) },
-                modifier = Modifier.background(
-                    colorResource(id = R.color.transparent),
-                    CircleShape
-                )
+                modifier = Modifier.clip(CircleShape)
             )
         }
     }
@@ -114,7 +120,7 @@ fun ActivityCard(
         modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = 10.dp, vertical = 5.dp)
-            .clip(RoundedCornerShape(8.dp))
+            .clip(RoundedCornerShape(11.dp))
             .clickable {
                 val argument = workActivity.toJson()
                 navController.navigate("activityDetails/$argument")
@@ -257,18 +263,29 @@ fun CustomTextField(
     )
 }
 
-private fun customTimePicker(time: MutableState<String>, context: Context) {
+@Composable
+fun CustomSwitch(value: MutableState<Boolean> = mutableStateOf(true)) {
+    Switch(
+        checked = value.value,
+        onCheckedChange = { value.value = it },
+        colors = SwitchDefaults.colors(
+            checkedThumbColor = MaterialTheme.colorScheme.primary,
+            checkedTrackColor = MaterialTheme.colorScheme.primary,
+            uncheckedTrackColor = MaterialTheme.colorScheme.onSurface
+        )
+    )
+}
 
-    var newTime = time
+private fun customTimePicker(time: MutableState<String>, context: Context) {
 
     val timePickerDialog = TimePickerDialog(
         context,
         R.style.MyTimePickerDialogStyle,
         { _, hour: Int, minute: Int ->
-            newTime.value = String.format("%02d", hour) + ":" + String.format("%02d", minute)
+            time.value = String.format("%02d", hour) + ":" + String.format("%02d", minute)
         },
-        Integer.parseInt(newTime.value.split(":")[0]),
-        Integer.parseInt(newTime.value.split(":")[1]),
+        Integer.parseInt(time.value.split(":")[0]),
+        Integer.parseInt(time.value.split(":")[1]),
         true
     )
 
@@ -277,7 +294,7 @@ private fun customTimePicker(time: MutableState<String>, context: Context) {
 }
 
 @Composable
-fun CustomTimeButton(time: MutableState<String>, label: String, context: Context ) {
+fun CustomTimeButton(time: MutableState<String>, label: String, context: Context) {
     OutlinedButton(
         modifier = Modifier.width(150.dp),
         onClick = { customTimePicker(time, context) },

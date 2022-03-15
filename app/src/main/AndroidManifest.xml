@@ -12,6 +12,7 @@
         <activity
             android:name=".MainActivity"
             android:label="ePlan"
+            android:windowSoftInputMode="adjustPan"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar"
             android:exported="true">
             <intent-filter>

@@ -5,7 +5,7 @@ import java.time.LocalTime
 import java.time.format.DateTimeFormatter
 import java.util.*
 
-class Appointment(
+data class Appointment(
     val activity: String,
     val title: String,
     val description: String,
@@ -14,7 +14,7 @@ class Appointment(
     val end: String,
     val planning: Boolean,
     val intervention: Boolean,
-    val invited: List<String>,
+    val invited: Map<String, Boolean>,
     val periodicity: String,
     val periodicityEnd: String,
     val memo: Boolean,
@@ -22,7 +22,7 @@ class Appointment(
     val warningUnit: String
 ) {
     enum class Periodicity {
-        Giornaliera, Settimanale, Bisettimanale, Mensile, Bimestrale
+        Nessuna, Giornaliera, Settimanale, Bisettimanale, Mensile, Bimestrale
     }
 //    val date: LocalDate =
 //        LocalDate.parse(date, DateTimeFormatter.ofPattern("dd/MM/yyyy", Locale.ITALIAN))

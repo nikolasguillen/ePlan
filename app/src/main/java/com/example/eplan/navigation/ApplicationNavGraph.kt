@@ -42,24 +42,13 @@ fun ApplicationNavGraph(navController: NavHostController) {
         }
         // Appuntamenti
         composable(route = NavigationItem.Appointments.route) {
-            val peopleInput = listOf(
-                "Giampiero Allamprese",
-                "Emanuele Crescentini",
-                "Nikolas Guillen Leon",
-                "Giorgio Pierantoni",
-                "Natalia Diaz",
-                "Marco Zaccheroni",
-                "Nikolas Guillen Leon",
-                "Nikolas Guillen Leon",
-                "Nikolas Guillen Leon",
-                "Nikolas Guillen Leon",
-                "Nikolas Guillen Leon",
-                "Nikolas Guillen Leon",
-                "Nikolas Guillen Leon",
-                "Nikolas Guillen Leon",
-                "Nikolas Guillen Leon",
-                "Nikolas Guillen Leon",
-                "Nikolas Guillen Leon"
+            val peopleInput = mapOf(
+                "Giampiero Allamprese" to true,
+                "Emanuele Crescentini" to false,
+                "Nikolas Guillen Leon" to true,
+                "Giorgio Pierantoni" to false,
+                "Natalia Diaz" to false,
+                "Marco Zaccheroni" to false
             )
             val appointments = mutableListOf<Appointment>()
             var i = 0

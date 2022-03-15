@@ -8,6 +8,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.Switch
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.outlined.Delete
@@ -19,21 +20,17 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
+import com.example.eplan.R
 import com.example.eplan.model.Person
 import com.example.eplan.model.WorkActivity
+import com.example.eplan.ui.items.CustomSwitch
 import com.example.eplan.ui.items.CustomTextField
 import com.example.eplan.ui.items.CustomTimeButton
 import com.example.eplan.ui.items.SaveItems
 
-var people: MutableList<Person> = mutableListOf()
-
-fun PeopleList(peopleInput: List<String>) {
-    for (person in peopleInput) {
-        people.add(Person(person, false))
-    }
-}
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -72,6 +69,7 @@ fun ActivityDetailsScreen(
                     IconButton(onClick = { /*TODO*/ }) {
                         Icon(
                             imageVector = Icons.Outlined.Delete,
+                            tint = Color.Red,
                             contentDescription = "Elimina commessa"
                         )
                     }
@@ -123,9 +121,9 @@ fun ActivityDetailsScreen(
                     numField = true
                 )
                 CustomTextField(value = km, label = "Km percorsi", numField = true)
-                Row(verticalAlignment = Alignment.CenterVertically) {
+                Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.SpaceBetween, modifier = Modifier.fillMaxWidth()) {
                     Text(text = "Chiudi attività")
-                    Checkbox(checked = close.value, onCheckedChange = { close.value = it })
+                    CustomSwitch(close)
                 }
             }
         })
@@ -142,7 +140,7 @@ fun ActivityDetailsScreen(
                     navController.navigateUp()
                 }
                 ) {
-                    Text(text = "Conferma")
+                    Text(text = stringResource(R.string.conferma))
                 }
             },
             dismissButton = {
@@ -150,7 +148,7 @@ fun ActivityDetailsScreen(
                     openDialog.value = false
                 }
                 ) {
-                    Text(text = "Annulla")
+                    Text(text = stringResource(R.string.annulla))
                 }
             }
         )

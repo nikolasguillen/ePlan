@@ -1,5 +1,6 @@
 package com.example.eplan.ui.screens
 
+import android.util.Log
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
@@ -8,30 +9,45 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.OutlinedTextField
-import androidx.compose.material.TextFieldDefaults
+import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.outlined.Delete
 import androidx.compose.material3.*
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Button
+import androidx.compose.material3.Card
+import androidx.compose.material3.Checkbox
+import androidx.compose.material3.Divider
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.snapshots.Snapshot
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.navigation.NavHostController
+import com.example.eplan.R
 import com.example.eplan.model.Appointment
+import com.example.eplan.model.Person
+import com.example.eplan.ui.items.CustomSwitch
 import com.example.eplan.ui.items.CustomTextField
 import com.example.eplan.ui.items.CustomTimeButton
 import com.example.eplan.ui.items.SaveItems
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, androidx.compose.material.ExperimentalMaterialApi::class)
 @Composable
 fun AppointmentDetailsScreen(
     appointment: Appointment,
@@ -46,7 +62,7 @@ fun AppointmentDetailsScreen(
     val end = remember { mutableStateOf(appointment.end) }
     val planning = remember { mutableStateOf(appointment.planning) }
     val intervention = remember { mutableStateOf(appointment.intervention) }
-    val invited = remember { mutableStateOf(appointment.invited) }
+    val people = remember { createPeople(appointment.invited) }
     val periodicity = remember { mutableStateOf(appointment.periodicity) }
     val periodicityEnd = remember { mutableStateOf(appointment.periodicityEnd) }
     val memo = remember { mutableStateOf(appointment.memo) }
@@ -59,6 +75,7 @@ fun AppointmentDetailsScreen(
 
     val backDialog = remember { mutableStateOf(false) }
     val invitedDialog = remember { mutableStateOf(false) }
+    val periodicityDialog = remember { mutableStateOf(false) }
 
     Scaffold(
         topBar = {
@@ -76,6 +93,7 @@ fun AppointmentDetailsScreen(
                     IconButton(onClick = { /*TODO*/ }) {
                         Icon(
                             imageVector = Icons.Outlined.Delete,
+                            tint = Color.Red,
                             contentDescription = "Elimina commessa"
                         )
                     }
@@ -99,7 +117,7 @@ fun AppointmentDetailsScreen(
                 }
             }
         },
-        content = {
+        content = { it ->
             BackHandler(enabled = true) {
                 backDialog.value = true
             }
@@ -134,79 +152,157 @@ fun AppointmentDetailsScreen(
                     )
                 }
                 Row(
-                    verticalAlignment = Alignment.CenterVertically
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    modifier = Modifier.fillMaxWidth()
                 ) {
-                    Text(text = "Pianificazione")
-                    Checkbox(checked = planning.value, onCheckedChange = { planning.value = it })
+                    Column() {
+                        Text(text = "Pianificazione")
+                        Text(
+                            text = "Non blocca l'orario e non viene esportato",
+                            style = MaterialTheme.typography.labelMedium
+                        )
+                    }
+                    CustomSwitch(planning)
                 }
                 Row(
-                    verticalAlignment = Alignment.CenterVertically
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    modifier = Modifier.fillMaxWidth()
                 ) {
                     Text(text = "Contabilizza come intervento")
-                    Checkbox(
-                        checked = intervention.value,
-                        onCheckedChange = { intervention.value = it })
+                    CustomSwitch(intervention)
                 }
-//                Box(
-//                    modifier = Modifier
-//                        .border(
-//                            BorderStroke(
-//                                1.dp,
-//                                MaterialTheme.colorScheme.onSurface
-//                            ), RoundedCornerShape(8.dp)
-//                        )
-//                        .padding(16.dp)
-//                        .fillMaxWidth()
-//                        .wrapContentHeight()
-//                ) {
-//                    Column() {
-//                        Text(text = "Invita anche:", style = MaterialTheme.typography.displaySmall)
-                        var people = ""
-                        for (person in invited.value) {
-                            people += person + "\n"
+                Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                    Text(text = "Invita anche:")
+                    Card(
+                        modifier = Modifier
+                            .clickable { invitedDialog.value = true }
+                            .fillMaxWidth()
+                            .wrapContentHeight()
+                            .clip(
+                                RoundedCornerShape(11.dp)
+                            )
+                    ) {
+                        if (people.all { person ->
+                                !person.isChecked.value
+                            }) {
+                            Text(
+                                text = stringResource(R.string.nessun_invitato),
+                                modifier = Modifier.padding(16.dp)
+                            )
+                        } else {
+                            for (person in people) {
+                                if (person.isChecked.value) {
+                                    Text(text = person.name, modifier = Modifier.padding(16.dp))
+                                }
+                            }
                         }
-//                        Text(text = people)
-                Text(text = "Invita anche")
-                Card() {
-                    Text(text = people)
+                    }
                 }
-                    
-//                    }
+                Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                    Text(text = stringResource(R.string.periodicita))
+                    Card(
+                        modifier = Modifier
+                            .clickable { periodicityDialog.value = true }
+                            .fillMaxWidth()
+                            .wrapContentHeight()
+                            .clip(
+                                RoundedCornerShape(11.dp)
+                            )
+                    ) {
+                        Text(text = periodicity.value, modifier = Modifier.padding(16.dp))
+                    }
                 }
-//            }
+            }
         }
     )
 
 
     if (invitedDialog.value) {
+        val snapshot = Snapshot.takeSnapshot()
         Dialog(onDismissRequest = { invitedDialog.value = false }) {
             Box(
                 modifier = Modifier
                     .background(MaterialTheme.colorScheme.surface, RoundedCornerShape(8.dp))
                     .padding(horizontal = 16.dp, vertical = 16.dp)
-                    .height(600.dp)
+                    .height(500.dp)
             ) {
                 Column() {
                     LazyColumn(
                         verticalArrangement = Arrangement.spacedBy(16.dp),
                         modifier = Modifier
-                            .wrapContentSize()
+                            .fillMaxWidth()
                             .weight(1f)
-                            .padding(bottom = 6.dp)
+                            .padding(bottom = 10.dp)
                     ) {
-                        items(invited.value) { person ->
-                            Text(text = person)
+                        items(people) { person ->
+                            val checkedState = remember { person.isChecked }
+                            Row(
+                                horizontalArrangement = Arrangement.SpaceBetween,
+                                verticalAlignment = Alignment.CenterVertically,
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .clickable {
+                                        checkedState.value = !checkedState.value
+                                        person.isChecked = checkedState
+                                    }
+                            ) {
+                                Text(text = person.name)
+                                Checkbox(checked = checkedState.value, onCheckedChange = {
+                                    checkedState.value = it
+                                    person.isChecked = checkedState
+                                })
+                            }
+                            Divider()
                         }
                     }
                     Row(
                         horizontalArrangement = Arrangement.SpaceEvenly,
                         modifier = Modifier.fillMaxWidth()
                     ) {
-                        Button(onClick = { /*TODO*/ }) {
-                            Text(text = "Annulla")
+                        Button(onClick = {
+                            for (person in people) {
+                                person.isChecked.value = snapshot.enter { person.isChecked.value }
+                            }
+                            invitedDialog.value = false
+                        }) {
+                            Text(text = stringResource(R.string.annulla))
                         }
-                        Button(onClick = { /*TODO*/ }) {
-                            Text(text = "Conferma")
+                        Button(onClick = { invitedDialog.value = false }) {
+                            Text(text = stringResource(R.string.conferma))
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    if (periodicityDialog.value) {
+        Dialog(onDismissRequest = { invitedDialog.value = false }) {
+            Box(
+                modifier = Modifier
+                    .background(MaterialTheme.colorScheme.surface, RoundedCornerShape(8.dp))
+                    .padding(start = 16.dp, end = 16.dp, top = 16.dp, bottom = 5.dp)
+            ) {
+                Column() {
+                    LazyColumn(
+                        verticalArrangement = Arrangement.spacedBy(16.dp),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                    ) {
+                        items(Appointment.Periodicity.values()) { item ->
+                            Row(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .height(40.dp)
+                                    .clickable {
+                                        periodicity.value = item.toString()
+                                    }
+                            ) {
+                                Text(text = item.toString())
+                            }
+                            Divider()
                         }
                     }
                 }
@@ -226,7 +322,7 @@ fun AppointmentDetailsScreen(
                     navController.navigateUp()
                 }
                 ) {
-                    Text(text = "Conferma")
+                    Text(text = stringResource(id = R.string.conferma))
                 }
             },
             dismissButton = {
@@ -238,4 +334,12 @@ fun AppointmentDetailsScreen(
                 }
             })
     }
+}
+
+fun createPeople(people: Map<String, Boolean>): MutableList<Person> {
+    val list = mutableListOf<Person>()
+    for (person in people) {
+        list.add(Person(person.key, mutableStateOf(person.value)))
+    }
+    return list
 }
