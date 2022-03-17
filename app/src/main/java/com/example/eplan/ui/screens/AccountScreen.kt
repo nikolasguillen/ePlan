@@ -5,6 +5,8 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -18,7 +20,17 @@ const val name = "Nikolas"
 @Composable
 fun AccountScreen(navController: NavHostController) {
     Scaffold(
-        topBar = { TopBar(title = "Ciao $name!") },
+        topBar = {
+            SmallTopAppBar(
+                title = { Text(text = "Ciao $name!") },
+                navigationIcon = {
+                    IconButton(
+                        onClick = { navController.popBackStack() }) {
+                        Icon(imageVector = Icons.Filled.ArrowBack, contentDescription = "go back")
+                    }
+                }
+            )
+        },
         content = {
             Column(
                 modifier = Modifier.padding(

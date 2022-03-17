@@ -67,8 +67,8 @@ fun ApplicationNavGraph(navController: NavHostController) {
                         Appointment.Periodicity.Bimestrale.toString(),
                         "27-02-2022",
                         true,
-                        10,
-                        "min"
+                        "10",
+                        "minuti"
                     )
                 )
                 i++
@@ -76,7 +76,7 @@ fun ApplicationNavGraph(navController: NavHostController) {
             AppointmentsScreen(navController = navController, appointments = appointments)
         }
         // Account
-        composable(route = NavigationItem.Account.route) {
+        composable(route = "account") {
             AccountScreen(navController = navController)
         }
         // Dettaglio attività

@@ -1,57 +1,53 @@
 package com.example.eplan.ui.items
 
+import android.app.DatePickerDialog
 import android.app.TimePickerDialog
 import android.content.Context
-import android.graphics.drawable.shapes.OvalShape
 import android.os.Build
-import com.example.eplan.R
+import android.util.Log
 import android.view.View
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.isSystemInDarkTheme
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.*
+import androidx.compose.material.OutlinedTextField
+import androidx.compose.material.Switch
+import androidx.compose.material.SwitchDefaults
+import androidx.compose.material.TextFieldDefaults
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AccountCircle
+import androidx.compose.material.icons.outlined.AccountCircle
 import androidx.compose.material3.*
-import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.Card
-import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedButton
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
-import androidx.navigation.NavController
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
+import com.example.eplan.R
 import com.example.eplan.model.Appointment
 import com.example.eplan.model.WorkActivity
 import com.example.eplan.model.toJson
 import com.shrikanthravi.collapsiblecalendarview.data.Day
 import com.shrikanthravi.collapsiblecalendarview.widget.CollapsibleCalendar
+import java.util.*
 
 @Composable
 fun MyAppTheme(
@@ -75,16 +71,25 @@ fun MyAppTheme(
 }
 
 @Composable
-fun TopBar(title: String) {
-    SmallTopAppBar(title = { Text(text = title) })
+fun TopBar(title: String, navController: NavHostController) {
+    SmallTopAppBar(
+        title = { Text(text = title) },
+        actions = {
+            IconButton(onClick = { navController.navigate("account") }) {
+                Icon(
+                    imageVector = Icons.Filled.AccountCircle,
+                    contentDescription = "account",
+                    modifier = Modifier.size(32.dp)
+                )
+            }
+        })
 }
 
 @Composable
-fun BottomNavBar(navController: NavController) {
+fun BottomNavBar(navController: NavHostController) {
     val items = listOf(
         NavigationItem.Home,
-        NavigationItem.Appointments,
-        NavigationItem.Account
+        NavigationItem.Appointments
     )
 
     val navBackStackEntry by navController.currentBackStackEntryAsState()
@@ -152,7 +157,7 @@ fun AppointmentCard(
         modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = 10.dp, vertical = 5.dp)
-            .clip(RoundedCornerShape(8.dp))
+            .clip(RoundedCornerShape(11.dp))
             .clickable {
                 val argument = appointment.toJson()
                 navController.navigate("appointmentDetails/$argument")
@@ -293,22 +298,81 @@ private fun customTimePicker(time: MutableState<String>, context: Context) {
 
 }
 
+private fun customDatePicker(date: MutableState<String>, context: Context) {
+
+    val datePickerDialog = DatePickerDialog(
+        context,
+        R.style.MyTimePickerDialogStyle,
+        { _, year: Int, month: Int, dayOfMonth: Int ->
+            Log.println(Log.DEBUG, "Data click: ", month.toString())
+            date.value =
+                "${String.format("%02d", dayOfMonth)}-${String.format("%02d", month + 1)}-${year}"
+        },
+        Integer.parseInt(date.value.split("-")[2]),
+        Integer.parseInt(date.value.split("-")[1]) - 1,
+        Integer.parseInt(date.value.split("-")[0])
+    )
+
+    datePickerDialog.show()
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CustomTimeButton(time: MutableState<String>, label: String, context: Context) {
-    OutlinedButton(
-        modifier = Modifier.width(150.dp),
-        onClick = { customTimePicker(time, context) },
-        shape = RoundedCornerShape(8.dp),
-        border = BorderStroke(1.dp, MaterialTheme.colorScheme.onSurfaceVariant),
-        colors = ButtonDefaults.outlinedButtonColors(
-            containerColor = Color.Transparent,
-            contentColor = MaterialTheme.colorScheme.onSurfaceVariant
-        )
+    Card(
+        modifier = Modifier
+            .width(150.dp)
+            .clip(RoundedCornerShape(11.dp))
+            .clickable { customTimePicker(time, context) }
     )
     {
         Text(
             text = label + ": " + time.value,
-            style = MaterialTheme.typography.bodyMedium
+            style = MaterialTheme.typography.bodyMedium,
+            modifier = Modifier
+                .padding(16.dp)
+                .align(Alignment.CenterHorizontally)
         )
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun CustomDateButton(date: MutableState<String>, context: Context) {
+    /*Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clip(RoundedCornerShape(11.dp))
+            .clickable { customDatePicker(date, context) }
+    )
+    {
+        Text(
+            text = date.value,
+            style = MaterialTheme.typography.bodyMedium,
+            modifier = Modifier
+                .padding(16.dp)
+                .align(Alignment.CenterHorizontally)
+        )
+    }*/
+    Box {
+        OutlinedTextField(
+            value = date.value,
+            onValueChange = { date.value = it },
+            label = { Text(text = stringResource(R.string.fine_periodicita)) },
+            shape = RoundedCornerShape(8.dp),
+            colors = TextFieldDefaults.outlinedTextFieldColors(
+                textColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                cursorColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                focusedBorderColor = MaterialTheme.colorScheme.primary,
+                unfocusedBorderColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                backgroundColor = Color.Transparent,
+                disabledTextColor = Color.Transparent
+            )
+        )
+        Box(
+            modifier = Modifier
+                .matchParentSize()
+                .alpha(0f)
+                .clickable { customDatePicker(date, context) })
     }
 }

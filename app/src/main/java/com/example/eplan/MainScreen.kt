@@ -18,9 +18,7 @@ fun MainScreen() {
         bottomBar = {
             val cr = currentRoute(navController = navController)
             if (cr?.contains("activityDetails") == false && !cr.contains("appointmentDetails")) {
-                BottomNavBar(
-                    navController = navController
-                )
+                BottomNavBar(navController = navController)
             }
         }
     ) {

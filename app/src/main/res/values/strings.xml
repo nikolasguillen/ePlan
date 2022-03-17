@@ -3,6 +3,8 @@
     <string name="appuntamenti">Appuntamenti</string>
     <string name="conferma">Conferma</string>
     <string name="annulla">Annulla</string>
-    <string name="periodicita">Periodicità</string>
+    <string name="periodicita">Periodicità:</string>
     <string name="nessun_invitato">Nessun invitato</string>
+    <string name="foglio_ore">Foglio ore</string>
+    <string name="fine_periodicita">Fine periodicità</string>
 </resources>

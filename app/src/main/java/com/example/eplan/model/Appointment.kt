@@ -18,7 +18,7 @@ data class Appointment(
     val periodicity: String,
     val periodicityEnd: String,
     val memo: Boolean,
-    val warningTime: Int,
+    val warningTime: String,
     val warningUnit: String
 ) {
     enum class Periodicity {

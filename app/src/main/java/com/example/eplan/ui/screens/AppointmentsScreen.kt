@@ -10,7 +10,9 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavHostController
+import com.example.eplan.R
 import com.example.eplan.model.Appointment
 import com.example.eplan.model.WorkActivity
 import com.example.eplan.ui.items.*
@@ -21,7 +23,7 @@ fun AppointmentsScreen(navController: NavHostController, appointments: MutableLi
 
     Scaffold(
         bottomBar = { BottomNavBar(navController = navController) },
-        topBar = { TopBar("Appuntamenti") },
+        topBar = { TopBar(stringResource(R.string.appuntamenti), navController = navController) },
         floatingActionButton = {
             FloatingActionButton(onClick = { /*TODO*/ }) {
                 Icon(imageVector = Icons.Outlined.Create, contentDescription = "Aggiungi attività")

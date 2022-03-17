@@ -9,7 +9,9 @@ import androidx.compose.material.icons.outlined.Create
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavHostController
+import com.example.eplan.R
 import com.example.eplan.model.WorkActivity
 import com.example.eplan.ui.items.ActivityCard
 import com.example.eplan.ui.items.BottomNavBar
@@ -21,7 +23,7 @@ import com.example.eplan.ui.items.TopBar
 fun HomeScreen(navController: NavHostController, workActivities: MutableList<WorkActivity>) {
     Scaffold(
         bottomBar = { BottomNavBar(navController = navController) },
-        topBar = { TopBar("Foglio ore") },
+        topBar = { TopBar(stringResource(R.string.foglio_ore), navController = navController) },
         floatingActionButton = {
             FloatingActionButton(onClick = { /*TODO*/ }) {
                 Icon(imageVector = Icons.Outlined.Create, contentDescription = "Aggiungi attività")

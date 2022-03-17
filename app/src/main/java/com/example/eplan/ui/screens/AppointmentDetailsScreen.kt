@@ -1,6 +1,5 @@
 package com.example.eplan.ui.screens
 
-import android.util.Log
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
@@ -9,7 +8,8 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.*
+import androidx.compose.material.OutlinedTextField
+import androidx.compose.material.TextFieldDefaults
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.outlined.Delete
@@ -18,7 +18,6 @@ import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.Checkbox
-import androidx.compose.material3.Divider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -35,17 +34,13 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.navigation.NavHostController
 import com.example.eplan.R
 import com.example.eplan.model.Appointment
 import com.example.eplan.model.Person
-import com.example.eplan.ui.items.CustomSwitch
-import com.example.eplan.ui.items.CustomTextField
-import com.example.eplan.ui.items.CustomTimeButton
-import com.example.eplan.ui.items.SaveItems
+import com.example.eplan.ui.items.*
 
 @OptIn(ExperimentalMaterial3Api::class, androidx.compose.material.ExperimentalMaterialApi::class)
 @Composable
@@ -76,6 +71,7 @@ fun AppointmentDetailsScreen(
     val backDialog = remember { mutableStateOf(false) }
     val invitedDialog = remember { mutableStateOf(false) }
     val periodicityDialog = remember { mutableStateOf(false) }
+    val timeUnitDialog = remember { mutableStateOf(false) }
 
     Scaffold(
         topBar = {
@@ -214,10 +210,95 @@ fun AppointmentDetailsScreen(
                         Text(text = periodicity.value, modifier = Modifier.padding(16.dp))
                     }
                 }
+                Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                    Text(text = "Fine periodicità:")
+                    CustomDateButton(date = date, context = navController.context)
+                }
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Text(text = "Contabilizza come intervento")
+                    CustomSwitch(memo)
+                }
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Text(text = "Avvisami tramite email")
+                    CustomSwitch()
+                }
+                Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                    Text(text = "Con un preavviso di:")
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(4.dp),
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        OutlinedTextField(
+                            value = warningTime.value,
+                            onValueChange = { warningTime.value = it },
+                            label = { Text(text = "Tempo") },
+                            shape = RoundedCornerShape(8.dp),
+                            colors = TextFieldDefaults.outlinedTextFieldColors(
+                                textColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                                cursorColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                                focusedBorderColor = MaterialTheme.colorScheme.primary,
+                                unfocusedBorderColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                                backgroundColor = Color.Transparent,
+                                disabledTextColor = Color.Transparent
+                            ),
+                            modifier = Modifier.weight(7f),
+                            singleLine = true,
+                            keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number)
+                        )
+                        Card(
+                            modifier = Modifier
+                                .clip(RoundedCornerShape(11.dp))
+                                .fillMaxHeight()
+                                .clickable { timeUnitDialog.value = true }
+                                .weight(3f)
+                        ) {
+                            Text(text = warningUnit.value, modifier = Modifier.padding(16.dp))
+                        }
+                    }
+                }
             }
         }
     )
 
+    if (timeUnitDialog.value) {
+        Dialog(onDismissRequest = { timeUnitDialog.value = false }) {
+            Box(
+                modifier = Modifier
+                    .background(MaterialTheme.colorScheme.surface, RoundedCornerShape(8.dp))
+            ) {
+                Column() {
+                    LazyColumn(
+                        verticalArrangement = Arrangement.spacedBy(8.dp),
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        items(listOf("minuti", "ore", "giorni")) { item ->
+                            Row(
+                                verticalAlignment = Alignment.CenterVertically,
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .height(40.dp)
+                                    .clickable {
+                                        warningUnit.value = item
+                                        timeUnitDialog.value = false
+                                    }
+                            ) {
+                                Text(text = item, modifier = Modifier.padding(horizontal = 16.dp))
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
 
     if (invitedDialog.value) {
         val snapshot = Snapshot.takeSnapshot()
@@ -226,11 +307,11 @@ fun AppointmentDetailsScreen(
                 modifier = Modifier
                     .background(MaterialTheme.colorScheme.surface, RoundedCornerShape(8.dp))
                     .padding(horizontal = 16.dp, vertical = 16.dp)
-                    .height(500.dp)
+                    .requiredHeightIn(max = 500.dp)
             ) {
                 Column() {
                     LazyColumn(
-                        verticalArrangement = Arrangement.spacedBy(16.dp),
+                        verticalArrangement = Arrangement.spacedBy(10.dp),
                         modifier = Modifier
                             .fillMaxWidth()
                             .weight(1f)
@@ -254,7 +335,6 @@ fun AppointmentDetailsScreen(
                                     person.isChecked = checkedState
                                 })
                             }
-                            Divider()
                         }
                     }
                     Row(
@@ -279,7 +359,7 @@ fun AppointmentDetailsScreen(
     }
 
     if (periodicityDialog.value) {
-        Dialog(onDismissRequest = { invitedDialog.value = false }) {
+        Dialog(onDismissRequest = { periodicityDialog.value = false }) {
             Box(
                 modifier = Modifier
                     .background(MaterialTheme.colorScheme.surface, RoundedCornerShape(8.dp))
@@ -287,22 +367,22 @@ fun AppointmentDetailsScreen(
             ) {
                 Column() {
                     LazyColumn(
-                        verticalArrangement = Arrangement.spacedBy(16.dp),
-                        modifier = Modifier
-                            .fillMaxWidth()
+                        verticalArrangement = Arrangement.spacedBy(10.dp),
+                        modifier = Modifier.fillMaxWidth()
                     ) {
                         items(Appointment.Periodicity.values()) { item ->
                             Row(
+                                verticalAlignment = Alignment.CenterVertically,
                                 modifier = Modifier
                                     .fillMaxWidth()
                                     .height(40.dp)
                                     .clickable {
                                         periodicity.value = item.toString()
+                                        periodicityDialog.value = false
                                     }
                             ) {
                                 Text(text = item.toString())
                             }
-                            Divider()
                         }
                     }
                 }
