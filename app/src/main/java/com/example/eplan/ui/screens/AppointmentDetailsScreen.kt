@@ -1,5 +1,6 @@
 package com.example.eplan.ui.screens
 
+import android.view.Gravity
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
@@ -41,6 +42,7 @@ import com.example.eplan.R
 import com.example.eplan.model.Appointment
 import com.example.eplan.model.Person
 import com.example.eplan.ui.items.*
+import com.google.accompanist.insets.rememberInsetsPaddingValues
 
 @OptIn(ExperimentalMaterial3Api::class, androidx.compose.material.ExperimentalMaterialApi::class)
 @Composable
@@ -173,12 +175,10 @@ fun AppointmentDetailsScreen(
                     Text(text = "Invita anche:")
                     Card(
                         modifier = Modifier
+                            .clip(RoundedCornerShape(11.dp))
                             .clickable { invitedDialog.value = true }
                             .fillMaxWidth()
                             .wrapContentHeight()
-                            .clip(
-                                RoundedCornerShape(11.dp)
-                            )
                     ) {
                         if (people.all { person ->
                                 !person.isChecked.value
@@ -196,30 +196,36 @@ fun AppointmentDetailsScreen(
                         }
                     }
                 }
-                Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                    Text(text = stringResource(R.string.periodicita))
-                    Card(
-                        modifier = Modifier
-                            .clickable { periodicityDialog.value = true }
-                            .fillMaxWidth()
-                            .wrapContentHeight()
-                            .clip(
-                                RoundedCornerShape(11.dp)
-                            )
+                Row(horizontalArrangement = Arrangement.SpaceBetween) {
+                    Column(
+                        verticalArrangement = Arrangement.spacedBy(8.dp),
+                        modifier = Modifier.weight(1f),
                     ) {
-                        Text(text = periodicity.value, modifier = Modifier.padding(16.dp))
+                        Text(text = stringResource(R.string.periodicita))
+                        Card(
+                            modifier = Modifier
+                                .clip(RoundedCornerShape(11.dp))
+                                .fillMaxWidth()
+                                .clickable { periodicityDialog.value = true }
+                        ) {
+                            Text(text = periodicity.value, modifier = Modifier.padding(16.dp))
+                        }
                     }
-                }
-                Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                    Text(text = "Fine periodicità:")
-                    CustomDateButton(date = date, context = navController.context)
+                    Spacer(modifier = Modifier.size(16.dp))
+                    Column(
+                        verticalArrangement = Arrangement.spacedBy(8.dp),
+                        modifier = Modifier.weight(1f)
+                    ) {
+                        Text(text = stringResource(R.string.fine_periodicita))
+                        CustomDateButton(date = date, context = navController.context)
+                    }
                 }
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.SpaceBetween,
                     modifier = Modifier.fillMaxWidth()
                 ) {
-                    Text(text = "Contabilizza come intervento")
+                    Text(text = "Attiva promemoria")
                     CustomSwitch(memo)
                 }
                 Row(
@@ -227,8 +233,9 @@ fun AppointmentDetailsScreen(
                     horizontalArrangement = Arrangement.SpaceBetween,
                     modifier = Modifier.fillMaxWidth()
                 ) {
+                    val test = remember { mutableStateOf(true) }
                     Text(text = "Avvisami tramite email")
-                    CustomSwitch()
+                    CustomSwitch(test, memo)
                 }
                 Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
                     Text(text = "Con un preavviso di:")
@@ -240,7 +247,8 @@ fun AppointmentDetailsScreen(
                         OutlinedTextField(
                             value = warningTime.value,
                             onValueChange = { warningTime.value = it },
-                            label = { Text(text = "Tempo") },
+                            label = null,
+                            enabled = memo.value,
                             shape = RoundedCornerShape(8.dp),
                             colors = TextFieldDefaults.outlinedTextFieldColors(
                                 textColor = MaterialTheme.colorScheme.onSurfaceVariant,
@@ -258,12 +266,13 @@ fun AppointmentDetailsScreen(
                             modifier = Modifier
                                 .clip(RoundedCornerShape(11.dp))
                                 .fillMaxHeight()
-                                .clickable { timeUnitDialog.value = true }
+                                .clickable { if (memo.value) timeUnitDialog.value = true }
                                 .weight(3f)
                         ) {
                             Text(text = warningUnit.value, modifier = Modifier.padding(16.dp))
                         }
                     }
+
                 }
             }
         }
@@ -277,7 +286,6 @@ fun AppointmentDetailsScreen(
             ) {
                 Column() {
                     LazyColumn(
-                        verticalArrangement = Arrangement.spacedBy(8.dp),
                         modifier = Modifier.fillMaxWidth()
                     ) {
                         items(listOf("minuti", "ore", "giorni")) { item ->
@@ -285,13 +293,19 @@ fun AppointmentDetailsScreen(
                                 verticalAlignment = Alignment.CenterVertically,
                                 modifier = Modifier
                                     .fillMaxWidth()
-                                    .height(40.dp)
+                                    .wrapContentHeight()
                                     .clickable {
                                         warningUnit.value = item
                                         timeUnitDialog.value = false
                                     }
                             ) {
-                                Text(text = item, modifier = Modifier.padding(horizontal = 16.dp))
+                                Text(
+                                    text = item,
+                                    modifier = Modifier.padding(
+                                        horizontal = 16.dp,
+                                        vertical = 12.dp
+                                    )
+                                )
                             }
                         }
                     }
@@ -306,12 +320,11 @@ fun AppointmentDetailsScreen(
             Box(
                 modifier = Modifier
                     .background(MaterialTheme.colorScheme.surface, RoundedCornerShape(8.dp))
-                    .padding(horizontal = 16.dp, vertical = 16.dp)
-                    .requiredHeightIn(max = 500.dp)
+                    .padding(bottom = 8.dp)
+                    .height(500.dp)
             ) {
                 Column() {
                     LazyColumn(
-                        verticalArrangement = Arrangement.spacedBy(10.dp),
                         modifier = Modifier
                             .fillMaxWidth()
                             .weight(1f)
@@ -329,11 +342,18 @@ fun AppointmentDetailsScreen(
                                         person.isChecked = checkedState
                                     }
                             ) {
-                                Text(text = person.name)
+                                Text(
+                                    text = person.name,
+                                    modifier = Modifier.padding(
+                                        start = 16.dp,
+                                        top = 12.dp,
+                                        bottom = 12.dp
+                                    )
+                                )
                                 Checkbox(checked = checkedState.value, onCheckedChange = {
                                     checkedState.value = it
                                     person.isChecked = checkedState
-                                })
+                                }, modifier = Modifier.padding(end = 16.dp))
                             }
                         }
                     }
@@ -363,11 +383,9 @@ fun AppointmentDetailsScreen(
             Box(
                 modifier = Modifier
                     .background(MaterialTheme.colorScheme.surface, RoundedCornerShape(8.dp))
-                    .padding(start = 16.dp, end = 16.dp, top = 16.dp, bottom = 5.dp)
             ) {
                 Column() {
                     LazyColumn(
-                        verticalArrangement = Arrangement.spacedBy(10.dp),
                         modifier = Modifier.fillMaxWidth()
                     ) {
                         items(Appointment.Periodicity.values()) { item ->
@@ -375,13 +393,19 @@ fun AppointmentDetailsScreen(
                                 verticalAlignment = Alignment.CenterVertically,
                                 modifier = Modifier
                                     .fillMaxWidth()
-                                    .height(40.dp)
+                                    .wrapContentHeight()
                                     .clickable {
                                         periodicity.value = item.toString()
                                         periodicityDialog.value = false
                                     }
                             ) {
-                                Text(text = item.toString())
+                                Text(
+                                    text = item.toString(),
+                                    modifier = Modifier.padding(
+                                        horizontal = 16.dp,
+                                        vertical = 16.dp
+                                    )
+                                )
                             }
                         }
                     }

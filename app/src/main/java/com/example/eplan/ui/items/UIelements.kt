@@ -253,6 +253,7 @@ fun CustomTextField(
         value = value.value,
         onValueChange = { value.value = it },
         label = { Text(text = label) },
+        textStyle = MaterialTheme.typography.bodyLarge,
         shape = RoundedCornerShape(8.dp),
         colors = TextFieldDefaults.outlinedTextFieldColors(
             textColor = MaterialTheme.colorScheme.onSurfaceVariant,
@@ -269,10 +270,11 @@ fun CustomTextField(
 }
 
 @Composable
-fun CustomSwitch(value: MutableState<Boolean> = mutableStateOf(true)) {
+fun CustomSwitch(value: MutableState<Boolean> = mutableStateOf(true), enabled: MutableState<Boolean> = mutableStateOf(true)) {
     Switch(
         checked = value.value,
         onCheckedChange = { value.value = it },
+        enabled = enabled.value,
         colors = SwitchDefaults.colors(
             checkedThumbColor = MaterialTheme.colorScheme.primary,
             checkedTrackColor = MaterialTheme.colorScheme.primary,
@@ -339,22 +341,21 @@ fun CustomTimeButton(time: MutableState<String>, label: String, context: Context
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CustomDateButton(date: MutableState<String>, context: Context) {
-    /*Card(
+    Card(
         modifier = Modifier
-            .fillMaxWidth()
             .clip(RoundedCornerShape(11.dp))
+            .fillMaxWidth()
             .clickable { customDatePicker(date, context) }
     )
     {
         Text(
             text = date.value,
-            style = MaterialTheme.typography.bodyMedium,
             modifier = Modifier
                 .padding(16.dp)
                 .align(Alignment.CenterHorizontally)
         )
-    }*/
-    Box {
+    }
+    /*Box {
         OutlinedTextField(
             value = date.value,
             onValueChange = { date.value = it },
@@ -374,5 +375,5 @@ fun CustomDateButton(date: MutableState<String>, context: Context) {
                 .matchParentSize()
                 .alpha(0f)
                 .clickable { customDatePicker(date, context) })
-    }
+    }*/
 }
