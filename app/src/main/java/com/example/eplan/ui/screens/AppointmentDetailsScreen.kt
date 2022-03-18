@@ -1,6 +1,5 @@
 package com.example.eplan.ui.screens
 
-import android.view.Gravity
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
@@ -42,7 +41,6 @@ import com.example.eplan.R
 import com.example.eplan.model.Appointment
 import com.example.eplan.model.Person
 import com.example.eplan.ui.items.*
-import com.google.accompanist.insets.rememberInsetsPaddingValues
 
 @OptIn(ExperimentalMaterial3Api::class, androidx.compose.material.ExperimentalMaterialApi::class)
 @Composable
@@ -130,10 +128,10 @@ fun AppointmentDetailsScreen(
                     .verticalScroll(rememberScrollState()),
                 verticalArrangement = Arrangement.spacedBy(16.dp),
             ) {
-                CustomTextField(value = name, label = "Attività")
-                CustomTextField(value = title, label = "Titolo")
-                CustomTextField(value = desc, label = "Descrizione")
-                CustomTextField(value = date, label = "Data")
+                CustomInputText(value = name, label = "Attività")
+                CustomInputText(value = title, label = "Titolo")
+                CustomInputText(value = desc, label = "Descrizione")
+                CustomInputText(value = date, label = "Data")
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween
@@ -202,14 +200,20 @@ fun AppointmentDetailsScreen(
                         modifier = Modifier.weight(1f),
                     ) {
                         Text(text = stringResource(R.string.periodicita))
-                        Card(
+                        /*Card(
                             modifier = Modifier
                                 .clip(RoundedCornerShape(11.dp))
                                 .fillMaxWidth()
                                 .clickable { periodicityDialog.value = true }
                         ) {
                             Text(text = periodicity.value, modifier = Modifier.padding(16.dp))
-                        }
+                        }*/
+                        CustomInputDropDown(
+                            value = periodicity,
+                            items = appointment.getPeriodicities(),
+                            enabled = memo,
+                            size = Modifier.fillMaxWidth()
+                        )
                     }
                     Spacer(modifier = Modifier.size(16.dp))
                     Column(
@@ -241,14 +245,15 @@ fun AppointmentDetailsScreen(
                     Text(text = "Con un preavviso di:")
                     Row(
                         verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.spacedBy(4.dp),
+                        horizontalArrangement = Arrangement.SpaceBetween,
                         modifier = Modifier.fillMaxWidth()
                     ) {
                         OutlinedTextField(
                             value = warningTime.value,
                             onValueChange = { warningTime.value = it },
-                            label = null,
-                            enabled = memo.value,
+                            label = { },
+                            readOnly = !memo.value,
+                            textStyle = MaterialTheme.typography.bodyLarge,
                             shape = RoundedCornerShape(8.dp),
                             colors = TextFieldDefaults.outlinedTextFieldColors(
                                 textColor = MaterialTheme.colorScheme.onSurfaceVariant,
@@ -258,21 +263,17 @@ fun AppointmentDetailsScreen(
                                 backgroundColor = Color.Transparent,
                                 disabledTextColor = Color.Transparent
                             ),
-                            modifier = Modifier.weight(7f),
+                            modifier = Modifier.width(250.dp),
                             singleLine = true,
                             keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number)
                         )
-                        Card(
-                            modifier = Modifier
-                                .clip(RoundedCornerShape(11.dp))
-                                .fillMaxHeight()
-                                .clickable { if (memo.value) timeUnitDialog.value = true }
-                                .weight(3f)
-                        ) {
-                            Text(text = warningUnit.value, modifier = Modifier.padding(16.dp))
-                        }
+                        CustomInputDropDown(
+                            value = warningUnit,
+                            items = mutableListOf("minuti", "ore", "giorni"),
+                            enabled = memo,
+                            size = Modifier.width(100.dp)
+                        )
                     }
-
                 }
             }
         }

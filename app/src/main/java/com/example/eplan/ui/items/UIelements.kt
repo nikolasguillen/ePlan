@@ -20,12 +20,10 @@ import androidx.compose.material.SwitchDefaults
 import androidx.compose.material.TextFieldDefaults
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
+import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.outlined.AccountCircle
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
@@ -36,6 +34,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.navigation.NavDestination.Companion.hierarchy
@@ -108,8 +107,7 @@ fun BottomNavBar(navController: NavHostController) {
                     }
                 },
                 icon = { Icon(painterResource(id = item.icon), contentDescription = item.title) },
-                label = { Text(text = item.title) },
-                modifier = Modifier.clip(CircleShape)
+                label = { Text(text = item.title) }
             )
         }
     }
@@ -244,7 +242,7 @@ fun SetupCalendar() {
 }
 
 @Composable
-fun CustomTextField(
+fun CustomInputText(
     value: MutableState<String>,
     label: String,
     numField: Boolean = false
@@ -269,8 +267,60 @@ fun CustomTextField(
     )
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CustomSwitch(value: MutableState<Boolean> = mutableStateOf(true), enabled: MutableState<Boolean> = mutableStateOf(true)) {
+fun CustomInputDropDown(
+    value: MutableState<String>,
+    items: MutableList<String>,
+    enabled: MutableState<Boolean>,
+    size: Modifier
+) {
+    val showDropDown = remember { mutableStateOf(false) }
+
+    Box() {
+        OutlinedCard(shape = RoundedCornerShape(8.dp), modifier = size) {
+            Row(
+                modifier = size.clickable { if (enabled.value) showDropDown.value = true },
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(text = value.value, modifier = Modifier.padding(start = 16.dp, top = 16.dp, bottom = 16.dp))
+                IconButton(onClick = { showDropDown.value = true }) {
+                    Icon(
+                        imageVector = Icons.Filled.ArrowDropDown,
+                        contentDescription = "dropdown"
+                    )
+                }
+            }
+        }
+        Box(
+            modifier = Modifier
+                .matchParentSize()
+                .alpha(0f)
+        )
+        DropdownMenu(
+            expanded = showDropDown.value,
+            onDismissRequest = { showDropDown.value = false }
+        ) {
+            items.forEach {
+                Row(modifier = size
+                    .wrapContentHeight()
+                    .clickable {
+                        value.value = it
+                        showDropDown.value = false
+                    }) {
+                    Text(text = it, modifier = Modifier.padding(16.dp))
+                }
+            }
+        }
+    }
+}
+
+@Composable
+fun CustomSwitch(
+    value: MutableState<Boolean> = mutableStateOf(true),
+    enabled: MutableState<Boolean> = mutableStateOf(true)
+) {
     Switch(
         checked = value.value,
         onCheckedChange = { value.value = it },
@@ -355,25 +405,4 @@ fun CustomDateButton(date: MutableState<String>, context: Context) {
                 .align(Alignment.CenterHorizontally)
         )
     }
-    /*Box {
-        OutlinedTextField(
-            value = date.value,
-            onValueChange = { date.value = it },
-            label = { Text(text = stringResource(R.string.fine_periodicita)) },
-            shape = RoundedCornerShape(8.dp),
-            colors = TextFieldDefaults.outlinedTextFieldColors(
-                textColor = MaterialTheme.colorScheme.onSurfaceVariant,
-                cursorColor = MaterialTheme.colorScheme.onSurfaceVariant,
-                focusedBorderColor = MaterialTheme.colorScheme.primary,
-                unfocusedBorderColor = MaterialTheme.colorScheme.onSurfaceVariant,
-                backgroundColor = Color.Transparent,
-                disabledTextColor = Color.Transparent
-            )
-        )
-        Box(
-            modifier = Modifier
-                .matchParentSize()
-                .alpha(0f)
-                .clickable { customDatePicker(date, context) })
-    }*/
 }

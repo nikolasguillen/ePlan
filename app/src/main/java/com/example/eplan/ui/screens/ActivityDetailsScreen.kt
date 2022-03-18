@@ -1,14 +1,11 @@
 package com.example.eplan.ui.screens
 
 import androidx.activity.compose.BackHandler
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.Switch
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.outlined.Delete
@@ -24,10 +21,9 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.example.eplan.R
-import com.example.eplan.model.Person
 import com.example.eplan.model.WorkActivity
 import com.example.eplan.ui.items.CustomSwitch
-import com.example.eplan.ui.items.CustomTextField
+import com.example.eplan.ui.items.CustomInputText
 import com.example.eplan.ui.items.CustomTimeButton
 import com.example.eplan.ui.items.SaveItems
 
@@ -106,8 +102,8 @@ fun ActivityDetailsScreen(
                     .verticalScroll(rememberScrollState()),
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
-                CustomTextField(value = name, label = "Attività")
-                CustomTextField(value = desc, label = "Descrizione")
+                CustomInputText(value = name, label = "Attività")
+                CustomInputText(value = desc, label = "Descrizione")
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween
@@ -115,12 +111,12 @@ fun ActivityDetailsScreen(
                     CustomTimeButton(time = start, label = "Ora inizio", context = navController.context)
                     CustomTimeButton(time = end, label = "Ora fine", context = navController.context)
                 }
-                CustomTextField(
+                CustomInputText(
                     value = movingTime,
                     label = "Ore di spostamento",
                     numField = true
                 )
-                CustomTextField(value = km, label = "Km percorsi", numField = true)
+                CustomInputText(value = km, label = "Km percorsi", numField = true)
                 Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.SpaceBetween, modifier = Modifier.fillMaxWidth()) {
                     Text(text = "Chiudi attività")
                     CustomSwitch(close)

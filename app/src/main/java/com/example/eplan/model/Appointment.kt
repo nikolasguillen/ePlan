@@ -24,6 +24,14 @@ data class Appointment(
     enum class Periodicity {
         Nessuna, Giornaliera, Settimanale, Bisettimanale, Mensile, Bimestrale
     }
+
+    fun getPeriodicities(): MutableList<String> {
+        val p = mutableListOf<String>()
+        for (periodicity in Periodicity.values()) {
+            p.add(periodicity.toString())
+        }
+        return p
+    }
 //    val date: LocalDate =
 //        LocalDate.parse(date, DateTimeFormatter.ofPattern("dd/MM/yyyy", Locale.ITALIAN))
 //    val start: LocalTime =
