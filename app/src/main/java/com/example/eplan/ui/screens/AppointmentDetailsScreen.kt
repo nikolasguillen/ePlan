@@ -1,6 +1,7 @@
 package com.example.eplan.ui.screens
 
 import androidx.activity.compose.BackHandler
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -232,47 +233,51 @@ fun AppointmentDetailsScreen(
                     Text(text = "Attiva promemoria")
                     CustomSwitch(memo)
                 }
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    val test = remember { mutableStateOf(true) }
-                    Text(text = "Avvisami tramite email")
-                    CustomSwitch(test, memo)
-                }
-                Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                    Text(text = "Con un preavviso di:")
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        modifier = Modifier.fillMaxWidth()
-                    ) {
-                        OutlinedTextField(
-                            value = warningTime.value,
-                            onValueChange = { warningTime.value = it },
-                            label = { },
-                            readOnly = !memo.value,
-                            textStyle = MaterialTheme.typography.bodyLarge,
-                            shape = RoundedCornerShape(8.dp),
-                            colors = TextFieldDefaults.outlinedTextFieldColors(
-                                textColor = MaterialTheme.colorScheme.onSurfaceVariant,
-                                cursorColor = MaterialTheme.colorScheme.onSurfaceVariant,
-                                focusedBorderColor = MaterialTheme.colorScheme.primary,
-                                unfocusedBorderColor = MaterialTheme.colorScheme.onSurfaceVariant,
-                                backgroundColor = Color.Transparent,
-                                disabledTextColor = Color.Transparent
-                            ),
-                            modifier = Modifier.width(250.dp),
-                            singleLine = true,
-                            keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number)
-                        )
-                        CustomInputDropDown(
-                            value = warningUnit,
-                            items = mutableListOf("minuti", "ore", "giorni"),
-                            enabled = memo,
-                            size = Modifier.width(100.dp)
-                        )
+                AnimatedVisibility(visible = memo.value) {
+                    Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
+                            val test = remember { mutableStateOf(true) }
+                            Text(text = "Avvisami tramite email")
+                            CustomSwitch(test, memo)
+                        }
+                        Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                            Text(text = "Con un preavviso di:")
+                            Row(
+                                verticalAlignment = Alignment.CenterVertically,
+                                horizontalArrangement = Arrangement.SpaceBetween,
+                                modifier = Modifier.fillMaxWidth()
+                            ) {
+                                OutlinedTextField(
+                                    value = warningTime.value,
+                                    onValueChange = { warningTime.value = it },
+                                    label = { },
+                                    readOnly = !memo.value,
+                                    textStyle = MaterialTheme.typography.bodyLarge,
+                                    shape = RoundedCornerShape(8.dp),
+                                    colors = TextFieldDefaults.outlinedTextFieldColors(
+                                        textColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                                        cursorColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                                        focusedBorderColor = MaterialTheme.colorScheme.primary,
+                                        unfocusedBorderColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                                        backgroundColor = Color.Transparent,
+                                        disabledTextColor = Color.Transparent
+                                    ),
+                                    modifier = Modifier.weight(6f),
+                                    singleLine = true,
+                                    keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number)
+                                )
+                                Spacer(modifier = Modifier.width(12.dp))
+                                CustomInputDropDown(
+                                    value = warningUnit,
+                                    items = mutableListOf("minuti", "ore", "giorni"),
+                                    enabled = memo
+                                )
+                            }
+                        }
                     }
                 }
             }

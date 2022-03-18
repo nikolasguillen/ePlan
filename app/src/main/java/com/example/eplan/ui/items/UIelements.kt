@@ -273,7 +273,7 @@ fun CustomInputDropDown(
     value: MutableState<String>,
     items: MutableList<String>,
     enabled: MutableState<Boolean>,
-    size: Modifier
+    size: Modifier = Modifier
 ) {
     val showDropDown = remember { mutableStateOf(false) }
 
@@ -285,7 +285,7 @@ fun CustomInputDropDown(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(text = value.value, modifier = Modifier.padding(start = 16.dp, top = 16.dp, bottom = 16.dp))
-                IconButton(onClick = { showDropDown.value = true }) {
+                IconButton(onClick = { if (enabled.value) showDropDown.value = true }) {
                     Icon(
                         imageVector = Icons.Filled.ArrowDropDown,
                         contentDescription = "dropdown"
