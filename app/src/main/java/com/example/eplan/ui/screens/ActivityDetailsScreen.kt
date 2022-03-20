@@ -21,7 +21,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.example.eplan.R
-import com.example.eplan.model.WorkActivity
+import com.example.eplan.domain.model.WorkActivity
 import com.example.eplan.ui.items.CustomSwitch
 import com.example.eplan.ui.items.CustomInputText
 import com.example.eplan.ui.items.CustomTimeButton
@@ -37,8 +37,8 @@ fun ActivityDetailsScreen(
 
     val start = remember { mutableStateOf(workActivity.start) }
     val end = remember { mutableStateOf(workActivity.end) }
-    val name = remember { mutableStateOf(workActivity.activityName) }
-    val desc = remember { mutableStateOf(workActivity.activityDescription) }
+    val name = remember { mutableStateOf(workActivity.title) }
+    val desc = remember { mutableStateOf(workActivity.description) }
     val movingTime = remember { mutableStateOf(workActivity.movingTime) }
     val km = remember { mutableStateOf(workActivity.km) }
     val close = remember { mutableStateOf(workActivity.close) }

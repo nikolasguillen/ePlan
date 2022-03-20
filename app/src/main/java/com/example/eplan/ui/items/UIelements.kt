@@ -7,11 +7,9 @@ import android.os.Build
 import android.util.Log
 import android.view.View
 import androidx.appcompat.content.res.AppCompatResources
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.OutlinedTextField
@@ -21,7 +19,6 @@ import androidx.compose.material.TextFieldDefaults
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.ArrowDropDown
-import androidx.compose.material.icons.outlined.AccountCircle
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -32,21 +29,18 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.example.eplan.R
-import com.example.eplan.model.Appointment
-import com.example.eplan.model.WorkActivity
-import com.example.eplan.model.toJson
+import com.example.eplan.domain.model.Appointment
+import com.example.eplan.domain.model.WorkActivity
+import com.example.eplan.domain.util.toJson
 import com.shrikanthravi.collapsiblecalendarview.data.Day
 import com.shrikanthravi.collapsiblecalendarview.widget.CollapsibleCalendar
-import java.util.*
 
 @Composable
 fun MyAppTheme(
@@ -131,11 +125,11 @@ fun ActivityCard(
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
             Text(
-                text = workActivity.activityName.replaceFirstChar { it.uppercase() },
+                text = workActivity.title.replaceFirstChar { it.uppercase() },
                 style = MaterialTheme.typography.titleMedium
             )
             Text(
-                text = workActivity.activityDescription.replaceFirstChar { it.uppercase() },
+                text = workActivity.description.replaceFirstChar { it.uppercase() },
                 style = MaterialTheme.typography.bodyMedium,
                 modifier = Modifier.padding(bottom = 3.dp)
             )

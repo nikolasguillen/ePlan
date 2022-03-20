@@ -1,9 +1,4 @@
-package com.example.eplan.model
-
-import java.time.LocalDate
-import java.time.LocalTime
-import java.time.format.DateTimeFormatter
-import java.util.*
+package com.example.eplan.domain.model
 
 data class Appointment(
     val activity: String,

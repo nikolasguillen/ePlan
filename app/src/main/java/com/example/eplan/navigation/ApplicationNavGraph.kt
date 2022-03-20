@@ -6,9 +6,9 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
-import com.example.eplan.model.Appointment
-import com.example.eplan.model.WorkActivity
-import com.example.eplan.model.fromJson
+import com.example.eplan.domain.model.Appointment
+import com.example.eplan.domain.model.WorkActivity
+import com.example.eplan.domain.util.fromJson
 import com.example.eplan.ui.items.NavigationItem
 import com.example.eplan.ui.screens.*
 

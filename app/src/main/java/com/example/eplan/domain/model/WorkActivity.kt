@@ -1,14 +1,9 @@
-package com.example.eplan.model
-
-import java.time.LocalDate
-import java.time.LocalTime
-import java.time.format.DateTimeFormatter
-import java.util.*
+package com.example.eplan.domain.model
 
 data class WorkActivity(
     val id: Int,
-    val activityName: String,
-    val activityDescription: String,
+    val title: String,
+    val description: String,
     val date: String,
     val start: String,
     val end: String,

@@ -1,4 +1,4 @@
-package com.example.eplan.model
+package com.example.eplan.domain.model
 
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf

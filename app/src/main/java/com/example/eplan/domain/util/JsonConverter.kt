@@ -1,4 +1,4 @@
-package com.example.eplan.model
+package com.example.eplan.domain.util
 
 import com.google.gson.Gson
 

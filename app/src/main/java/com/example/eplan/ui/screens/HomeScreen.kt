@@ -12,7 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavHostController
 import com.example.eplan.R
-import com.example.eplan.model.WorkActivity
+import com.example.eplan.domain.model.WorkActivity
 import com.example.eplan.ui.items.ActivityCard
 import com.example.eplan.ui.items.BottomNavBar
 import com.example.eplan.ui.items.SetupCalendar

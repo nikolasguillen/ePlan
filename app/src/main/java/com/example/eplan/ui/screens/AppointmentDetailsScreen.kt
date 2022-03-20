@@ -39,8 +39,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.navigation.NavHostController
 import com.example.eplan.R
-import com.example.eplan.model.Appointment
-import com.example.eplan.model.Person
+import com.example.eplan.domain.model.Appointment
+import com.example.eplan.domain.model.Person
 import com.example.eplan.ui.items.*
 
 @OptIn(ExperimentalMaterial3Api::class, androidx.compose.material.ExperimentalMaterialApi::class)
