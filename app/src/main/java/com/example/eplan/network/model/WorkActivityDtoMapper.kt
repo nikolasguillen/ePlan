@@ -1,23 +1,22 @@
 package com.example.eplan.network.model
 
 import com.example.eplan.domain.model.WorkActivity
-import com.example.eplan.domain.util.EntityMapper
+import com.example.eplan.domain.util.DomainMapper
 import com.example.eplan.domain.util.durationCalculator
-import java.time.LocalDate
 import java.time.LocalTime
 import java.time.format.DateTimeFormatter
 
-class WorkActivityNetworkMapper : EntityMapper<WorkActivityNetworkEntity, WorkActivity> {
+class WorkActivityDtoMapper : DomainMapper<WorkActivityDto, WorkActivity> {
 
-    override fun mapFromEntity(entity: WorkActivityNetworkEntity): WorkActivity {
-        var startDateTime = dateTimeParser(entity.start)
-        var endDateTime = dateTimeParser(entity.end)
+    override fun mapToDomainModel(model: WorkActivityDto): WorkActivity {
+        var startDateTime = dateTimeParser(model.start)
+        var endDateTime = dateTimeParser(model.end)
         startDateTime = startDateTime.copy(first = dateFromNetwork(startDateTime.first))
         endDateTime = endDateTime.copy(first = dateFromNetwork(endDateTime.first))
         return WorkActivity(
-            id = Integer.parseInt(entity.id),
-            title = entity.title,
-            description = entity.description,
+            id = Integer.parseInt(model.id),
+            title = model.title,
+            description = model.description,
             date = startDateTime.first,
             start = startDateTime.second,
             end = endDateTime.second,
@@ -27,7 +26,7 @@ class WorkActivityNetworkMapper : EntityMapper<WorkActivityNetworkEntity, WorkAc
         )
     }
 
-    override fun mapToEntity(domainModel: WorkActivity): WorkActivityNetworkEntity {
+    override fun mapFromDomainModel(domainModel: WorkActivity): WorkActivityDto {
         val startDateTime = dateToNetwork(domainModel.date) + " " + domainModel.start
         val endDateTime = dateToNetwork(domainModel.date) + " " + domainModel.end
         val formatter =  DateTimeFormatter.ofPattern("hh:mm:ss")
@@ -35,7 +34,7 @@ class WorkActivityNetworkMapper : EntityMapper<WorkActivityNetworkEntity, WorkAc
         val endTime = LocalTime.parse(domainModel.end, formatter)
 
 
-        return WorkActivityNetworkEntity(
+        return WorkActivityDto(
             id = domainModel.id.toString(),
             title = domainModel.title,
             description = domainModel.description,
@@ -46,12 +45,12 @@ class WorkActivityNetworkMapper : EntityMapper<WorkActivityNetworkEntity, WorkAc
         )
     }
 
-    fun fromEntityList(initial: List<WorkActivityNetworkEntity>): List<WorkActivity> {
-        return initial.map { mapFromEntity(it) }
+    fun fromEntityList(initial: List<WorkActivityDto>): List<WorkActivity> {
+        return initial.map { mapToDomainModel(it) }
     }
 
-    fun toEntityList(initial: List<WorkActivity>): List<WorkActivityNetworkEntity> {
-        return initial.map { mapToEntity(it) }
+    fun toEntityList(initial: List<WorkActivity>): List<WorkActivityDto> {
+        return initial.map { mapFromDomainModel(it) }
     }
 
     private fun dateTimeParser(dateTime: String): Pair<String, String> {

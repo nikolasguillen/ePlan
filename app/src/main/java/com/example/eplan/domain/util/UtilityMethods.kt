@@ -5,5 +5,5 @@ import java.time.LocalTime
 
 fun durationCalculator(start: LocalTime, end: LocalTime): String {
     val diff = Duration.between(start, end).toMinutes()
-    return (diff/60).toString()
+    return (diff.toFloat()/60.0).toString()
 }
