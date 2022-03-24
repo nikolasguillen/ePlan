@@ -1,10 +1,9 @@
-package com.example.eplan.ui.items
+package com.example.eplan.presentation.ui.items
 
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
 import android.content.Context
 import android.os.Build
-import android.util.Log
 import android.view.View
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.compose.foundation.clickable
@@ -30,6 +29,7 @@ import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.navigation.NavDestination.Companion.hierarchy
@@ -89,7 +89,7 @@ fun BottomNavBar(navController: NavHostController) {
     val currentDestination = navBackStackEntry?.destination
 
 
-    NavigationBar() {
+    NavigationBar {
         items.forEach { item ->
             NavigationBarItem(
                 selected = currentDestination?.hierarchy?.any {
@@ -131,10 +131,12 @@ fun ActivityCard(
             Text(
                 text = workActivity.description.replaceFirstChar { it.uppercase() },
                 style = MaterialTheme.typography.bodyMedium,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
                 modifier = Modifier.padding(bottom = 3.dp)
             )
-            Text(text = workActivity.start.toString(), style = MaterialTheme.typography.labelSmall)
-            Text(text = workActivity.end.toString(), style = MaterialTheme.typography.labelSmall)
+            Text(text = workActivity.start, style = MaterialTheme.typography.labelSmall)
+            Text(text = workActivity.end, style = MaterialTheme.typography.labelSmall)
         }
     }
 }
@@ -271,7 +273,7 @@ fun CustomInputDropDown(
 ) {
     val showDropDown = remember { mutableStateOf(false) }
 
-    Box() {
+    Box {
         OutlinedCard(shape = RoundedCornerShape(8.dp), modifier = size) {
             Row(
                 modifier = size.clickable { if (enabled.value) showDropDown.value = true },
@@ -340,6 +342,7 @@ private fun customTimePicker(time: MutableState<String>, context: Context) {
         true
     )
 
+
     timePickerDialog.show()
 
 }
@@ -350,7 +353,6 @@ private fun customDatePicker(date: MutableState<String>, context: Context) {
         context,
         R.style.MyTimePickerDialogStyle,
         { _, year: Int, month: Int, dayOfMonth: Int ->
-            Log.println(Log.DEBUG, "Data click: ", month.toString())
             date.value =
                 "${String.format("%02d", dayOfMonth)}-${String.format("%02d", month + 1)}-${year}"
         },

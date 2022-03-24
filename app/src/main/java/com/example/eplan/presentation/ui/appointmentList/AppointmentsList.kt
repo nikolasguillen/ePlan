@@ -1,4 +1,4 @@
-package com.example.eplan.ui.screens
+package com.example.eplan.presentation.ui.appointmentList
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
@@ -13,7 +13,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavHostController
 import com.example.eplan.R
 import com.example.eplan.domain.model.Appointment
-import com.example.eplan.ui.items.*
+import com.example.eplan.presentation.ui.items.*
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -30,7 +30,7 @@ fun AppointmentsScreen(navController: NavHostController, appointments: MutableLi
         content = {
             Column(modifier = Modifier.padding(bottom = it.calculateBottomPadding())) {
                 SetupCalendar()
-                LazyColumn() {
+                LazyColumn {
                     items(appointments) { appointment ->
                         AppointmentCard(
                             appointment = appointment,

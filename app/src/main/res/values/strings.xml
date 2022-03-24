@@ -7,4 +7,14 @@
     <string name="nessun_invitato">Nessun invitato</string>
     <string name="foglio_ore">Foglio ore</string>
     <string name="fine_periodicita">Fine periodicità:</string>
+    <string name="errore_orario">L\'ora di fine attività deve essere successiva a quella di inizio!</string>
+    <string name="ore_spostamento">Ore di spostamento</string>
+    <string name="km_percorsi">Km percorsi</string>
+    <string name="ora_inizio">Ora inizio</string>
+    <string name="ora_fine">Ora fine</string>
+    <string name="descrizione">Descrizione</string>
+    <string name="attivita">Attività</string>
+    <string name="elimina_commessa">Elimina commessa</string>
+    <string name="indietro">Indietro</string>
+    <string name="chiudi_senza_salvare">Sei sicuro di voler uscire senza salvare?</string>
 </resources>

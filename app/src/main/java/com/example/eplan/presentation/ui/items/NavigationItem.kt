@@ -1,4 +1,4 @@
-package com.example.eplan.ui.items
+package com.example.eplan.presentation.ui.items
 
 import com.example.eplan.R
 

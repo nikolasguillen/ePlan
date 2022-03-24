@@ -1,4 +1,4 @@
-package com.example.eplan.ui.screens
+package com.example.eplan.presentation.ui.appointment
 
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedVisibility
@@ -41,7 +41,7 @@ import androidx.navigation.NavHostController
 import com.example.eplan.R
 import com.example.eplan.domain.model.Appointment
 import com.example.eplan.domain.model.Person
-import com.example.eplan.ui.items.*
+import com.example.eplan.presentation.ui.items.*
 
 @OptIn(ExperimentalMaterial3Api::class, androidx.compose.material.ExperimentalMaterialApi::class)
 @Composable
@@ -97,7 +97,7 @@ fun AppointmentDetailsScreen(
                 })
         },
         bottomBar = {
-            NavigationBar() {
+            NavigationBar {
                 items.forEach { item ->
                     NavigationBarItem(
                         selected = false,
@@ -153,7 +153,7 @@ fun AppointmentDetailsScreen(
                     horizontalArrangement = Arrangement.SpaceBetween,
                     modifier = Modifier.fillMaxWidth()
                 ) {
-                    Column() {
+                    Column {
                         Text(text = "Pianificazione")
                         Text(
                             text = "Non blocca l'orario e non viene esportato",
@@ -290,7 +290,7 @@ fun AppointmentDetailsScreen(
                 modifier = Modifier
                     .background(MaterialTheme.colorScheme.surface, RoundedCornerShape(8.dp))
             ) {
-                Column() {
+                Column {
                     LazyColumn(
                         modifier = Modifier.fillMaxWidth()
                     ) {
@@ -329,7 +329,7 @@ fun AppointmentDetailsScreen(
                     .padding(bottom = 8.dp)
                     .height(500.dp)
             ) {
-                Column() {
+                Column {
                     LazyColumn(
                         modifier = Modifier
                             .fillMaxWidth()
@@ -390,7 +390,7 @@ fun AppointmentDetailsScreen(
                 modifier = Modifier
                     .background(MaterialTheme.colorScheme.surface, RoundedCornerShape(8.dp))
             ) {
-                Column() {
+                Column {
                     LazyColumn(
                         modifier = Modifier.fillMaxWidth()
                     ) {
@@ -425,7 +425,7 @@ fun AppointmentDetailsScreen(
             onDismissRequest = {
                 backDialog.value = false
             },
-            title = { Text(text = "Sei sicuro di voler uscire senza salvare?") },
+            title = { Text(text = stringResource(R.string.chiudi_senza_salvare)) },
             confirmButton = {
                 TextButton(onClick = {
                     backDialog.value = false
@@ -440,7 +440,7 @@ fun AppointmentDetailsScreen(
                     backDialog.value = false
                 }
                 ) {
-                    Text(text = "Annulla")
+                    Text(text = stringResource(id = R.string.annulla))
                 }
             })
     }

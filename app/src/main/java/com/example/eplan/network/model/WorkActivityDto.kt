@@ -13,11 +13,17 @@ data class WorkActivityDto(
     @SerializedName("start")
     var start: String,
 
-    @SerializedName("duration")
+    @SerializedName("durata")
     var duration: String,
 
-    @SerializedName("id")
+    @SerializedName("id_interventi")
     var id: String,
+
+    @SerializedName("ore_spostamento")
+    var moveTime: String,
+
+    @SerializedName("km_spostamento")
+    var moveDistance: String,
 
     @SerializedName("color")
     var color: String,

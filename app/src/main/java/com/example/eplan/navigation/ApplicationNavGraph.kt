@@ -1,6 +1,8 @@
 package com.example.eplan.navigation
 
+import android.annotation.SuppressLint
 import androidx.compose.runtime.Composable
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
@@ -9,8 +11,14 @@ import androidx.navigation.navArgument
 import com.example.eplan.domain.model.Appointment
 import com.example.eplan.domain.model.WorkActivity
 import com.example.eplan.domain.util.fromJson
-import com.example.eplan.ui.items.NavigationItem
-import com.example.eplan.ui.screens.*
+import com.example.eplan.presentation.ui.account.AccountScreen
+import com.example.eplan.repository.WorkActivityRepositoryImpl
+import com.example.eplan.presentation.ui.items.NavigationItem
+import com.example.eplan.presentation.ui.appointment.AppointmentDetailsScreen
+import com.example.eplan.presentation.ui.appointmentList.AppointmentsScreen
+import com.example.eplan.presentation.ui.workActivity.ActivityDetailsScreen
+import com.example.eplan.presentation.ui.workActivityList.ActivityListViewModel
+import com.example.eplan.presentation.ui.workActivityList.HomeScreen
 
 @Composable
 fun ApplicationNavGraph(navController: NavHostController) {
@@ -20,25 +28,7 @@ fun ApplicationNavGraph(navController: NavHostController) {
     ) {
         //Foglio ore
         composable(route = NavigationItem.Home.route) {
-            val activities = mutableListOf<WorkActivity>()
-            var i = 0
-            while (i < 10) {
-                activities.add(
-                    WorkActivity(
-                        12345,
-                        "commessa",
-                        "descrizione commessa",
-                        "22-02-2022",
-                        "08:00",
-                        "09:00",
-                        "2",
-                        "180",
-                        false
-                    )
-                )
-                i++
-            }
-            HomeScreen(navController = navController, activities)
+            HomeScreen(navController = navController, viewModel = hiltViewModel())
         }
         // Appuntamenti
         composable(route = NavigationItem.Appointments.route) {

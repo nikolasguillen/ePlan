@@ -20,8 +20,8 @@ class WorkActivityDtoMapper : DomainMapper<WorkActivityDto, WorkActivity> {
             date = startDateTime.first,
             start = startDateTime.second,
             end = endDateTime.second,
-            movingTime = "0",
-            km = "0",
+            movingTime = model.moveTime,
+            km = model.moveDistance,
             close = false
         )
     }
@@ -41,20 +41,22 @@ class WorkActivityDtoMapper : DomainMapper<WorkActivityDto, WorkActivity> {
             start = startDateTime,
             end = endDateTime,
             duration = durationCalculator(start = startTime, end = endTime),
+            moveTime = domainModel.movingTime,
+            moveDistance = domainModel.km,
             color = "TODO"
         )
     }
 
-    fun fromEntityList(initial: List<WorkActivityDto>): List<WorkActivity> {
+    fun toDomainList(initial: List<WorkActivityDto>): List<WorkActivity> {
         return initial.map { mapToDomainModel(it) }
     }
 
-    fun toEntityList(initial: List<WorkActivity>): List<WorkActivityDto> {
+    fun fromDomainList(initial: List<WorkActivity>): List<WorkActivityDto> {
         return initial.map { mapFromDomainModel(it) }
     }
 
     private fun dateTimeParser(dateTime: String): Pair<String, String> {
-        return Pair(first = dateTime.split(" ")[0], second = dateTime.split(" ")[1])
+        return Pair(first = dateTime.split(" ")[0], second = dateTime.split(" ")[1].removeSuffix(":00"))
     }
 
     /* Converte la data dal formato yyyy-MM-dd a dd-MM-yyyy */

@@ -1,4 +1,4 @@
-package com.example.eplan.ui.screens
+package com.example.eplan.presentation.ui.account
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -12,7 +12,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
-import com.example.eplan.ui.items.TopBar
 
 const val name = "Nikolas"
 
@@ -41,7 +40,7 @@ fun AccountScreen(navController: NavHostController) {
                 )
             ) {
                 LazyColumn(verticalArrangement = Arrangement.spacedBy(16.dp)) {
-                    item() {
+                    item {
                         Text(
                             text = "Profilo",
                             style = MaterialTheme.typography.headlineSmall,

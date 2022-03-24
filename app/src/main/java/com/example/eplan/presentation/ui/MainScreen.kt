@@ -1,4 +1,4 @@
-package com.example.eplan
+package com.example.eplan.presentation.ui
 
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
@@ -8,7 +8,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.eplan.navigation.ApplicationNavGraph
-import com.example.eplan.ui.items.BottomNavBar
+import com.example.eplan.presentation.ui.items.BottomNavBar
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

@@ -1,5 +1,7 @@
-package com.example.eplan.ui.screens
+package com.example.eplan.presentation.ui.workActivity
 
+import android.annotation.SuppressLint
+import android.widget.Toast
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -22,12 +24,16 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.example.eplan.R
 import com.example.eplan.domain.model.WorkActivity
-import com.example.eplan.ui.items.CustomSwitch
-import com.example.eplan.ui.items.CustomInputText
-import com.example.eplan.ui.items.CustomTimeButton
-import com.example.eplan.ui.items.SaveItems
+import com.example.eplan.presentation.ui.items.CustomSwitch
+import com.example.eplan.presentation.ui.items.CustomInputText
+import com.example.eplan.presentation.ui.items.CustomTimeButton
+import com.example.eplan.presentation.ui.items.SaveItems
+import java.time.Duration
+import java.time.LocalTime
+import java.time.format.DateTimeFormatter
 
 
+@SuppressLint("UnrememberedMutableState")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ActivityDetailsScreen(
@@ -41,7 +47,6 @@ fun ActivityDetailsScreen(
     val desc = remember { mutableStateOf(workActivity.description) }
     val movingTime = remember { mutableStateOf(workActivity.movingTime) }
     val km = remember { mutableStateOf(workActivity.km) }
-    val close = remember { mutableStateOf(workActivity.close) }
 
     val items = listOf(
         SaveItems.Save,
@@ -49,15 +54,21 @@ fun ActivityDetailsScreen(
 
     val openDialog = remember { mutableStateOf(false) }
 
+    val toast = Toast.makeText(
+        navController.context,
+        stringResource(R.string.errore_orario),
+        Toast.LENGTH_SHORT
+    )
+
     Scaffold(
         topBar = {
             MediumTopAppBar(
-                title = { Text(text = "Attività") },
+                title = { Text(text = stringResource(R.string.attivita)) },
                 navigationIcon = {
                     IconButton(onClick = { openDialog.value = true }) {
                         Icon(
                             imageVector = Icons.Filled.ArrowBack,
-                            contentDescription = "Back"
+                            contentDescription = stringResource(R.string.indietro)
                         )
                     }
                 },
@@ -66,17 +77,29 @@ fun ActivityDetailsScreen(
                         Icon(
                             imageVector = Icons.Outlined.Delete,
                             tint = Color.Red,
-                            contentDescription = "Elimina commessa"
+                            contentDescription = stringResource(R.string.elimina_commessa)
                         )
                     }
                 })
         },
         bottomBar = {
-            NavigationBar() {
+            NavigationBar {
                 items.forEach { item ->
                     NavigationBarItem(
                         selected = false,
-                        onClick = { navController.navigateUp() },
+                        onClick = {
+                            if (Duration.between(
+                                    LocalTime.parse(start.value, DateTimeFormatter.ISO_TIME),
+                                    LocalTime.parse(end.value, DateTimeFormatter.ISO_TIME)
+                                ).toMinutes() > 0
+                            ) {
+                                navController.navigateUp()
+                            } else {
+                                toast.cancel()
+                                toast.setText(navController.context.getString(R.string.errore_orario))
+                                toast.show()
+                            }
+                        },
                         icon = {
                             Icon(
                                 painterResource(id = item.icon),
@@ -102,25 +125,32 @@ fun ActivityDetailsScreen(
                     .verticalScroll(rememberScrollState()),
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
-                CustomInputText(value = name, label = "Attività")
-                CustomInputText(value = desc, label = "Descrizione")
+                CustomInputText(value = name, label = stringResource(R.string.attivita))
+                CustomInputText(value = desc, label = stringResource(R.string.descrizione))
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
-                    CustomTimeButton(time = start, label = "Ora inizio", context = navController.context)
-                    CustomTimeButton(time = end, label = "Ora fine", context = navController.context)
+                    CustomTimeButton(
+                        time = start,
+                        label = stringResource(R.string.ora_inizio),
+                        context = navController.context
+                    )
+                    CustomTimeButton(
+                        time = end,
+                        label = stringResource(R.string.ora_fine),
+                        context = navController.context
+                    )
                 }
                 CustomInputText(
                     value = movingTime,
-                    label = "Ore di spostamento",
+                    label = stringResource(R.string.ore_spostamento),
                     numField = true
                 )
-                CustomInputText(value = km, label = "Km percorsi", numField = true)
-                Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.SpaceBetween, modifier = Modifier.fillMaxWidth()) {
-                    Text(text = "Chiudi attività")
-                    CustomSwitch(close)
-                }
+                CustomInputText(
+                    value = km,
+                    label = stringResource(R.string.km_percorsi),
+                    numField = true)
             }
         })
 
@@ -129,7 +159,7 @@ fun ActivityDetailsScreen(
             onDismissRequest = {
                 openDialog.value = false
             },
-            title = { Text(text = "Sei sicuro di voler uscire senza salvare?") },
+            title = { Text(text = stringResource(R.string.chiudi_senza_salvare)) },
             confirmButton = {
                 TextButton(onClick = {
                     openDialog.value = false
