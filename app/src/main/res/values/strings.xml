@@ -17,4 +17,5 @@
     <string name="elimina_commessa">Elimina commessa</string>
     <string name="indietro">Indietro</string>
     <string name="chiudi_senza_salvare">Sei sicuro di voler uscire senza salvare?</string>
+    <string name="account">Account</string>
 </resources>

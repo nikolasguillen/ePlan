@@ -201,20 +201,20 @@ fun AppointmentDetailsScreen(
                         modifier = Modifier.weight(1f),
                     ) {
                         Text(text = stringResource(R.string.periodicita))
-                        /*Card(
+                        Card(
                             modifier = Modifier
                                 .clip(RoundedCornerShape(11.dp))
                                 .fillMaxWidth()
                                 .clickable { periodicityDialog.value = true }
                         ) {
                             Text(text = periodicity.value, modifier = Modifier.padding(16.dp))
-                        }*/
-                        CustomInputDropDown(
+                        }
+                        /*CustomInputDropDown(
                             value = periodicity,
                             items = appointment.getPeriodicities(),
                             enabled = memo,
                             size = Modifier.fillMaxWidth()
-                        )
+                        )*/
                     }
                     Spacer(modifier = Modifier.size(16.dp))
                     Column(

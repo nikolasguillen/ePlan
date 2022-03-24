@@ -13,6 +13,9 @@ import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavHostController
 import com.example.eplan.R
 import com.example.eplan.domain.model.Appointment
+import com.example.eplan.presentation.ui.composables.AppointmentCard
+import com.example.eplan.presentation.ui.composables.BottomNavBar
+import com.example.eplan.presentation.ui.composables.TopBar
 import com.example.eplan.presentation.ui.items.*
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -21,7 +24,7 @@ fun AppointmentsScreen(navController: NavHostController, appointments: MutableLi
 
     Scaffold(
         bottomBar = { BottomNavBar(navController = navController) },
-        topBar = { TopBar(stringResource(R.string.appuntamenti), navController = navController) },
+        topBar = { TopBar(stringResource(R.string.appuntamenti), navigate = { navController.navigate("account") } ) },
         floatingActionButton = {
             FloatingActionButton(onClick = { /*TODO*/ }) {
                 Icon(imageVector = Icons.Outlined.Create, contentDescription = "Aggiungi attività")

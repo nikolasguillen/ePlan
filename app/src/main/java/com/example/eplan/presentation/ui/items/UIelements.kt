@@ -3,11 +3,9 @@ package com.example.eplan.presentation.ui.items
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
 import android.content.Context
-import android.os.Build
 import android.view.View
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
@@ -16,7 +14,6 @@ import androidx.compose.material.Switch
 import androidx.compose.material.SwitchDefaults
 import androidx.compose.material.TextFieldDefaults
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -26,152 +23,13 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
-import androidx.navigation.NavDestination.Companion.hierarchy
-import androidx.navigation.NavHostController
-import androidx.navigation.compose.currentBackStackEntryAsState
 import com.example.eplan.R
-import com.example.eplan.domain.model.Appointment
-import com.example.eplan.domain.model.WorkActivity
-import com.example.eplan.domain.util.toJson
 import com.shrikanthravi.collapsiblecalendarview.data.Day
 import com.shrikanthravi.collapsiblecalendarview.widget.CollapsibleCalendar
 
-@Composable
-fun MyAppTheme(
-    darkTheme: Boolean = isSystemInDarkTheme(),
-    content: @Composable () -> Unit
-) {
-    val dynamic = Build.VERSION.SDK_INT >= Build.VERSION_CODES.S
-    val colorScheme = if (dynamic) {
-        val context = LocalContext.current
-        if (darkTheme) dynamicDarkColorScheme(context = context) else dynamicLightColorScheme(
-            context = context
-        )
-    } else {
-        if (darkTheme) darkColorScheme() else lightColorScheme()
-    }
-
-    MaterialTheme(
-        content = content,
-        colorScheme = colorScheme
-    )
-}
-
-@Composable
-fun TopBar(title: String, navController: NavHostController) {
-    SmallTopAppBar(
-        title = { Text(text = title) },
-        actions = {
-            IconButton(onClick = { navController.navigate("account") }) {
-                Icon(
-                    imageVector = Icons.Filled.AccountCircle,
-                    contentDescription = "account",
-                    modifier = Modifier.size(32.dp)
-                )
-            }
-        })
-}
-
-@Composable
-fun BottomNavBar(navController: NavHostController) {
-    val items = listOf(
-        NavigationItem.Home,
-        NavigationItem.Appointments
-    )
-
-    val navBackStackEntry by navController.currentBackStackEntryAsState()
-    val currentDestination = navBackStackEntry?.destination
-
-
-    NavigationBar {
-        items.forEach { item ->
-            NavigationBarItem(
-                selected = currentDestination?.hierarchy?.any {
-                    it.route == item.route
-                } == true,
-                onClick = {
-                    if (currentDestination?.route != item.route) {
-                        navController.navigate(item.route)
-                    }
-                },
-                icon = { Icon(painterResource(id = item.icon), contentDescription = item.title) },
-                label = { Text(text = item.title) }
-            )
-        }
-    }
-}
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun ActivityCard(
-    workActivity: WorkActivity,
-    navController: NavHostController
-) {
-    Card(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(horizontal = 10.dp, vertical = 5.dp)
-            .clip(RoundedCornerShape(11.dp))
-            .clickable {
-                val argument = workActivity.toJson()
-                navController.navigate("activityDetails/$argument")
-            },
-    ) {
-        Column(modifier = Modifier.padding(16.dp)) {
-            Text(
-                text = workActivity.title.replaceFirstChar { it.uppercase() },
-                style = MaterialTheme.typography.titleMedium
-            )
-            Text(
-                text = workActivity.description.replaceFirstChar { it.uppercase() },
-                style = MaterialTheme.typography.bodyMedium,
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis,
-                modifier = Modifier.padding(bottom = 3.dp)
-            )
-            Text(text = workActivity.start, style = MaterialTheme.typography.labelSmall)
-            Text(text = workActivity.end, style = MaterialTheme.typography.labelSmall)
-        }
-    }
-}
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun AppointmentCard(
-    appointment: Appointment,
-    navController: NavHostController
-) {
-    Card(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(horizontal = 10.dp, vertical = 5.dp)
-            .clip(RoundedCornerShape(11.dp))
-            .clickable {
-                val argument = appointment.toJson()
-                navController.navigate("appointmentDetails/$argument")
-            },
-    ) {
-        Column(modifier = Modifier.padding(16.dp)) {
-            Text(
-                text = appointment.activity.replaceFirstChar { it.uppercase() },
-                style = MaterialTheme.typography.titleMedium
-            )
-            Text(
-                text = appointment.description.replaceFirstChar { it.uppercase() },
-                style = MaterialTheme.typography.bodyMedium,
-                modifier = Modifier.padding(bottom = 3.dp)
-            )
-            Text(text = appointment.start, style = MaterialTheme.typography.labelSmall)
-            Text(text = appointment.end, style = MaterialTheme.typography.labelSmall)
-        }
-    }
-}
 
 @Composable
 fun SetupCalendar() {

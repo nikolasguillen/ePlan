@@ -4,8 +4,8 @@ import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.ExperimentalFoundationApi
-import com.example.eplan.presentation.ui.items.MyAppTheme
 import com.example.eplan.presentation.ui.MainScreen
+import com.example.eplan.presentation.ui.composables.MyAppTheme
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint

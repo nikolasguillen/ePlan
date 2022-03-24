@@ -8,7 +8,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.eplan.navigation.ApplicationNavGraph
-import com.example.eplan.presentation.ui.items.BottomNavBar
+import com.example.eplan.presentation.ui.composables.BottomNavBar
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

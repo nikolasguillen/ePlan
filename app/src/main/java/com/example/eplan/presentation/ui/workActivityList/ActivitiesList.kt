@@ -10,15 +10,12 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import com.example.eplan.R
-import com.example.eplan.domain.model.WorkActivity
-import com.example.eplan.presentation.ui.items.ActivityCard
-import com.example.eplan.presentation.ui.items.BottomNavBar
+import com.example.eplan.presentation.ui.composables.ActivityCard
+import com.example.eplan.presentation.ui.composables.BottomNavBar
 import com.example.eplan.presentation.ui.items.SetupCalendar
-import com.example.eplan.presentation.ui.items.TopBar
-import javax.inject.Inject
+import com.example.eplan.presentation.ui.composables.TopBar
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -26,7 +23,7 @@ fun HomeScreen(navController: NavHostController, viewModel: ActivityListViewMode
 
     Scaffold(
         bottomBar = { BottomNavBar(navController = navController) },
-        topBar = { TopBar(stringResource(R.string.foglio_ore), navController = navController) },
+        topBar = { TopBar(stringResource(R.string.foglio_ore), navigate = { navController.navigate("account") }) },
         floatingActionButton = {
             FloatingActionButton(onClick = { /*TODO*/ }) {
                 Icon(imageVector = Icons.Outlined.Create, contentDescription = "Aggiungi attività")
