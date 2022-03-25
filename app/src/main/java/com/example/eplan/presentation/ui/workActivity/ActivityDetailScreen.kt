@@ -15,7 +15,6 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
@@ -24,10 +23,9 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.example.eplan.R
 import com.example.eplan.domain.model.WorkActivity
-import com.example.eplan.presentation.ui.items.CustomSwitch
+import com.example.eplan.presentation.navigation.BottomNavBarItems
 import com.example.eplan.presentation.ui.items.CustomInputText
 import com.example.eplan.presentation.ui.items.CustomTimeButton
-import com.example.eplan.presentation.ui.items.SaveItems
 import java.time.Duration
 import java.time.LocalTime
 import java.time.format.DateTimeFormatter
@@ -38,8 +36,19 @@ import java.time.format.DateTimeFormatter
 @Composable
 fun ActivityDetailsScreen(
     workActivity: WorkActivity,
+    viewModel: ActivityDetailViewModel,
+    activityId: Int?,
     navController: NavHostController
 ) {
+
+    if (activityId == null) {
+        TODO("Mostrare attività non valida")
+    } else {
+        val onLoad = viewModel.onLoad.value
+        if (!onLoad) {
+            viewModel.onLoad.value = true
+        }
+    }
 
     val start = remember { mutableStateOf(workActivity.start) }
     val end = remember { mutableStateOf(workActivity.end) }
@@ -49,7 +58,7 @@ fun ActivityDetailsScreen(
     val km = remember { mutableStateOf(workActivity.km) }
 
     val items = listOf(
-        SaveItems.Save,
+        BottomNavBarItems.Save,
     )
 
     val openDialog = remember { mutableStateOf(false) }
@@ -125,6 +134,9 @@ fun ActivityDetailsScreen(
                     .verticalScroll(rememberScrollState()),
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
+                OutlinedTextField(value = "testo super mega iper lungo", onValueChange = {}, label = { Text(
+                    text = "Attività"
+                ) })
                 CustomInputText(value = name, label = stringResource(R.string.attivita))
                 CustomInputText(value = desc, label = stringResource(R.string.descrizione))
                 Row(

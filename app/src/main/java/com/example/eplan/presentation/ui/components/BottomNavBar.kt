@@ -1,4 +1,4 @@
-package com.example.eplan.presentation.ui.composables
+package com.example.eplan.presentation.ui.components
 
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
@@ -10,13 +10,13 @@ import androidx.compose.ui.res.painterResource
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
-import com.example.eplan.presentation.ui.items.NavigationItem
+import com.example.eplan.presentation.navigation.BottomNavBarItems
 
 @Composable
 fun BottomNavBar(navController: NavHostController) {
     val items = listOf(
-        NavigationItem.Home,
-        NavigationItem.Appointments
+        BottomNavBarItems.Home,
+        BottomNavBarItems.Appointments
     )
 
     val navBackStackEntry by navController.currentBackStackEntryAsState()

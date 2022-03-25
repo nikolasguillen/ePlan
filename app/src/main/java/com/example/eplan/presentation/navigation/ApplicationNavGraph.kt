@@ -1,6 +1,5 @@
-package com.example.eplan.navigation
+package com.example.eplan.presentation.navigation
 
-import android.annotation.SuppressLint
 import androidx.compose.runtime.Composable
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
@@ -12,26 +11,24 @@ import com.example.eplan.domain.model.Appointment
 import com.example.eplan.domain.model.WorkActivity
 import com.example.eplan.domain.util.fromJson
 import com.example.eplan.presentation.ui.account.AccountScreen
-import com.example.eplan.repository.WorkActivityRepositoryImpl
-import com.example.eplan.presentation.ui.items.NavigationItem
 import com.example.eplan.presentation.ui.appointment.AppointmentDetailsScreen
 import com.example.eplan.presentation.ui.appointmentList.AppointmentsScreen
 import com.example.eplan.presentation.ui.workActivity.ActivityDetailsScreen
-import com.example.eplan.presentation.ui.workActivityList.ActivityListViewModel
-import com.example.eplan.presentation.ui.workActivityList.HomeScreen
+import com.example.eplan.presentation.ui.workActivityList.ActivitiesListScreen
 
 @Composable
 fun ApplicationNavGraph(navController: NavHostController) {
     NavHost(
         navController = navController,
-        startDestination = NavigationItem.Home.route
+        startDestination = BottomNavBarItems.Home.route
     ) {
         //Foglio ore
-        composable(route = NavigationItem.Home.route) {
-            HomeScreen(navController = navController, viewModel = hiltViewModel())
+        composable(route = BottomNavBarItems.Home.route) {
+            ActivitiesListScreen(navController = navController, viewModel = hiltViewModel())
+            val ciao = 10
         }
         // Appuntamenti
-        composable(route = NavigationItem.Appointments.route) {
+        composable(route = BottomNavBarItems.Appointments.route) {
             val peopleInput = mapOf(
                 "Giampiero Allamprese" to true,
                 "Emanuele Crescentini" to false,

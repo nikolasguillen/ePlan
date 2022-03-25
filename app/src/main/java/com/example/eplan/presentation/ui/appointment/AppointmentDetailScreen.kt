@@ -41,6 +41,7 @@ import androidx.navigation.NavHostController
 import com.example.eplan.R
 import com.example.eplan.domain.model.Appointment
 import com.example.eplan.domain.model.Person
+import com.example.eplan.presentation.navigation.BottomNavBarItems
 import com.example.eplan.presentation.ui.items.*
 
 @OptIn(ExperimentalMaterial3Api::class, androidx.compose.material.ExperimentalMaterialApi::class)
@@ -66,7 +67,7 @@ fun AppointmentDetailsScreen(
     val warningUnit = remember { mutableStateOf(appointment.warningUnit) }
 
     val items = listOf(
-        SaveItems.Save,
+        BottomNavBarItems.Save,
     )
 
     val backDialog = remember { mutableStateOf(false) }
@@ -129,6 +130,10 @@ fun AppointmentDetailsScreen(
                     .verticalScroll(rememberScrollState()),
                 verticalArrangement = Arrangement.spacedBy(16.dp),
             ) {
+                OutlinedTextField(value = "roba lunga lunga lunga", onValueChange = {}, label = { Text(
+                    text = "Etichetta"
+                ) })
+                TextField(value = "roba lunga lunga lunga", onValueChange = {}, label = { Text(text = "Attività") })
                 CustomInputText(value = name, label = "Attività")
                 CustomInputText(value = title, label = "Titolo")
                 CustomInputText(value = desc, label = "Descrizione")
@@ -247,7 +252,6 @@ fun AppointmentDetailsScreen(
                         Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
                             Text(text = "Con un preavviso di:")
                             Row(
-                                verticalAlignment = Alignment.CenterVertically,
                                 horizontalArrangement = Arrangement.SpaceBetween,
                                 modifier = Modifier.fillMaxWidth()
                             ) {

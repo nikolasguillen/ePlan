@@ -1,4 +1,4 @@
-package com.example.eplan.presentation.ui.composables
+package com.example.eplan.presentation.ui.components
 
 import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme

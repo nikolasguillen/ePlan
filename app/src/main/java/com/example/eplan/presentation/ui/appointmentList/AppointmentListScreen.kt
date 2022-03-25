@@ -1,4 +1,4 @@
-package com.example.eplan.presentation.ui.workActivityList
+package com.example.eplan.presentation.ui.appointmentList
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
@@ -12,33 +12,31 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavHostController
 import com.example.eplan.R
-import com.example.eplan.presentation.ui.composables.ActivityCard
-import com.example.eplan.presentation.ui.composables.BottomNavBar
-import com.example.eplan.presentation.ui.items.SetupCalendar
-import com.example.eplan.presentation.ui.composables.TopBar
+import com.example.eplan.domain.model.Appointment
+import com.example.eplan.presentation.ui.components.AppointmentCard
+import com.example.eplan.presentation.ui.components.BottomNavBar
+import com.example.eplan.presentation.ui.components.TopBar
+import com.example.eplan.presentation.ui.items.*
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HomeScreen(navController: NavHostController, viewModel: ActivityListViewModel) {
+fun AppointmentsScreen(navController: NavHostController, appointments: MutableList<Appointment>) {
 
     Scaffold(
         bottomBar = { BottomNavBar(navController = navController) },
-        topBar = { TopBar(stringResource(R.string.foglio_ore), navigate = { navController.navigate("account") }) },
+        topBar = { TopBar(stringResource(R.string.appuntamenti), navigate = { navController.navigate("account") } ) },
         floatingActionButton = {
             FloatingActionButton(onClick = { /*TODO*/ }) {
                 Icon(imageVector = Icons.Outlined.Create, contentDescription = "Aggiungi attività")
             }
         },
         content = {
-
-            val workActivities = viewModel.workActivities.value
-
             Column(modifier = Modifier.padding(bottom = it.calculateBottomPadding())) {
                 SetupCalendar()
                 LazyColumn {
-                    items(workActivities) { workActivity ->
-                        ActivityCard(
-                            workActivity = workActivity,
+                    items(appointments) { appointment ->
+                        AppointmentCard(
+                            appointment = appointment,
                             navController = navController
                         )
                     }
