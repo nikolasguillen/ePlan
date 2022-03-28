@@ -95,11 +95,9 @@ dependencies {
     implementation("androidx.room:room-ktx:$roomVersion")
 
     // Accompanist dependencies
-    def accompanist_version = "0.24.3-alpha"
-    implementation "com.google.accompanist:accompanist-insets:$accompanist_version"
-    // If using insets-ui
-    implementation "com.google.accompanist:accompanist-insets-ui:$accompanist_version"
-    implementation "com.google.accompanist:accompanist-navigation-animation:$accompanist_version"
+    def accompanist_version = "0.24.5-alpha"
+
+    implementation "com.google.accompanist:accompanist-swiperefresh:$accompanist_version"
     implementation "com.google.accompanist:accompanist-navigation-animation:$accompanist_version"
 
     def nav_version = "2.4.1"

@@ -21,8 +21,7 @@ class WorkActivityDtoMapper : DomainMapper<WorkActivityDto, WorkActivity> {
             start = startDateTime.second,
             end = endDateTime.second,
             movingTime = model.moveTime,
-            km = model.moveDistance,
-            close = false
+            km = model.moveDistance
         )
     }
 

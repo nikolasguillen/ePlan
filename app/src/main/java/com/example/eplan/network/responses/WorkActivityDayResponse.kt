@@ -3,8 +3,8 @@ package com.example.eplan.network.responses
 import com.example.eplan.network.model.WorkActivityDto
 import com.google.gson.annotations.SerializedName
 
-class WorkActivityMonthResponse (
+class WorkActivityDayResponse (
 
-    @SerializedName("")
+    @SerializedName("activitiesInDay")
     var workActivities: List<WorkActivityDto>
 )

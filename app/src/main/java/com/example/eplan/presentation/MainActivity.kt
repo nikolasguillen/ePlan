@@ -60,10 +60,11 @@ class MainActivity : AppCompatActivity() {
                     val viewModel: ActivityDetailViewModel =
                         viewModel(key = "ActivityDetailsViewModel", factory = factory)
                     ActivityDetailsScreen(
-                        workActivity = ,
-                        viewModel = ,
-                        activityId = ,
-                        navController =
+                        activityId = navBackStackEntry.arguments?.getInt("activityId")!!,
+                        viewModel = viewModel,
+                        onSavePressed = ,
+                        onBackPressed = ,
+                        onDeletePressed =
                     )
                 }
             }

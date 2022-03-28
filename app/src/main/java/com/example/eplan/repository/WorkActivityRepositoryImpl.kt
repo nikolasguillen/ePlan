@@ -1,22 +1,24 @@
 package com.example.eplan.repository
 
 import android.content.Context
-import android.util.Log
+import com.example.eplan.domain.model.User
 import com.example.eplan.domain.model.WorkActivity
+import com.example.eplan.domain.util.toJson
 import com.example.eplan.network.WorkActivityService
 import com.example.eplan.network.model.WorkActivityDto
 import com.example.eplan.network.model.WorkActivityDtoMapper
-import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 import com.google.gson.Gson
 import java.io.IOException
+import java.time.Month
 
 class WorkActivityRepositoryImpl(
-    private val workActivityService: WorkActivityService,
+    private val service: WorkActivityService,
     private val mapper: WorkActivityDtoMapper
 ) : WorkActivityRepository {
 
-    override suspend fun getMonthActivities(
+    override suspend fun getDayActivities(
         userToken: String,
+        dayOfMonth: Int,
         month: Int,
         context: Context
     ): List<WorkActivity> {
@@ -32,9 +34,16 @@ class WorkActivityRepositoryImpl(
         }
 
         val gson = Gson()
-        val workActivities =
-            gson.fromJson(tracciatoJson, Array<WorkActivityDto>::class.java).asList()
-        return workActivityDtoMapper.toDomainList(workActivities)
+        val workActivities = workActivityDtoMapper.toDomainList(
+            gson.fromJson(
+                tracciatoJson,
+                Array<WorkActivityDto>::class.java
+            ).asList()
+        )
+
+        return workActivities.filter { workActivity ->
+            workActivity.date.dayOfMonth == dayOfMonth && workActivity.date.month == Month.of(month)
+        }
     }
     /*override suspend fun getMonthActivities(
         userToken: String,
@@ -43,4 +52,12 @@ class WorkActivityRepositoryImpl(
 
         return mapper.toDomainList(workActivityService.getMonthActivities(userToken, month).workActivities)
     }*/
+
+    override suspend fun getActivityById(userToken: String, activityId: Int): WorkActivity {
+        return mapper.mapToDomainModel(service.getActivityById(userToken, activityId).workActivity)
+    }
+
+    override suspend fun updateWorkActivity(userToken: String, workActivity: WorkActivity) {
+        service.updateActivity(userToken, workActivity.id, "TODO")
+    }
 }

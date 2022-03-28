@@ -14,18 +14,15 @@ fun ActivitiesList(
     onNavigateToActivityDetailScreen: (String) -> Unit
 ) {
 
-    Column {
-        SetupCalendar()
-        LazyColumn {
-            items(workActivities) { workActivity ->
-                ActivityCard(
-                    workActivity = workActivity,
-                    onClick = {
-                        val route = Screen.WorkActivityDetails.route + "/${workActivity.id}"
-                        onNavigateToActivityDetailScreen(route)
-                    }
-                )
-            }
+    LazyColumn {
+        items(workActivities) { workActivity ->
+            ActivityCard(
+                workActivity = workActivity,
+                onClick = {
+                    val route = Screen.WorkActivityDetails.route + "/${workActivity.id}"
+                    onNavigateToActivityDetailScreen(route)
+                }
+            )
         }
     }
 }

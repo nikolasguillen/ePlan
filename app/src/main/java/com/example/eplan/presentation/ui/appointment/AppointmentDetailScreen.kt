@@ -40,7 +40,7 @@ import androidx.compose.ui.window.Dialog
 import androidx.navigation.NavHostController
 import com.example.eplan.R
 import com.example.eplan.domain.model.Appointment
-import com.example.eplan.domain.model.Person
+import com.example.eplan.domain.model.User
 import com.example.eplan.presentation.navigation.BottomNavBarItems
 import com.example.eplan.presentation.ui.items.*
 
@@ -450,10 +450,10 @@ fun AppointmentDetailsScreen(
     }
 }
 
-fun createPeople(people: Map<String, Boolean>): MutableList<Person> {
-    val list = mutableListOf<Person>()
+fun createPeople(people: Map<String, Boolean>): MutableList<User> {
+    val list = mutableListOf<User>()
     for (person in people) {
-        list.add(Person(person.key, mutableStateOf(person.value)))
+        list.add(User(person.key, mutableStateOf(person.value)))
     }
     return list
 }

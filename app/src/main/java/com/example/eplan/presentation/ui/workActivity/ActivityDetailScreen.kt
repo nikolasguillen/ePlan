@@ -17,6 +17,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -35,24 +36,19 @@ import java.time.format.DateTimeFormatter
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ActivityDetailsScreen(
-    workActivity: WorkActivity,
     viewModel: ActivityDetailViewModel,
-    activityId: Int?,
-    navController: NavHostController
+    activityId: Int,
+    onBackPressed: () -> Unit,
+    onSavePressed: (WorkActivity) -> Unit,
+    onDeletePressed: () -> Unit
 ) {
 
-    if (activityId == null) {
-        TODO("Mostrare attività non valida")
-    } else {
-        val onLoad = viewModel.onLoad.value
-        if (!onLoad) {
-            viewModel.onLoad.value = true
-        }
-    }
+
 
     val start = remember { mutableStateOf(workActivity.start) }
     val end = remember { mutableStateOf(workActivity.end) }
-    val name = remember { mutableStateOf(workActivity.title) }
+    val date = remember { mutableStateOf(workActivity.date) }
+    val title = remember { mutableStateOf(workActivity.title) }
     val desc = remember { mutableStateOf(workActivity.description) }
     val movingTime = remember { mutableStateOf(workActivity.movingTime) }
     val km = remember { mutableStateOf(workActivity.km) }
@@ -64,7 +60,7 @@ fun ActivityDetailsScreen(
     val openDialog = remember { mutableStateOf(false) }
 
     val toast = Toast.makeText(
-        navController.context,
+        LocalContext.current,
         stringResource(R.string.errore_orario),
         Toast.LENGTH_SHORT
     )
@@ -102,7 +98,18 @@ fun ActivityDetailsScreen(
                                     LocalTime.parse(end.value, DateTimeFormatter.ISO_TIME)
                                 ).toMinutes() > 0
                             ) {
-                                navController.navigateUp()
+                                onSavePressed(
+                                    WorkActivity(
+                                        id = workActivity.id,
+                                        title = title.value,
+                                        description = desc.value,
+                                        date = date.value,
+                                        start = start.value,
+                                        end = end.value,
+                                        km = km.value,
+                                        movingTime = movingTime.value
+                                    )
+                                )
                             } else {
                                 toast.cancel()
                                 toast.setText(navController.context.getString(R.string.errore_orario))
@@ -134,10 +141,15 @@ fun ActivityDetailsScreen(
                     .verticalScroll(rememberScrollState()),
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
-                OutlinedTextField(value = "testo super mega iper lungo", onValueChange = {}, label = { Text(
-                    text = "Attività"
-                ) })
-                CustomInputText(value = name, label = stringResource(R.string.attivita))
+                OutlinedTextField(
+                    value = "testo super mega iper lungo",
+                    onValueChange = {},
+                    label = {
+                        Text(
+                            text = "Attività"
+                        )
+                    })
+                CustomInputText(value = title, label = stringResource(R.string.attivita))
                 CustomInputText(value = desc, label = stringResource(R.string.descrizione))
                 Row(
                     modifier = Modifier.fillMaxWidth(),
@@ -162,7 +174,8 @@ fun ActivityDetailsScreen(
                 CustomInputText(
                     value = km,
                     label = stringResource(R.string.km_percorsi),
-                    numField = true)
+                    numField = true
+                )
             }
         })
 

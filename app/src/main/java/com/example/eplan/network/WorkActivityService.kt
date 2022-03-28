@@ -1,15 +1,29 @@
 package com.example.eplan.network
 
-import com.example.eplan.network.responses.WorkActivityMonthResponse
-import retrofit2.http.GET
-import retrofit2.http.Header
-import retrofit2.http.Query
+import com.example.eplan.network.responses.WorkActivityByIdResponse
+import com.example.eplan.network.responses.WorkActivityDayResponse
+import retrofit2.http.*
 
 interface WorkActivityService {
 
     @GET("get")
-    suspend fun getMonthActivities(
-        @Header("UserToken") token: String,
+    suspend fun getDayActivities(
+        @Header("userToken") token: String,
+        @Query("dayOfMonth") dayOfMonth: Int,
         @Query("month") month: Int
-    ): WorkActivityMonthResponse
+    ): WorkActivityDayResponse
+
+    @GET("get")
+    suspend fun getActivityById(
+        @Header("userToken") token: String,
+        @Query("id") id: Int
+    ): WorkActivityByIdResponse
+
+
+    @POST("post")
+    suspend fun updateActivity(
+        @Header("userToken") token: String,
+        @Query("activityId") id: Int,
+        @Query("updatedActivity") activity: String
+    )
 }
