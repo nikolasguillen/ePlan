@@ -16,13 +16,15 @@ import java.time.LocalDate
 import java.time.Month
 import java.util.*
 import javax.inject.Inject
+import javax.inject.Named
 
 @HiltViewModel
 class ActivityListViewModel
 @Inject
 constructor(
     private val repository: WorkActivityRepository,
-    @ApplicationContext val context: Context
+    @Named("auth_token") private val userToken: String,
+    @ApplicationContext private val context: Context
 ) : ViewModel() {
 
     val workActivities: MutableState<List<WorkActivity>> = mutableStateOf(listOf())
@@ -32,7 +34,8 @@ constructor(
             onTriggerEvent(
                 ActivityListEvent.DayChangeEvent(
                     LocalDate.now().dayOfMonth,
-                    LocalDate.now().monthValue
+                    LocalDate.now().monthValue,
+                    LocalDate.now().year
                 )
             )
         }
@@ -43,23 +46,24 @@ constructor(
             try {
                 when (event) {
                     is ActivityListEvent.DayChangeEvent -> {
-                        dayChange(event.dayOfMonth, event.month)
+                        dayChange(event.dayOfMonth, event.month, event.year)
                     }
                 }
             } catch (e: Exception) {
-                Log.e("Exception", "onTriggerEvent: Exception $e, ${e.cause}")
+                Log.e("ActivityListViewModel", "onTriggerEvent: Exception $e, ${e.cause}")
             }
         }
     }
 
 
-    private suspend fun dayChange(dayOfMonth: Int, month: Int) {
+    private suspend fun dayChange(dayOfMonth: Int, month: Int, year: Int) {
         resetActivitiesState()
         val result =
             repository.getDayActivities(
-                userToken = "TODO",
+                userToken = userToken,
                 dayOfMonth = dayOfMonth,
                 month = month,
+                year = year,
                 context = context
             )
         workActivities.value = result

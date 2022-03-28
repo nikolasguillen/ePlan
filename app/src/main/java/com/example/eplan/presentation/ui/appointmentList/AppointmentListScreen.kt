@@ -15,8 +15,8 @@ import com.example.eplan.R
 import com.example.eplan.domain.model.Appointment
 import com.example.eplan.presentation.ui.components.AppointmentCard
 import com.example.eplan.presentation.ui.components.BottomNavBar
+import com.example.eplan.presentation.ui.components.CollapsibleCalendar
 import com.example.eplan.presentation.ui.components.TopBar
-import com.example.eplan.presentation.ui.items.*
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -32,7 +32,7 @@ fun AppointmentsScreen(navController: NavHostController, appointments: MutableLi
         },
         content = {
             Column(modifier = Modifier.padding(bottom = it.calculateBottomPadding())) {
-                SetupCalendar()
+                CollapsibleCalendar()
                 LazyColumn {
                     items(appointments) { appointment ->
                         AppointmentCard(

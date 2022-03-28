@@ -1,5 +1,6 @@
 package com.example.eplan.di
 
+import androidx.navigation.Navigator
 import com.example.eplan.network.WorkActivityService
 import com.example.eplan.network.model.WorkActivityDtoMapper
 import com.google.gson.GsonBuilder
@@ -9,6 +10,7 @@ import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import javax.inject.Named
 import javax.inject.Singleton
 
 @Module
@@ -33,6 +35,7 @@ object NetworkModule {
 
     @Singleton
     @Provides
+    @Named("auth_token")
     fun provideUserToken(): String {
         return "Token"
     }

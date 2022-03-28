@@ -10,6 +10,7 @@ interface WorkActivityRepository {
         userToken: String,
         dayOfMonth: Int,
         month: Int,
+        year: Int,
         context: Context
     ): List<WorkActivity>
 

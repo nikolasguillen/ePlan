@@ -10,7 +10,7 @@ import com.example.eplan.R
 import com.example.eplan.presentation.navigation.Screen
 import com.example.eplan.presentation.ui.components.ActivitiesList
 import com.example.eplan.presentation.ui.components.TopBar
-import com.example.eplan.presentation.ui.items.SetupCalendar
+import com.example.eplan.presentation.ui.components.CollapsibleCalendar
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -32,7 +32,15 @@ fun ActivitiesListScreen(viewModel: ActivityListViewModel, onNavigate: (String) 
         },
         content = {
             Column {
-                SetupCalendar()
+                CollapsibleCalendar(onDaySelected = { dayOfMonth, month, year ->
+                    viewModel.onTriggerEvent(
+                        ActivityListEvent.DayChangeEvent(
+                            dayOfMonth = dayOfMonth,
+                            month = month,
+                            year = year
+                        )
+                    )
+                })
                 ActivitiesList(
                     workActivities = viewModel.workActivities.value,
                     onNavigateToActivityDetailScreen = onNavigate

@@ -3,8 +3,6 @@ package com.example.eplan.presentation.ui.items
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
 import android.content.Context
-import android.view.View
-import androidx.appcompat.content.res.AppCompatResources
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -22,104 +20,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.viewinterop.AndroidView
 import com.example.eplan.R
-import com.shrikanthravi.collapsiblecalendarview.data.Day
-import com.shrikanthravi.collapsiblecalendarview.widget.CollapsibleCalendar
 
-
-@Composable
-fun SetupCalendar() {
-
-    var day: Day? = null
-
-    val todayBackgroundColor = MaterialTheme.colorScheme.primary.toArgb()
-    val todayTextColor = MaterialTheme.colorScheme.onPrimary.toArgb()
-    val selectedDayBackgroundColor = MaterialTheme.colorScheme.onSurface.toArgb()
-    val selectedDayTextColor = MaterialTheme.colorScheme.surface.toArgb()
-    val dynamicTextColor = MaterialTheme.colorScheme.onSurface.toArgb()
-
-    AndroidView(
-        factory = { context ->
-            CollapsibleCalendar(context).apply {
-
-                primaryColor = resources.getColor(R.color.transparent, context.theme)
-                textColor = dynamicTextColor
-                setExpandIconColor(dynamicTextColor)
-
-                // Material dynamic theme
-                AppCompatResources.getDrawable(context, R.drawable.selection_circle)
-                    ?.setTint(selectedDayBackgroundColor)
-                selectedItemBackgroundDrawable =
-                    AppCompatResources.getDrawable(context, R.drawable.selection_circle)
-                selectedItemTextColor = selectedDayTextColor
-                AppCompatResources.getDrawable(context, R.drawable.today_circle)
-                    ?.setTint(todayBackgroundColor)
-                todayItemBackgroundDrawable =
-                    AppCompatResources.getDrawable(context, R.drawable.today_circle)
-                todayItemTextColor = todayTextColor
-
-                setCalendarListener(object : CollapsibleCalendar.CalendarListener {
-                    override fun onClickListener() {
-                    }
-
-                    override fun onDataUpdate() {
-                    }
-
-                    override fun onDayChanged() {
-                    }
-
-                    override fun onDaySelect() {
-                        day = selectedDay
-                        collapse(100)
-                    }
-
-                    override fun onItemClick(v: View) {
-                    }
-
-                    override fun onMonthChange() {
-                    }
-
-                    override fun onWeekChange(position: Int) {
-                    }
-
-                })
-            }
-        },
-        modifier = (Modifier
-            .fillMaxWidth()
-            .padding(0.dp, 0.dp, 0.dp, 5.dp))
-    )
-}
-
-@Composable
-fun CustomInputText(
-    value: MutableState<String>,
-    label: String,
-    numField: Boolean = false
-) {
-    OutlinedTextField(
-        value = value.value,
-        onValueChange = { value.value = it },
-        label = { Text(text = label) },
-        textStyle = MaterialTheme.typography.bodyLarge,
-        shape = RoundedCornerShape(8.dp),
-        colors = TextFieldDefaults.outlinedTextFieldColors(
-            textColor = MaterialTheme.colorScheme.onSurfaceVariant,
-            cursorColor = MaterialTheme.colorScheme.onSurfaceVariant,
-            focusedBorderColor = MaterialTheme.colorScheme.primary,
-            unfocusedBorderColor = MaterialTheme.colorScheme.onSurfaceVariant,
-            backgroundColor = Color.Transparent,
-            disabledTextColor = Color.Transparent
-        ),
-        singleLine = numField,
-        modifier = Modifier.fillMaxWidth(),
-        keyboardOptions = if (numField) KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number) else KeyboardOptions.Default
-    )
-}
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -127,18 +31,21 @@ fun CustomInputDropDown(
     value: MutableState<String>,
     items: MutableList<String>,
     enabled: MutableState<Boolean>,
-    size: Modifier = Modifier
+    modifier: Modifier = Modifier
 ) {
     val showDropDown = remember { mutableStateOf(false) }
 
     Box {
-        OutlinedCard(shape = RoundedCornerShape(8.dp), modifier = size) {
+        OutlinedCard(shape = RoundedCornerShape(8.dp), modifier = modifier) {
             Row(
-                modifier = size.clickable { if (enabled.value) showDropDown.value = true },
+                modifier = modifier.clickable { if (enabled.value) showDropDown.value = true },
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Text(text = value.value, modifier = Modifier.padding(start = 16.dp, top = 16.dp, bottom = 16.dp))
+                Text(
+                    text = value.value,
+                    modifier = Modifier.padding(start = 16.dp, top = 16.dp, bottom = 16.dp)
+                )
                 IconButton(onClick = { if (enabled.value) showDropDown.value = true }) {
                     Icon(
                         imageVector = Icons.Filled.ArrowDropDown,
@@ -157,7 +64,7 @@ fun CustomInputDropDown(
             onDismissRequest = { showDropDown.value = false }
         ) {
             items.forEach {
-                Row(modifier = size
+                Row(modifier = modifier
                     .wrapContentHeight()
                     .clickable {
                         value.value = it

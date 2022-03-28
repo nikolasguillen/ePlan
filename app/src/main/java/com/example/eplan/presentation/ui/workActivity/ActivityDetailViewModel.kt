@@ -1,14 +1,18 @@
 package com.example.eplan.presentation.ui.workActivity
 
 import android.content.Context
+import android.util.Log
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.eplan.domain.model.User
 import com.example.eplan.domain.model.WorkActivity
 import com.example.eplan.repository.WorkActivityRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.launch
+import java.lang.Exception
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -17,7 +21,8 @@ class ActivityDetailViewModel
 @Inject
 constructor(
     private val repository: WorkActivityRepository,
-    @ApplicationContext context: Context
+    @Named("auth_token") private val userToken: String,
+    @ApplicationContext private val context: Context
 ) : ViewModel() {
 
     val workActivity: MutableState<WorkActivity?> = mutableStateOf(null)
@@ -26,11 +31,31 @@ constructor(
 
     fun onTriggerEvent(event: ActivityDetailEvent) {
 
+        viewModelScope.launch {
+            try {
+                when (event) {
+                    is ActivityDetailEvent.GetActivityByIdEvent -> {
+                        getActivityById(event.id)
+                    }
+                    is ActivityDetailEvent.UpdateActivityDetailEvent -> {
+                        updateActivityDetail(event.workActivity)
+                    }
+                }
+            } catch (e: Exception) {
+                Log.e("ActivityDetailViewModel", "onTriggerEvent: Exception $e, ${e.cause}")
+            }
+        }
+
     }
 
     private suspend fun getActivityById(id: Int) {
         resetActivity()
-        val result = repository.getActivityById( )
+        val result = repository.getActivityById(userToken = userToken, activityId = id)
+        workActivity.value = result
+    }
+
+    private suspend fun updateActivityDetail(workActivity: WorkActivity) {
+        repository.updateWorkActivity(userToken = userToken, workActivity = workActivity)
     }
 
     private fun resetActivity() {
