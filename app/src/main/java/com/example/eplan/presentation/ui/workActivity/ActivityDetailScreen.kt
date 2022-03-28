@@ -21,11 +21,9 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavHostController
 import com.example.eplan.R
 import com.example.eplan.domain.model.WorkActivity
 import com.example.eplan.presentation.navigation.BottomNavBarItems
-import com.example.eplan.presentation.ui.items.CustomInputText
 import com.example.eplan.presentation.ui.items.CustomTimeButton
 import java.time.Duration
 import java.time.LocalTime
