@@ -1,6 +1,5 @@
 package com.example.eplan.di
 
-import androidx.navigation.Navigator
 import com.example.eplan.network.WorkActivityService
 import com.example.eplan.network.model.WorkActivityDtoMapper
 import com.google.gson.GsonBuilder
