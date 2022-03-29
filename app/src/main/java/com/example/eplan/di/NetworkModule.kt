@@ -1,6 +1,9 @@
 package com.example.eplan.di
 
+import com.example.eplan.network.LoginService
 import com.example.eplan.network.WorkActivityService
+import com.example.eplan.network.model.UserDtoMapper
+import com.example.eplan.network.model.UserService
 import com.example.eplan.network.model.WorkActivityDtoMapper
 import com.google.gson.GsonBuilder
 import dagger.Module
@@ -30,6 +33,32 @@ object NetworkModule {
             .addConverterFactory(GsonConverterFactory.create(GsonBuilder().create()))
             .build()
             .create(WorkActivityService::class.java)
+    }
+
+    @Singleton
+    @Provides
+    fun provideLoginService(): LoginService {
+        return Retrofit.Builder()
+            .baseUrl("https://ciao.com/")
+            .addConverterFactory(GsonConverterFactory.create(GsonBuilder().create()))
+            .build()
+            .create(LoginService::class.java)
+    }
+
+    @Singleton
+    @Provides
+    fun provideUserDtoMapper(): UserDtoMapper {
+        return UserDtoMapper()
+    }
+
+    @Singleton
+    @Provides
+    fun provideUserService(): UserService {
+        return Retrofit.Builder()
+            .baseUrl("https://ciao.com/")
+            .addConverterFactory(GsonConverterFactory.create(GsonBuilder().create()))
+            .build()
+            .create(UserService::class.java)
     }
 
     @Singleton

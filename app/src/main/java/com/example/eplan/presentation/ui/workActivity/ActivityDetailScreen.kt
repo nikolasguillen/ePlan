@@ -1,12 +1,12 @@
 package com.example.eplan.presentation.ui.workActivity
 
-import android.annotation.SuppressLint
 import android.widget.Toast
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
@@ -20,6 +20,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import com.example.eplan.R
 import com.example.eplan.domain.model.WorkActivity
@@ -29,8 +30,6 @@ import java.time.Duration
 import java.time.LocalTime
 import java.time.format.DateTimeFormatter
 
-
-@SuppressLint("UnrememberedMutableState")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ActivityDetailsScreen(
@@ -38,18 +37,18 @@ fun ActivityDetailsScreen(
     activityId: Int,
     onBackPressed: () -> Unit,
     onSavePressed: (WorkActivity) -> Unit,
-    onDeletePressed: () -> Unit
+    onDeletePressed: (Int) -> Unit
 ) {
 
+    val onLoad = viewModel.onLoad.value
 
+    // Evita di rifare la chiamata API ad ogni recomposition
+    if (!onLoad) {
+        viewModel.onLoad.value = true
+        viewModel.onTriggerEvent(ActivityDetailEvent.GetActivityByIdEvent(activityId))
+    }
 
-    val start = remember { mutableStateOf(workActivity.start) }
-    val end = remember { mutableStateOf(workActivity.end) }
-    val date = remember { mutableStateOf(workActivity.date) }
-    val title = remember { mutableStateOf(workActivity.title) }
-    val desc = remember { mutableStateOf(workActivity.description) }
-    val movingTime = remember { mutableStateOf(workActivity.movingTime) }
-    val km = remember { mutableStateOf(workActivity.km) }
+    val workActivity = viewModel.workActivity.value
 
     val items = listOf(
         BottomNavBarItems.Save,
@@ -63,119 +62,164 @@ fun ActivityDetailsScreen(
         Toast.LENGTH_SHORT
     )
 
-    Scaffold(
-        topBar = {
-            MediumTopAppBar(
-                title = { Text(text = stringResource(R.string.attivita)) },
-                navigationIcon = {
-                    IconButton(onClick = { openDialog.value = true }) {
-                        Icon(
-                            imageVector = Icons.Filled.ArrowBack,
-                            contentDescription = stringResource(R.string.indietro)
-                        )
-                    }
-                },
-                actions = {
-                    IconButton(onClick = { /*TODO*/ }) {
-                        Icon(
-                            imageVector = Icons.Outlined.Delete,
-                            tint = Color.Red,
-                            contentDescription = stringResource(R.string.elimina_commessa)
-                        )
-                    }
-                })
-        },
-        bottomBar = {
-            NavigationBar {
-                items.forEach { item ->
-                    NavigationBarItem(
-                        selected = false,
-                        onClick = {
-                            if (Duration.between(
-                                    LocalTime.parse(start.value, DateTimeFormatter.ISO_TIME),
-                                    LocalTime.parse(end.value, DateTimeFormatter.ISO_TIME)
-                                ).toMinutes() > 0
-                            ) {
-                                onSavePressed(
-                                    WorkActivity(
-                                        id = workActivity.id,
-                                        title = title.value,
-                                        description = desc.value,
-                                        date = date.value,
-                                        start = start.value,
-                                        end = end.value,
-                                        km = km.value,
-                                        movingTime = movingTime.value
-                                    )
-                                )
-                            } else {
-                                toast.cancel()
-                                toast.setText(navController.context.getString(R.string.errore_orario))
-                                toast.show()
-                            }
-                        },
-                        icon = {
-                            Icon(
-                                painterResource(id = item.icon),
-                                contentDescription = item.title
-                            )
-                        },
-                        label = { Text(text = item.title) },
-                        modifier = Modifier.background(Color.Transparent, CircleShape)
-                    )
-                }
-            }
-        },
-        content = {
-            it.calculateBottomPadding()
-            BackHandler(enabled = true) {
-                openDialog.value = true
-            }
+    workActivity?.let {
 
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(horizontal = 16.dp, vertical = 16.dp)
-                    .verticalScroll(rememberScrollState()),
-                verticalArrangement = Arrangement.spacedBy(16.dp)
-            ) {
-                OutlinedTextField(
-                    value = "testo super mega iper lungo",
-                    onValueChange = {},
-                    label = {
-                        Text(
-                            text = "Attività"
-                        )
+        val title = remember {
+            mutableStateOf(it.title)
+        }
+
+        val description = remember {
+            mutableStateOf(it.description)
+        }
+
+        val date = remember {
+            mutableStateOf(it.date)
+        }
+
+        val start = remember {
+            mutableStateOf(it.start)
+        }
+
+        val end = remember {
+            mutableStateOf(it.end)
+        }
+
+        val movingTime = remember {
+            mutableStateOf(it.movingTime)
+        }
+
+        val km = remember {
+            mutableStateOf(it.km)
+        }
+
+        Scaffold(
+            topBar = {
+                MediumTopAppBar(
+                    title = { Text(text = stringResource(R.string.attivita)) },
+                    navigationIcon = {
+                        IconButton(onClick = { openDialog.value = true }) {
+                            Icon(
+                                imageVector = Icons.Filled.ArrowBack,
+                                contentDescription = stringResource(R.string.indietro)
+                            )
+                        }
+                    },
+                    actions = {
+                        IconButton(onClick = {
+                            onDeletePressed(activityId)
+                            viewModel.onLoad.value = false
+                        }) {
+                            Icon(
+                                imageVector = Icons.Outlined.Delete,
+                                tint = Color.Red,
+                                contentDescription = stringResource(R.string.elimina_commessa)
+                            )
+                        }
                     })
-                CustomInputText(value = title, label = stringResource(R.string.attivita))
-                CustomInputText(value = desc, label = stringResource(R.string.descrizione))
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween
+            },
+            bottomBar = {
+                NavigationBar {
+                    items.forEach { item ->
+                        NavigationBarItem(
+                            selected = false,
+                            onClick = {
+                                if (Duration.between(
+                                        LocalTime.parse(
+                                            start.value,
+                                            DateTimeFormatter.ISO_TIME
+                                        ),
+                                        LocalTime.parse(
+                                            end.value,
+                                            DateTimeFormatter.ISO_TIME
+                                        )
+                                    ).toMinutes() > 0
+                                ) {
+                                    onSavePressed(
+                                        WorkActivity(
+                                            id = activityId,
+                                            title = title.value,
+                                            description = description.value,
+                                            date = date.value,
+                                            start = start.value,
+                                            end = end.value,
+                                            km = km.value,
+                                            movingTime = movingTime.value
+                                        )
+                                    )
+                                } else {
+                                    toast.cancel()
+                                    toast.setText(R.string.errore_orario)
+                                    toast.show()
+                                }
+                            },
+                            icon = {
+                                Icon(
+                                    painterResource(id = item.icon),
+                                    contentDescription = item.title
+                                )
+                            },
+                            label = { Text(text = item.title) },
+                            modifier = Modifier.background(Color.Transparent, CircleShape)
+                        )
+                    }
+                }
+            },
+            content = { paddingValues ->
+
+                paddingValues.calculateBottomPadding()
+                BackHandler(enabled = true) {
+                    openDialog.value = true
+                }
+                Column(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(horizontal = 16.dp, vertical = 16.dp)
+                        .verticalScroll(rememberScrollState()),
+                    verticalArrangement = Arrangement.spacedBy(16.dp)
                 ) {
-                    CustomTimeButton(
-                        time = start,
-                        label = stringResource(R.string.ora_inizio),
-                        context = navController.context
+                    OutlinedTextField(
+                        value = title.value,
+                        onValueChange = { title.value = it },
+                        label = { stringResource(R.string.attivita) }
                     )
-                    CustomTimeButton(
-                        time = end,
-                        label = stringResource(R.string.ora_fine),
-                        context = navController.context
+                    OutlinedTextField(
+                        value = description.value,
+                        onValueChange = { description.value = it },
+                        label = { stringResource(R.string.descrizione) }
+                    )
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween
+                    ) {
+                        CustomTimeButton(
+                            time = start,
+                            label = stringResource(R.string.ora_inizio),
+                            context = LocalContext.current
+                        )
+                        CustomTimeButton(
+                            time = end,
+                            label = stringResource(R.string.ora_fine),
+                            context = LocalContext.current
+                        )
+                    }
+                    OutlinedTextField(
+                        value = movingTime.value,
+                        onValueChange = { movingTime.value = it },
+                        label = { stringResource(R.string.ore_spostamento) },
+                        maxLines = 1,
+                        keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number)
+                    )
+                    OutlinedTextField(
+                        value = km.value,
+                        onValueChange = { km.value = it },
+                        label = { stringResource(R.string.km_percorsi) },
+                        maxLines = 1,
+                        keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number)
                     )
                 }
-                CustomInputText(
-                    value = movingTime,
-                    label = stringResource(R.string.ore_spostamento),
-                    numField = true
-                )
-                CustomInputText(
-                    value = km,
-                    label = stringResource(R.string.km_percorsi),
-                    numField = true
-                )
             }
-        })
+        )
+    }
 
     if (openDialog.value) {
         AlertDialog(
@@ -186,7 +230,8 @@ fun ActivityDetailsScreen(
             confirmButton = {
                 TextButton(onClick = {
                     openDialog.value = false
-                    navController.navigateUp()
+                    viewModel.onLoad.value = false
+                    onBackPressed()
                 }
                 ) {
                     Text(text = stringResource(R.string.conferma))

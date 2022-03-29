@@ -42,17 +42,12 @@ class WorkActivityRepositoryImpl(
             ).asList()
         )
 
-        return workActivities.filter { workActivity ->
+        /*return workActivities.filter { workActivity ->
             workActivity.date.dayOfMonth == dayOfMonth && workActivity.date.month == Month.of(month)
-        }
-    }
-    /*override suspend fun getMonthActivities(
-        userToken: String,
-        month: Int
-    ): List<WorkActivity> {
+        }*/
 
-        return mapper.toDomainList(workActivityService.getMonthActivities(userToken, month).workActivities)
-    }*/
+        return workActivities
+    }
 
     override suspend fun getActivityById(userToken: String, activityId: Int): WorkActivity {
         return mapper.mapToDomainModel(service.getActivityById(userToken, activityId).workActivity)

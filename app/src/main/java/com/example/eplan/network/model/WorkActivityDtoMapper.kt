@@ -3,6 +3,7 @@ package com.example.eplan.network.model
 import com.example.eplan.domain.model.WorkActivity
 import com.example.eplan.domain.util.DomainMapper
 import com.example.eplan.domain.util.durationCalculator
+import java.time.LocalDate
 import java.time.LocalTime
 import java.time.format.DateTimeFormatter
 
@@ -13,11 +14,12 @@ class WorkActivityDtoMapper : DomainMapper<WorkActivityDto, WorkActivity> {
         var endDateTime = dateTimeParser(model.end)
         startDateTime = startDateTime.copy(first = dateFromNetwork(startDateTime.first))
         endDateTime = endDateTime.copy(first = dateFromNetwork(endDateTime.first))
+        val formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy")
         return WorkActivity(
             id = Integer.parseInt(model.id),
             title = model.title,
             description = model.description,
-            date = startDateTime.first,
+            date = LocalDate.parse(startDateTime.first, formatter),
             start = startDateTime.second,
             end = endDateTime.second,
             movingTime = model.moveTime,
@@ -68,10 +70,10 @@ class WorkActivityDtoMapper : DomainMapper<WorkActivityDto, WorkActivity> {
     }
 
     /* Converte la data dal formato dd-MM-yyyy a yyyy-MM-dd */
-    private fun dateToNetwork(date: String): String {
-        val dayOfMonth = date.split("-")[0]
-        val month = date.split("-")[1]
-        val year = date.split("-")[2]
+    private fun dateToNetwork(date: LocalDate): String {
+        val dayOfMonth = date.dayOfMonth
+        val month = date.monthValue
+        val year = date.year
 
         return "$year-$month-$dayOfMonth"
     }

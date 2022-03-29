@@ -14,6 +14,7 @@ import com.example.eplan.presentation.navigation.BottomNavBarItems
 
 @Composable
 fun BottomNavBar(navController: NavHostController) {
+
     val items = listOf(
         BottomNavBarItems.Home,
         BottomNavBarItems.Appointments

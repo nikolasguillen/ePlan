@@ -49,7 +49,7 @@ import com.example.eplan.presentation.ui.items.*
 fun AppointmentDetailsScreen(
     appointment: Appointment,
     navController: NavHostController
-) {
+) {/*
 
     val name = remember { mutableStateOf(appointment.activity) }
     val title = remember { mutableStateOf(appointment.title) }
@@ -88,7 +88,7 @@ fun AppointmentDetailsScreen(
                     }
                 },
                 actions = {
-                    IconButton(onClick = { /*TODO*/ }) {
+                    IconButton(onClick = { *//*TODO*//* }) {
                         Icon(
                             imageVector = Icons.Outlined.Delete,
                             tint = Color.Red,
@@ -214,12 +214,12 @@ fun AppointmentDetailsScreen(
                         ) {
                             Text(text = periodicity.value, modifier = Modifier.padding(16.dp))
                         }
-                        /*CustomInputDropDown(
+                        *//*CustomInputDropDown(
                             value = periodicity,
                             items = appointment.getPeriodicities(),
                             enabled = memo,
                             size = Modifier.fillMaxWidth()
-                        )*/
+                        )*//*
                     }
                     Spacer(modifier = Modifier.size(16.dp))
                     Column(
@@ -447,13 +447,14 @@ fun AppointmentDetailsScreen(
                     Text(text = stringResource(id = R.string.annulla))
                 }
             })
-    }
+    }*/
 }
 
+/*
 fun createPeople(people: Map<String, Boolean>): MutableList<User> {
     val list = mutableListOf<User>()
     for (person in people) {
         list.add(User(person.key, mutableStateOf(person.value)))
     }
     return list
-}
+}*/

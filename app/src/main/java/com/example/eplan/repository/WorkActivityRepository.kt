@@ -1,7 +1,6 @@
 package com.example.eplan.repository
 
 import android.content.Context
-import com.example.eplan.domain.model.User
 import com.example.eplan.domain.model.WorkActivity
 
 interface WorkActivityRepository {

@@ -8,7 +8,11 @@ sealed class ActivityDetailEvent {
         val id: Int
     ) : ActivityDetailEvent()
 
-    data class UpdateActivityDetailEvent(
+    data class UpdateActivityEvent(
         val workActivity: WorkActivity
+    ) : ActivityDetailEvent()
+
+    data class DeleteActivityEvent(
+        val id: Int
     ) : ActivityDetailEvent()
 }
