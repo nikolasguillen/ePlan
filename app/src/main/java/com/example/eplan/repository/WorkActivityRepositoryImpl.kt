@@ -1,15 +1,12 @@
 package com.example.eplan.repository
 
 import android.content.Context
-import com.example.eplan.domain.model.User
 import com.example.eplan.domain.model.WorkActivity
-import com.example.eplan.domain.util.toJson
 import com.example.eplan.network.WorkActivityService
 import com.example.eplan.network.model.WorkActivityDto
 import com.example.eplan.network.model.WorkActivityDtoMapper
 import com.google.gson.Gson
 import java.io.IOException
-import java.time.Month
 
 class WorkActivityRepositoryImpl(
     private val service: WorkActivityService,
@@ -48,10 +45,15 @@ class WorkActivityRepositoryImpl(
     }
 
     override suspend fun getActivityById(userToken: String, activityId: String): WorkActivity {
-        return mapper.mapToDomainModel(service.getActivityById(userToken, activityId).workActivity)
+        return mapper.mapToDomainModel(service.getActivity(userToken, activityId).workActivity)
     }
 
     override suspend fun updateWorkActivity(userToken: String, workActivity: WorkActivity) {
         service.updateActivity(userToken, workActivity.id, "TODO")
+        /*TODO come mando l'attività?*/
+    }
+
+    override suspend fun deleteWorkActivity(userToken: String, id: String) {
+        service.deleteActivity(userToken, id)
     }
 }

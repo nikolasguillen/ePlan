@@ -16,5 +16,7 @@ interface WorkActivityRepository {
         activityId: String
     ): WorkActivity
 
-    suspend fun updateWorkActivity(userToken: String, workActivity: WorkActivity)
+    suspend fun updateWorkActivity(userToken: String, workActivity: WorkActivity) /* TODO chidedere se ritorna qualcosa */
+
+    suspend fun deleteWorkActivity(userToken: String, id: String) /* TODO chidedere se ritorna qualcosa */
 }

@@ -26,6 +26,7 @@ import com.example.eplan.R
 import com.example.eplan.domain.model.WorkActivity
 import com.example.eplan.presentation.navigation.BottomNavBarItems
 import com.example.eplan.presentation.ui.items.CustomTimeButton
+import com.example.eplan.presentation.ui.workActivity.ActivityDetailEvent.*
 import java.time.Duration
 import java.time.LocalTime
 import java.time.format.DateTimeFormatter
@@ -45,7 +46,7 @@ fun ActivityDetailsScreen(
     // Evita di rifare la chiamata API ad ogni recomposition
     if (!onLoad) {
         viewModel.onLoad.value = true
-        viewModel.onTriggerEvent(ActivityDetailEvent.GetActivityByIdEvent(activityId))
+        viewModel.onTriggerEvent(GetActivityEvent(activityId))
     }
 
     val workActivity = viewModel.workActivity.value

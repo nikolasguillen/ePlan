@@ -13,7 +13,7 @@ interface WorkActivityService {
     ): WorkActivityDayResponse
 
     @GET("getById")
-    suspend fun getActivityById(
+    suspend fun getActivity(
         @Header("userToken") token: String,
         @Query("id") id: String
     ): WorkActivityByIdResponse
@@ -24,5 +24,11 @@ interface WorkActivityService {
         @Header("userToken") token: String,
         @Query("activityId") id: String,
         @Query("updatedActivity") activity: String
+    )
+
+    @DELETE("delete")
+    suspend fun deleteActivity(
+        @Header("userToken") token: String,
+        @Query("activityId") id: String
     )
 }

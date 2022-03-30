@@ -4,7 +4,7 @@ import com.example.eplan.domain.model.WorkActivity
 
 sealed class ActivityDetailEvent {
 
-    data class GetActivityByIdEvent(
+    data class GetActivityEvent(
         val id: String
     ) : ActivityDetailEvent()
 

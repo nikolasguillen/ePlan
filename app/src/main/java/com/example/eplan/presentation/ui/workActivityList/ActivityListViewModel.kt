@@ -8,6 +8,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.eplan.domain.model.WorkActivity
+import com.example.eplan.presentation.ui.workActivityList.ActivityListEvent.*
 import com.example.eplan.presentation.util.TAG
 import com.example.eplan.repository.WorkActivityRepository
 import dagger.assisted.Assisted
@@ -51,9 +52,9 @@ constructor(
         Log.d(TAG, "Query (init): ${query.value}")
 
         if (query.value != LocalDate.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy"))) {
-            onTriggerEvent(ActivityListEvent.RestoreStateEvent)
+            onTriggerEvent(RestoreStateEvent)
         } else {
-            onTriggerEvent(ActivityListEvent.DayChangeEvent)
+            onTriggerEvent(DayChangeEvent)
         }
     }
 
@@ -61,10 +62,10 @@ constructor(
         viewModelScope.launch {
             try {
                 when (event) {
-                    is ActivityListEvent.DayChangeEvent -> {
+                    is DayChangeEvent -> {
                         dayChange()
                     }
-                    ActivityListEvent.RestoreStateEvent -> {
+                    RestoreStateEvent -> {
                         restoreState()
                     }
                 }
