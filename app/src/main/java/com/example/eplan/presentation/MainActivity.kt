@@ -12,6 +12,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.HiltViewModelFactory
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
@@ -64,10 +65,11 @@ class MainActivity : AppCompatActivity() {
                 ) {
 
                     composable(route = Screen.WorkActivityList.route) { navBackStackEntry ->
-                        val factory = HiltViewModelFactory(LocalContext.current, navBackStackEntry)
+                        /*val factory = HiltViewModelFactory(LocalContext.current, navBackStackEntry)
                         val viewModel: ActivityListViewModel =
-                            viewModel(key = "ActivityListViewModel", factory = factory)
-                        Log.d(TAG, viewModel.toString())
+                            viewModel(key = "ActivityListViewModel", factory = factory)*/
+
+                        val viewModel = hiltViewModel<ActivityListViewModel>()
                         ActivitiesListScreen(
                             viewModel = viewModel,
                             onNavigate = navController::navigate
@@ -81,10 +83,11 @@ class MainActivity : AppCompatActivity() {
                                 type = NavType.StringType
                             })
                     ) { navBackStackEntry ->
-                        val factory = HiltViewModelFactory(LocalContext.current, navBackStackEntry)
+                        /*val factory = HiltViewModelFactory(LocalContext.current, navBackStackEntry)
                         val viewModel: ActivityDetailViewModel =
-                            viewModel(key = "ActivityDetailsViewModel", factory = factory)
-                        Log.d(TAG, "Bestemmio")
+                            viewModel(key = "ActivityDetailsViewModel", factory = factory)*/
+
+                        val viewModel = hiltViewModel<ActivityDetailViewModel>()
                         ActivityDetailsScreen(
                             activityId = navBackStackEntry.arguments?.getString("activityId")!!,
                             viewModel = viewModel,

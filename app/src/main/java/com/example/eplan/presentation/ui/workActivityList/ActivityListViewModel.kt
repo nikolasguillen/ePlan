@@ -38,7 +38,7 @@ constructor(
 
     val workActivities: MutableState<List<WorkActivity>> = mutableStateOf(listOf())
 
-    val query = mutableStateOf("")
+    val query = mutableStateOf(LocalDate.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy")))
 
     init {
         savedStateHandle.get<String>(STATE_KEY_QUERY)
@@ -62,11 +62,9 @@ constructor(
             try {
                 when (event) {
                     is ActivityListEvent.DayChangeEvent -> {
-                        Log.d(TAG, "Query (DayChangeEvent):${query.value}")
                         dayChange()
                     }
                     ActivityListEvent.RestoreStateEvent -> {
-                        Log.d(TAG, "Query (RestoreStateEvent):${query.value}")
                         restoreState()
                     }
                 }

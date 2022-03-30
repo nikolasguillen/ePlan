@@ -48,7 +48,8 @@ fun ActivitiesListScreen(viewModel: ActivityListViewModel, onNavigate: (String) 
                     viewModel.onTriggerEvent(
                         ActivityListEvent.DayChangeEvent
                     )
-                })
+                },
+                startDate = LocalDate.parse(viewModel.query.value, DateTimeFormatter.ofPattern("dd-MM-yyyy")))
                 ActivitiesList(
                     workActivities = viewModel.workActivities.value,
                     onNavigateToActivityDetailScreen = onNavigate

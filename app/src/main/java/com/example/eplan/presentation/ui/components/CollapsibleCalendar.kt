@@ -1,5 +1,6 @@
 package com.example.eplan.presentation.ui.components
 
+import android.util.Log
 import android.view.View
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -11,11 +12,15 @@ import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import com.example.eplan.R
+import com.example.eplan.presentation.util.TAG
 import com.shrikanthravi.collapsiblecalendarview.data.Day
 import com.shrikanthravi.collapsiblecalendarview.widget.CollapsibleCalendar
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 
 @Composable
 fun CollapsibleCalendar(
+    startDate: LocalDate,
     onDaySelected: (dayOfMonth: Int, week: Int, year: Int) -> Unit
 ) {
 
@@ -28,6 +33,13 @@ fun CollapsibleCalendar(
     AndroidView(
         factory = { context ->
             CollapsibleCalendar(context).apply {
+
+                this.firstDayOfWeek = 1
+                this.select(Day(startDate.year, startDate.monthValue - 1, startDate.dayOfMonth))
+                this.selectedDay =
+                    Day(startDate.year, startDate.monthValue - 1, startDate.dayOfMonth)
+
+                expand(1)
 
                 primaryColor = resources.getColor(R.color.transparent, context.theme)
                 textColor = dynamicTextColor
