@@ -18,9 +18,7 @@ class WorkActivityRepositoryImpl(
 
     override suspend fun getDayActivities(
         userToken: String,
-        dayOfMonth: Int,
-        month: Int,
-        year: Int,
+        query: String,
         context: Context
     ): List<WorkActivity> {
 
@@ -49,7 +47,7 @@ class WorkActivityRepositoryImpl(
         return workActivities
     }
 
-    override suspend fun getActivityById(userToken: String, activityId: Int): WorkActivity {
+    override suspend fun getActivityById(userToken: String, activityId: String): WorkActivity {
         return mapper.mapToDomainModel(service.getActivityById(userToken, activityId).workActivity)
     }
 

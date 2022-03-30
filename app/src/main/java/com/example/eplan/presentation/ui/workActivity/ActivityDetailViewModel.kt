@@ -48,7 +48,7 @@ constructor(
 
     }
 
-    private suspend fun getActivityById(id: Int) {
+    private suspend fun getActivityById(id: String) {
         resetActivity()
         val result = repository.getActivityById(userToken = userToken, activityId = id)
         workActivity.value = result

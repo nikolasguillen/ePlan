@@ -3,7 +3,7 @@ package com.example.eplan.domain.model
 import java.time.LocalDate
 
 data class WorkActivity(
-    val id: Int,
+    val id: String,
     val title: String,
     val description: String,
     val date: LocalDate,

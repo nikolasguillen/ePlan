@@ -2,9 +2,8 @@ package com.example.eplan.presentation.ui.workActivityList
 
 sealed class ActivityListEvent {
 
-    data class DayChangeEvent(
-        val dayOfMonth: Int,
-        val month: Int,
-        val year: Int
-    ) : ActivityListEvent()
+    object DayChangeEvent : ActivityListEvent()
+
+    // Ripristino stato app in caso di process death
+    object RestoreStateEvent : ActivityListEvent()
 }

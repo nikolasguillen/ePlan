@@ -22,10 +22,9 @@ import com.example.eplan.presentation.ui.workActivityList.ActivityListEvent
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AppointmentsScreen(navController: NavHostController, appointments: MutableList<Appointment>) {
+fun AppointmentListScreen(navController: NavHostController) {
 
-    /*Scaffold(
-        bottomBar = { BottomNavBar(navController = navController) },
+    Scaffold(
         topBar = {
             TopBar(stringResource(R.string.appuntamenti), navigate = {
                 navController.navigate(
@@ -34,7 +33,7 @@ fun AppointmentsScreen(navController: NavHostController, appointments: MutableLi
             })
         },
         floatingActionButton = {
-            FloatingActionButton(onClick = { *//*TODO*//* }) {
+            FloatingActionButton(onClick = { /*TODO*/ }) {
                 Icon(
                     imageVector = Icons.Outlined.Create,
                     contentDescription = stringResource(R.string.aggiungi_attivita)
@@ -42,7 +41,7 @@ fun AppointmentsScreen(navController: NavHostController, appointments: MutableLi
             }
         },
         content = {
-            Column(modifier = Modifier.padding(bottom = it.calculateBottomPadding())) {
+            /*Column(modifier = Modifier.padding(bottom = it.calculateBottomPadding())) {
                 CollapsibleCalendar(onDaySelected = { dayOfMonth, month, year ->
                     viewModel.onTriggerEvent(
                         ActivityListEvent.DayChangeEvent(
@@ -60,7 +59,7 @@ fun AppointmentsScreen(navController: NavHostController, appointments: MutableLi
                         )
                     }
                 }
-            }
+            }*/
         }
-    )*/
+    )
 }

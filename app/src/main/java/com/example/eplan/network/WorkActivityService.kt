@@ -6,24 +6,23 @@ import retrofit2.http.*
 
 interface WorkActivityService {
 
-    @GET("get")
+    @GET("getByDay")
     suspend fun getDayActivities(
         @Header("userToken") token: String,
-        @Query("dayOfMonth") dayOfMonth: Int,
-        @Query("month") month: Int
+        @Query("query") query: String
     ): WorkActivityDayResponse
 
-    @GET("get")
+    @GET("getById")
     suspend fun getActivityById(
         @Header("userToken") token: String,
-        @Query("id") id: Int
+        @Query("id") id: String
     ): WorkActivityByIdResponse
 
 
-    @POST("post")
+    @GET("update")
     suspend fun updateActivity(
         @Header("userToken") token: String,
-        @Query("activityId") id: Int,
+        @Query("activityId") id: String,
         @Query("updatedActivity") activity: String
     )
 }

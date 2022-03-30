@@ -7,15 +7,13 @@ interface WorkActivityRepository {
 
     suspend fun getDayActivities(
         userToken: String,
-        dayOfMonth: Int,
-        month: Int,
-        year: Int,
+        query: String,
         context: Context
     ): List<WorkActivity>
 
     suspend fun getActivityById(
         userToken: String,
-        activityId: Int
+        activityId: String
     ): WorkActivity
 
     suspend fun updateWorkActivity(userToken: String, workActivity: WorkActivity)

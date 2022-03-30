@@ -57,7 +57,7 @@ fun CollapsibleCalendar(
 
                     override fun onDaySelect() {
                         selectedDay?.let {
-                            onDaySelected(it.day, it.month, it.year)
+                            onDaySelected(it.day, it.month + 1, it.year)
                             collapse(100)
                         }
                     }

@@ -16,7 +16,7 @@ class WorkActivityDtoMapper : DomainMapper<WorkActivityDto, WorkActivity> {
         endDateTime = endDateTime.copy(first = dateFromNetwork(endDateTime.first))
         val formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy")
         return WorkActivity(
-            id = Integer.parseInt(model.id),
+            id = model.id,
             title = model.title,
             description = model.description,
             date = LocalDate.parse(startDateTime.first, formatter),
@@ -36,7 +36,7 @@ class WorkActivityDtoMapper : DomainMapper<WorkActivityDto, WorkActivity> {
 
 
         return WorkActivityDto(
-            id = domainModel.id.toString(),
+            id = domainModel.id,
             title = domainModel.title,
             description = domainModel.description,
             start = startDateTime,

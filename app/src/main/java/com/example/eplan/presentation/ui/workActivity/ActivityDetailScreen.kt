@@ -34,10 +34,10 @@ import java.time.format.DateTimeFormatter
 @Composable
 fun ActivityDetailsScreen(
     viewModel: ActivityDetailViewModel,
-    activityId: Int,
+    activityId: String,
     onBackPressed: () -> Unit,
     onSavePressed: (WorkActivity) -> Unit,
-    onDeletePressed: (Int) -> Unit
+    onDeletePressed: (String) -> Unit
 ) {
 
     val onLoad = viewModel.onLoad.value

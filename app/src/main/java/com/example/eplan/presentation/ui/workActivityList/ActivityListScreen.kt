@@ -1,5 +1,6 @@
 package com.example.eplan.presentation.ui.workActivityList
 
+import android.util.Log
 import androidx.compose.foundation.layout.Column
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Create
@@ -11,10 +12,14 @@ import com.example.eplan.presentation.navigation.Screen
 import com.example.eplan.presentation.ui.components.ActivitiesList
 import com.example.eplan.presentation.ui.components.TopBar
 import com.example.eplan.presentation.ui.components.CollapsibleCalendar
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ActivitiesListScreen(viewModel: ActivityListViewModel, onNavigate: (String) -> Unit) {
+
+    Log.d("Viewmodel:", viewModel.toString())
 
     Scaffold(
         topBar = {
@@ -33,12 +38,14 @@ fun ActivitiesListScreen(viewModel: ActivityListViewModel, onNavigate: (String) 
         content = {
             Column {
                 CollapsibleCalendar(onDaySelected = { dayOfMonth, month, year ->
-                    viewModel.onTriggerEvent(
-                        ActivityListEvent.DayChangeEvent(
-                            dayOfMonth = dayOfMonth,
-                            month = month,
-                            year = year
+
+                    viewModel.onQueryChanged(
+                        LocalDate.of(year, month, dayOfMonth).format(
+                            DateTimeFormatter.ofPattern("dd-MM-yyyy")
                         )
+                    )
+                    viewModel.onTriggerEvent(
+                        ActivityListEvent.DayChangeEvent
                     )
                 })
                 ActivitiesList(
