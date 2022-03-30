@@ -8,6 +8,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.eplan.domain.model.WorkActivity
+import com.example.eplan.presentation.util.TAG
 import com.example.eplan.repository.WorkActivityRepository
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
@@ -40,14 +41,14 @@ constructor(
     val query = mutableStateOf("")
 
     init {
-
-        Log.d("Query (init):", query.value)
         savedStateHandle.get<String>(STATE_KEY_QUERY)
-            ?.let { Log.d("Query (init, savedStateHandle):", it) }
+            ?.let { Log.d(TAG, "Query (init, savedStateHandle):$it") }
 
         savedStateHandle.get<String>(STATE_KEY_QUERY)?.let { q ->
             setQuery(q)
         }
+
+        Log.d(TAG, "Query (init): ${query.value}")
 
         if (query.value != LocalDate.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy"))) {
             onTriggerEvent(ActivityListEvent.RestoreStateEvent)
@@ -61,11 +62,11 @@ constructor(
             try {
                 when (event) {
                     is ActivityListEvent.DayChangeEvent -> {
-                        Log.d("Query (DayChangeEvent):", query.value)
+                        Log.d(TAG, "Query (DayChangeEvent):${query.value}")
                         dayChange()
                     }
                     ActivityListEvent.RestoreStateEvent -> {
-                        Log.d("Query (RestoreStateEvent):", query.value)
+                        Log.d(TAG, "Query (RestoreStateEvent):${query.value}")
                         restoreState()
                     }
                 }
@@ -109,6 +110,6 @@ constructor(
     private fun setQuery(query: String) {
         this.query.value = query
         savedStateHandle.set(STATE_KEY_QUERY, query)
-        Log.d("Query (dentro savedStateHandle):", savedStateHandle.get<String>(STATE_KEY_QUERY)!!)
+        Log.d(TAG, "Query (dentro savedStateHandle):${savedStateHandle.get<String>(STATE_KEY_QUERY)!!}")
     }
 }

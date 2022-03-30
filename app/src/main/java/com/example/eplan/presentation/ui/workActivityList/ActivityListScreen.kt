@@ -12,6 +12,7 @@ import com.example.eplan.presentation.navigation.Screen
 import com.example.eplan.presentation.ui.components.ActivitiesList
 import com.example.eplan.presentation.ui.components.TopBar
 import com.example.eplan.presentation.ui.components.CollapsibleCalendar
+import com.example.eplan.presentation.util.TAG
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
@@ -19,7 +20,7 @@ import java.time.format.DateTimeFormatter
 @Composable
 fun ActivitiesListScreen(viewModel: ActivityListViewModel, onNavigate: (String) -> Unit) {
 
-    Log.d("Viewmodel:", viewModel.toString())
+    Log.d(TAG, viewModel.toString())
 
     Scaffold(
         topBar = {

@@ -1,6 +1,7 @@
 package com.example.eplan.presentation
 
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.layout.padding
@@ -27,6 +28,7 @@ import com.example.eplan.presentation.ui.workActivity.ActivityDetailViewModel
 import com.example.eplan.presentation.ui.workActivity.ActivityDetailsScreen
 import com.example.eplan.presentation.ui.workActivityList.ActivitiesListScreen
 import com.example.eplan.presentation.ui.workActivityList.ActivityListViewModel
+import com.example.eplan.presentation.util.TAG
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -65,6 +67,7 @@ class MainActivity : AppCompatActivity() {
                         val factory = HiltViewModelFactory(LocalContext.current, navBackStackEntry)
                         val viewModel: ActivityListViewModel =
                             viewModel(key = "ActivityListViewModel", factory = factory)
+                        Log.d(TAG, viewModel.toString())
                         ActivitiesListScreen(
                             viewModel = viewModel,
                             onNavigate = navController::navigate
@@ -81,6 +84,7 @@ class MainActivity : AppCompatActivity() {
                         val factory = HiltViewModelFactory(LocalContext.current, navBackStackEntry)
                         val viewModel: ActivityDetailViewModel =
                             viewModel(key = "ActivityDetailsViewModel", factory = factory)
+                        Log.d(TAG, "Bestemmio")
                         ActivityDetailsScreen(
                             activityId = navBackStackEntry.arguments?.getString("activityId")!!,
                             viewModel = viewModel,
