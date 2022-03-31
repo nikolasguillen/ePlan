@@ -6,7 +6,6 @@ import com.example.eplan.network.WorkActivityService
 import com.example.eplan.network.model.WorkActivityDto
 import com.example.eplan.network.model.WorkActivityDtoMapper
 import com.google.gson.Gson
-import dagger.hilt.android.qualifiers.ApplicationContext
 import java.io.IOException
 
 class WorkActivityRepositoryImpl(
@@ -45,7 +44,11 @@ class WorkActivityRepositoryImpl(
         return workActivities
     }
 
-    override suspend fun getActivityById(userToken: String, activityId: String, context: Context): WorkActivity {
+    override suspend fun getActivityById(
+        userToken: String,
+        activityId: String,
+        context: Context
+    ): WorkActivity {
         /*return mapper.mapToDomainModel(service.getActivity(userToken, activityId).workActivity)*/
 
         val workActivityDtoMapper = WorkActivityDtoMapper()
@@ -73,7 +76,10 @@ class WorkActivityRepositoryImpl(
         return workActivities.first { it.id == activityId }
     }
 
-    override suspend fun updateWorkActivity(userToken: String, workActivity: WorkActivity) {
+    override suspend fun updateWorkActivity(
+        userToken: String,
+        workActivity: WorkActivity
+    ) {
         service.updateActivity(userToken, workActivity.id, "TODO")
         /*TODO come mando l'attività?*/
     }

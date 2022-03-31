@@ -26,6 +26,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.example.eplan.presentation.navigation.NavGraph
 import com.example.eplan.presentation.navigation.Screen
 import com.example.eplan.presentation.ui.appointmentList.AppointmentListScreen
 import com.example.eplan.presentation.ui.components.BottomNavBar
@@ -100,65 +101,7 @@ class MainActivity : AppCompatActivity() {
                         }
                     }
                 ) {
-                    NavHost(
-                        navController = navController,
-                        startDestination = Screen.WorkActivityList.route,
-                        modifier = Modifier.systemBarsPadding()
-                    ) {
-
-                        composable(route = Screen.WorkActivityList.route) { navBackStackEntry ->
-                            /*val factory = HiltViewModelFactory(LocalContext.current, navBackStackEntry)
-                            val viewModel: ActivityListViewModel =
-                                viewModel(key = "ActivityListViewModel", factory = factory)*/
-
-                            val viewModel = hiltViewModel<ActivityListViewModel>()
-                            ActivitiesListScreen(
-                                viewModel = viewModel,
-                                onNavigate = navController::navigate,
-                                it.calculateBottomPadding()
-                            )
-                        }
-
-                        composable(
-                            route = Screen.WorkActivityDetails.route + "/{activityId}",
-                            arguments = listOf(
-                                navArgument("activityId") {
-                                    type = NavType.StringType
-                                })
-                        ) { navBackStackEntry ->
-                            /*val factory = HiltViewModelFactory(LocalContext.current, navBackStackEntry)
-                            val viewModel: ActivityDetailViewModel =
-                                viewModel(key = "ActivityDetailsViewModel", factory = factory)*/
-
-                            val viewModel = hiltViewModel<ActivityDetailViewModel>()
-                            ActivityDetailsScreen(
-                                activityId = navBackStackEntry.arguments?.getString("activityId")!!,
-                                viewModel = viewModel,
-                                onSavePressed = { workActivity ->
-                                    viewModel.onTriggerEvent(
-                                        ActivityDetailEvent.UpdateActivityEvent(
-                                            workActivity = workActivity
-                                        )
-                                    )
-                                    navController.navigateUp()
-                                },
-                                onBackPressed = navController::navigateUp,
-                                onDeletePressed = { id ->
-                                    viewModel.onTriggerEvent(
-                                        ActivityDetailEvent.DeleteActivityEvent(
-                                            id = id
-                                        )
-                                    )
-                                    navController.navigateUp()
-                                }
-                            )
-                        }
-
-                        /*TODO da sistemare*/
-                        composable(route = Screen.AppointmentList.route) {
-                            AppointmentListScreen(navController = navController)
-                        }
-                    }
+                    NavGraph(navController = navController, bottomPadding = it.calculateBottomPadding())
                 }
             }
         }

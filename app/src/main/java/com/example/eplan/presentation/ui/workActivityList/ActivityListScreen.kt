@@ -1,6 +1,5 @@
 package com.example.eplan.presentation.ui.workActivityList
 
-import android.util.Log
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
@@ -13,9 +12,8 @@ import androidx.compose.ui.unit.Dp
 import com.example.eplan.R
 import com.example.eplan.presentation.navigation.Screen
 import com.example.eplan.presentation.ui.components.ActivitiesList
-import com.example.eplan.presentation.ui.components.TopBar
 import com.example.eplan.presentation.ui.components.CollapsibleCalendar
-import com.example.eplan.presentation.util.TAG
+import com.example.eplan.presentation.ui.components.TopBar
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 

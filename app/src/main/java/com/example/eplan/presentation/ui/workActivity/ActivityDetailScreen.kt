@@ -111,7 +111,8 @@ fun ActivityDetailsScreen(
                                 (start.value != it.start) ||
                                 (end.value != it.end) ||
                                 (movingTime.value != it.movingTime) ||
-                                (km.value != it.km)) {
+                                (km.value != it.km)
+                            ) {
                                 edited = true
                             }
 
@@ -150,7 +151,7 @@ fun ActivityDetailsScreen(
                     enter = fadeIn() + slideInVertically(initialOffsetY = { it }),
                     exit = slideOutVertically(targetOffsetY = { it }) + fadeOut()
                 ) {
-                    NavigationBar {
+                    NavigationBar(containerColor = MaterialTheme.colorScheme.secondary) {
                         items.forEach { item ->
                             NavigationBarItem(
                                 selected = false,
@@ -187,10 +188,11 @@ fun ActivityDetailsScreen(
                                 icon = {
                                     Icon(
                                         painterResource(id = item.icon),
-                                        contentDescription = item.title
+                                        contentDescription = item.title,
+                                        tint = MaterialTheme.colorScheme.onSecondary
                                     )
                                 },
-                                label = { Text(text = item.title) },
+                                label = { Text(text = item.title, color = MaterialTheme.colorScheme.onSecondary) },
                                 modifier = Modifier.background(Color.Transparent, CircleShape)
                             )
                         }
@@ -207,7 +209,8 @@ fun ActivityDetailsScreen(
                         (start.value != it.start) ||
                         (end.value != it.end) ||
                         (movingTime.value != it.movingTime) ||
-                        (km.value != it.km)) {
+                        (km.value != it.km)
+                    ) {
                         edited = true
                     }
 
