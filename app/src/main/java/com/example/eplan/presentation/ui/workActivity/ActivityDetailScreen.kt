@@ -7,6 +7,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
@@ -17,12 +18,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.snapshots.Snapshot
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import com.example.eplan.R
@@ -55,6 +58,8 @@ fun ActivityDetailsScreen(
     val workActivity = remember { viewModel.workActivity.value }
 
     val bottomBarState = rememberSaveable { mutableStateOf(false) }
+
+    val focusManager = LocalFocusManager.current
 
     val items = listOf(
         BottomNavBarItems.Save,
@@ -145,62 +150,59 @@ fun ActivityDetailsScreen(
                 )
             },
             bottomBar = {
-                bottomBarState.value = true
-                AnimatedVisibility(
-                    visible = bottomBarState.value,
-                    enter = fadeIn() + slideInVertically(initialOffsetY = { it }),
-                    exit = slideOutVertically(targetOffsetY = { it }) + fadeOut()
-                ) {
-                    NavigationBar(containerColor = MaterialTheme.colorScheme.secondary) {
-                        items.forEach { item ->
-                            NavigationBarItem(
-                                selected = false,
-                                onClick = {
-                                    if (Duration.between(
-                                            LocalTime.parse(
-                                                start.value,
-                                                DateTimeFormatter.ISO_TIME
-                                            ),
-                                            LocalTime.parse(
-                                                end.value,
-                                                DateTimeFormatter.ISO_TIME
-                                            )
-                                        ).toMinutes() > 0
-                                    ) {
-                                        onSavePressed(
-                                            WorkActivity(
-                                                id = activityId,
-                                                title = title.value,
-                                                description = description.value,
-                                                date = date.value,
-                                                start = start.value,
-                                                end = end.value,
-                                                km = km.value,
-                                                movingTime = movingTime.value
-                                            )
+                NavigationBar(containerColor = MaterialTheme.colorScheme.secondary) {
+                    items.forEach { item ->
+                        NavigationBarItem(
+                            selected = false,
+                            onClick = {
+                                if (Duration.between(
+                                        LocalTime.parse(
+                                            start.value,
+                                            DateTimeFormatter.ISO_TIME
+                                        ),
+                                        LocalTime.parse(
+                                            end.value,
+                                            DateTimeFormatter.ISO_TIME
                                         )
-                                    } else {
-                                        toast.cancel()
-                                        toast.setText(R.string.errore_orario)
-                                        toast.show()
-                                    }
-                                },
-                                icon = {
-                                    Icon(
-                                        painterResource(id = item.icon),
-                                        contentDescription = item.title,
-                                        tint = MaterialTheme.colorScheme.onSecondary
+                                    ).toMinutes() > 0
+                                ) {
+                                    onSavePressed(
+                                        WorkActivity(
+                                            id = activityId,
+                                            title = title.value,
+                                            description = description.value,
+                                            date = date.value,
+                                            start = start.value,
+                                            end = end.value,
+                                            km = km.value,
+                                            movingTime = movingTime.value
+                                        )
                                     )
-                                },
-                                label = { Text(text = item.title, color = MaterialTheme.colorScheme.onSecondary) },
-                                modifier = Modifier.background(Color.Transparent, CircleShape)
-                            )
-                        }
+                                } else {
+                                    toast.cancel()
+                                    toast.setText(R.string.errore_orario)
+                                    toast.show()
+                                }
+                            },
+                            icon = {
+                                Icon(
+                                    painterResource(id = item.icon),
+                                    contentDescription = item.title,
+                                    tint = MaterialTheme.colorScheme.onSecondary
+                                )
+                            },
+                            label = {
+                                Text(
+                                    text = item.title,
+                                    color = MaterialTheme.colorScheme.onSecondary
+                                )
+                            },
+                            modifier = Modifier.background(Color.Transparent, CircleShape)
+                        )
                     }
                 }
             },
             content = { paddingValues ->
-
                 BackHandler(enabled = true) {
 
                     var edited = false
@@ -217,7 +219,6 @@ fun ActivityDetailsScreen(
                     if (edited) {
                         openDialog.value = true
                     } else {
-                        bottomBarState.value = false
                         onBackPressed()
                     }
                 }
@@ -266,7 +267,13 @@ fun ActivityDetailsScreen(
                         label = { Text(text = stringResource(R.string.ore_spostamento)) },
                         modifier = Modifier.fillMaxWidth(),
                         singleLine = true,
-                        keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number)
+                        keyboardOptions = KeyboardOptions.Default.copy(
+                            keyboardType = KeyboardType.Number,
+                            imeAction = ImeAction.Done
+                        ),
+                        keyboardActions = KeyboardActions(
+                            onDone = { focusManager.clearFocus() }
+                        )
                     )
                     OutlinedTextField(
                         value = km.value,
@@ -274,7 +281,13 @@ fun ActivityDetailsScreen(
                         label = { Text(text = stringResource(R.string.km_percorsi)) },
                         modifier = Modifier.fillMaxWidth(),
                         singleLine = true,
-                        keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number)
+                        keyboardOptions = KeyboardOptions.Default.copy(
+                            keyboardType = KeyboardType.Number,
+                            imeAction = ImeAction.Done
+                        ),
+                        keyboardActions = KeyboardActions(
+                            onDone = { focusManager.clearFocus() }
+                        )
                     )
                 }
             }

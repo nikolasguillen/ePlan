@@ -1,8 +1,10 @@
 package com.example.eplan.presentation.ui.items
 
+import android.app.Activity
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
 import android.content.Context
+import android.text.format.DateFormat.is24HourFormat
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -22,7 +24,10 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
+import androidx.fragment.app.FragmentManager
 import com.example.eplan.R
+import com.google.android.material.timepicker.MaterialTimePicker
+import com.google.android.material.timepicker.TimeFormat
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -94,7 +99,7 @@ fun CustomSwitch(
     )
 }
 
-private fun customTimePicker(time: MutableState<String>, context: Context) {
+private fun customTimePicker(time: MutableState<String>, context: Context, fragmentManager: FragmentManager? = null) {
 
     val timePickerDialog = TimePickerDialog(
         context,
@@ -107,8 +112,8 @@ private fun customTimePicker(time: MutableState<String>, context: Context) {
         true
     )
 
-
     timePickerDialog.show()
+
 
 }
 
@@ -131,12 +136,12 @@ private fun customDatePicker(date: MutableState<String>, context: Context) {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CustomTimeButton(time: MutableState<String>, label: String, context: Context) {
+fun CustomTimeButton(time: MutableState<String>, label: String, context: Context, fragmentManager: FragmentManager? = null) {
     Card(
         modifier = Modifier
             .width(150.dp)
             .clip(RoundedCornerShape(11.dp))
-            .clickable { customTimePicker(time, context) }
+            .clickable { customTimePicker(time, context, fragmentManager) }
     )
     {
         Text(

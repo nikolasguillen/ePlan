@@ -71,7 +71,7 @@ constructor(
     }
 
     private suspend fun updateActivity(workActivity: WorkActivity) {
-        repository.updateWorkActivity(userToken = userToken, workActivity = workActivity, context = context)
+        repository.updateWorkActivity(userToken = userToken, workActivity = workActivity)
         resetActivity()
     }
 

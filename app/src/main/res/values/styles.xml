@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
     <style name="MyTimePickerDialogStyle" parent="Theme.AppCompat.Light.Dialog">
-        <item name="android:colorAccent">@color/palettePrimaryContainer</item>
-        <item name="android:colorControlActivated">@color/palettePrimaryContainer</item>
+        <item name="android:colorAccent">@color/md_theme_light_primary</item>
+        <item name="android:colorControlActivated">@color/md_theme_light_primary</item>
     </style>
 </resources>

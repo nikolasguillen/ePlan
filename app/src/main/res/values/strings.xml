@@ -20,4 +20,5 @@
     <string name="account">Account</string>
     <string name="aggiungi_attivita">Aggiungi attività</string>
     <string name="login">Login</string>
+    <string name="ok">Ok</string>
 </resources>
