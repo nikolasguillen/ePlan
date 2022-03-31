@@ -9,6 +9,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.Dp
 import com.example.eplan.R
 import com.example.eplan.presentation.navigation.Screen
 import com.example.eplan.presentation.ui.components.ActivitiesList
@@ -20,9 +21,10 @@ import java.time.format.DateTimeFormatter
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ActivitiesListScreen(viewModel: ActivityListViewModel, onNavigate: (String) -> Unit) {
+fun ActivitiesListScreen(viewModel: ActivityListViewModel, onNavigate: (String) -> Unit, bottomPadding: Dp) {
 
     Scaffold(
+        modifier = Modifier.padding(bottom = bottomPadding),
         topBar = {
             TopBar(
                 stringResource(R.string.foglio_ore),

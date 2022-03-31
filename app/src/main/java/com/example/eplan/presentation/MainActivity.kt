@@ -5,17 +5,16 @@ import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
-import androidx.compose.foundation.background
+import androidx.compose.animation.*
 import androidx.compose.foundation.isSystemInDarkTheme
-import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.core.view.WindowCompat
@@ -27,7 +26,6 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import com.example.eplan.presentation.navigation.NavGraph
 import com.example.eplan.presentation.navigation.Screen
 import com.example.eplan.presentation.ui.appointmentList.AppointmentListScreen
 import com.example.eplan.presentation.ui.components.BottomNavBar
@@ -56,7 +54,6 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        
 
         WindowCompat.setDecorFitsSystemWindows(window, false)
 
@@ -65,6 +62,7 @@ class MainActivity : AppCompatActivity() {
             val navController = rememberNavController()
             val systemUiController = rememberSystemUiController()
             val useDarkIcons = !isSystemInDarkTheme()
+            val bottomBarState = rememberSaveable { mutableStateOf(false) }
 
             SideEffect {
                 systemUiController.setSystemBarsColor(
@@ -81,16 +79,86 @@ class MainActivity : AppCompatActivity() {
 
                 Scaffold(
                     bottomBar = {
-                        val cr = currentRoute(navController = navController)
-                        if (cr?.contains(Screen.WorkActivityList.route) == true || cr?.contains(
-                                Screen.AppointmentList.route
-                            ) == true
+
+                        when (currentRoute(navController = navController)) {
+                            (Screen.WorkActivityList.route) -> {
+                                bottomBarState.value = true
+                            }
+                            (Screen.AppointmentList.route) -> {
+                                bottomBarState.value = true
+                            }
+                            else -> {
+                                bottomBarState.value = false
+                            }
+                        }
+                        AnimatedVisibility(
+                            visible = bottomBarState.value,
+                            enter = fadeIn() + slideInVertically(initialOffsetY = { it }),
+                            exit = slideOutVertically(targetOffsetY = { it }) + fadeOut()
                         ) {
                             BottomNavBar(navController = navController)
                         }
                     }
                 ) {
-                    NavGraph(navController = navController)
+                    NavHost(
+                        navController = navController,
+                        startDestination = Screen.WorkActivityList.route,
+                        modifier = Modifier.systemBarsPadding()
+                    ) {
+
+                        composable(route = Screen.WorkActivityList.route) { navBackStackEntry ->
+                            /*val factory = HiltViewModelFactory(LocalContext.current, navBackStackEntry)
+                            val viewModel: ActivityListViewModel =
+                                viewModel(key = "ActivityListViewModel", factory = factory)*/
+
+                            val viewModel = hiltViewModel<ActivityListViewModel>()
+                            ActivitiesListScreen(
+                                viewModel = viewModel,
+                                onNavigate = navController::navigate,
+                                it.calculateBottomPadding()
+                            )
+                        }
+
+                        composable(
+                            route = Screen.WorkActivityDetails.route + "/{activityId}",
+                            arguments = listOf(
+                                navArgument("activityId") {
+                                    type = NavType.StringType
+                                })
+                        ) { navBackStackEntry ->
+                            /*val factory = HiltViewModelFactory(LocalContext.current, navBackStackEntry)
+                            val viewModel: ActivityDetailViewModel =
+                                viewModel(key = "ActivityDetailsViewModel", factory = factory)*/
+
+                            val viewModel = hiltViewModel<ActivityDetailViewModel>()
+                            ActivityDetailsScreen(
+                                activityId = navBackStackEntry.arguments?.getString("activityId")!!,
+                                viewModel = viewModel,
+                                onSavePressed = { workActivity ->
+                                    viewModel.onTriggerEvent(
+                                        ActivityDetailEvent.UpdateActivityEvent(
+                                            workActivity = workActivity
+                                        )
+                                    )
+                                    navController.navigateUp()
+                                },
+                                onBackPressed = navController::navigateUp,
+                                onDeletePressed = { id ->
+                                    viewModel.onTriggerEvent(
+                                        ActivityDetailEvent.DeleteActivityEvent(
+                                            id = id
+                                        )
+                                    )
+                                    navController.navigateUp()
+                                }
+                            )
+                        }
+
+                        /*TODO da sistemare*/
+                        composable(route = Screen.AppointmentList.route) {
+                            AppointmentListScreen(navController = navController)
+                        }
+                    }
                 }
             }
         }
