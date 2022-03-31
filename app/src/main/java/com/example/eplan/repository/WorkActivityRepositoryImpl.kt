@@ -6,6 +6,7 @@ import com.example.eplan.network.WorkActivityService
 import com.example.eplan.network.model.WorkActivityDto
 import com.example.eplan.network.model.WorkActivityDtoMapper
 import com.google.gson.Gson
+import dagger.hilt.android.qualifiers.ApplicationContext
 import java.io.IOException
 
 class WorkActivityRepositoryImpl(
@@ -44,8 +45,32 @@ class WorkActivityRepositoryImpl(
         return workActivities
     }
 
-    override suspend fun getActivityById(userToken: String, activityId: String): WorkActivity {
-        return mapper.mapToDomainModel(service.getActivity(userToken, activityId).workActivity)
+    override suspend fun getActivityById(userToken: String, activityId: String, context: Context): WorkActivity {
+        /*return mapper.mapToDomainModel(service.getActivity(userToken, activityId).workActivity)*/
+
+        val workActivityDtoMapper = WorkActivityDtoMapper()
+
+        lateinit var tracciatoJson: String
+        try {
+            tracciatoJson = context.assets.open("tracciatoEplan.json")
+                .bufferedReader()
+                .use { it.readText() }
+        } catch (ioException: IOException) {
+        }
+
+        val gson = Gson()
+        val workActivities = workActivityDtoMapper.toDomainList(
+            gson.fromJson(
+                tracciatoJson,
+                Array<WorkActivityDto>::class.java
+            ).asList()
+        )
+
+        /*return workActivities.filter { workActivity ->
+            workActivity.date.dayOfMonth == dayOfMonth && workActivity.date.month == Month.of(month)
+        }*/
+
+        return workActivities.first { it.id == activityId }
     }
 
     override suspend fun updateWorkActivity(userToken: String, workActivity: WorkActivity) {

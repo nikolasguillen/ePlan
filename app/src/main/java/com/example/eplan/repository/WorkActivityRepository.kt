@@ -13,7 +13,8 @@ interface WorkActivityRepository {
 
     suspend fun getActivityById(
         userToken: String,
-        activityId: String
+        activityId: String,
+        context: Context
     ): WorkActivity
 
     suspend fun updateWorkActivity(userToken: String, workActivity: WorkActivity) /* TODO chidedere se ritorna qualcosa */

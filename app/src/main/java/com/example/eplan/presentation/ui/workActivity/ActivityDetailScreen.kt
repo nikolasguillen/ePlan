@@ -1,5 +1,7 @@
 package com.example.eplan.presentation.ui.workActivity
 
+import android.annotation.SuppressLint
+import android.util.Log
 import android.widget.Toast
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
@@ -15,6 +17,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.snapshots.Snapshot
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
@@ -27,10 +30,12 @@ import com.example.eplan.domain.model.WorkActivity
 import com.example.eplan.presentation.navigation.BottomNavBarItems
 import com.example.eplan.presentation.ui.items.CustomTimeButton
 import com.example.eplan.presentation.ui.workActivity.ActivityDetailEvent.*
+import com.example.eplan.presentation.util.TAG
 import java.time.Duration
 import java.time.LocalTime
 import java.time.format.DateTimeFormatter
 
+@SuppressLint("UnrememberedMutableState")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ActivityDetailsScreen(
@@ -49,7 +54,7 @@ fun ActivityDetailsScreen(
         viewModel.onTriggerEvent(GetActivityEvent(activityId))
     }
 
-    val workActivity = viewModel.workActivity.value
+    val workActivity = remember { viewModel.workActivity.value }
 
     val items = listOf(
         BottomNavBarItems.Save,
@@ -93,12 +98,31 @@ fun ActivityDetailsScreen(
             mutableStateOf(it.km)
         }
 
+        val snapshot = Snapshot.takeSnapshot()
+
         Scaffold(
             topBar = {
                 MediumTopAppBar(
                     title = { Text(text = stringResource(R.string.attivita)) },
                     navigationIcon = {
-                        IconButton(onClick = { openDialog.value = true }) {
+                        IconButton(onClick = {
+
+                            var edited = false
+                            if ((title.value != snapshot.enter { title.value }) ||
+                                (description.value != snapshot.enter { description.value }) ||
+                                (start.value != snapshot.enter { start.value }) ||
+                                (end.value != snapshot.enter { end.value }) ||
+                                (movingTime.value != snapshot.enter { movingTime.value }) ||
+                                (km.value != snapshot.enter { km.value })) {
+                                edited = true
+                            }
+
+                            if (edited) {
+                                openDialog.value = true
+                            } else {
+                                onBackPressed()
+                            }
+                        }) {
                             Icon(
                                 imageVector = Icons.Filled.ArrowBack,
                                 contentDescription = stringResource(R.string.indietro)
@@ -116,7 +140,8 @@ fun ActivityDetailsScreen(
                                 contentDescription = stringResource(R.string.elimina_commessa)
                             )
                         }
-                    })
+                    }
+                )
             },
             bottomBar = {
                 NavigationBar {
@@ -167,26 +192,47 @@ fun ActivityDetailsScreen(
             },
             content = { paddingValues ->
 
-                paddingValues.calculateBottomPadding()
                 BackHandler(enabled = true) {
-                    openDialog.value = true
+
+                    var edited = false
+                    if ((title.value != snapshot.enter { title.value }) ||
+                        (description.value != snapshot.enter { description.value }) ||
+                        (start.value != snapshot.enter { start.value }) ||
+                        (end.value != snapshot.enter { end.value }) ||
+                        (movingTime.value != snapshot.enter { movingTime.value }) ||
+                        (km.value != snapshot.enter { km.value })) {
+                        edited = true
+                    }
+
+                    if (edited) {
+                        openDialog.value = true
+                    } else {
+                        onBackPressed()
+                    }
                 }
                 Column(
                     modifier = Modifier
                         .fillMaxSize()
-                        .padding(horizontal = 16.dp, vertical = 16.dp)
+                        .padding(
+                            start = 16.dp,
+                            end = 16.dp,
+                            top = 16.dp,
+                            bottom = paddingValues.calculateBottomPadding()
+                        )
                         .verticalScroll(rememberScrollState()),
                     verticalArrangement = Arrangement.spacedBy(16.dp)
                 ) {
                     OutlinedTextField(
                         value = title.value,
                         onValueChange = { title.value = it },
-                        label = { stringResource(R.string.attivita) }
+                        label = { Text(text = stringResource(R.string.attivita)) },
+                        modifier = Modifier.fillMaxWidth()
                     )
                     OutlinedTextField(
                         value = description.value,
                         onValueChange = { description.value = it },
-                        label = { stringResource(R.string.descrizione) }
+                        label = { Text(text = stringResource(R.string.descrizione)) },
+                        modifier = Modifier.fillMaxWidth()
                     )
                     Row(
                         modifier = Modifier.fillMaxWidth(),
@@ -206,15 +252,17 @@ fun ActivityDetailsScreen(
                     OutlinedTextField(
                         value = movingTime.value,
                         onValueChange = { movingTime.value = it },
-                        label = { stringResource(R.string.ore_spostamento) },
-                        maxLines = 1,
+                        label = { Text(text = stringResource(R.string.ore_spostamento)) },
+                        modifier = Modifier.fillMaxWidth(),
+                        singleLine = true,
                         keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number)
                     )
                     OutlinedTextField(
                         value = km.value,
                         onValueChange = { km.value = it },
-                        label = { stringResource(R.string.km_percorsi) },
-                        maxLines = 1,
+                        label = { Text(text = stringResource(R.string.km_percorsi)) },
+                        modifier = Modifier.fillMaxWidth(),
+                        singleLine = true,
                         keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number)
                     )
                 }

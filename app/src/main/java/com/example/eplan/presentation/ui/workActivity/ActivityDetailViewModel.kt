@@ -63,7 +63,7 @@ constructor(
 
     private suspend fun getActivity(id: String) {
         resetActivity()
-        val result = repository.getActivityById(userToken = userToken, activityId = id)
+        val result = repository.getActivityById(userToken = userToken, activityId = id, context = context)
 
         state.set(STATE_KEY_ACTIVITY, id)
 

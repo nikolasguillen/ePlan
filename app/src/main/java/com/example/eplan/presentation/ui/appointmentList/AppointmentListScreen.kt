@@ -33,7 +33,10 @@ fun AppointmentListScreen(navController: NavHostController) {
             })
         },
         floatingActionButton = {
-            FloatingActionButton(onClick = { /*TODO*/ }) {
+            FloatingActionButton(
+                onClick = { /*TODO*/ },
+                containerColor = MaterialTheme.colorScheme.primary
+            ) {
                 Icon(
                     imageVector = Icons.Outlined.Create,
                     contentDescription = stringResource(R.string.aggiungi_attivita)

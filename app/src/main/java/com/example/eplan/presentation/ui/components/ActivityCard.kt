@@ -34,15 +34,19 @@ fun ActivityCard(
         Column(modifier = Modifier.padding(16.dp)) {
             Text(
                 text = workActivity.title.replaceFirstChar { it.uppercase() },
-                style = MaterialTheme.typography.titleMedium
-            )
-            Text(
-                text = workActivity.description.replaceFirstChar { it.uppercase() },
-                style = MaterialTheme.typography.bodyMedium,
+                style = MaterialTheme.typography.titleMedium,
                 maxLines = 1,
-                overflow = TextOverflow.Ellipsis,
-                modifier = Modifier.padding(bottom = 3.dp)
+                overflow = TextOverflow.Ellipsis
             )
+            if (workActivity.description != "") {
+                Text(
+                    text = workActivity.description.replaceFirstChar { it.uppercase() },
+                    style = MaterialTheme.typography.bodyMedium,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
+                    modifier = Modifier.padding(bottom = 3.dp)
+                )
+            }
             Text(text = workActivity.start, style = MaterialTheme.typography.labelSmall)
             Text(text = workActivity.end, style = MaterialTheme.typography.labelSmall)
         }

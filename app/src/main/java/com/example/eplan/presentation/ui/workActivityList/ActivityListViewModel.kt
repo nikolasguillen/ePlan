@@ -42,14 +42,10 @@ constructor(
     val query = mutableStateOf(LocalDate.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy")))
 
     init {
-        savedStateHandle.get<String>(STATE_KEY_QUERY)
-            ?.let { Log.d(TAG, "Query (init, savedStateHandle):$it") }
 
         savedStateHandle.get<String>(STATE_KEY_QUERY)?.let { q ->
             setQuery(q)
         }
-
-        Log.d(TAG, "Query (init): ${query.value}")
 
         if (query.value != LocalDate.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy"))) {
             onTriggerEvent(RestoreStateEvent)
@@ -109,6 +105,5 @@ constructor(
     private fun setQuery(query: String) {
         this.query.value = query
         savedStateHandle.set(STATE_KEY_QUERY, query)
-        Log.d(TAG, "Query (dentro savedStateHandle):${savedStateHandle.get<String>(STATE_KEY_QUERY)!!}")
     }
 }

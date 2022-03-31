@@ -39,8 +39,6 @@ fun CollapsibleCalendar(
                 this.selectedDay =
                     Day(startDate.year, startDate.monthValue - 1, startDate.dayOfMonth)
 
-                expand(1)
-
                 primaryColor = resources.getColor(R.color.transparent, context.theme)
                 textColor = dynamicTextColor
                 setExpandIconColor(dynamicTextColor)

@@ -2,10 +2,12 @@ package com.example.eplan.presentation.ui.workActivityList
 
 import android.util.Log
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Create
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import com.example.eplan.R
 import com.example.eplan.presentation.navigation.Screen
@@ -20,8 +22,6 @@ import java.time.format.DateTimeFormatter
 @Composable
 fun ActivitiesListScreen(viewModel: ActivityListViewModel, onNavigate: (String) -> Unit) {
 
-    Log.d(TAG, viewModel.toString())
-
     Scaffold(
         topBar = {
             TopBar(
@@ -29,7 +29,10 @@ fun ActivitiesListScreen(viewModel: ActivityListViewModel, onNavigate: (String) 
                 navigate = { onNavigate(Screen.Account.route) })
         },
         floatingActionButton = {
-            FloatingActionButton(onClick = { /*TODO*/ }) {
+            FloatingActionButton(
+                onClick = { /*TODO*/ },
+                containerColor = MaterialTheme.colorScheme.primary
+            ) {
                 Icon(
                     imageVector = Icons.Outlined.Create,
                     contentDescription = stringResource(R.string.aggiungi_attivita)
@@ -38,18 +41,23 @@ fun ActivitiesListScreen(viewModel: ActivityListViewModel, onNavigate: (String) 
         },
         content = {
             Column {
-                CollapsibleCalendar(onDaySelected = { dayOfMonth, month, year ->
+                CollapsibleCalendar(
+                    onDaySelected = { dayOfMonth, month, year ->
 
-                    viewModel.onQueryChanged(
-                        LocalDate.of(year, month, dayOfMonth).format(
-                            DateTimeFormatter.ofPattern("dd-MM-yyyy")
+                        viewModel.onQueryChanged(
+                            LocalDate.of(year, month, dayOfMonth).format(
+                                DateTimeFormatter.ofPattern("dd-MM-yyyy")
+                            )
                         )
+                        viewModel.onTriggerEvent(
+                            ActivityListEvent.DayChangeEvent
+                        )
+                    },
+                    startDate = LocalDate.parse(
+                        viewModel.query.value,
+                        DateTimeFormatter.ofPattern("dd-MM-yyyy")
                     )
-                    viewModel.onTriggerEvent(
-                        ActivityListEvent.DayChangeEvent
-                    )
-                },
-                startDate = LocalDate.parse(viewModel.query.value, DateTimeFormatter.ofPattern("dd-MM-yyyy")))
+                )
                 ActivitiesList(
                     workActivities = viewModel.workActivities.value,
                     onNavigateToActivityDetailScreen = onNavigate

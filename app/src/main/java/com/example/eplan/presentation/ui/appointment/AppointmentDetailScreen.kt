@@ -375,6 +375,7 @@ fun AppointmentDetailsScreen(
                             for (person in people) {
                                 person.isChecked.value = snapshot.enter { person.isChecked.value }
                             }
+                            snapshot.dispose()
                             invitedDialog.value = false
                         }) {
                             Text(text = stringResource(R.string.annulla))

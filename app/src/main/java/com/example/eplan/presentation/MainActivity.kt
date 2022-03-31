@@ -1,19 +1,25 @@
 package com.example.eplan.presentation
 
+import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.compose.setContent
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
+import androidx.compose.foundation.background
+import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
-import androidx.hilt.navigation.HiltViewModelFactory
+import androidx.compose.ui.graphics.Color
+import androidx.core.view.WindowCompat
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
@@ -21,15 +27,17 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.example.eplan.presentation.navigation.NavGraph
 import com.example.eplan.presentation.navigation.Screen
 import com.example.eplan.presentation.ui.appointmentList.AppointmentListScreen
 import com.example.eplan.presentation.ui.components.BottomNavBar
+import com.example.eplan.presentation.ui.theme.AppTheme
 import com.example.eplan.presentation.ui.workActivity.ActivityDetailEvent
 import com.example.eplan.presentation.ui.workActivity.ActivityDetailViewModel
 import com.example.eplan.presentation.ui.workActivity.ActivityDetailsScreen
 import com.example.eplan.presentation.ui.workActivityList.ActivitiesListScreen
 import com.example.eplan.presentation.ui.workActivityList.ActivityListViewModel
-import com.example.eplan.presentation.util.TAG
+import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -43,72 +51,46 @@ class MainActivity : AppCompatActivity() {
         }
     }*/
 
+    @RequiresApi(Build.VERSION_CODES.S)
     @OptIn(ExperimentalMaterial3Api::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContent {
+
+        
+
+        WindowCompat.setDecorFitsSystemWindows(window, false)
+
+        setContent() {
 
             val navController = rememberNavController()
+            val systemUiController = rememberSystemUiController()
+            val useDarkIcons = !isSystemInDarkTheme()
 
-            Scaffold(
-                bottomBar = {
-                    val cr = currentRoute(navController = navController)
-                    if (cr?.contains(Screen.WorkActivityList.route) == true || cr?.contains(Screen.AppointmentList.route) == true) {
-                        BottomNavBar(navController = navController)
+            SideEffect {
+                systemUiController.setSystemBarsColor(
+                    color = Color.Transparent,
+                    darkIcons = useDarkIcons
+                )
+                systemUiController.setNavigationBarColor(
+                    color = Color.Transparent,
+                    darkIcons = useDarkIcons
+                )
+            }
+
+            AppTheme {
+
+                Scaffold(
+                    bottomBar = {
+                        val cr = currentRoute(navController = navController)
+                        if (cr?.contains(Screen.WorkActivityList.route) == true || cr?.contains(
+                                Screen.AppointmentList.route
+                            ) == true
+                        ) {
+                            BottomNavBar(navController = navController)
+                        }
                     }
-                }
-            ) {
-                NavHost(
-                    navController = navController,
-                    startDestination = Screen.WorkActivityList.route,
-                    modifier = Modifier.padding(bottom = it.calculateBottomPadding())
                 ) {
-
-                    composable(route = Screen.WorkActivityList.route) { navBackStackEntry ->
-                        /*val factory = HiltViewModelFactory(LocalContext.current, navBackStackEntry)
-                        val viewModel: ActivityListViewModel =
-                            viewModel(key = "ActivityListViewModel", factory = factory)*/
-
-                        val viewModel = hiltViewModel<ActivityListViewModel>()
-                        ActivitiesListScreen(
-                            viewModel = viewModel,
-                            onNavigate = navController::navigate
-                        )
-                    }
-
-                    composable(
-                        route = Screen.WorkActivityDetails.route + "/{activityId}",
-                        arguments = listOf(
-                            navArgument("activityId") {
-                                type = NavType.StringType
-                            })
-                    ) { navBackStackEntry ->
-                        /*val factory = HiltViewModelFactory(LocalContext.current, navBackStackEntry)
-                        val viewModel: ActivityDetailViewModel =
-                            viewModel(key = "ActivityDetailsViewModel", factory = factory)*/
-
-                        val viewModel = hiltViewModel<ActivityDetailViewModel>()
-                        ActivityDetailsScreen(
-                            activityId = navBackStackEntry.arguments?.getString("activityId")!!,
-                            viewModel = viewModel,
-                            onSavePressed = { workActivity ->
-                                viewModel.onTriggerEvent(
-                                    ActivityDetailEvent.UpdateActivityEvent(
-                                        workActivity = workActivity
-                                    )
-                                )
-                            },
-                            onBackPressed = navController::navigateUp,
-                            onDeletePressed = { id ->
-                                viewModel.onTriggerEvent(ActivityDetailEvent.DeleteActivityEvent(id = id))
-                            }
-                        )
-                    }
-
-                    /*TODO da sistemare*/
-                    composable(route = Screen.AppointmentList.route) {
-                        AppointmentListScreen(navController = navController)
-                    }
+                    NavGraph(navController = navController)
                 }
             }
         }
