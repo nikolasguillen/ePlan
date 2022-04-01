@@ -1,5 +1,6 @@
 package com.example.eplan.presentation.ui.workActivity
 
+import android.util.Log
 import android.widget.Toast
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.*
@@ -31,11 +32,17 @@ import androidx.compose.ui.unit.dp
 import com.example.eplan.R
 import com.example.eplan.domain.model.WorkActivity
 import com.example.eplan.presentation.navigation.BottomNavBarItems
+import com.example.eplan.presentation.ui.components.DatePicker
 import com.example.eplan.presentation.ui.items.CustomTimeButton
 import com.example.eplan.presentation.ui.workActivity.ActivityDetailEvent.GetActivityEvent
+import com.example.eplan.presentation.util.TAG
+import com.example.eplan.presentation.util.fromDateToLocalDate
+import com.example.eplan.presentation.util.fromLocalDateToDate
 import java.time.Duration
 import java.time.LocalTime
+import java.time.ZoneId
 import java.time.format.DateTimeFormatter
+import java.util.*
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -64,6 +71,10 @@ fun ActivityDetailsScreen(
     val items = listOf(
         BottomNavBarItems.Save,
     )
+
+    val test = remember {
+        mutableStateOf(false)
+    }
 
     val openDialog = remember { mutableStateOf(false) }
 
