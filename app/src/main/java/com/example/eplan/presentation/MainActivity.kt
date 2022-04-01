@@ -108,7 +108,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     @Composable
-    fun currentRoute(navController: NavHostController): String? {
+    private fun currentRoute(navController: NavHostController): String? {
         val navBackStackEntry by navController.currentBackStackEntryAsState()
         return navBackStackEntry?.destination?.route
     }

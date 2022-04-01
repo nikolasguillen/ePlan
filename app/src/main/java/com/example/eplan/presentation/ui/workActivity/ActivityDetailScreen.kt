@@ -261,6 +261,9 @@ fun ActivityDetailsScreen(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.SpaceBetween
                     ) {
+                        Button(onClick = { test.value = true }) {
+
+                        }
                         CustomTimeButton(
                             time = start,
                             label = stringResource(R.string.ora_inizio),
@@ -303,6 +306,13 @@ fun ActivityDetailsScreen(
                 }
             }
         )
+
+        if (test.value) {
+            DatePicker(
+                date = fromLocalDateToDate(date.value),
+                onDateSelected = { date.value = fromDateToLocalDate(it) },
+                onDismissRequest = { test.value = false })
+        }
     }
 
     if (openDialog.value) {

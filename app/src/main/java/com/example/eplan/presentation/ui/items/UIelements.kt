@@ -22,10 +22,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.fragment.app.FragmentManager
 import com.example.eplan.R
+import com.example.eplan.presentation.ui.components.showTimePicker
+import com.example.eplan.presentation.util.fromLocalTimeToString
+import com.example.eplan.presentation.util.fromStringToLocalTime
 import com.google.android.material.timepicker.MaterialTimePicker
 import com.google.android.material.timepicker.TimeFormat
 
@@ -99,7 +103,7 @@ fun CustomSwitch(
     )
 }
 
-private fun customTimePicker(time: MutableState<String>, context: Context, fragmentManager: FragmentManager? = null) {
+private fun customTimePicker(time: MutableState<String>, context: Context) {
 
     val timePickerDialog = TimePickerDialog(
         context,
@@ -136,12 +140,21 @@ private fun customDatePicker(date: MutableState<String>, context: Context) {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CustomTimeButton(time: MutableState<String>, label: String, context: Context, fragmentManager: FragmentManager? = null) {
+fun CustomTimeButton(time: MutableState<String>, label: String, context: Context) {
     Card(
         modifier = Modifier
             .width(150.dp)
             .clip(RoundedCornerShape(11.dp))
-            .clickable { customTimePicker(time, context, fragmentManager) }
+//            .clickable { customTimePicker(time, context) }
+            .clickable {
+                showTimePicker(
+                    inputTime = time.value,
+                    context = context,
+                    onSelected = {
+                        time.value = fromLocalTimeToString(it)
+                    }
+                )
+            }
     )
     {
         Text(
