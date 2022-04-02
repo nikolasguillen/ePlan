@@ -1,37 +1,25 @@
 package com.example.eplan.presentation.ui.items
 
-import android.app.Activity
 import android.app.DatePickerDialog
-import android.app.TimePickerDialog
 import android.content.Context
-import android.text.format.DateFormat.is24HourFormat
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.Switch
 import androidx.compose.material.SwitchDefaults
-import androidx.compose.material.TextFieldDefaults
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
-import androidx.fragment.app.FragmentManager
 import com.example.eplan.R
-import com.example.eplan.presentation.ui.components.showTimePicker
-import com.example.eplan.presentation.util.fromLocalTimeToString
-import com.example.eplan.presentation.util.fromStringToLocalTime
-import com.google.android.material.timepicker.MaterialTimePicker
-import com.google.android.material.timepicker.TimeFormat
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -103,24 +91,6 @@ fun CustomSwitch(
     )
 }
 
-private fun customTimePicker(time: MutableState<String>, context: Context) {
-
-    val timePickerDialog = TimePickerDialog(
-        context,
-        R.style.MyTimePickerDialogStyle,
-        { _, hour: Int, minute: Int ->
-            time.value = String.format("%02d", hour) + ":" + String.format("%02d", minute)
-        },
-        Integer.parseInt(time.value.split(":")[0]),
-        Integer.parseInt(time.value.split(":")[1]),
-        true
-    )
-
-    timePickerDialog.show()
-
-
-}
-
 private fun customDatePicker(date: MutableState<String>, context: Context) {
 
     val datePickerDialog = DatePickerDialog(
@@ -138,34 +108,7 @@ private fun customDatePicker(date: MutableState<String>, context: Context) {
     datePickerDialog.show()
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun CustomTimeButton(time: MutableState<String>, label: String, context: Context) {
-    Card(
-        modifier = Modifier
-            .width(150.dp)
-            .clip(RoundedCornerShape(11.dp))
-//            .clickable { customTimePicker(time, context) }
-            .clickable {
-                showTimePicker(
-                    inputTime = time.value,
-                    context = context,
-                    onSelected = {
-                        time.value = fromLocalTimeToString(it)
-                    }
-                )
-            }
-    )
-    {
-        Text(
-            text = label + ": " + time.value,
-            style = MaterialTheme.typography.bodyMedium,
-            modifier = Modifier
-                .padding(16.dp)
-                .align(Alignment.CenterHorizontally)
-        )
-    }
-}
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

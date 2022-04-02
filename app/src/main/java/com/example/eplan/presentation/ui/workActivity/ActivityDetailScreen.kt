@@ -1,14 +1,11 @@
 package com.example.eplan.presentation.ui.workActivity
 
-import android.util.Log
 import android.widget.Toast
 import androidx.activity.compose.BackHandler
-import androidx.compose.animation.*
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
@@ -24,7 +21,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
-import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
@@ -33,22 +29,12 @@ import androidx.compose.ui.unit.dp
 import com.example.eplan.R
 import com.example.eplan.domain.model.WorkActivity
 import com.example.eplan.presentation.navigation.BottomNavBarItems
-import com.example.eplan.presentation.ui.components.DatePicker
-import com.example.eplan.presentation.ui.items.CustomTimeButton
-import com.example.eplan.presentation.ui.theme.md_theme_light_onSurface
+import com.example.eplan.presentation.ui.components.CustomTimeButton
 import com.example.eplan.presentation.ui.workActivity.ActivityDetailEvent.GetActivityEvent
-import com.example.eplan.presentation.util.*
-import com.vanpra.composematerialdialogs.MaterialDialog
-import com.vanpra.composematerialdialogs.MaterialDialogButtons
-import com.vanpra.composematerialdialogs.datetime.time.TimePickerColors
-import com.vanpra.composematerialdialogs.datetime.time.TimePickerDefaults
-import com.vanpra.composematerialdialogs.datetime.time.timepicker
 import com.vanpra.composematerialdialogs.rememberMaterialDialogState
 import java.time.Duration
 import java.time.LocalTime
-import java.time.ZoneId
 import java.time.format.DateTimeFormatter
-import java.util.*
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -78,9 +64,7 @@ fun ActivityDetailsScreen(
         BottomNavBarItems.Save,
     )
 
-    val openTime = rememberMaterialDialogState()
-
-    val openDialog = remember { mutableStateOf(false) }
+    val backDialog = remember { mutableStateOf(false) }
 
     val toast = Toast.makeText(
         LocalContext.current,
@@ -137,7 +121,7 @@ fun ActivityDetailsScreen(
                             }
 
                             if (edited) {
-                                openDialog.value = true
+                                backDialog.value = true
                             } else {
                                 bottomBarState.value = false
                                 onBackPressed()
@@ -232,7 +216,7 @@ fun ActivityDetailsScreen(
                     }
 
                     if (edited) {
-                        openDialog.value = true
+                        backDialog.value = true
                     } else {
                         onBackPressed()
                     }
@@ -265,18 +249,19 @@ fun ActivityDetailsScreen(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.SpaceBetween
                     ) {
-                        Button(onClick = { openTime.show() }) {
-                            Text(text = start.value)
-                        }
                         CustomTimeButton(
-                            time = start,
+                            time = start.value,
                             label = stringResource(R.string.ora_inizio),
-                            context = LocalContext.current
+                            onClick = { time ->
+                                start.value = time
+                            }
                         )
                         CustomTimeButton(
-                            time = end,
+                            time = end.value,
                             label = stringResource(R.string.ora_fine),
-                            context = LocalContext.current
+                            onClick = { time ->
+                                end.value = time
+                            }
                         )
                     }
                     OutlinedTextField(
@@ -310,57 +295,17 @@ fun ActivityDetailsScreen(
                 }
             }
         )
-        androidx.compose.material.MaterialTheme(
-            colors = androidx.compose.material.MaterialTheme.colors.copy(
-                onBackground = MaterialTheme.colorScheme.onSurface,
-                background = MaterialTheme.colorScheme.surface,
-                primary = MaterialTheme.colorScheme.onSurface
-            )
-        ) {
-            MaterialDialog(
-                dialogState = openTime,
-                buttons = {
-                    positiveButton(
-                        text = stringResource(id = R.string.ok),
-                        textStyle = MaterialTheme.typography.labelLarge.copy(color = MaterialTheme.colorScheme.primary)
-                    )
-                    negativeButton(
-                        stringResource(id = R.string.annulla),
-                        textStyle = MaterialTheme.typography.labelLarge.copy(color = MaterialTheme.colorScheme.primary)
-                    )
-                },
-                backgroundColor = MaterialTheme.colorScheme.surface,
-                shape = RoundedCornerShape(11.dp)
-            ) {
-                timepicker(
-                    title = stringResource(R.string.seleziona_orario),
-                    initialTime = fromStringToLocalTime(start.value),
-                    is24HourClock = true,
-                    colors = TimePickerDefaults.colors(
-                        activeBackgroundColor = MaterialTheme.colorScheme.primary,
-                        activeTextColor = MaterialTheme.colorScheme.onPrimary,
-                        inactiveBackgroundColor = MaterialTheme.colorScheme.surfaceVariant,
-                        inactiveTextColor = MaterialTheme.colorScheme.onSurfaceVariant,
-                        selectorColor = MaterialTheme.colorScheme.primary,
-                        selectorTextColor = MaterialTheme.colorScheme.onPrimary,
-                        headerTextColor = MaterialTheme.colorScheme.onSurface
-                    )
-                ) { time ->
-                    start.value = fromLocalTimeToString(time)
-                }
-            }
-        }
     }
 
-    if (openDialog.value) {
+    if (backDialog.value) {
         AlertDialog(
             onDismissRequest = {
-                openDialog.value = false
+                backDialog.value = false
             },
             title = { Text(text = stringResource(R.string.chiudi_senza_salvare)) },
             confirmButton = {
                 TextButton(onClick = {
-                    openDialog.value = false
+                    backDialog.value = false
                     viewModel.onLoad.value = false
                     onBackPressed()
                 }
@@ -370,7 +315,7 @@ fun ActivityDetailsScreen(
             },
             dismissButton = {
                 TextButton(onClick = {
-                    openDialog.value = false
+                    backDialog.value = false
                 }
                 ) {
                     Text(text = stringResource(R.string.annulla))
