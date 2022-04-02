@@ -8,6 +8,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
@@ -34,10 +35,15 @@ import com.example.eplan.domain.model.WorkActivity
 import com.example.eplan.presentation.navigation.BottomNavBarItems
 import com.example.eplan.presentation.ui.components.DatePicker
 import com.example.eplan.presentation.ui.items.CustomTimeButton
+import com.example.eplan.presentation.ui.theme.md_theme_light_onSurface
 import com.example.eplan.presentation.ui.workActivity.ActivityDetailEvent.GetActivityEvent
-import com.example.eplan.presentation.util.TAG
-import com.example.eplan.presentation.util.fromDateToLocalDate
-import com.example.eplan.presentation.util.fromLocalDateToDate
+import com.example.eplan.presentation.util.*
+import com.vanpra.composematerialdialogs.MaterialDialog
+import com.vanpra.composematerialdialogs.MaterialDialogButtons
+import com.vanpra.composematerialdialogs.datetime.time.TimePickerColors
+import com.vanpra.composematerialdialogs.datetime.time.TimePickerDefaults
+import com.vanpra.composematerialdialogs.datetime.time.timepicker
+import com.vanpra.composematerialdialogs.rememberMaterialDialogState
 import java.time.Duration
 import java.time.LocalTime
 import java.time.ZoneId
@@ -72,9 +78,7 @@ fun ActivityDetailsScreen(
         BottomNavBarItems.Save,
     )
 
-    val test = remember {
-        mutableStateOf(false)
-    }
+    val openTime = rememberMaterialDialogState()
 
     val openDialog = remember { mutableStateOf(false) }
 
@@ -261,8 +265,8 @@ fun ActivityDetailsScreen(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.SpaceBetween
                     ) {
-                        Button(onClick = { test.value = true }) {
-
+                        Button(onClick = { openTime.show() }) {
+                            Text(text = start.value)
                         }
                         CustomTimeButton(
                             time = start,
@@ -306,12 +310,45 @@ fun ActivityDetailsScreen(
                 }
             }
         )
-
-        if (test.value) {
-            DatePicker(
-                date = fromLocalDateToDate(date.value),
-                onDateSelected = { date.value = fromDateToLocalDate(it) },
-                onDismissRequest = { test.value = false })
+        androidx.compose.material.MaterialTheme(
+            colors = androidx.compose.material.MaterialTheme.colors.copy(
+                onBackground = MaterialTheme.colorScheme.onSurface,
+                background = MaterialTheme.colorScheme.surface,
+                primary = MaterialTheme.colorScheme.onSurface
+            )
+        ) {
+            MaterialDialog(
+                dialogState = openTime,
+                buttons = {
+                    positiveButton(
+                        text = stringResource(id = R.string.ok),
+                        textStyle = MaterialTheme.typography.labelLarge.copy(color = MaterialTheme.colorScheme.primary)
+                    )
+                    negativeButton(
+                        stringResource(id = R.string.annulla),
+                        textStyle = MaterialTheme.typography.labelLarge.copy(color = MaterialTheme.colorScheme.primary)
+                    )
+                },
+                backgroundColor = MaterialTheme.colorScheme.surface,
+                shape = RoundedCornerShape(11.dp)
+            ) {
+                timepicker(
+                    title = stringResource(R.string.seleziona_orario),
+                    initialTime = fromStringToLocalTime(start.value),
+                    is24HourClock = true,
+                    colors = TimePickerDefaults.colors(
+                        activeBackgroundColor = MaterialTheme.colorScheme.primary,
+                        activeTextColor = MaterialTheme.colorScheme.onPrimary,
+                        inactiveBackgroundColor = MaterialTheme.colorScheme.surfaceVariant,
+                        inactiveTextColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                        selectorColor = MaterialTheme.colorScheme.primary,
+                        selectorTextColor = MaterialTheme.colorScheme.onPrimary,
+                        headerTextColor = MaterialTheme.colorScheme.onSurface
+                    )
+                ) { time ->
+                    start.value = fromLocalTimeToString(time)
+                }
+            }
         }
     }
 

@@ -22,4 +22,5 @@
     <string name="login">Login</string>
     <string name="ok">Ok</string>
     <string name="seleziona_data">Seleziona una data</string>
+    <string name="seleziona_orario">Seleziona un orario</string>
 </resources>

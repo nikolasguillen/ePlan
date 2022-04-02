@@ -79,6 +79,9 @@ dependencies {
     // CollapsibleCalendar
     implementation 'com.github.shrikanth7698:Collapsible-Calendar-View-Android:v1.0.3'
 
+    // Compose dialogs
+    implementation "io.github.vanpra.compose-material-dialogs:datetime:0.7.0"
+
     // Gson for Jsons
     implementation 'com.google.code.gson:gson:2.9.0'
 
