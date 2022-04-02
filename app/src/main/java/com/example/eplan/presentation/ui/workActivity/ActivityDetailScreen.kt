@@ -31,12 +31,12 @@ import com.example.eplan.domain.model.WorkActivity
 import com.example.eplan.presentation.navigation.BottomNavBarItems
 import com.example.eplan.presentation.ui.components.CustomTimeButton
 import com.example.eplan.presentation.ui.workActivity.ActivityDetailEvent.GetActivityEvent
-import com.vanpra.composematerialdialogs.rememberMaterialDialogState
 import java.time.Duration
 import java.time.LocalTime
 import java.time.format.DateTimeFormatter
 
-@OptIn(ExperimentalMaterial3Api::class)
+
+@ExperimentalMaterial3Api
 @Composable
 fun ActivityDetailsScreen(
     viewModel: ActivityDetailViewModel,
@@ -149,7 +149,7 @@ fun ActivityDetailsScreen(
                 )
             },
             bottomBar = {
-                NavigationBar(containerColor = MaterialTheme.colorScheme.secondary) {
+                NavigationBar(containerColor = MaterialTheme.colorScheme.primary) {
                     items.forEach { item ->
                         NavigationBarItem(
                             selected = false,
@@ -250,14 +250,14 @@ fun ActivityDetailsScreen(
                         horizontalArrangement = Arrangement.SpaceBetween
                     ) {
                         CustomTimeButton(
-                            time = start.value,
+                            startTime = start.value,
                             label = stringResource(R.string.ora_inizio),
                             onClick = { time ->
                                 start.value = time
                             }
                         )
                         CustomTimeButton(
-                            time = end.value,
+                            startTime = end.value,
                             label = stringResource(R.string.ora_fine),
                             onClick = { time ->
                                 end.value = time

@@ -110,7 +110,7 @@ private fun customDatePicker(date: MutableState<String>, context: Context) {
 
 
 
-@OptIn(ExperimentalMaterial3Api::class)
+@ExperimentalMaterial3Api
 @Composable
 fun CustomDateButton(date: MutableState<String>, context: Context) {
     Card(

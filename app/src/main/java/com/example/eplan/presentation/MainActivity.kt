@@ -7,7 +7,6 @@ import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.animation.*
 import androidx.compose.foundation.isSystemInDarkTheme
-import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
@@ -15,27 +14,15 @@ import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.core.view.WindowCompat
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
-import androidx.navigation.NavType
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import androidx.navigation.navArgument
 import com.example.eplan.presentation.navigation.NavGraph
 import com.example.eplan.presentation.navigation.Screen
-import com.example.eplan.presentation.ui.appointmentList.AppointmentListScreen
 import com.example.eplan.presentation.ui.components.BottomNavBar
 import com.example.eplan.presentation.ui.theme.AppTheme
-import com.example.eplan.presentation.ui.workActivity.ActivityDetailEvent
-import com.example.eplan.presentation.ui.workActivity.ActivityDetailViewModel
-import com.example.eplan.presentation.ui.workActivity.ActivityDetailsScreen
-import com.example.eplan.presentation.ui.workActivityList.ActivitiesListScreen
-import com.example.eplan.presentation.ui.workActivityList.ActivityListViewModel
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -58,7 +45,7 @@ class MainActivity : AppCompatActivity() {
 
         WindowCompat.setDecorFitsSystemWindows(window, false)
 
-        setContent() {
+        setContent {
 
             val navController = rememberNavController()
             val systemUiController = rememberSystemUiController()

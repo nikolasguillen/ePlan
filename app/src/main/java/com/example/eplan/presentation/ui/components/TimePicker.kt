@@ -27,7 +27,7 @@ fun CustomTimePicker(startTime: String, dialogState: MaterialDialogState, onClic
             dialogState = dialogState,
             buttons = {
                 positiveButton(
-                    text = stringResource(id = R.string.ok),
+                    text = stringResource(id = R.string.ok_conf),
                     textStyle = MaterialTheme.typography.labelLarge.copy(color = MaterialTheme.colorScheme.primary)
                 )
                 negativeButton(

@@ -14,9 +14,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavHostController
 import com.example.eplan.domain.model.WorkActivity
-import com.example.eplan.domain.util.toJson
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

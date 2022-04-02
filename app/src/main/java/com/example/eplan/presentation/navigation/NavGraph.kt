@@ -1,7 +1,7 @@
 package com.example.eplan.presentation.navigation
 
 import androidx.compose.foundation.layout.statusBarsPadding
-import androidx.compose.foundation.layout.systemBarsPadding
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.Dp
@@ -18,6 +18,7 @@ import com.example.eplan.presentation.ui.workActivity.ActivityDetailsScreen
 import com.example.eplan.presentation.ui.workActivityList.ActivitiesListScreen
 import com.example.eplan.presentation.ui.workActivityList.ActivityListViewModel
 
+@ExperimentalMaterial3Api
 @Composable
 fun NavGraph(navController: NavHostController, bottomPadding: Dp) {
     NavHost(

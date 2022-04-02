@@ -15,9 +15,9 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import com.vanpra.composematerialdialogs.rememberMaterialDialogState
 
-@OptIn(ExperimentalMaterial3Api::class)
+@ExperimentalMaterial3Api
 @Composable
-fun CustomTimeButton(time: String, label: String, onClick: (String) -> Unit) {
+fun CustomTimeButton(startTime: String, label: String, onClick: (String) -> Unit) {
 
     val dialogState = rememberMaterialDialogState()
 
@@ -29,12 +29,12 @@ fun CustomTimeButton(time: String, label: String, onClick: (String) -> Unit) {
     )
     {
         Text(
-            text = "$label: $time",
+            text = "$label: $startTime",
             style = MaterialTheme.typography.bodyMedium,
             modifier = Modifier
                 .padding(16.dp)
                 .align(Alignment.CenterHorizontally)
         )
     }
-    CustomTimePicker(startTime = time, dialogState = dialogState, onClick = onClick)
+    CustomTimePicker(startTime = startTime, dialogState = dialogState, onClick = onClick)
 }

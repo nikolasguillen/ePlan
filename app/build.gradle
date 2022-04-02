@@ -6,6 +6,7 @@ plugins {
     // Room
     id "kotlin-kapt"
 
+    // Hilt
     id "dagger.hilt.android.plugin"
 }
 
