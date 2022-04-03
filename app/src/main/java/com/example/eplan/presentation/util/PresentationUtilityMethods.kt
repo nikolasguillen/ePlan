@@ -1,8 +1,10 @@
 package com.example.eplan.presentation.util
 
+import java.time.Duration
 import java.time.LocalDate
 import java.time.LocalTime
 import java.time.ZoneId
+import java.time.format.DateTimeFormatter
 import java.util.*
 
 fun fromLocalDateToDate(localDate: LocalDate): Date {
@@ -22,4 +24,11 @@ fun fromStringToLocalTime(timeString: String): LocalTime {
     val minute = timeString.split(":")[1].toInt()
 
     return LocalTime.of(hour, minute)
+}
+
+fun acceptableTimeInterval(start: String, end: String): Boolean {
+    return Duration.between(
+        LocalTime.parse(start, DateTimeFormatter.ISO_TIME),
+        LocalTime.parse(end, DateTimeFormatter.ISO_TIME)
+    ).toMinutes() > 0
 }

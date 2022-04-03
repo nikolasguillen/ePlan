@@ -15,7 +15,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import com.vanpra.composematerialdialogs.rememberMaterialDialogState
 
-@OptIn(ExperimentalMaterial3Api::class)
+@ExperimentalMaterial3Api
 @Composable
 fun CustomTimeButton(time: String, label: String, onClick: (String) -> Unit) {
 

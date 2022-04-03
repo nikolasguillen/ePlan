@@ -2,8 +2,12 @@ package com.example.eplan.presentation.ui.workActivity
 
 import android.widget.Toast
 import androidx.activity.compose.BackHandler
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
+import androidx.compose.foundation.gestures.animateScrollBy
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.relocation.BringIntoViewRequester
+import androidx.compose.foundation.relocation.bringIntoViewRequester
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.KeyboardActions
@@ -16,11 +20,16 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.*
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.layout.positionInRoot
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
@@ -29,21 +38,24 @@ import androidx.compose.ui.unit.dp
 import com.example.eplan.R
 import com.example.eplan.domain.model.WorkActivity
 import com.example.eplan.presentation.navigation.BottomNavBarItems
+import com.example.eplan.presentation.ui.components.BottomSaveBar
 import com.example.eplan.presentation.ui.components.CustomTimeButton
 import com.example.eplan.presentation.ui.workActivity.ActivityDetailEvent.GetActivityEvent
-import com.vanpra.composematerialdialogs.rememberMaterialDialogState
+import com.example.eplan.presentation.util.acceptableTimeInterval
+import kotlinx.coroutines.launch
 import java.time.Duration
 import java.time.LocalTime
 import java.time.format.DateTimeFormatter
 
-@OptIn(ExperimentalMaterial3Api::class)
+
+@OptIn(ExperimentalMaterial3Api::class, androidx.compose.ui.ExperimentalComposeUiApi::class)
 @Composable
 fun ActivityDetailsScreen(
     viewModel: ActivityDetailViewModel,
     activityId: String,
     onBackPressed: () -> Unit,
-    onSavePressed: (WorkActivity) -> Unit,
-    onDeletePressed: (String) -> Unit
+    onSavePressed: () -> Unit,
+    onDeletePressed: () -> Unit
 ) {
 
     val onLoad = viewModel.onLoad.value
@@ -54,15 +66,9 @@ fun ActivityDetailsScreen(
         viewModel.onTriggerEvent(GetActivityEvent(activityId))
     }
 
-    val workActivity = remember { viewModel.workActivity.value }
+    val workActivity = viewModel.workActivity.value
 
-    val bottomBarState = rememberSaveable { mutableStateOf(false) }
-
-    val focusManager = LocalFocusManager.current
-
-    val items = listOf(
-        BottomNavBarItems.Save,
-    )
+    val keyboardController = LocalSoftwareKeyboardController.current
 
     val backDialog = remember { mutableStateOf(false) }
 
@@ -74,59 +80,18 @@ fun ActivityDetailsScreen(
 
     workActivity?.let {
 
-        val title = remember {
-            mutableStateOf(it.title)
-        }
-
-        val description = remember {
-            mutableStateOf(it.description)
-        }
-
-        val date = remember {
-            mutableStateOf(it.date)
-        }
-
-        val start = remember {
-            mutableStateOf(it.start)
-        }
-
-        val end = remember {
-            mutableStateOf(it.end)
-        }
-
-        val movingTime = remember {
-            mutableStateOf(it.movingTime)
-        }
-
-        val km = remember {
-            mutableStateOf(it.km)
-        }
-
         Scaffold(
             topBar = {
                 MediumTopAppBar(
                     title = { Text(text = stringResource(R.string.attivita)) },
                     navigationIcon = {
                         IconButton(onClick = {
-
-                            var edited = false
-                            if ((title.value != it.title) ||
-                                (description.value != it.description) ||
-                                (start.value != it.start) ||
-                                (end.value != it.end) ||
-                                (movingTime.value != it.movingTime) ||
-                                (km.value != it.km)
-                            ) {
-                                edited = true
-                            }
-
-                            if (edited) {
+                            if (viewModel.checkChanges()) {
                                 backDialog.value = true
                             } else {
-                                bottomBarState.value = false
                                 onBackPressed()
+                                keyboardController?.hide()
                             }
-
                         }) {
                             Icon(
                                 imageVector = Icons.Filled.ArrowBack,
@@ -136,7 +101,7 @@ fun ActivityDetailsScreen(
                     },
                     actions = {
                         IconButton(onClick = {
-                            onDeletePressed(activityId)
+                            onDeletePressed()
                             viewModel.onLoad.value = false
                         }) {
                             Icon(
@@ -149,76 +114,25 @@ fun ActivityDetailsScreen(
                 )
             },
             bottomBar = {
-                NavigationBar(containerColor = MaterialTheme.colorScheme.secondary) {
-                    items.forEach { item ->
-                        NavigationBarItem(
-                            selected = false,
-                            onClick = {
-                                if (Duration.between(
-                                        LocalTime.parse(
-                                            start.value,
-                                            DateTimeFormatter.ISO_TIME
-                                        ),
-                                        LocalTime.parse(
-                                            end.value,
-                                            DateTimeFormatter.ISO_TIME
-                                        )
-                                    ).toMinutes() > 0
-                                ) {
-                                    onSavePressed(
-                                        WorkActivity(
-                                            id = activityId,
-                                            title = title.value,
-                                            description = description.value,
-                                            date = date.value,
-                                            start = start.value,
-                                            end = end.value,
-                                            km = km.value,
-                                            movingTime = movingTime.value
-                                        )
-                                    )
-                                } else {
-                                    toast.cancel()
-                                    toast.setText(R.string.errore_orario)
-                                    toast.show()
-                                }
-                            },
-                            icon = {
-                                Icon(
-                                    painterResource(id = item.icon),
-                                    contentDescription = item.title,
-                                    tint = MaterialTheme.colorScheme.onSecondary
-                                )
-                            },
-                            label = {
-                                Text(
-                                    text = item.title,
-                                    color = MaterialTheme.colorScheme.onSecondary
-                                )
-                            },
-                            modifier = Modifier.background(Color.Transparent, CircleShape)
-                        )
-                    }
-                }
+                BottomSaveBar(onClick = {
+                    onSaveClick(
+                        saveAction = onSavePressed,
+                        saveCondition = { acceptableTimeInterval(it.start, it.end) },
+                        elseBranch = {
+                            toast.cancel()
+                            toast.setText(R.string.errore_orario)
+                            toast.show()
+                        }
+                    )
+                })
             },
             content = { paddingValues ->
                 BackHandler(enabled = true) {
-
-                    var edited = false
-                    if ((title.value != it.title) ||
-                        (description.value != it.description) ||
-                        (start.value != it.start) ||
-                        (end.value != it.end) ||
-                        (movingTime.value != it.movingTime) ||
-                        (km.value != it.km)
-                    ) {
-                        edited = true
-                    }
-
-                    if (edited) {
+                    if (viewModel.checkChanges()) {
                         backDialog.value = true
                     } else {
                         onBackPressed()
+                        keyboardController?.hide()
                     }
                 }
                 Column(
@@ -234,14 +148,15 @@ fun ActivityDetailsScreen(
                     verticalArrangement = Arrangement.spacedBy(16.dp)
                 ) {
                     OutlinedTextField(
-                        value = title.value,
-                        onValueChange = { title.value = it },
+                        value = it.title,
+                        onValueChange = { viewModel.updateTitle(it) },
                         label = { Text(text = stringResource(R.string.attivita)) },
-                        modifier = Modifier.fillMaxWidth()
+                        modifier = Modifier
+                            .fillMaxWidth()
                     )
                     OutlinedTextField(
-                        value = description.value,
-                        onValueChange = { description.value = it },
+                        value = it.description,
+                        onValueChange = { viewModel.updateDescription(it) },
                         label = { Text(text = stringResource(R.string.descrizione)) },
                         modifier = Modifier.fillMaxWidth()
                     )
@@ -250,23 +165,23 @@ fun ActivityDetailsScreen(
                         horizontalArrangement = Arrangement.SpaceBetween
                     ) {
                         CustomTimeButton(
-                            time = start.value,
+                            time = it.start,
                             label = stringResource(R.string.ora_inizio),
                             onClick = { time ->
-                                start.value = time
+                                viewModel.updateStart(time)
                             }
                         )
                         CustomTimeButton(
-                            time = end.value,
+                            time = it.end,
                             label = stringResource(R.string.ora_fine),
                             onClick = { time ->
-                                end.value = time
+                                viewModel.updateEnd(time)
                             }
                         )
                     }
                     OutlinedTextField(
-                        value = movingTime.value,
-                        onValueChange = { movingTime.value = it },
+                        value = it.movingTime,
+                        onValueChange = { viewModel.updateMovingTime(it) },
                         label = { Text(text = stringResource(R.string.ore_spostamento)) },
                         modifier = Modifier.fillMaxWidth(),
                         singleLine = true,
@@ -275,12 +190,12 @@ fun ActivityDetailsScreen(
                             imeAction = ImeAction.Done
                         ),
                         keyboardActions = KeyboardActions(
-                            onDone = { focusManager.clearFocus() }
+                            onDone = { keyboardController?.hide() }
                         )
                     )
                     OutlinedTextField(
-                        value = km.value,
-                        onValueChange = { km.value = it },
+                        value = it.km,
+                        onValueChange = { viewModel.updateKm(it) },
                         label = { Text(text = stringResource(R.string.km_percorsi)) },
                         modifier = Modifier.fillMaxWidth(),
                         singleLine = true,
@@ -289,7 +204,7 @@ fun ActivityDetailsScreen(
                             imeAction = ImeAction.Done
                         ),
                         keyboardActions = KeyboardActions(
-                            onDone = { focusManager.clearFocus() }
+                            onDone = { keyboardController?.hide() }
                         )
                     )
                 }
@@ -322,5 +237,17 @@ fun ActivityDetailsScreen(
                 }
             }
         )
+    }
+}
+
+private fun onSaveClick(
+    saveAction: () -> Unit,
+    saveCondition: () -> Boolean,
+    elseBranch: () -> Unit
+) {
+    if (saveCondition()) {
+        saveAction()
+    } else {
+        elseBranch()
     }
 }
