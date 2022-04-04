@@ -50,7 +50,7 @@ import java.time.LocalTime
 import java.time.format.DateTimeFormatter
 
 
-@OptIn(ExperimentalMaterial3Api::class, androidx.compose.ui.ExperimentalComposeUiApi::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class)
 @Composable
 fun ActivityDetailsScreen(
     viewModel: ActivityDetailViewModel,
@@ -173,14 +173,14 @@ fun ActivityDetailsScreen(
                         horizontalArrangement = Arrangement.SpaceBetween
                     ) {
                         CustomTimeButton(
-                            time = it.start,
+                            startTime = it.start.toString(),
                             label = stringResource(R.string.ora_inizio),
                             onClick = { time ->
                                 viewModel.updateStart(time)
                             }
                         )
                         CustomTimeButton(
-                            time = it.end,
+                            startTime = it.end.toString(),
                             label = stringResource(R.string.ora_fine),
                             onClick = { time ->
                                 viewModel.updateEnd(time)

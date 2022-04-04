@@ -1,14 +1,15 @@
 package com.example.eplan.domain.model
 
 import java.time.LocalDate
+import java.time.LocalTime
 
 data class WorkActivity(
     val id: String,
     val title: String,
     val description: String,
     val date: LocalDate,
-    val start: String,
-    val end: String,
+    val start: LocalTime,
+    val end: LocalTime,
     val movingTime: String,
     val km: String
 ) {

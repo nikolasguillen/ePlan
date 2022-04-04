@@ -42,7 +42,6 @@ import com.example.eplan.R
 import com.example.eplan.domain.model.Appointment
 import com.example.eplan.domain.model.User
 import com.example.eplan.presentation.navigation.BottomNavBarItems
-import com.example.eplan.presentation.ui.items.*
 
 @OptIn(ExperimentalMaterial3Api::class, androidx.compose.material.ExperimentalMaterialApi::class)
 @Composable

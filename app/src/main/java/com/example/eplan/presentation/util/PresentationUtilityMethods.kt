@@ -26,9 +26,6 @@ fun fromStringToLocalTime(timeString: String): LocalTime {
     return LocalTime.of(hour, minute)
 }
 
-fun acceptableTimeInterval(start: String, end: String): Boolean {
-    return Duration.between(
-        LocalTime.parse(start, DateTimeFormatter.ISO_TIME),
-        LocalTime.parse(end, DateTimeFormatter.ISO_TIME)
-    ).toMinutes() > 0
+fun acceptableTimeInterval(start: LocalTime, end: LocalTime): Boolean {
+    return Duration.between(start, end).toMinutes() > 0
 }

@@ -1,12 +1,15 @@
 package com.example.eplan.repository
 
 import android.content.Context
+import android.util.Log
 import com.example.eplan.domain.model.WorkActivity
 import com.example.eplan.network.WorkActivityService
 import com.example.eplan.network.model.WorkActivityDto
 import com.example.eplan.network.model.WorkActivityDtoMapper
+import com.example.eplan.presentation.util.TAG
 import com.google.gson.Gson
 import java.io.IOException
+import java.time.LocalDate
 
 class WorkActivityRepositoryImpl(
     private val service: WorkActivityService,
@@ -15,7 +18,7 @@ class WorkActivityRepositoryImpl(
 
     override suspend fun getDayActivities(
         userToken: String,
-        query: String,
+        query: LocalDate,
         context: Context
     ): List<WorkActivity> {
 
@@ -41,7 +44,7 @@ class WorkActivityRepositoryImpl(
             workActivity.date.dayOfMonth == dayOfMonth && workActivity.date.month == Month.of(month)
         }*/
 
-        return workActivities
+        return workActivities.filter { it.date == query }
     }
 
     override suspend fun getActivityById(

@@ -508,68 +508,68 @@
   {
     "title": "Pause e permessi Permesso",
     "description": "Permesso",
-    "start": "2022-02-17 11: 45: 00",
+    "start": "2022-02-17 11:45:00",
     "durata": "1",
     "id_interventi": "271052",
     "ore_spostamento": "0",
     "km_spostamento": "0",
     "color": "#ffbbbb",
-    "end": "2022-02-17 12: 45: 00"
+    "end": "2022-02-17 12:45:00"
   },
   {
     "title": "Commerciale Web Preventivo",
     "description": "prev vari",
-    "start": "2022-02-17 12: 45: 00",
+    "start": "2022-02-17 12:45:00",
     "durata": "1",
     "id_interventi": "271275",
     "ore_spostamento": "0",
     "km_spostamento": "0",
     "color": "#ffddbb",
-    "end": "2022-02-17 13: 45: 00"
+    "end": "2022-02-17 13:45:00"
   },
   {
     "title": "Master in Fundraising Assistenza annuale",
     "description": "preparazione alla migrazione",
-    "start": "2022-02-17 15: 00: 00",
+    "start": "2022-02-17 15:00:00",
     "durata": "0.5",
     "id_interventi": "273771",
     "ore_spostamento": "0",
     "km_spostamento": "0",
     "color": "#ddddbb",
-    "end": "2022-02-17 15: 30: 00"
+    "end": "2022-02-17 15:30:00"
   },
   {
     "title": "Equiline ecommerce B2B e PIM Categora Accounting",
     "description": "call interna e call con il cliente",
-    "start": "2022-02-17 15: 30: 00",
+    "start": "2022-02-17 15:30:00",
     "durata": "3.5",
     "id_interventi": "273765",
     "ore_spostamento": "0",
     "km_spostamento": "0",
     "color": "#bbffbb",
-    "end": "2022-02-17 19: 00: 00"
+    "end": "2022-02-17 19:00:00"
   },
   {
     "title": "Master in Fundraising Assistenza annuale",
     "description": "migrazione del server",
-    "start": "2022-02-17 19: 00: 00",
+    "start": "2022-02-17 19:00:00",
     "durata": "2",
     "id_interventi": "273761",
     "ore_spostamento": "0",
     "km_spostamento": "0",
     "color": "#ddddbb",
-    "end": "2022-02-17 21: 00: 00"
+    "end": "2022-02-17 21:00:00"
   },
   {
     "title": "Gestione Lavori Web Controllo di gestione",
     "description": "punti vari",
-    "start": "2022-02-18 09: 00: 00",
+    "start": "2022-02-18 09:00:00",
     "durata": "0.5",
     "id_interventi": "273778",
     "ore_spostamento": "0",
     "km_spostamento": "0",
     "color": "#bbffdd",
-    "end": "2022-02-18 09: 30: 00"
+    "end": "2022-02-18 09:30:00"
   },
   {
     "title": "Novalux Sito 2021 Accounting",

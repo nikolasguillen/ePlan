@@ -45,8 +45,8 @@ fun ActivityCard(
                     modifier = Modifier.padding(bottom = 3.dp)
                 )
             }
-            Text(text = workActivity.start, style = MaterialTheme.typography.labelSmall)
-            Text(text = workActivity.end, style = MaterialTheme.typography.labelSmall)
+            Text(text = workActivity.start.toString(), style = MaterialTheme.typography.labelSmall)
+            Text(text = workActivity.end.toString(), style = MaterialTheme.typography.labelSmall)
         }
     }
 }

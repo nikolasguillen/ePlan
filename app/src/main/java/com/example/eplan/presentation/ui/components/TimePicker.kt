@@ -12,9 +12,10 @@ import com.vanpra.composematerialdialogs.MaterialDialog
 import com.vanpra.composematerialdialogs.MaterialDialogState
 import com.vanpra.composematerialdialogs.datetime.time.TimePickerDefaults
 import com.vanpra.composematerialdialogs.datetime.time.timepicker
+import java.time.LocalTime
 
 @Composable
-fun CustomTimePicker(startTime: String, dialogState: MaterialDialogState, onClick: (String) -> Unit) {
+fun CustomTimePicker(startTime: String, dialogState: MaterialDialogState, onClick: (LocalTime) -> Unit) {
 
     androidx.compose.material.MaterialTheme(
         colors = androidx.compose.material.MaterialTheme.colors.copy(
@@ -52,7 +53,7 @@ fun CustomTimePicker(startTime: String, dialogState: MaterialDialogState, onClic
                     headerTextColor = MaterialTheme.colorScheme.onSurface
                 )
             ) { time ->
-                onClick(fromLocalTimeToString(time))
+                onClick(time)
             }
         }
     }

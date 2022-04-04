@@ -17,6 +17,7 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.launch
 import java.lang.Exception
 import java.time.LocalDate
+import java.time.LocalTime
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -51,11 +52,11 @@ constructor(
         workActivity.value = workActivity.value?.copy(date = date)
     }
 
-    fun updateStart(time: String) {
+    fun updateStart(time: LocalTime) {
         workActivity.value = workActivity.value?.copy(start = time)
     }
 
-    fun updateEnd(time: String) {
+    fun updateEnd(time: LocalTime) {
         workActivity.value = workActivity.value?.copy(end = time)
     }
 

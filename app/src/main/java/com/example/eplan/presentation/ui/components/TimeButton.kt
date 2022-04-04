@@ -14,10 +14,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import com.vanpra.composematerialdialogs.rememberMaterialDialogState
+import java.time.LocalTime
 
 @ExperimentalMaterial3Api
 @Composable
-fun CustomTimeButton(startTime: String, label: String, onClick: (String) -> Unit) {
+fun CustomTimeButton(startTime: String, label: String, onClick: (LocalTime) -> Unit) {
 
     val dialogState = rememberMaterialDialogState()
 

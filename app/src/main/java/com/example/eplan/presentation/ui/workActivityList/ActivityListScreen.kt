@@ -20,7 +20,11 @@ import java.time.format.DateTimeFormatter
 
 @ExperimentalMaterial3Api
 @Composable
-fun ActivitiesListScreen(viewModel: ActivityListViewModel, onNavigate: (String) -> Unit, bottomPadding: Dp) {
+fun ActivitiesListScreen(
+    viewModel: ActivityListViewModel,
+    onNavigate: (String) -> Unit,
+    bottomPadding: Dp
+) {
 
     Scaffold(
         modifier = Modifier.padding(bottom = bottomPadding),
@@ -46,18 +50,13 @@ fun ActivitiesListScreen(viewModel: ActivityListViewModel, onNavigate: (String) 
                     onDaySelected = { dayOfMonth, month, year ->
 
                         viewModel.onQueryChanged(
-                            LocalDate.of(year, month, dayOfMonth).format(
-                                DateTimeFormatter.ofPattern("dd-MM-yyyy")
-                            )
+                            LocalDate.of(year, month, dayOfMonth)
                         )
                         viewModel.onTriggerEvent(
                             ActivityListEvent.DayChangeEvent
                         )
                     },
-                    startDate = LocalDate.parse(
-                        viewModel.query.value,
-                        DateTimeFormatter.ofPattern("dd-MM-yyyy")
-                    )
+                    startDate = viewModel.query.value
                 )
                 ActivitiesList(
                     workActivities = viewModel.workActivities.value,

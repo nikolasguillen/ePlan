@@ -8,6 +8,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.eplan.domain.model.WorkActivity
+import com.example.eplan.domain.util.getDateFormatter
 import com.example.eplan.presentation.ui.workActivityList.ActivityListEvent.DayChangeEvent
 import com.example.eplan.presentation.ui.workActivityList.ActivityListEvent.RestoreStateEvent
 import com.example.eplan.repository.WorkActivityRepository
@@ -33,15 +34,15 @@ constructor(
 
     val workActivities: MutableState<List<WorkActivity>> = mutableStateOf(listOf())
 
-    val query = mutableStateOf(LocalDate.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy")))
+    val query = mutableStateOf(LocalDate.of(2022, 2, 14))
 
     init {
 
-        savedStateHandle.get<String>(STATE_KEY_QUERY)?.let { q ->
+        savedStateHandle.get<LocalDate>(STATE_KEY_QUERY)?.let { q ->
             setQuery(q)
         }
 
-        if (query.value != LocalDate.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy"))) {
+        if (query.value != LocalDate.now()) {
             onTriggerEvent(RestoreStateEvent)
         } else {
             onTriggerEvent(DayChangeEvent)
@@ -65,17 +66,7 @@ constructor(
         }
     }
 
-    private suspend fun restoreState() {
-        resetActivitiesState()
-        val results = repository.getDayActivities(
-            userToken = userToken,
-            query = query.value,
-            context = context
-        )
-        workActivities.value = results
-    }
-
-    fun onQueryChanged(query: String) {
+    fun onQueryChanged(query: LocalDate) {
         setQuery(query = query)
     }
 
@@ -92,11 +83,21 @@ constructor(
         workActivities.value.sortedBy { it.start }
     }
 
+    private suspend fun restoreState() {
+        resetActivitiesState()
+        val results = repository.getDayActivities(
+            userToken = userToken,
+            query = query.value,
+            context = context
+        )
+        workActivities.value = results
+    }
+
     private fun resetActivitiesState() {
         workActivities.value = listOf()
     }
 
-    private fun setQuery(query: String) {
+    private fun setQuery(query: LocalDate) {
         this.query.value = query
         savedStateHandle.set(STATE_KEY_QUERY, query)
     }

@@ -2,12 +2,13 @@ package com.example.eplan.repository
 
 import android.content.Context
 import com.example.eplan.domain.model.WorkActivity
+import java.time.LocalDate
 
 interface WorkActivityRepository {
 
     suspend fun getDayActivities(
         userToken: String,
-        query: String,
+        query: LocalDate,
         context: Context
     ): List<WorkActivity>
 
