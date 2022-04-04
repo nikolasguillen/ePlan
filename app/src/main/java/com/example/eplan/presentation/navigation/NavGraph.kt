@@ -1,11 +1,8 @@
 package com.example.eplan.presentation.navigation
 
-import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.Dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -18,8 +15,11 @@ import androidx.navigation.navigation
 import com.example.eplan.presentation.navigation.NestedNavGraphs.*
 import com.example.eplan.presentation.ui.account.AccountScreen
 import com.example.eplan.presentation.ui.appointmentList.AppointmentListScreen
-import com.example.eplan.presentation.ui.workActivity.ActivityDetailEvent
-import com.example.eplan.presentation.ui.workActivity.ActivityDetailEvent.*
+import com.example.eplan.presentation.ui.login.LoginEvent.LoginAttemptEvent
+import com.example.eplan.presentation.ui.login.LoginScreen
+import com.example.eplan.presentation.ui.login.LoginViewModel
+import com.example.eplan.presentation.ui.workActivity.ActivityDetailEvent.DeleteActivityEvent
+import com.example.eplan.presentation.ui.workActivity.ActivityDetailEvent.UpdateActivityEvent
 import com.example.eplan.presentation.ui.workActivity.ActivityDetailViewModel
 import com.example.eplan.presentation.ui.workActivity.ActivityDetailsScreen
 import com.example.eplan.presentation.ui.workActivityList.ActivitiesListScreen
@@ -30,9 +30,18 @@ import com.example.eplan.presentation.ui.workActivityList.ActivityListViewModel
 fun NavGraph(navController: NavHostController, bottomPadding: Dp) {
     NavHost(
         navController = navController,
-        startDestination = WorkActivityGraph.route,
+        startDestination = LoginGraph.route,
         modifier = Modifier.statusBarsPadding()
     ) {
+
+        navigation(startDestination = LoginGraph.startDestination, route = LoginGraph.route) {
+            composable(route = Screen.Login.route) {
+                val viewModel = hiltViewModel<LoginViewModel>()
+                LoginScreen(viewModel = viewModel, onLoginAttempted = { username, password ->
+                    viewModel.onTriggerEvent(LoginAttemptEvent(username, password))
+                })
+            }
+        }
 
         navigation(
             startDestination = WorkActivityGraph.startDestination,
