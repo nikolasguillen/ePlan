@@ -7,7 +7,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
-import androidx.navigation.NavDestination.Companion.hierarchy
 import com.example.eplan.presentation.navigation.BottomNavBarItems
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 
@@ -20,7 +19,7 @@ fun BottomSaveBar(onClick: () -> Unit) {
 
     Box {
 
-        rememberSystemUiController().setNavigationBarColor(color = Color.Transparent)
+        rememberSystemUiController().setNavigationBarColor(color = MaterialTheme.colorScheme.primary)
 
         Surface(color = MaterialTheme.colorScheme.primary) {
             NavigationBar(

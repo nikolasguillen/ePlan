@@ -2,6 +2,8 @@ package com.example.eplan.presentation.navigation
 
 sealed class Screen(val route: String, val name: String) {
 
+    object Login: Screen(route = "login", name = "Login")
+
     object WorkActivityList: Screen(route = "workActivityList", name = "Foglio ore")
 
     object WorkActivityDetails: Screen(route = "workActivityDetails", name = "Attività")

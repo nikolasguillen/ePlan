@@ -29,6 +29,8 @@
         <entry key="app/src/main/res/layout/calendar_fragment.xml" value="0.2453125" />
         <entry key="app/src/main/res/layout/homescreen.xml" value="0.2453125" />
         <entry key="app/src/main/res/menu/bottom_navigation_menu.xml" value="0.45364583333333336" />
+        <entry key="app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.209" />
+        <entry key="app/src/main/res/mipmap-anydpi-v26/ic_launcher_round.xml" value="0.209" />
       </map>
     </option>
   </component>

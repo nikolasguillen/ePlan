@@ -1,13 +1,18 @@
 package com.example.eplan.presentation.ui.components
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.indication
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.systemBarsPadding
+import androidx.compose.material.ripple.rememberRipple
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
@@ -35,22 +40,34 @@ fun BottomNavBar(navController: NavHostController) {
         rememberSystemUiController().setNavigationBarColor(color = Color.Transparent)
 
         Surface(color = MaterialTheme.colorScheme.surface) {
-            Surface(color = MaterialTheme.colorScheme.primary.copy(alpha = 0.08F)) {
-                NavigationBar(modifier = Modifier.navigationBarsPadding()) {
-                    items.forEach { item ->
-                        NavigationBarItem(
-                            selected = currentDestination?.hierarchy?.any {
-                                it.route == item.route
-                            } == true,
-                            onClick = {
-                                if (currentDestination?.route != item.route) {
-                                    navController.navigate(item.route)
-                                }
-                            },
-                            icon = { Icon(painterResource(id = item.icon), contentDescription = item.title) },
-                            label = { Text(text = item.title) }
-                        )
-                    }
+            rememberSystemUiController().setNavigationBarColor(
+                MaterialTheme.colorScheme.primary.copy(
+                    alpha = 0.08F
+                )
+            )
+            NavigationBar(modifier = Modifier.navigationBarsPadding()) {
+                items.forEach { item ->
+                    NavigationBarItem(
+                        selected = currentDestination?.hierarchy?.any {
+                            it.route == item.route
+                        } == true,
+                        onClick = {
+                            if (currentDestination?.route != item.route) {
+                                navController.navigate(item.route)
+                            }
+                        },
+                        icon = {
+                            Icon(
+                                painterResource(id = item.icon),
+                                contentDescription = item.title
+                            )
+                        },
+                        label = { Text(text = item.title) },
+                        modifier = Modifier.clickable(
+                            onClick = {},
+                            indication = rememberRipple(bounded = false),
+                            interactionSource = remember { MutableInteractionSource() })
+                    )
                 }
             }
         }

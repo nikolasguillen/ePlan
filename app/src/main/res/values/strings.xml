@@ -23,4 +23,8 @@
     <string name="ok_conf">OK</string>
     <string name="seleziona_data">Seleziona una data</string>
     <string name="seleziona_orario">Seleziona un orario</string>
+    <string name="profilo">Profilo</string>
+    <string name="impostazioni">Impostazioni</string>
+    <string name="app_info">Informazioni sull\'app</string>
+    <string name="torna_indietro">Torna indietro</string>
 </resources>
