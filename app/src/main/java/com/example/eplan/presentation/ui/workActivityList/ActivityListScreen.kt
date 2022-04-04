@@ -17,7 +17,8 @@ import com.example.eplan.presentation.ui.components.TopBar
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
-@OptIn(ExperimentalMaterial3Api::class)
+
+@ExperimentalMaterial3Api
 @Composable
 fun ActivitiesListScreen(viewModel: ActivityListViewModel, onNavigate: (String) -> Unit, bottomPadding: Dp) {
 

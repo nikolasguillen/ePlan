@@ -8,20 +8,14 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.eplan.domain.model.WorkActivity
-import com.example.eplan.presentation.ui.workActivityList.ActivityListEvent.*
-import com.example.eplan.presentation.util.TAG
+import com.example.eplan.presentation.ui.workActivityList.ActivityListEvent.DayChangeEvent
+import com.example.eplan.presentation.ui.workActivityList.ActivityListEvent.RestoreStateEvent
 import com.example.eplan.repository.WorkActivityRepository
-import dagger.assisted.Assisted
-import dagger.assisted.AssistedInject
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.launch
-import java.lang.Exception
 import java.time.LocalDate
-import java.time.LocalDateTime
-import java.time.Month
 import java.time.format.DateTimeFormatter
-import java.util.*
 import javax.inject.Inject
 import javax.inject.Named
 

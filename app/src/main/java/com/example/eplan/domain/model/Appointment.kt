@@ -1,7 +1,5 @@
 package com.example.eplan.domain.model
 
-import androidx.compose.runtime.MutableState
-
 data class Appointment(
     val activity: String,
     val title: String,

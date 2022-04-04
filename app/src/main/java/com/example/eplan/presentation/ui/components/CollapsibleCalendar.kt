@@ -1,6 +1,5 @@
 package com.example.eplan.presentation.ui.components
 
-import android.util.Log
 import android.view.View
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -12,11 +11,9 @@ import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import com.example.eplan.R
-import com.example.eplan.presentation.util.TAG
 import com.shrikanthravi.collapsiblecalendarview.data.Day
 import com.shrikanthravi.collapsiblecalendarview.widget.CollapsibleCalendar
 import java.time.LocalDate
-import java.time.format.DateTimeFormatter
 
 @Composable
 fun CollapsibleCalendar(
