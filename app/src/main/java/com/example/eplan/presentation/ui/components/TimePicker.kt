@@ -19,9 +19,9 @@ fun CustomTimePicker(startTime: String, dialogState: MaterialDialogState, onClic
 
     androidx.compose.material.MaterialTheme(
         colors = androidx.compose.material.MaterialTheme.colors.copy(
-            onBackground = MaterialTheme.colorScheme.onSurface,
-            background = MaterialTheme.colorScheme.surface,
-            primary = MaterialTheme.colorScheme.onSurface
+            onBackground = MaterialTheme.colorScheme.onTertiaryContainer,
+            background = MaterialTheme.colorScheme.tertiaryContainer,
+            primary = MaterialTheme.colorScheme.onTertiaryContainer
         )
     ) {
         MaterialDialog(
@@ -36,7 +36,7 @@ fun CustomTimePicker(startTime: String, dialogState: MaterialDialogState, onClic
                     textStyle = MaterialTheme.typography.labelLarge.copy(color = MaterialTheme.colorScheme.primary)
                 )
             },
-            backgroundColor = MaterialTheme.colorScheme.surface,
+            backgroundColor = MaterialTheme.colorScheme.secondaryContainer,
             shape = RoundedCornerShape(11.dp)
         ) {
             timepicker(
@@ -46,11 +46,11 @@ fun CustomTimePicker(startTime: String, dialogState: MaterialDialogState, onClic
                 colors = TimePickerDefaults.colors(
                     activeBackgroundColor = MaterialTheme.colorScheme.primary,
                     activeTextColor = MaterialTheme.colorScheme.onPrimary,
-                    inactiveBackgroundColor = MaterialTheme.colorScheme.surfaceVariant,
-                    inactiveTextColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                    inactiveBackgroundColor = MaterialTheme.colorScheme.surface,
+                    inactiveTextColor = MaterialTheme.colorScheme.onSurface,
                     selectorColor = MaterialTheme.colorScheme.primary,
                     selectorTextColor = MaterialTheme.colorScheme.onPrimary,
-                    headerTextColor = MaterialTheme.colorScheme.onSurface
+                    headerTextColor = MaterialTheme.colorScheme.onTertiaryContainer
                 )
             ) { time ->
                 onClick(time)

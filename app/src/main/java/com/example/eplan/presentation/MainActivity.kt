@@ -9,8 +9,10 @@ import androidx.compose.animation.*
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.navigationBarsPadding
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.SideEffect
@@ -19,6 +21,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.modifier.modifierLocalConsumer
 import androidx.core.view.WindowCompat
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
@@ -32,6 +35,7 @@ import com.example.eplan.presentation.navigation.NavGraph
 import com.example.eplan.presentation.navigation.Screen
 import com.example.eplan.presentation.ui.appointmentList.AppointmentListScreen
 import com.example.eplan.presentation.ui.components.BottomNavBar
+import com.example.eplan.presentation.ui.components.TopBar
 import com.example.eplan.presentation.ui.theme.AppTheme
 import com.example.eplan.presentation.ui.workActivity.ActivityDetailEvent
 import com.example.eplan.presentation.ui.workActivity.ActivityDetailViewModel
@@ -71,10 +75,9 @@ class MainActivity : AppCompatActivity() {
             }
 
             AppTheme {
-
                 Scaffold(
+//                    modifier = Modifier.navigationBarsPadding(),
                     bottomBar = {
-
                         when (currentRoute(navController = navController)) {
                             (Screen.WorkActivityList.route) -> {
                                 bottomBarState.value = true
@@ -86,6 +89,7 @@ class MainActivity : AppCompatActivity() {
                                 bottomBarState.value = false
                             }
                         }
+
                         AnimatedVisibility(
                             visible = bottomBarState.value,
                             enter = fadeIn() + slideInVertically(initialOffsetY = { it }),
@@ -95,7 +99,10 @@ class MainActivity : AppCompatActivity() {
                         }
                     }
                 ) {
-                    NavGraph(navController = navController, bottomPadding = it.calculateBottomPadding())
+                    NavGraph(
+                        navController = navController,
+                        bottomPadding = it.calculateBottomPadding()
+                    )
                 }
             }
         }

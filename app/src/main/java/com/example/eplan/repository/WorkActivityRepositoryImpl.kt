@@ -22,8 +22,6 @@ class WorkActivityRepositoryImpl(
         context: Context
     ): List<WorkActivity> {
 
-        val workActivityDtoMapper = WorkActivityDtoMapper()
-
         lateinit var tracciatoJson: String
         try {
             tracciatoJson = context.assets.open("tracciatoEplan.json")
@@ -33,7 +31,7 @@ class WorkActivityRepositoryImpl(
         }
 
         val gson = Gson()
-        val workActivities = workActivityDtoMapper.toDomainList(
+        val workActivities = mapper.toDomainList(
             gson.fromJson(
                 tracciatoJson,
                 Array<WorkActivityDto>::class.java
@@ -54,7 +52,6 @@ class WorkActivityRepositoryImpl(
     ): WorkActivity {
         /*return mapper.mapToDomainModel(service.getActivity(userToken, activityId).workActivity)*/
 
-        val workActivityDtoMapper = WorkActivityDtoMapper()
 
         lateinit var tracciatoJson: String
         try {
@@ -65,7 +62,7 @@ class WorkActivityRepositoryImpl(
         }
 
         val gson = Gson()
-        val workActivities = workActivityDtoMapper.toDomainList(
+        val workActivities = mapper.toDomainList(
             gson.fromJson(
                 tracciatoJson,
                 Array<WorkActivityDto>::class.java

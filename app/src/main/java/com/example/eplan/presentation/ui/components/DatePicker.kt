@@ -58,7 +58,7 @@ fun DatePicker(
             modifier = Modifier
                 .wrapContentSize()
                 .background(
-                    color = MaterialTheme.colorScheme.surface,
+                    color = MaterialTheme.colorScheme.secondaryContainer,
                     shape = RoundedCornerShape(size = 16.dp)
                 )
         ) {
