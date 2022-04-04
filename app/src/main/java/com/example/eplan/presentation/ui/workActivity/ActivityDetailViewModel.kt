@@ -33,6 +33,8 @@ constructor(
     private val state: SavedStateHandle
 ) : ViewModel() {
 
+    val onLoad = mutableStateOf(false)
+
     private var initialState: MutableState<WorkActivity?> = mutableStateOf(null)
     var workActivity: MutableState<WorkActivity?> = mutableStateOf(null)
         private set
@@ -68,8 +70,6 @@ constructor(
     fun checkChanges(): Boolean {
         return initialState.value != workActivity.value
     }
-
-    val onLoad = mutableStateOf(false)
 
     init {
         state.get<String>(STATE_KEY_ACTIVITY)?.let { workActivityId ->

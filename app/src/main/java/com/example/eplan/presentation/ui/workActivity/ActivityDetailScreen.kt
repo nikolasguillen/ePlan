@@ -39,9 +39,11 @@ import com.example.eplan.R
 import com.example.eplan.domain.model.WorkActivity
 import com.example.eplan.presentation.navigation.BottomNavBarItems
 import com.example.eplan.presentation.ui.components.BottomSaveBar
+import com.example.eplan.presentation.ui.components.CustomDateButton
 import com.example.eplan.presentation.ui.components.CustomTimeButton
 import com.example.eplan.presentation.ui.workActivity.ActivityDetailEvent.GetActivityEvent
 import com.example.eplan.presentation.util.acceptableTimeInterval
+import com.example.eplan.presentation.util.fromDateToLocalDate
 import kotlinx.coroutines.launch
 import java.time.Duration
 import java.time.LocalTime
@@ -58,9 +60,8 @@ fun ActivityDetailsScreen(
     onDeletePressed: () -> Unit
 ) {
 
-    val onLoad = viewModel.onLoad.value
-
     // Evita di rifare la chiamata API ad ogni recomposition
+    val onLoad = viewModel.onLoad.value
     if (!onLoad) {
         viewModel.onLoad.value = true
         viewModel.onTriggerEvent(GetActivityEvent(activityId))
@@ -102,7 +103,6 @@ fun ActivityDetailsScreen(
                     actions = {
                         IconButton(onClick = {
                             onDeletePressed()
-                            viewModel.onLoad.value = false
                         }) {
                             Icon(
                                 imageVector = Icons.Outlined.Delete,
@@ -160,6 +160,14 @@ fun ActivityDetailsScreen(
                         label = { Text(text = stringResource(R.string.descrizione)) },
                         modifier = Modifier.fillMaxWidth()
                     )
+                    Row(modifier = Modifier.fillMaxWidth()) {
+                        CustomDateButton(
+                            date = it.date,
+                            onDateSelected = {
+                                viewModel.updateDate(fromDateToLocalDate(it))
+                            }
+                        )
+                    }
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.SpaceBetween
@@ -221,7 +229,6 @@ fun ActivityDetailsScreen(
             confirmButton = {
                 TextButton(onClick = {
                     backDialog.value = false
-                    viewModel.onLoad.value = false
                     onBackPressed()
                 }
                 ) {

@@ -1,12 +1,8 @@
-package com.example.eplan.presentation.ui.items
+package com.example.eplan.presentation.ui.components
 
-import android.app.DatePickerDialog
-import android.content.Context
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Switch
-import androidx.compose.material.SwitchDefaults
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material3.*
@@ -17,9 +13,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
-import com.example.eplan.R
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -71,60 +65,5 @@ fun CustomInputDropDown(
                 }
             }
         }
-    }
-}
-
-@Composable
-fun CustomSwitch(
-    value: MutableState<Boolean> = mutableStateOf(true),
-    enabled: MutableState<Boolean> = mutableStateOf(true)
-) {
-    Switch(
-        checked = value.value,
-        onCheckedChange = { value.value = it },
-        enabled = enabled.value,
-        colors = SwitchDefaults.colors(
-            checkedThumbColor = MaterialTheme.colorScheme.primary,
-            checkedTrackColor = MaterialTheme.colorScheme.primary,
-            uncheckedTrackColor = MaterialTheme.colorScheme.onSurface
-        )
-    )
-}
-
-private fun customDatePicker(date: MutableState<String>, context: Context) {
-
-    val datePickerDialog = DatePickerDialog(
-        context,
-        R.style.MyTimePickerDialogStyle,
-        { _, year: Int, month: Int, dayOfMonth: Int ->
-            date.value =
-                "${String.format("%02d", dayOfMonth)}-${String.format("%02d", month + 1)}-${year}"
-        },
-        Integer.parseInt(date.value.split("-")[2]),
-        Integer.parseInt(date.value.split("-")[1]) - 1,
-        Integer.parseInt(date.value.split("-")[0])
-    )
-
-    datePickerDialog.show()
-}
-
-
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun CustomDateButton(date: MutableState<String>, context: Context) {
-    Card(
-        modifier = Modifier
-            .clip(RoundedCornerShape(11.dp))
-            .fillMaxWidth()
-            .clickable { customDatePicker(date, context) }
-    )
-    {
-        Text(
-            text = date.value,
-            modifier = Modifier
-                .padding(16.dp)
-                .align(Alignment.CenterHorizontally)
-        )
     }
 }

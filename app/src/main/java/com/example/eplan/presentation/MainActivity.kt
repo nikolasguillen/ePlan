@@ -44,14 +44,6 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
-    /*companion object {
-        private lateinit var instance: MainActivity
-
-        private val database: EplanDatabase by lazy {
-            EplanDatabase.buildDatabase(instance)
-        }
-    }*/
-
     @RequiresApi(Build.VERSION_CODES.S)
     @OptIn(ExperimentalMaterial3Api::class)
     override fun onCreate(savedInstanceState: Bundle?) {
