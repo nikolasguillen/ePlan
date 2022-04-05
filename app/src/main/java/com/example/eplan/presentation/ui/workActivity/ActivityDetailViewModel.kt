@@ -36,6 +36,8 @@ constructor(
 
     val onLoad = mutableStateOf(false)
 
+    val loading = mutableStateOf(false)
+
     private var initialState: MutableState<WorkActivity?> = mutableStateOf(null)
     var workActivity: MutableState<WorkActivity?> = mutableStateOf(null)
         private set

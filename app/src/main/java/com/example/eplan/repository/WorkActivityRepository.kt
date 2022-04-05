@@ -8,7 +8,7 @@ interface WorkActivityRepository {
 
     suspend fun getDayActivities(
         userToken: String,
-        query: LocalDate,
+        query: String,
         context: Context
     ): List<WorkActivity>
 

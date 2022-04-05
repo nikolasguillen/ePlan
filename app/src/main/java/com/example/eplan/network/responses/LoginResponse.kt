@@ -4,6 +4,9 @@ import com.google.gson.annotations.SerializedName
 
 class LoginResponse(
 
-    @SerializedName("loginResponse")
-    var loginResponse: Boolean
+    @SerializedName("statusCode")
+    var statusCode: Int,
+
+    @SerializedName("message")
+    var message: String
 )

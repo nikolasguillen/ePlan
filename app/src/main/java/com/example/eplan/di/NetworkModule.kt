@@ -29,7 +29,7 @@ object NetworkModule {
     @Provides
     fun provideWorkActivityService(): WorkActivityService {
         return Retrofit.Builder()
-            .baseUrl("https://ciao.com/")
+            .baseUrl("https://gest.eplanweb.com/api/")
             .addConverterFactory(GsonConverterFactory.create(GsonBuilder().create()))
             .build()
             .create(WorkActivityService::class.java)
@@ -39,7 +39,7 @@ object NetworkModule {
     @Provides
     fun provideLoginService(): LoginService {
         return Retrofit.Builder()
-            .baseUrl("https://ciao.com/")
+            .baseUrl("https://gest.eplanweb.com/api/")
             .addConverterFactory(GsonConverterFactory.create(GsonBuilder().create()))
             .build()
             .create(LoginService::class.java)

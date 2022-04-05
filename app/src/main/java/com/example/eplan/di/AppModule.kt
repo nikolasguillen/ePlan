@@ -1,7 +1,7 @@
 package com.example.eplan.di
 
 import android.content.Context
-import com.example.eplan.presentation.EplanApplication
+import com.example.eplan.presentation.BaseApplication
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -15,7 +15,7 @@ object AppModule {
 
     @Singleton
     @Provides
-    fun provideApplication(@ApplicationContext app: Context): EplanApplication {
-        return app as EplanApplication
+    fun provideApplication(@ApplicationContext app: Context): BaseApplication {
+        return app as BaseApplication
     }
 }

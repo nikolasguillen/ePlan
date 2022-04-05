@@ -1,14 +1,11 @@
 package com.example.eplan.network
 
-import retrofit2.http.GET
-import retrofit2.http.Query
+import com.example.eplan.network.model.CredentialsDto
+import com.example.eplan.network.responses.LoginResponse
+import retrofit2.http.*
 
 interface LoginService {
 
-    @GET("get")
-    suspend fun getUserToken(
-        @Query("username") username: String,
-        @Query("password") password: String
-    ): String
-
+    @POST("login")
+    suspend fun login(@Body credentials: CredentialsDto): LoginResponse
 }

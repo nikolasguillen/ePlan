@@ -27,14 +27,6 @@ object RepositoryModule {
 
     @Singleton
     @Provides
-    fun provideLoginRepository(
-        loginService: LoginService
-    ): LoginRepository {
-        return LoginRepositoryImpl(loginService)
-    }
-
-    @Singleton
-    @Provides
     fun provideUserRepository(
         userService: UserService,
         userDtoMapper: UserDtoMapper

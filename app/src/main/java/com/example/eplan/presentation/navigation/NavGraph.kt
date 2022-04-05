@@ -37,68 +37,76 @@ fun NavGraph(navController: NavHostController, bottomPadding: Dp) {
         navigation(startDestination = LoginGraph.startDestination, route = LoginGraph.route) {
             composable(route = Screen.Login.route) {
                 val viewModel = hiltViewModel<LoginViewModel>()
-                LoginScreen(viewModel = viewModel, onLoginAttempted = { username, password ->
-                    viewModel.onTriggerEvent(LoginAttemptEvent(username, password))
-                })
-            }
-        }
-
-        navigation(
-            startDestination = WorkActivityGraph.startDestination,
-            route = WorkActivityGraph.route
-        ) {
-            composable(route = Screen.WorkActivityList.route) {
-                val viewModel = hiltViewModel<ActivityListViewModel>()
-                ActivitiesListScreen(
+                LoginScreen(
                     viewModel = viewModel,
-                    onNavigate = navController::navigate,
-                    bottomPadding = bottomPadding
+                    onLoginAttempted = { viewModel.onTriggerEvent(LoginAttemptEvent) }
                 )
+                if (viewModel.successfulLoginAttempt.value) {
+                    navController.navigate(WorkActivityGraph.route)
+                    navController.popBackStack(LoginGraph.route, true)
+                }
             }
 
-            composable(
-                route = Screen.WorkActivityDetails.route + "/{activityId}",
-                arguments = listOf(
-                    navArgument("activityId") {
-                        type = NavType.StringType
-                    })
-            ) { navBackStackEntry ->
-                val viewModel = hiltViewModel<ActivityDetailViewModel>()
-                ActivityDetailsScreen(
-                    activityId = navBackStackEntry.arguments?.getString("activityId")!!,
-                    viewModel = viewModel,
-                    onSavePressed = {
-                        viewModel.onTriggerEvent(UpdateActivityEvent)
-                        navController.navigateUp()
-                    },
-                    onBackPressed = navController::navigateUp,
-                    onDeletePressed = {
-                        viewModel.onTriggerEvent(DeleteActivityEvent)
-                        navController.navigateUp()
-                    }
-                )
+            navigation(
+                startDestination = WorkActivityGraph.startDestination,
+                route = WorkActivityGraph.route
+            ) {
+                composable(route = Screen.WorkActivityList.route) {
+                    val viewModel = hiltViewModel<ActivityListViewModel>()
+                    ActivitiesListScreen(
+                        viewModel = viewModel,
+                        onNavigate = navController::navigate,
+                        bottomPadding = bottomPadding
+                    )
+                }
+
+                composable(
+                    route = Screen.WorkActivityDetails.route + "/{activityId}",
+                    arguments = listOf(
+                        navArgument("activityId") {
+                            type = NavType.StringType
+                        })
+                ) { navBackStackEntry ->
+                    val viewModel = hiltViewModel<ActivityDetailViewModel>()
+                    ActivityDetailsScreen(
+                        activityId = navBackStackEntry.arguments?.getString("activityId")!!,
+                        viewModel = viewModel,
+                        onSavePressed = {
+                            viewModel.onTriggerEvent(UpdateActivityEvent)
+                            navController.navigateUp()
+                        },
+                        onBackPressed = navController::navigateUp,
+                        onDeletePressed = {
+                            viewModel.onTriggerEvent(DeleteActivityEvent)
+                            navController.navigateUp()
+                        }
+                    )
+                }
             }
-        }
 
-        navigation(
-            startDestination = AppointmentGraph.startDestination,
-            route = AppointmentGraph.route
-        ) {
-            /*TODO da sistemare*/
-            composable(route = Screen.AppointmentList.route) {
-                AppointmentListScreen(navController = navController)
+            navigation(
+                startDestination = AppointmentGraph.startDestination,
+                route = AppointmentGraph.route
+            ) {
+                /*TODO da sistemare*/
+                composable(route = Screen.AppointmentList.route) {
+                    AppointmentListScreen(navController = navController)
 
+                }
             }
-        }
 
-        navigation(startDestination = AccountGraph.startDestination, route = AccountGraph.route) {
-            composable(route = Screen.Account.route) {
-                AccountScreen(
-                    onBackPressed = navController::popBackStack,
-                    toProfile = {},
-                    toAppInfo = {},
-                    toSettings = {}
-                )
+            navigation(
+                startDestination = AccountGraph.startDestination,
+                route = AccountGraph.route
+            ) {
+                composable(route = Screen.Account.route) {
+                    AccountScreen(
+                        onBackPressed = navController::popBackStack,
+                        toProfile = {},
+                        toAppInfo = {},
+                        toSettings = {}
+                    )
+                }
             }
         }
     }

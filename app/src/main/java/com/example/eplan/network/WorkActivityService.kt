@@ -8,7 +8,7 @@ interface WorkActivityService {
 
     @GET("getByDay")
     suspend fun getDayActivities(
-        @Header("userToken") token: String,
+        @Header("Authorization: Bearer") token: String,
         @Query("query") query: String
     ): WorkActivityDayResponse
 

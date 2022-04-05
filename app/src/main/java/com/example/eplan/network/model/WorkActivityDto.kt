@@ -16,7 +16,7 @@ data class WorkActivityDto(
     @SerializedName("durata")
     var duration: String,
 
-    @SerializedName("id_interventi")
+    @SerializedName("id_interventia")
     var id: String,
 
     @SerializedName("ore_spostamento")

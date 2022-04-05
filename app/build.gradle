@@ -56,7 +56,6 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
 
     // Compose
-
     def compose_version = "1.2.0-alpha06"
     implementation "androidx.compose.material:material:$compose_version"
     implementation "androidx.compose.animation:animation:$compose_version"
@@ -83,7 +82,7 @@ dependencies {
     // Compose dialogs
     implementation "io.github.vanpra.compose-material-dialogs:datetime:0.7.0"
 
-    // Gson for Jsons
+    // Gson for Json
     implementation 'com.google.code.gson:gson:2.9.0'
 
     // Retrofit2
@@ -106,9 +105,15 @@ dependencies {
     // Accompanist dependencies
     def accompanist_version = "0.24.5-alpha"
 
+    // DataStore dependencies
+    def dataStore_version = "1.0.0"
+    implementation("androidx.datastore:datastore:$dataStore_version")
+    implementation("androidx.datastore:datastore-preferences:$dataStore_version")
+
     implementation "com.google.accompanist:accompanist-swiperefresh:$accompanist_version"
     implementation "com.google.accompanist:accompanist-navigation-animation:$accompanist_version"
     implementation "com.google.accompanist:accompanist-systemuicontroller:$accompanist_version"
+    implementation "com.google.accompanist:accompanist-placeholder-material:$accompanist_version"
 
     def nav_version = "2.4.1"
 

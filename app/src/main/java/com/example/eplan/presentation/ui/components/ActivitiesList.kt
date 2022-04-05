@@ -9,7 +9,8 @@ import com.example.eplan.presentation.navigation.Screen
 @Composable
 fun ActivitiesList(
     workActivities: List<WorkActivity>,
-    onNavigateToActivityDetailScreen: (String) -> Unit
+    onNavigateToActivityDetailScreen: (String) -> Unit,
+    loading: Boolean
 ) {
 
     LazyColumn {
@@ -19,7 +20,8 @@ fun ActivitiesList(
                 onClick = {
                     val route = Screen.WorkActivityDetails.route + "/${workActivity.id}"
                     onNavigateToActivityDetailScreen(route)
-                }
+                },
+                loading = loading
             )
         }
     }

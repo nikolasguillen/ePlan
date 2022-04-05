@@ -15,19 +15,23 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.example.eplan.domain.model.WorkActivity
+import com.google.accompanist.placeholder.PlaceholderHighlight
+import com.google.accompanist.placeholder.material.placeholder
+import com.google.accompanist.placeholder.material.shimmer
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ActivityCard(
     workActivity: WorkActivity,
-    onClick: () -> Unit
+    onClick: () -> Unit,
+    loading: Boolean
 ) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = 10.dp, vertical = 5.dp)
             .clip(RoundedCornerShape(11.dp))
-            .clickable(onClick = onClick),
+            .clickable(onClick = onClick)
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
             Text(

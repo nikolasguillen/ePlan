@@ -8,6 +8,9 @@ import com.example.eplan.network.model.WorkActivityDto
 import com.example.eplan.network.model.WorkActivityDtoMapper
 import com.example.eplan.presentation.util.TAG
 import com.google.gson.Gson
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.withContext
 import java.io.IOException
 import java.time.LocalDate
 
@@ -18,11 +21,12 @@ class WorkActivityRepositoryImpl(
 
     override suspend fun getDayActivities(
         userToken: String,
-        query: LocalDate,
+        query: String,
         context: Context
     ): List<WorkActivity> {
 
         lateinit var tracciatoJson: String
+
         try {
             tracciatoJson = context.assets.open("tracciatoEplan.json")
                 .bufferedReader()
@@ -42,7 +46,7 @@ class WorkActivityRepositoryImpl(
             workActivity.date.dayOfMonth == dayOfMonth && workActivity.date.month == Month.of(month)
         }*/
 
-        return workActivities.filter { it.date == query }
+        return workActivities.filter { it.date.toString() == query }
     }
 
     override suspend fun getActivityById(

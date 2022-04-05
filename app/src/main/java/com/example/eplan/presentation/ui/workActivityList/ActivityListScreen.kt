@@ -26,6 +26,12 @@ fun ActivitiesListScreen(
     bottomPadding: Dp
 ) {
 
+    val workActivities = viewModel.workActivities.value
+
+    val query = viewModel.query.value
+
+    val loading = viewModel.loading.value
+
     Scaffold(
         modifier = Modifier.padding(bottom = bottomPadding),
         topBar = {
@@ -50,17 +56,18 @@ fun ActivitiesListScreen(
                     onDaySelected = { dayOfMonth, month, year ->
 
                         viewModel.onQueryChanged(
-                            LocalDate.of(year, month, dayOfMonth)
+                            LocalDate.of(year, month, dayOfMonth).toString()
                         )
                         viewModel.onTriggerEvent(
                             ActivityListEvent.DayChangeEvent
                         )
                     },
-                    startDate = viewModel.query.value
+                    startDate = LocalDate.parse(query, DateTimeFormatter.ISO_DATE)
                 )
                 ActivitiesList(
-                    workActivities = viewModel.workActivities.value,
-                    onNavigateToActivityDetailScreen = onNavigate
+                    workActivities = workActivities,
+                    onNavigateToActivityDetailScreen = onNavigate,
+                    loading = loading
                 )
             }
         }
