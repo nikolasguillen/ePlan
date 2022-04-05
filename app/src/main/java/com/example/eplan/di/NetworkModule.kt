@@ -19,6 +19,8 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 object NetworkModule {
 
+    var auth_token = "Bearer "
+
     @Singleton
     @Provides
     fun provideWorkActivityDtoMapper(): WorkActivityDtoMapper {
@@ -65,6 +67,6 @@ object NetworkModule {
     @Provides
     @Named("auth_token")
     fun provideUserToken(): String {
-        return "Token"
+        return auth_token
     }
 }

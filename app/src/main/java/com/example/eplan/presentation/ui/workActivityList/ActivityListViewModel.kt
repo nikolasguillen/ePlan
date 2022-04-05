@@ -51,11 +51,11 @@ constructor(
             setQuery(q)
         }
 
-        if (query.value != LocalDate.now().toString()) {
-            onTriggerEvent(RestoreStateEvent)
-        } else {
+//        if (query.value != LocalDate.now().toString()) {
+//            onTriggerEvent(RestoreStateEvent)
+//        } else {
             onTriggerEvent(DayChangeEvent)
-        }
+//        }
     }
 
     fun onTriggerEvent(event: ActivityListEvent) {
@@ -63,6 +63,7 @@ constructor(
             try {
                 when (event) {
                     is DayChangeEvent -> {
+                        Log.d(TAG, "token: $userToken")
                         dayChange()
                     }
                     RestoreStateEvent -> {
@@ -86,7 +87,6 @@ constructor(
 
         dayChange.execute(token = userToken, query = query.value).onEach { dataState ->
             loading.value = dataState.loading
-            Log.d(TAG, "Loading: ${loading.value}")
 
             dataState.data?.let { list ->
                 workActivities.value = list

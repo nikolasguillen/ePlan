@@ -50,16 +50,16 @@ constructor(
 
     private fun login(username: String, password: String) {
 
+        message.value = ""
+
         loginAttempt.execute(username = username, password = password).onEach { dataState ->
 
             loading.value = dataState.loading
 
             dataState.data?.let { pair ->
                 statusCode.value = pair.first
-                message.value = pair.second
+                userToken = pair.second
                 successfulLoginAttempt.value = true
-                userToken = message.value
-
             }
 
             dataState.error?.let { error ->

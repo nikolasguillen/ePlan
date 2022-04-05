@@ -1,8 +1,10 @@
 package com.example.eplan.presentation.navigation
 
+import android.util.Log
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.Dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -12,6 +14,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import androidx.navigation.navigation
+import com.example.eplan.di.NetworkModule
 import com.example.eplan.presentation.navigation.NestedNavGraphs.*
 import com.example.eplan.presentation.ui.account.AccountScreen
 import com.example.eplan.presentation.ui.appointmentList.AppointmentListScreen
@@ -24,6 +27,7 @@ import com.example.eplan.presentation.ui.workActivity.ActivityDetailViewModel
 import com.example.eplan.presentation.ui.workActivity.ActivityDetailsScreen
 import com.example.eplan.presentation.ui.workActivityList.ActivitiesListScreen
 import com.example.eplan.presentation.ui.workActivityList.ActivityListViewModel
+import com.example.eplan.presentation.util.TAG
 
 @ExperimentalMaterial3Api
 @Composable
@@ -34,6 +38,7 @@ fun NavGraph(navController: NavHostController, bottomPadding: Dp) {
         modifier = Modifier.statusBarsPadding()
     ) {
 
+
         navigation(startDestination = LoginGraph.startDestination, route = LoginGraph.route) {
             composable(route = Screen.Login.route) {
                 val viewModel = hiltViewModel<LoginViewModel>()
@@ -42,8 +47,10 @@ fun NavGraph(navController: NavHostController, bottomPadding: Dp) {
                     onLoginAttempted = { viewModel.onTriggerEvent(LoginAttemptEvent) }
                 )
                 if (viewModel.successfulLoginAttempt.value) {
+                    NetworkModule.auth_token += viewModel.getToken()
+                    navController.popBackStack()
                     navController.navigate(WorkActivityGraph.route)
-                    navController.popBackStack(LoginGraph.route, true)
+                    viewModel.successfulLoginAttempt.value = false
                 }
             }
 

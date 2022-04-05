@@ -10,6 +10,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.Dp
 import com.example.eplan.R
+import com.example.eplan.presentation.navigation.NestedNavGraphs
 import com.example.eplan.presentation.navigation.Screen
 import com.example.eplan.presentation.ui.components.ActivitiesList
 import com.example.eplan.presentation.ui.components.CollapsibleCalendar
@@ -37,7 +38,7 @@ fun ActivitiesListScreen(
         topBar = {
             TopBar(
                 stringResource(R.string.foglio_ore),
-                navigate = { onNavigate(Screen.Account.route) })
+                navigate = { onNavigate(NestedNavGraphs.AccountGraph.route) })
         },
         floatingActionButton = {
             FloatingActionButton(

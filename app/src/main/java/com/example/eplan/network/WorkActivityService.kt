@@ -1,16 +1,17 @@
 package com.example.eplan.network
 
+import com.example.eplan.network.model.WorkActivityDto
 import com.example.eplan.network.responses.WorkActivityByIdResponse
 import com.example.eplan.network.responses.WorkActivityDayResponse
 import retrofit2.http.*
 
 interface WorkActivityService {
 
-    @GET("getByDay")
+    @GET("interventi")
     suspend fun getDayActivities(
-        @Header("Authorization: Bearer") token: String,
-        @Query("query") query: String
-    ): WorkActivityDayResponse
+        @Header("Authorization") token: String,
+        @Query("intervento") query: String
+    ): List<WorkActivityDto>
 
     @GET("getById")
     suspend fun getActivity(
