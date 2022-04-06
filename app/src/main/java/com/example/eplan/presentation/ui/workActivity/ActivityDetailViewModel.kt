@@ -3,17 +3,19 @@ package com.example.eplan.presentation.ui.workActivity
 import android.content.Context
 import android.util.Log
 import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.eplan.domain.model.WorkActivity
+import com.example.eplan.interactors.workActivityDetail.GetById
 import com.example.eplan.presentation.ui.workActivity.ActivityDetailEvent.*
 import com.example.eplan.presentation.util.TAG
 import com.example.eplan.repository.WorkActivityRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import java.lang.Exception
 import java.time.LocalDate
@@ -28,15 +30,18 @@ const val STATE_KEY_ACTIVITY = "state.key.workActivityId"
 class ActivityDetailViewModel
 @Inject
 constructor(
+    private val getById: GetById,
     private val repository: WorkActivityRepository,
     @Named("auth_token") private val userToken: String,
     @ApplicationContext private val context: Context,
-    private val state: SavedStateHandle
+    private val savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
     val onLoad = mutableStateOf(false)
 
     val loading = mutableStateOf(false)
+
+    val query = mutableStateOf("")
 
     private var initialState: MutableState<WorkActivity?> = mutableStateOf(null)
     var workActivity: MutableState<WorkActivity?> = mutableStateOf(null)
@@ -75,7 +80,7 @@ constructor(
     }
 
     init {
-        state.get<String>(STATE_KEY_ACTIVITY)?.let { workActivityId ->
+        savedStateHandle.get<String>(STATE_KEY_ACTIVITY)?.let { workActivityId ->
             onTriggerEvent(GetActivityEvent(workActivityId))
         }
     }
@@ -86,7 +91,8 @@ constructor(
             try {
                 when (event) {
                     is GetActivityEvent -> {
-                        getActivity(event.id)
+                        setQuery(event.id)
+                        getActivity()
                     }
                     is UpdateActivityEvent -> {
                         updateActivity()
@@ -102,15 +108,24 @@ constructor(
 
     }
 
-    private suspend fun getActivity(id: String) {
+    private fun getActivity() {
+        Log.d(TAG, "get by Id (viewModel): query: ${query.value}")
         resetActivity()
-        val result =
-            repository.getActivityById(userToken = userToken, activityId = id, context = context)
 
-        state.set(STATE_KEY_ACTIVITY, id)
+        getById.execute(token = userToken, id = query.value).onEach { dataState ->
+            loading.value = dataState.loading
 
-        initialState.value = result
-        workActivity.value = result
+            dataState.data?.let { newActivity ->
+                Log.d(TAG, "dentro il datastate: $newActivity")
+                initialState.value = newActivity
+                workActivity.value = newActivity
+            }
+
+            dataState.error?.let { error ->
+                Log.e(TAG, "getActivity: $error")
+                // TODO gestire errori
+            }
+        }.launchIn(viewModelScope)
     }
 
     private suspend fun updateActivity() {
@@ -126,7 +141,7 @@ constructor(
     private suspend fun deleteActivity() {
         workActivity.value?.let { repository.deleteWorkActivity(userToken = userToken, id = it.id) }
         resetActivity()
-        state.remove<String>(STATE_KEY_ACTIVITY)
+        savedStateHandle.remove<String>(STATE_KEY_ACTIVITY)
     }
 
     private fun resetActivity() {
@@ -134,4 +149,8 @@ constructor(
         initialState.value = null
     }
 
+    private fun setQuery(query: String) {
+        this.query.value = query
+        savedStateHandle.set(STATE_KEY_ACTIVITY, query)
+    }
 }

@@ -1,18 +1,12 @@
 package com.example.eplan.repository
 
 import android.content.Context
-import android.util.Log
 import com.example.eplan.domain.model.WorkActivity
 import com.example.eplan.network.WorkActivityService
 import com.example.eplan.network.model.WorkActivityDto
 import com.example.eplan.network.model.WorkActivityDtoMapper
-import com.example.eplan.presentation.util.TAG
 import com.google.gson.Gson
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.coroutineScope
-import kotlinx.coroutines.withContext
 import java.io.IOException
-import java.time.LocalDate
 
 class WorkActivityRepositoryImpl(
     private val service: WorkActivityService,

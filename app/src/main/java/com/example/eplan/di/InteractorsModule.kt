@@ -1,6 +1,7 @@
 package com.example.eplan.di
 
 import com.example.eplan.interactors.login.LoginAttempt
+import com.example.eplan.interactors.workActivityDetail.GetById
 import com.example.eplan.interactors.workActivityList.DayChange
 import com.example.eplan.network.LoginService
 import com.example.eplan.network.WorkActivityService
@@ -34,6 +35,18 @@ object InteractorsModule {
     ): LoginAttempt {
         return LoginAttempt(
             service = service
+        )
+    }
+
+    @ViewModelScoped
+    @Provides
+    fun provideActivityById(
+        service: WorkActivityService,
+        mapper: WorkActivityDtoMapper
+    ): GetById {
+        return GetById(
+            service = service,
+            mapper = mapper
         )
     }
 }

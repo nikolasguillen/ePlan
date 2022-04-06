@@ -30,6 +30,7 @@ import com.example.eplan.presentation.navigation.NestedNavGraphs
 import com.example.eplan.presentation.navigation.Screen
 import com.example.eplan.presentation.ui.components.ActivitiesList
 import com.example.eplan.presentation.ui.components.CollapsibleCalendar
+import com.example.eplan.presentation.ui.components.GifImage
 import com.example.eplan.presentation.ui.components.TopBar
 import com.example.eplan.presentation.ui.workActivityList.ActivityListEvent.*
 import com.example.eplan.presentation.util.fromLocalDateToDate
@@ -82,7 +83,9 @@ fun ActivitiesListScreen(
                         .format(DateTimeFormatter.ofPattern("dd MMMM yyyy"))
 
                     Text(
-                        text = date.split(" ")[0] + " " + date.split(" ")[1].replaceFirstChar { it.uppercase() } + " " + date.split(" ")[2],
+                        text = date.split(" ")[0] + " " + date.split(" ")[1].replaceFirstChar { it.uppercase() } + " " + date.split(
+                            " "
+                        )[2],
                         style = MaterialTheme.typography.titleMedium
                     )
                     Crossfade(targetState = calendarVisibility.value) { isVisible ->
@@ -109,7 +112,7 @@ fun ActivitiesListScreen(
                                     this.date = fromLocalDateToDate(selectedDate).time
                                     viewModel.onQueryChanged(selectedDate.toString())
                                     viewModel.onTriggerEvent(DayChangeEvent)
-//                                    calendarVisibility.value = false
+                                    calendarVisibility.value = false
                                 }
                             }
                         },
@@ -128,11 +131,23 @@ fun ActivitiesListScreen(
 //                    },
 //                    startDate = LocalDate.parse(query, DateTimeFormatter.ISO_DATE)
 //                )
-                ActivitiesList(
-                    workActivities = workActivities,
-                    onNavigateToActivityDetailScreen = onNavigate,
-                    loading = loading
-                )
+                if (workActivities.value.isEmpty() && !loading) {
+                    Column(modifier = Modifier.fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally) {
+                        GifImage(
+                            imageID = R.drawable.travolta,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(all = 64.dp)
+                        )
+                        Text(text = "Non ci sono interventi da mostrare :(", style = MaterialTheme.typography.bodyLarge)
+                    }
+                } else {
+                    ActivitiesList(
+                        workActivities = workActivities,
+                        onNavigateToActivityDetailScreen = onNavigate,
+                        loading = loading
+                    )
+                }
             }
         }
     )

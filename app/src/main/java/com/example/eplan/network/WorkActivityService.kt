@@ -1,8 +1,6 @@
 package com.example.eplan.network
 
 import com.example.eplan.network.model.WorkActivityDto
-import com.example.eplan.network.responses.WorkActivityByIdResponse
-import com.example.eplan.network.responses.WorkActivityDayResponse
 import retrofit2.http.*
 
 interface WorkActivityService {
@@ -14,23 +12,23 @@ interface WorkActivityService {
         @Query("end") end: String
     ): List<WorkActivityDto>
 
-    @GET("getById")
+    @GET("interventi")
     suspend fun getActivity(
-        @Header("userToken") token: String,
+        @Header("Authorization") token: String,
         @Query("id") id: String
-    ): WorkActivityByIdResponse
+    ): WorkActivityDto
 
 
     @GET("update")
     suspend fun updateActivity(
-        @Header("userToken") token: String,
+        @Header("Authorization") token: String,
         @Query("activityId") id: String,
         @Query("updatedActivity") activity: String
     )
 
     @DELETE("delete")
     suspend fun deleteActivity(
-        @Header("userToken") token: String,
+        @Header("Authorization") token: String,
         @Query("activityId") id: String
     )
 }

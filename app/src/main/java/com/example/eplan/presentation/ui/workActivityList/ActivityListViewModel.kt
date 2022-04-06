@@ -51,11 +51,11 @@ constructor(
             setQuery(q)
         }
 
-//        if (query.value != LocalDate.now().toString()) {
-//            onTriggerEvent(RestoreStateEvent)
-//        } else {
+        if (query.value != LocalDate.now().toString()) {
+            onTriggerEvent(RestoreStateEvent)
+        } else {
             onTriggerEvent(DayChangeEvent)
-//        }
+        }
     }
 
     fun onTriggerEvent(event: ActivityListEvent) {

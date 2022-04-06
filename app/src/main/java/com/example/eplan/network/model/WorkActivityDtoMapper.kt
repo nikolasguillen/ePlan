@@ -1,15 +1,10 @@
 package com.example.eplan.network.model
 
-import android.util.Log
 import com.example.eplan.domain.model.WorkActivity
 import com.example.eplan.domain.util.DomainMapper
 import com.example.eplan.domain.util.durationCalculator
-import com.example.eplan.domain.util.getDateFormatter
-import com.example.eplan.domain.util.getTimeFormatter
-import com.example.eplan.presentation.util.TAG
 import java.time.LocalDate
 import java.time.LocalTime
-import java.time.format.DateTimeFormatter
 
 class WorkActivityDtoMapper : DomainMapper<WorkActivityDto, WorkActivity> {
 
