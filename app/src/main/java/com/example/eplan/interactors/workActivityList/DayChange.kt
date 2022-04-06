@@ -39,7 +39,8 @@ constructor(
         return mapper.toDomainList(
             service.getDayActivities(
                 token = token,
-                query = query
+                start = query,
+                end = query
             )
         )
     }

@@ -31,7 +31,8 @@ fun CollapsibleCalendar(
         factory = { context ->
             CollapsibleCalendar(context).apply {
 
-                this.firstDayOfWeek = 1
+                /* se metto lunedi' come primo giorno, si sfasa tutto */
+//                this.firstDayOfWeek = 1
                 this.select(Day(startDate.year, startDate.monthValue - 1, startDate.dayOfMonth))
                 this.selectedDay =
                     Day(startDate.year, startDate.monthValue - 1, startDate.dayOfMonth)

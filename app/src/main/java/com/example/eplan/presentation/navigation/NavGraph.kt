@@ -1,10 +1,8 @@
 package com.example.eplan.presentation.navigation
 
-import android.util.Log
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.Dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -27,11 +25,10 @@ import com.example.eplan.presentation.ui.workActivity.ActivityDetailViewModel
 import com.example.eplan.presentation.ui.workActivity.ActivityDetailsScreen
 import com.example.eplan.presentation.ui.workActivityList.ActivitiesListScreen
 import com.example.eplan.presentation.ui.workActivityList.ActivityListViewModel
-import com.example.eplan.presentation.util.TAG
 
 @ExperimentalMaterial3Api
 @Composable
-fun NavGraph(navController: NavHostController, bottomPadding: Dp) {
+fun NavGraph(navController: NavHostController) {
     NavHost(
         navController = navController,
         startDestination = LoginGraph.route,
@@ -62,8 +59,7 @@ fun NavGraph(navController: NavHostController, bottomPadding: Dp) {
                     val viewModel = hiltViewModel<ActivityListViewModel>()
                     ActivitiesListScreen(
                         viewModel = viewModel,
-                        onNavigate = navController::navigate,
-                        bottomPadding = bottomPadding
+                        onNavigate = navController::navigate
                     )
                 }
 

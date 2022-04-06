@@ -10,7 +10,8 @@ interface WorkActivityService {
     @GET("interventi")
     suspend fun getDayActivities(
         @Header("Authorization") token: String,
-        @Query("intervento") query: String
+        @Query("start") start: String,
+        @Query("end") end: String
     ): List<WorkActivityDto>
 
     @GET("getById")
