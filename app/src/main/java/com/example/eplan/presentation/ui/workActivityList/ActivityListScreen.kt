@@ -5,12 +5,14 @@ import android.widget.CalendarView
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material.icons.outlined.Create
+import androidx.compose.material.ripple.rememberRipple
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
@@ -19,6 +21,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.capitalize
+import androidx.compose.ui.text.toUpperCase
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
@@ -29,8 +32,10 @@ import com.example.eplan.presentation.ui.components.ActivitiesList
 import com.example.eplan.presentation.ui.components.CollapsibleCalendar
 import com.example.eplan.presentation.ui.components.TopBar
 import com.example.eplan.presentation.ui.workActivityList.ActivityListEvent.*
+import com.example.eplan.presentation.util.fromLocalDateToDate
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
+import java.util.*
 
 
 @ExperimentalMaterial3Api
@@ -71,19 +76,26 @@ fun ActivitiesListScreen(
                     modifier = Modifier
                         .fillMaxWidth()
                         .clickable { calendarVisibility.value = !calendarVisibility.value }
-                        .padding(vertical = 16.dp, horizontal = 16.dp)
+                        .padding(16.dp)
                 ) {
+                    val date = LocalDate.parse(query)
+                        .format(DateTimeFormatter.ofPattern("dd MMMM yyyy"))
+
                     Text(
-                        text = LocalDate.parse(query)
-                            .format(DateTimeFormatter.ofPattern("MMMM dd, yyyy"))
-                            .replaceFirstChar { it.uppercase() },
-                        style = MaterialTheme.typography.headlineSmall
+                        text = date.split(" ")[0] + " " + date.split(" ")[1].replaceFirstChar { it.uppercase() } + " " + date.split(" ")[2],
+                        style = MaterialTheme.typography.titleMedium
                     )
                     Crossfade(targetState = calendarVisibility.value) { isVisible ->
                         if (isVisible) {
-                            Icon(imageVector = Icons.Filled.KeyboardArrowUp, contentDescription = "Chiudi il calendario")
+                            Icon(
+                                imageVector = Icons.Filled.KeyboardArrowUp,
+                                contentDescription = "Chiudi il calendario"
+                            )
                         } else {
-                            Icon(imageVector = Icons.Filled.KeyboardArrowDown, contentDescription = "Apri il calendario")
+                            Icon(
+                                imageVector = Icons.Filled.KeyboardArrowDown,
+                                contentDescription = "Apri il calendario"
+                            )
                         }
                     }
                 }
@@ -91,16 +103,13 @@ fun ActivitiesListScreen(
                     AndroidView(
                         factory = { context ->
                             CalendarView(context).apply {
+                                this.date = fromLocalDateToDate(LocalDate.parse(query)).time
                                 this.setOnDateChangeListener { _, year, month, dayOfMonth ->
-                                    viewModel.onQueryChanged(
-                                        LocalDate.of(
-                                            year,
-                                            month + 1,
-                                            dayOfMonth
-                                        ).toString()
-                                    )
+                                    val selectedDate = LocalDate.of(year, month + 1, dayOfMonth)
+                                    this.date = fromLocalDateToDate(selectedDate).time
+                                    viewModel.onQueryChanged(selectedDate.toString())
                                     viewModel.onTriggerEvent(DayChangeEvent)
-                                    calendarVisibility.value = false
+//                                    calendarVisibility.value = false
                                 }
                             }
                         },
