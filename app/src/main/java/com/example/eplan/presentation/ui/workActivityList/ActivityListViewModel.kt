@@ -8,7 +8,6 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.eplan.domain.model.WorkActivity
-import com.example.eplan.domain.util.getDateFormatter
 import com.example.eplan.interactors.workActivityList.DayChange
 import com.example.eplan.presentation.ui.workActivityList.ActivityListEvent.DayChangeEvent
 import com.example.eplan.presentation.ui.workActivityList.ActivityListEvent.RestoreStateEvent
@@ -16,11 +15,11 @@ import com.example.eplan.presentation.util.TAG
 import com.example.eplan.repository.WorkActivityRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import java.time.LocalDate
-import java.time.format.DateTimeFormatter
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -31,9 +30,7 @@ class ActivityListViewModel
 @Inject
 constructor(
     private val dayChange: DayChange,
-    private val repository: WorkActivityRepository,
     @Named("auth_token") private val userToken: String,
-    @ApplicationContext private val context: Context,
     private val savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
@@ -41,20 +38,21 @@ constructor(
 
     val loading = mutableStateOf(false)
 
-    val query = mutableStateOf(LocalDate.now().toString())
+    val date = mutableStateOf(LocalDate.now().toString())
 
     init {
 
-        Log.d(TAG, query.value)
+        Log.d(TAG, "viewModel init: ${date.value}")
 
         savedStateHandle.get<String>(STATE_KEY_QUERY)?.let { q ->
-            setQuery(q)
+            Log.d(TAG, "savedStateHandle in init: $q")
+            setDate(q)
         }
 
-        if (query.value != LocalDate.now().toString()) {
+        if (date.value != LocalDate.now().toString()) {
             onTriggerEvent(RestoreStateEvent)
         } else {
-            onTriggerEvent(DayChangeEvent)
+            onTriggerEvent(DayChangeEvent(date.value))
         }
     }
 
@@ -64,6 +62,7 @@ constructor(
                 when (event) {
                     is DayChangeEvent -> {
                         Log.d(TAG, "token: $userToken")
+                        setDate(event.date)
                         dayChange()
                     }
                     RestoreStateEvent -> {
@@ -76,16 +75,12 @@ constructor(
         }
     }
 
-    fun onQueryChanged(query: String) {
-        setQuery(query = query)
-    }
-
 
     private fun dayChange() {
-        Log.d(TAG, "dayChange: query: ${query.value}")
+        Log.d(TAG, "dayChange: query: ${date.value}")
         resetActivitiesState()
 
-        dayChange.execute(token = userToken, query = query.value).onEach { dataState ->
+        dayChange.execute(token = userToken, query = date.value).onEach { dataState ->
             loading.value = dataState.loading
 
             dataState.data?.let { list ->
@@ -99,22 +94,30 @@ constructor(
         }.launchIn(viewModelScope)
     }
 
-    private suspend fun restoreState() {
+    private fun restoreState() {
+        Log.d(TAG, "restoreState: query: ${this.date.value}")
         resetActivitiesState()
-        val results = repository.getDayActivities(
-            userToken = userToken,
-            query = query.value,
-            context = context
-        )
-        workActivities.value = results
+
+        dayChange.execute(token = userToken, query = date.value).onEach { dataState ->
+            loading.value = dataState.loading
+
+            dataState.data?.let { list ->
+                workActivities.value = list
+            }
+
+            dataState.error?.let { error ->
+                Log.e(TAG, "restoreState: $error")
+                // TODO gestire errori
+            }
+        }.launchIn(viewModelScope)
     }
 
     private fun resetActivitiesState() {
         workActivities.value = listOf()
     }
 
-    private fun setQuery(query: String) {
-        this.query.value = query
-        savedStateHandle.set(STATE_KEY_QUERY, query)
+    private fun setDate(date: String) {
+        this.date.value = date
+        savedStateHandle.set(STATE_KEY_QUERY, date)
     }
 }

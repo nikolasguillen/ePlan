@@ -9,20 +9,18 @@ import com.example.eplan.presentation.navigation.Screen
 
 @Composable
 fun ActivitiesList(
-    workActivities: MutableState<List<WorkActivity>>,
-    onNavigateToActivityDetailScreen: (String) -> Unit,
-    loading: Boolean
+    workActivities: List<WorkActivity>,
+    onNavigateToActivityDetailScreen: (String) -> Unit
 ) {
 
     LazyColumn {
-        items(workActivities.value) { workActivity ->
+        items(workActivities) { workActivity ->
             ActivityCard(
                 workActivity = workActivity,
                 onClick = {
                     val route = Screen.WorkActivityDetails.route + "/${workActivity.id}"
                     onNavigateToActivityDetailScreen(route)
-                },
-                loading = loading
+                }
             )
         }
     }

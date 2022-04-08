@@ -1,6 +1,5 @@
 package com.example.eplan.presentation.ui.components
 
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -14,42 +13,32 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import com.example.eplan.domain.model.WorkActivity
 import com.google.accompanist.placeholder.PlaceholderHighlight
 import com.google.accompanist.placeholder.material.placeholder
 import com.google.accompanist.placeholder.material.shimmer
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ActivityCard(
-    workActivity: WorkActivity,
-    onClick: () -> Unit,
+fun PlaceholderCard(
 ) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = 10.dp, vertical = 5.dp)
             .clip(RoundedCornerShape(11.dp))
-            .clickable(onClick = onClick)
+            .placeholder(visible = true, highlight = PlaceholderHighlight.shimmer())
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
             Text(
-                text = workActivity.title.replaceFirstChar { it.uppercase() },
-                style = MaterialTheme.typography.titleMedium,
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis
+                text = ""
             )
-            if (workActivity.description != "") {
-                Text(
-                    text = workActivity.description.replaceFirstChar { it.uppercase() },
-                    style = MaterialTheme.typography.bodyMedium,
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis,
-                    modifier = Modifier.padding(bottom = 3.dp)
-                )
-            }
-            Text(text = workActivity.start.toString(), style = MaterialTheme.typography.labelSmall)
-            Text(text = workActivity.end.toString(), style = MaterialTheme.typography.labelSmall)
+            Text(
+                text = "",
+                modifier = Modifier.padding(bottom = 3.dp)
+            )
+            Text(text = "")
+            Text(text = "")
         }
     }
+
 }
