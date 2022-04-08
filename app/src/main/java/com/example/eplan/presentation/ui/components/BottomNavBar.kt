@@ -1,5 +1,6 @@
 package com.example.eplan.presentation.ui.components
 
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.material3.*
@@ -27,13 +28,10 @@ fun BottomNavBar(navController: NavHostController) {
 
     Box {
 
-        rememberSystemUiController().setNavigationBarColor(color = Color.Transparent)
-
         Surface(color = MaterialTheme.colorScheme.surface) {
             rememberSystemUiController().setNavigationBarColor(
-                MaterialTheme.colorScheme.primary.copy(
-                    alpha = 0.08F
-                )
+                color = MaterialTheme.colorScheme.primary.copy(alpha = 0.08F),
+                darkIcons = !isSystemInDarkTheme()
             )
             NavigationBar(modifier = Modifier.navigationBarsPadding()) {
                 items.forEach { item ->

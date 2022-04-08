@@ -1,17 +1,5 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <!-- Base application theme. -->
-    <style name="Theme.EPlan" parent="Theme.Material3.DayNight.NoActionBar">
-        <!-- Primary brand color. -->
-        <item name="colorPrimary">@color/md_theme_light_primary</item>
-        <item name="colorOnPrimary">@color/md_theme_light_onPrimary</item>
-        <item name="colorOnSurface">@color/md_theme_light_onSurface</item>
-        <!-- Secondary brand color. -->
-        <item name="colorSecondary">@color/md_theme_light_secondary</item>
-        <item name="colorOnSecondary">@color/md_theme_light_onSecondary</item>
-        <!-- Status bar color. -->
-        <item name="android:statusBarColor" tools:targetApi="l">@color/transparent</item>
-        <!-- Customize your theme here. -->
-    </style>
+
     <style name="CalenderViewCustom" parent="ThemeOverlay.Material3.MaterialCalendar">
         <item name="colorAccent">@color/md_theme_light_tertiary</item>
         <item name="colorOnPrimary">@color/md_theme_light_onPrimary</item>
@@ -20,7 +8,11 @@
         <item name="android:textColorPrimary">@color/md_theme_light_onSurface</item>
     </style>
 
-    <style name="AppTheme" parent="Theme.Material3.Light.NoActionBar">
+
+    <style name="Theme.EPlan" parent="Theme.Material3.Light.NoActionBar">
+
+        <item name="android:statusBarColor" tools:targetApi="l">@color/transparent</item>
+
         <item name="colorPrimary">@color/md_theme_light_primary</item>
         <item name="colorOnPrimary">@color/md_theme_light_onPrimary</item>
         <item name="colorPrimaryContainer">@color/md_theme_light_primaryContainer</item>

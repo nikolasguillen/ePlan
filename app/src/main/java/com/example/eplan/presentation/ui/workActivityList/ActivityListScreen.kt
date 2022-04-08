@@ -95,19 +95,6 @@ fun ActivitiesListScreen(
                         }
                     )
                 }
-//                CollapsibleCalendar(
-//                    onDaySelected = { dayOfMonth, month, year ->
-//
-//                        viewModel.onQueryChanged(
-//                            LocalDate.of(year, month, dayOfMonth).toString()
-//                        )
-//                        viewModel.onTriggerEvent(
-//                            DayChangeEvent
-//                        )
-//                    },
-//                    startDate = LocalDate.parse(query, DateTimeFormatter.ISO_DATE)
-//                )
-
                 if (loading) {
                     repeat(3) {
                         PlaceholderCard()

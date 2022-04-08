@@ -1,18 +1,4 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <!-- Base application theme. -->
-    <style name="Theme.EPlan" parent="Theme.MaterialComponents.DayNight.NoActionBar">
-        <!-- Primary brand color. -->
-        <item name="colorPrimary">@color/md_theme_dark_primary</item>
-        <item name="colorOnPrimary">@color/md_theme_dark_onPrimary</item>
-        <item name="colorOnSurface">@color/md_theme_dark_onSurface</item>
-        <!-- Secondary brand color. -->
-        <item name="colorSecondary">@color/teal_200</item>
-        <item name="colorSecondaryVariant">@color/teal_200</item>
-        <item name="colorOnSecondary">@color/black</item>
-        <!-- Status bar color. -->
-        <item name="android:statusBarColor" tools:targetApi="l">@color/transparent</item>
-        <!-- Customize your theme here. -->
-    </style>
 
     <style name="CalenderViewCustom" parent="ThemeOverlay.MaterialComponents.MaterialCalendar">
         <item name="colorAccent">@color/md_theme_dark_tertiary</item>
@@ -22,7 +8,10 @@
         <item name="android:textColorPrimary">@color/md_theme_dark_onSurface</item>
     </style>
 
-    <style name="AppTheme" parent="Theme.Material3.Dark.NoActionBar">
+    <style name="Theme.EPlan" parent="Theme.Material3.Dark.NoActionBar">
+
+        <item name="android:statusBarColor" tools:targetApi="l">@color/transparent</item>
+
         <item name="colorPrimary">@color/md_theme_dark_primary</item>
         <item name="colorOnPrimary">@color/md_theme_dark_onPrimary</item>
         <item name="colorPrimaryContainer">@color/md_theme_dark_primaryContainer</item>
