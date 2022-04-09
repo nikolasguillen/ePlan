@@ -19,7 +19,8 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 object NetworkModule {
 
-    var auth_token = "Bearer "
+    private const val TOKEN_HEADER = "Bearer "
+    var userToken = ""
 
     @Singleton
     @Provides
@@ -67,6 +68,6 @@ object NetworkModule {
     @Provides
     @Named("auth_token")
     fun provideUserToken(): String {
-        return auth_token
+        return TOKEN_HEADER + userToken
     }
 }

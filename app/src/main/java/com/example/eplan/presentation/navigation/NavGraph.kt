@@ -4,7 +4,6 @@ import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.Dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
@@ -44,7 +43,7 @@ fun NavGraph(navController: NavHostController) {
                     onLoginAttempted = { viewModel.onTriggerEvent(LoginAttemptEvent) }
                 )
                 if (viewModel.successfulLoginAttempt.value) {
-                    NetworkModule.auth_token += viewModel.getToken()
+                    NetworkModule.userToken = viewModel.getToken()
                     navController.popBackStack()
                     navController.navigate(WorkActivityGraph.route)
                     viewModel.successfulLoginAttempt.value = false

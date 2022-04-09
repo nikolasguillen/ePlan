@@ -33,7 +33,6 @@ constructor(
     private val getById: GetById,
     private val repository: WorkActivityRepository,
     @Named("auth_token") private val userToken: String,
-    @ApplicationContext private val context: Context,
     private val savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 

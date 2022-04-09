@@ -1,21 +1,18 @@
 package com.example.eplan.presentation.ui.workActivityList
 
-import android.content.Context
 import android.util.Log
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.eplan.di.NetworkModule
 import com.example.eplan.domain.model.WorkActivity
 import com.example.eplan.interactors.workActivityList.DayChange
 import com.example.eplan.presentation.ui.workActivityList.ActivityListEvent.DayChangeEvent
 import com.example.eplan.presentation.ui.workActivityList.ActivityListEvent.RestoreStateEvent
 import com.example.eplan.presentation.util.TAG
-import com.example.eplan.repository.WorkActivityRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
-import dagger.hilt.android.qualifiers.ApplicationContext
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
@@ -24,6 +21,7 @@ import javax.inject.Inject
 import javax.inject.Named
 
 const val STATE_KEY_QUERY = "activity.state.query.key"
+const val STATE_KEY_TOKEN = "activity.state.token.key"
 
 @HiltViewModel
 class ActivityListViewModel
@@ -44,14 +42,21 @@ constructor(
 
         Log.d(TAG, "viewModel init: ${date.value}")
 
+        savedStateHandle.get<String>(STATE_KEY_TOKEN)?.let { t ->
+
+            // TODO non so come aggiornare il token dopo la process death
+            // TODO devo capire come rimandarti al login, e' la cosa piu' giusta da fare
+        }
+
         savedStateHandle.get<String>(STATE_KEY_QUERY)?.let { q ->
-            Log.d(TAG, "savedStateHandle in init: $q")
+            Log.d(TAG, "savedStateHandle -> query in init: $q")
             setDate(q)
         }
 
         if (date.value != LocalDate.now().toString()) {
             onTriggerEvent(RestoreStateEvent)
         } else {
+            savedStateHandle.set(STATE_KEY_TOKEN, userToken)
             onTriggerEvent(DayChangeEvent(date.value))
         }
     }
