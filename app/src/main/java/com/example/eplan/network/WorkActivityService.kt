@@ -19,11 +19,10 @@ interface WorkActivityService {
     ): WorkActivityDto
 
 
-    @GET("update")
+    @POST("saveInterventi")
     suspend fun updateActivity(
         @Header("Authorization") token: String,
-        @Query("activityId") id: String,
-        @Query("updatedActivity") activity: String
+        @Body workActivityDto: WorkActivityDto
     )
 
     @DELETE("delete")

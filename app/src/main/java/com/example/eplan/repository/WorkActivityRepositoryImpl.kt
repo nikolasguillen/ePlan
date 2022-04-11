@@ -78,8 +78,6 @@ class WorkActivityRepositoryImpl(
         userToken: String,
         workActivity: WorkActivity
     ) {
-        service.updateActivity(userToken, workActivity.id, "TODO")
-        /*TODO come mando l'attività?*/
     }
 
     override suspend fun deleteWorkActivity(userToken: String, id: String) {

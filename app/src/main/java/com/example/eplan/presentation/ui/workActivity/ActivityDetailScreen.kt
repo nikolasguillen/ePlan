@@ -19,6 +19,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.*
@@ -197,14 +198,17 @@ fun ActivityDetailsScreen(
                                 label = stringResource(R.string.ora_inizio),
                                 onClick = { time ->
                                     viewModel.updateStart(time)
-                                }
+                                },
+                                modifier = Modifier.weight(3F)
                             )
+                            Spacer(modifier = Modifier.weight(1F))
                             CustomTimeButton(
                                 startTime = it.end.toString(),
                                 label = stringResource(R.string.ora_fine),
                                 onClick = { time ->
                                     viewModel.updateEnd(time)
-                                }
+                                },
+                                modifier = Modifier.weight(3F)
                             )
                         }
                         OutlinedTextField(

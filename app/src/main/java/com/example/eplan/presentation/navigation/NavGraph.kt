@@ -76,12 +76,12 @@ fun NavGraph(navController: NavHostController) {
                         viewModel = viewModel,
                         onSavePressed = {
                             viewModel.onTriggerEvent(UpdateActivityEvent)
-                            navController.navigateUp()
+                            navController.popBackStack()
                         },
-                        onBackPressed = navController::navigateUp,
+                        onBackPressed = navController::popBackStack,
                         onDeletePressed = {
                             viewModel.onTriggerEvent(DeleteActivityEvent)
-                            navController.navigateUp()
+                            navController.popBackStack()
                         }
                     )
                 }

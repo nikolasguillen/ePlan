@@ -1,6 +1,5 @@
 package com.example.eplan.presentation.ui.workActivity
 
-import android.content.Context
 import android.util.Log
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
@@ -9,15 +8,14 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.eplan.domain.model.WorkActivity
 import com.example.eplan.interactors.workActivityDetail.GetById
+import com.example.eplan.interactors.workActivityDetail.UpdateActivity
 import com.example.eplan.presentation.ui.workActivity.ActivityDetailEvent.*
 import com.example.eplan.presentation.util.TAG
 import com.example.eplan.repository.WorkActivityRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
-import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
-import java.lang.Exception
 import java.time.LocalDate
 import java.time.LocalTime
 import javax.inject.Inject
@@ -31,6 +29,7 @@ class ActivityDetailViewModel
 @Inject
 constructor(
     private val getById: GetById,
+    private val updateActivity: UpdateActivity,
     private val repository: WorkActivityRepository,
     @Named("auth_token") private val userToken: String,
     private val savedStateHandle: SavedStateHandle
@@ -126,14 +125,22 @@ constructor(
         }.launchIn(viewModelScope)
     }
 
-    private suspend fun updateActivity() {
+    private fun updateActivity() {
         workActivity.value?.let {
-            repository.updateWorkActivity(
-                userToken = userToken,
-                workActivity = it
-            )
+
+            updateActivity.execute(token = userToken, workActivity = it).onEach { dataState ->
+                loading.value = dataState.loading
+
+                dataState.data?.let { result ->
+                    if (result) resetActivity()
+                }
+
+                dataState.error?.let { error ->
+                    Log.e(TAG, "updateActivity: $error")
+                    //TODO gestire errori
+                }
+            }.launchIn(viewModelScope)
         }
-        resetActivity()
     }
 
     private suspend fun deleteActivity() {

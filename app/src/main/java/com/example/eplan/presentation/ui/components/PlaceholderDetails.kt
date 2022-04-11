@@ -2,90 +2,99 @@ package com.example.eplan.presentation.ui.components
 
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
+import com.example.eplan.R
+import com.example.eplan.presentation.util.fromDateToLocalDate
 import com.google.accompanist.placeholder.PlaceholderHighlight
 import com.google.accompanist.placeholder.material.placeholder
 import com.google.accompanist.placeholder.material.shimmer
 
 @Composable
 fun PlaceholderDetails() {
+
+    val modifier = Modifier
+        .placeholder(
+            visible = true,
+            highlight = PlaceholderHighlight.shimmer(),
+            color = if (isSystemInDarkTheme()) Color.White.copy(alpha = 0.1F) else Color.Black.copy(
+                alpha = 0.1F
+            )
+        )
+        .fillMaxWidth()
+
+
     Column(
-        modifier = Modifier.padding(all = 16.dp).fillMaxSize(),
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(all = 16.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
-        Text(
-            text = "Placeholder",
-            modifier = Modifier
-                .placeholder(
-                    visible = true,
-                    highlight = PlaceholderHighlight.shimmer(),
-                    color = if (isSystemInDarkTheme()) Color.White.copy(alpha = 0.1F) else Color.Black.copy(
-                        alpha = 0.1F
-                    )
-                )
-                .fillMaxWidth()
-                .height(20.dp),
+        OutlinedTextField(
+            value = "",
+            onValueChange = {},
+            label = { Text(text = "Placeholder") },
+            modifier = modifier,
+            readOnly = true
         )
-        Text(
-            text = "Placeholder",
-            modifier = Modifier
-                .placeholder(
-                    visible = true,
-                    highlight = PlaceholderHighlight.shimmer(),
-                    color = if (isSystemInDarkTheme()) Color.White.copy(alpha = 0.1F) else Color.Black.copy(
-                        alpha = 0.1F
-                    )
-                )
-                .fillMaxWidth()
-                .height(20.dp),
+        OutlinedTextField(
+            value = "",
+            onValueChange = {},
+            label = { Text(text = "Placeholder") },
+            modifier = modifier,
+            readOnly = true
         )
-        Text(
-            text = "Placeholder",
-            modifier = Modifier
-                .placeholder(
-                    visible = true,
-                    highlight = PlaceholderHighlight.shimmer(),
-                    color = if (isSystemInDarkTheme()) Color.White.copy(alpha = 0.1F) else Color.Black.copy(
-                        alpha = 0.1F
-                    )
-                )
-                .fillMaxWidth()
-                .height(20.dp),
+        OutlinedTextField(
+            value = "",
+            onValueChange = {},
+            label = { Text(text = "Placeholder") },
+            modifier = modifier,
+            readOnly = true
         )
         Row(
             horizontalArrangement = Arrangement.SpaceBetween,
             modifier = Modifier.fillMaxWidth()
         ) {
-            Text(
-                text = "Placeholder",
-                modifier = Modifier
-                    .placeholder(
-                        visible = true,
-                        highlight = PlaceholderHighlight.shimmer(),
-                        color = if (isSystemInDarkTheme()) Color.White.copy(alpha = 0.1F) else Color.Black.copy(
-                            alpha = 0.1F
-                        )
-                    )
-                    .weight(1F)
-                    .height(20.dp),
+            OutlinedTextField(
+                value = "",
+                onValueChange = {},
+                label = { Text(text = "Placeholder") },
+                modifier = modifier.weight(3F),
+                readOnly = true
             )
-            Text(
-                text = "Placeholder",
-                modifier = Modifier
-                    .placeholder(
-                        visible = true,
-                        highlight = PlaceholderHighlight.shimmer(),
-                        color = if (isSystemInDarkTheme()) Color.White.copy(alpha = 0.1F) else Color.Black.copy(
-                            alpha = 0.1F
-                        )
-                    )
-                    .weight(1F)
-                    .height(20.dp),
+            Spacer(modifier = Modifier.size(50.dp, 50.dp).weight(1F))
+            OutlinedTextField(
+                value = "",
+                onValueChange = {},
+                label = { Text(text = "Placeholder") },
+                modifier = modifier.weight(3F),
+                readOnly = true
             )
         }
+        OutlinedTextField(
+            value = "",
+            onValueChange = {},
+            label = { Text(text = "Placeholder") },
+            modifier = modifier,
+            readOnly = true
+        )
+        OutlinedTextField(
+            value = "",
+            onValueChange = {},
+            label = { Text(text = "Placeholder") },
+            modifier = modifier,
+            readOnly = true
+        )
     }
 }

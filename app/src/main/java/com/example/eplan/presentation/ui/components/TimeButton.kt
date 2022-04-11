@@ -1,6 +1,8 @@
 package com.example.eplan.presentation.ui.components
 
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -18,24 +20,26 @@ import java.time.LocalTime
 
 @ExperimentalMaterial3Api
 @Composable
-fun CustomTimeButton(startTime: String, label: String, onClick: (LocalTime) -> Unit) {
+fun CustomTimeButton(startTime: String, label: String, onClick: (LocalTime) -> Unit, modifier: Modifier) {
 
     val dialogState = rememberMaterialDialogState()
 
-    Card(
-        modifier = Modifier
-            .width(150.dp)
-            .clip(RoundedCornerShape(11.dp))
-            .clickable { dialogState.show() }
-    )
-    {
-        Text(
-            text = "$label: $startTime",
-            style = MaterialTheme.typography.bodyMedium,
+    Column(horizontalAlignment = Alignment.CenterHorizontally, modifier = modifier) {
+        Card(
             modifier = Modifier
-                .padding(16.dp)
-                .align(Alignment.CenterHorizontally)
+                .width(150.dp)
+                .clip(RoundedCornerShape(11.dp))
+                .clickable { dialogState.show() }
         )
+        {
+            Text(
+                text = "$label: $startTime",
+                style = MaterialTheme.typography.bodyMedium,
+                modifier = Modifier
+                    .padding(16.dp)
+                    .align(Alignment.CenterHorizontally)
+            )
+        }
     }
     CustomTimePicker(startTime = startTime, dialogState = dialogState, onClick = onClick)
 }
