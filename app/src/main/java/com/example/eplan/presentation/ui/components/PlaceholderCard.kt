@@ -1,5 +1,6 @@
 package com.example.eplan.presentation.ui.components
 
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -11,6 +12,8 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.google.accompanist.placeholder.PlaceholderHighlight
@@ -26,7 +29,11 @@ fun PlaceholderCard(
             .fillMaxWidth()
             .padding(horizontal = 10.dp, vertical = 5.dp)
             .clip(RoundedCornerShape(11.dp))
-            .placeholder(visible = true, highlight = PlaceholderHighlight.shimmer())
+            .placeholder(
+                visible = true,
+                highlight = PlaceholderHighlight.shimmer(),
+                color = if (isSystemInDarkTheme()) Color.White.copy(alpha = 0.1F) else Color.Black.copy(alpha = 0.1F)
+            )
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
             Text(

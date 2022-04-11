@@ -2,12 +2,14 @@ package com.example.eplan.presentation
 
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.compose.setContent
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.animation.*
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
@@ -26,6 +28,7 @@ import com.example.eplan.presentation.navigation.NavGraph
 import com.example.eplan.presentation.navigation.Screen
 import com.example.eplan.presentation.ui.components.BottomNavBar
 import com.example.eplan.presentation.ui.theme.AppTheme
+import com.example.eplan.presentation.util.TAG
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -60,7 +63,7 @@ class MainActivity : AppCompatActivity() {
 
             AppTheme {
                 Scaffold(
-//                    modifier = Modifier.navigationBarsPadding(),
+                    modifier = Modifier.navigationBarsPadding(),
                     bottomBar = {
                         when (currentRoute(navController = navController)) {
                             (Screen.WorkActivityList.route) -> {
@@ -74,20 +77,20 @@ class MainActivity : AppCompatActivity() {
                             }
                         }
 
-                        AnimatedVisibility(
-                            visible = bottomBarState.value,
-                            enter = fadeIn() + slideInVertically(initialOffsetY = { it }),
-                            exit = slideOutVertically(targetOffsetY = { it }) + fadeOut()
-                        ) {
+//                        AnimatedVisibility(
+//                            visible = bottomBarState.value,
+//                            enter = fadeIn() + slideInVertically(initialOffsetY = { it }),
+//                            exit = slideOutVertically(targetOffsetY = { it }) + fadeOut()
+//                        ) {
+                        if (bottomBarState.value) {
                             BottomNavBar(navController = navController)
                         }
+//                        }
                     }
                 ) {
-                    Box(modifier = Modifier.padding(bottom = it.calculateBottomPadding())) {
-                        NavGraph(
-                            navController = navController
-                        )
-                    }
+//                    Box(modifier = Modifier.padding(bottom = it.calculateBottomPadding())) {
+                        NavGraph(navController = navController)
+//                    }
                 }
             }
         }

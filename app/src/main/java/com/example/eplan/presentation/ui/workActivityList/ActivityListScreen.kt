@@ -1,5 +1,6 @@
 package com.example.eplan.presentation.ui.workActivityList
 
+import android.util.Log
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.clickable
@@ -15,10 +16,13 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.example.eplan.R
 import com.example.eplan.presentation.navigation.NestedNavGraphs
 import com.example.eplan.presentation.ui.components.*
+import com.example.eplan.presentation.util.TAG
+import com.example.eplan.presentation.util.bottomNavPadding
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
@@ -39,6 +43,7 @@ fun ActivitiesListScreen(
     val calendarVisibility = remember { mutableStateOf(false) }
 
     Scaffold(
+        modifier = Modifier.padding(bottom = bottomNavPadding),
         topBar = {
             TopBar(
                 stringResource(R.string.foglio_ore),
