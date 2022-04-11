@@ -4,6 +4,7 @@ import java.time.LocalDate
 import java.time.LocalTime
 
 data class WorkActivity(
+    val idAttivita: String,
     val id: String,
     val title: String,
     val description: String,
@@ -20,6 +21,7 @@ data class WorkActivity(
 
         other as WorkActivity
 
+        if (idAttivita != other.idAttivita) return false
         if (id != other.id) return false
         if (title != other.title) return false
         if (description != other.description) return false
@@ -34,6 +36,7 @@ data class WorkActivity(
 
     override fun hashCode(): Int {
         var result = id.hashCode()
+        result = 31 * result + idAttivita.hashCode()
         result = 31 * result + title.hashCode()
         result = 31 * result + description.hashCode()
         result = 31 * result + date.hashCode()

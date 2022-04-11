@@ -19,6 +19,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import com.example.eplan.presentation.util.fromDateToLocalDate
 import com.example.eplan.presentation.util.fromLocalDateToDate
+import com.example.eplan.presentation.util.toLiteralDateParser
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
@@ -37,8 +38,7 @@ fun CustomDateButton(date: LocalDate, onDateSelected: (Date) -> Unit) {
     )
     {
         Text(
-            text = DateFormat.format("MMMM d, yyyy", fromLocalDateToDate(date)).toString()
-                .replaceFirstChar { it.uppercase() },
+            text = toLiteralDateParser(date.toString()),
             modifier = Modifier
                 .padding(16.dp)
                 .align(Alignment.CenterHorizontally)

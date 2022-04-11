@@ -4,6 +4,6 @@ import com.example.eplan.network.model.WorkActivityDto
 import com.google.gson.annotations.SerializedName
 
 class WorkActivityByIdResponse(
-    @SerializedName("activity")
+    @SerializedName("intervento")
     var workActivity: WorkActivityDto
 )

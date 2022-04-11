@@ -115,7 +115,6 @@ constructor(
             loading.value = dataState.loading
 
             dataState.data?.let { newActivity ->
-                Log.d(TAG, "dentro il datastate: $newActivity")
                 initialState.value = newActivity
                 workActivity.value = newActivity
             }

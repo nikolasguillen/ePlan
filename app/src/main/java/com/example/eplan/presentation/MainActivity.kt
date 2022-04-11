@@ -77,20 +77,18 @@ class MainActivity : AppCompatActivity() {
                             }
                         }
 
-//                        AnimatedVisibility(
-//                            visible = bottomBarState.value,
-//                            enter = fadeIn() + slideInVertically(initialOffsetY = { it }),
-//                            exit = slideOutVertically(targetOffsetY = { it }) + fadeOut()
-//                        ) {
-                        if (bottomBarState.value) {
-                            BottomNavBar(navController = navController)
+                        AnimatedVisibility(
+                            visible = bottomBarState.value,
+                            enter = fadeIn() + slideInVertically(initialOffsetY = { it }),
+                            exit = slideOutVertically(targetOffsetY = { it }) + fadeOut()
+                        ) {
+                            if (bottomBarState.value) {
+                                BottomNavBar(navController = navController)
+                            }
                         }
-//                        }
                     }
                 ) {
-//                    Box(modifier = Modifier.padding(bottom = it.calculateBottomPadding())) {
-                        NavGraph(navController = navController)
-//                    }
+                    NavGraph(navController = navController)
                 }
             }
         }

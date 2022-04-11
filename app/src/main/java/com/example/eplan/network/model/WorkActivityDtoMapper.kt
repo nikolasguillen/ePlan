@@ -13,6 +13,7 @@ class WorkActivityDtoMapper : DomainMapper<WorkActivityDto, WorkActivity> {
         val endDateTime = dateTimeParser(model.end)
 
         return WorkActivity(
+            idAttivita = model.idAttivita,
             id = model.id,
             title = model.title,
             description = model.description,
@@ -29,15 +30,16 @@ class WorkActivityDtoMapper : DomainMapper<WorkActivityDto, WorkActivity> {
         val endDateTime = dateToNetwork(domainModel.date) + " " + domainModel.end
 
         return WorkActivityDto(
+            idAttivita = domainModel.idAttivita,
             id = domainModel.id,
             title = domainModel.title,
             description = domainModel.description,
             start = startDateTime,
             end = endDateTime,
-            duration = durationCalculator(start = domainModel.start, end = domainModel.end),
+            duration = "",
             moveTime = domainModel.movingTime,
             moveDistance = domainModel.km,
-            color = "TODO"
+            color = ""
         )
     }
 

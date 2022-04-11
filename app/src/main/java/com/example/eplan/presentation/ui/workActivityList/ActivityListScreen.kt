@@ -1,6 +1,5 @@
 package com.example.eplan.presentation.ui.workActivityList
 
-import android.util.Log
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.clickable
@@ -16,15 +15,12 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.example.eplan.R
 import com.example.eplan.presentation.navigation.NestedNavGraphs
 import com.example.eplan.presentation.ui.components.*
-import com.example.eplan.presentation.util.TAG
 import com.example.eplan.presentation.util.bottomNavPadding
-import java.time.LocalDate
-import java.time.format.DateTimeFormatter
+import com.example.eplan.presentation.util.toLiteralDateParser
 
 
 @ExperimentalMaterial3Api
@@ -68,13 +64,8 @@ fun ActivitiesListScreen(
                         .clickable { calendarVisibility.value = !calendarVisibility.value }
                         .padding(16.dp)
                 ) {
-                    val headerDate = LocalDate.parse(date)
-                        .format(DateTimeFormatter.ofPattern("dd MMMM yyyy"))
-
                     Text(
-                        text = headerDate.split(" ")[0] + " " + headerDate.split(" ")[1].replaceFirstChar { it.uppercase() } + " " + headerDate.split(
-                            " "
-                        )[2],
+                        text = toLiteralDateParser(date = date),
                         style = MaterialTheme.typography.titleMedium
                     )
                     Crossfade(targetState = calendarVisibility.value) { isVisible ->
@@ -117,7 +108,7 @@ fun ActivitiesListScreen(
                                     .padding(all = 64.dp)
                             )
                             Text(
-                                text = "Non ci sono interventi da mostrare :(",
+                                text = "Non ci sono interventi da mostrare",
                                 style = MaterialTheme.typography.bodyLarge
                             )
                         }

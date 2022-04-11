@@ -2,17 +2,15 @@ package com.example.eplan.presentation.ui.workActivity
 
 import android.widget.Toast
 import androidx.activity.compose.BackHandler
-import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.background
+import androidx.compose.animation.*
+import androidx.compose.foundation.*
 import androidx.compose.foundation.gestures.animateScrollBy
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.relocation.BringIntoViewRequester
 import androidx.compose.foundation.relocation.bringIntoViewRequester
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.outlined.Delete
@@ -42,9 +40,13 @@ import com.example.eplan.presentation.navigation.BottomNavBarItems
 import com.example.eplan.presentation.ui.components.BottomSaveBar
 import com.example.eplan.presentation.ui.components.CustomDateButton
 import com.example.eplan.presentation.ui.components.CustomTimeButton
+import com.example.eplan.presentation.ui.components.PlaceholderDetails
 import com.example.eplan.presentation.ui.workActivity.ActivityDetailEvent.GetActivityEvent
 import com.example.eplan.presentation.util.acceptableTimeInterval
 import com.example.eplan.presentation.util.fromDateToLocalDate
+import com.google.accompanist.placeholder.PlaceholderHighlight
+import com.google.accompanist.placeholder.material.placeholder
+import com.google.accompanist.placeholder.material.shimmer
 import kotlinx.coroutines.launch
 import java.time.Duration
 import java.time.LocalTime
@@ -68,6 +70,8 @@ fun ActivityDetailsScreen(
         viewModel.onTriggerEvent(GetActivityEvent(activityId))
     }
 
+    val loading = viewModel.loading.value
+
     val workActivity = viewModel.workActivity.value
 
     val keyboardController = LocalSoftwareKeyboardController.current
@@ -80,146 +84,162 @@ fun ActivityDetailsScreen(
         Toast.LENGTH_SHORT
     )
 
-    workActivity?.let {
 
-        Scaffold(
-            topBar = {
-                MediumTopAppBar(
-                    title = { Text(text = stringResource(R.string.attivita)) },
-                    navigationIcon = {
-                        IconButton(onClick = {
-                            if (viewModel.checkChanges()) {
-                                backDialog.value = true
-                            } else {
-                                onBackPressed()
-                                keyboardController?.hide()
-                            }
-                        }) {
-                            Icon(
-                                imageVector = Icons.Filled.ArrowBack,
-                                contentDescription = stringResource(R.string.indietro)
-                            )
+    Scaffold(
+        topBar = {
+            MediumTopAppBar(
+                title = { Text(text = stringResource(R.string.attivita)) },
+                navigationIcon = {
+                    IconButton(onClick = {
+                        if (viewModel.checkChanges()) {
+                            backDialog.value = true
+                        } else {
+                            onBackPressed()
+                            keyboardController?.hide()
                         }
-                    },
-                    actions = {
-                        IconButton(onClick = {
-                            onDeletePressed()
-                        }) {
-                            Icon(
-                                imageVector = Icons.Outlined.Delete,
-                                tint = Color.Red,
-                                contentDescription = stringResource(R.string.elimina_commessa)
-                            )
-                        }
+                    }) {
+                        Icon(
+                            imageVector = Icons.Filled.ArrowBack,
+                            contentDescription = stringResource(R.string.indietro)
+                        )
                     }
-                )
-            },
-            bottomBar = {
-                BottomSaveBar(onClick = {
+                },
+                actions = {
+                    IconButton(
+                        onClick = {
+                            if (!loading) {
+                                onDeletePressed()
+                            }
+                        }
+                    ) {
+                        Icon(
+                            imageVector = Icons.Outlined.Delete,
+                            tint = Color.Red,
+                            contentDescription = stringResource(R.string.elimina_commessa)
+                        )
+                    }
+                }
+            )
+        },
+        bottomBar = {
+            BottomSaveBar(onClick = {
+                if (!loading) {
                     onSaveClick(
                         saveAction = onSavePressed,
-                        saveCondition = { acceptableTimeInterval(it.start, it.end) },
+                        saveCondition = {
+                            acceptableTimeInterval(
+                                workActivity?.start,
+                                workActivity?.end
+                            )
+                        },
                         elseBranch = {
                             toast.cancel()
                             toast.setText(R.string.errore_orario)
                             toast.show()
                         }
                     )
-                })
-            },
-            content = { paddingValues ->
-                BackHandler(enabled = true) {
-                    if (viewModel.checkChanges()) {
-                        backDialog.value = true
-                    } else {
-                        onBackPressed()
-                        keyboardController?.hide()
-                    }
                 }
-                Column(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(
-                            start = 16.dp,
-                            end = 16.dp,
-                            top = 16.dp,
-                            bottom = paddingValues.calculateBottomPadding()
-                        )
-                        .verticalScroll(rememberScrollState()),
-                    verticalArrangement = Arrangement.spacedBy(16.dp)
-                ) {
-                    OutlinedTextField(
-                        value = it.title,
-                        onValueChange = { viewModel.updateTitle(it) },
-                        label = { Text(text = stringResource(R.string.attivita)) },
-                        modifier = Modifier
-                            .fillMaxWidth()
-                    )
-                    OutlinedTextField(
-                        value = it.description,
-                        onValueChange = { viewModel.updateDescription(it) },
-                        label = { Text(text = stringResource(R.string.descrizione)) },
-                        modifier = Modifier.fillMaxWidth()
-                    )
-                    Row(modifier = Modifier.fillMaxWidth()) {
-                        CustomDateButton(
-                            date = it.date,
-                            onDateSelected = {
-                                viewModel.updateDate(fromDateToLocalDate(it))
-                            }
-                        )
-                    }
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.SpaceBetween
-                    ) {
-                        CustomTimeButton(
-                            startTime = it.start.toString(),
-                            label = stringResource(R.string.ora_inizio),
-                            onClick = { time ->
-                                viewModel.updateStart(time)
-                            }
-                        )
-                        CustomTimeButton(
-                            startTime = it.end.toString(),
-                            label = stringResource(R.string.ora_fine),
-                            onClick = { time ->
-                                viewModel.updateEnd(time)
-                            }
-                        )
-                    }
-                    OutlinedTextField(
-                        value = it.movingTime,
-                        onValueChange = { viewModel.updateMovingTime(it) },
-                        label = { Text(text = stringResource(R.string.ore_spostamento)) },
-                        modifier = Modifier.fillMaxWidth(),
-                        singleLine = true,
-                        keyboardOptions = KeyboardOptions.Default.copy(
-                            keyboardType = KeyboardType.Number,
-                            imeAction = ImeAction.Done
-                        ),
-                        keyboardActions = KeyboardActions(
-                            onDone = { keyboardController?.hide() }
-                        )
-                    )
-                    OutlinedTextField(
-                        value = it.km,
-                        onValueChange = { viewModel.updateKm(it) },
-                        label = { Text(text = stringResource(R.string.km_percorsi)) },
-                        modifier = Modifier.fillMaxWidth(),
-                        singleLine = true,
-                        keyboardOptions = KeyboardOptions.Default.copy(
-                            keyboardType = KeyboardType.Number,
-                            imeAction = ImeAction.Done
-                        ),
-                        keyboardActions = KeyboardActions(
-                            onDone = { keyboardController?.hide() }
-                        )
-                    )
+            })
+        },
+        content = { paddingValues ->
+            BackHandler(enabled = true) {
+                if (viewModel.checkChanges()) {
+                    backDialog.value = true
+                } else {
+                    onBackPressed()
+                    keyboardController?.hide()
                 }
             }
-        )
-    }
+
+            if (loading) {
+                PlaceholderDetails()
+            } else {
+                workActivity?.let {
+                    Column(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(
+                                start = 16.dp,
+                                end = 16.dp,
+                                top = 16.dp,
+                                bottom = paddingValues.calculateBottomPadding()
+                            )
+                            .verticalScroll(rememberScrollState()),
+                        verticalArrangement = Arrangement.spacedBy(16.dp)
+                    ) {
+                        OutlinedTextField(
+                            value = it.title,
+                            onValueChange = { viewModel.updateTitle(it) },
+                            label = { Text(text = stringResource(R.string.attivita)) },
+                            modifier = Modifier
+                                .fillMaxWidth()
+                        )
+                        OutlinedTextField(
+                            value = it.description,
+                            onValueChange = { viewModel.updateDescription(it) },
+                            label = { Text(text = stringResource(R.string.descrizione)) },
+                            modifier = Modifier.fillMaxWidth()
+                        )
+                        Row(modifier = Modifier.fillMaxWidth()) {
+                            CustomDateButton(
+                                date = it.date,
+                                onDateSelected = {
+                                    viewModel.updateDate(fromDateToLocalDate(it))
+                                }
+                            )
+                        }
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.SpaceBetween
+                        ) {
+                            CustomTimeButton(
+                                startTime = it.start.toString(),
+                                label = stringResource(R.string.ora_inizio),
+                                onClick = { time ->
+                                    viewModel.updateStart(time)
+                                }
+                            )
+                            CustomTimeButton(
+                                startTime = it.end.toString(),
+                                label = stringResource(R.string.ora_fine),
+                                onClick = { time ->
+                                    viewModel.updateEnd(time)
+                                }
+                            )
+                        }
+                        OutlinedTextField(
+                            value = it.movingTime,
+                            onValueChange = { viewModel.updateMovingTime(it) },
+                            label = { Text(text = stringResource(R.string.ore_spostamento)) },
+                            modifier = Modifier.fillMaxWidth(),
+                            singleLine = true,
+                            keyboardOptions = KeyboardOptions.Default.copy(
+                                keyboardType = KeyboardType.Number,
+                                imeAction = ImeAction.Done
+                            ),
+                            keyboardActions = KeyboardActions(
+                                onDone = { keyboardController?.hide() }
+                            )
+                        )
+                        OutlinedTextField(
+                            value = it.km,
+                            onValueChange = { viewModel.updateKm(it) },
+                            label = { Text(text = stringResource(R.string.km_percorsi)) },
+                            modifier = Modifier.fillMaxWidth(),
+                            singleLine = true,
+                            keyboardOptions = KeyboardOptions.Default.copy(
+                                keyboardType = KeyboardType.Number,
+                                imeAction = ImeAction.Done
+                            ),
+                            keyboardActions = KeyboardActions(
+                                onDone = { keyboardController?.hide() }
+                            )
+                        )
+                    }
+                }
+            }
+        }
+    )
 
     if (backDialog.value) {
         AlertDialog(

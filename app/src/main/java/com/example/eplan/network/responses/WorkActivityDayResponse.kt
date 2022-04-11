@@ -5,6 +5,6 @@ import com.google.gson.annotations.SerializedName
 
 class WorkActivityDayResponse (
 
-    @SerializedName("activitiesInDay")
+    @SerializedName("interventi")
     var workActivities: List<WorkActivityDto>
 )

@@ -26,6 +26,17 @@ fun fromStringToLocalTime(timeString: String): LocalTime {
     return LocalTime.of(hour, minute)
 }
 
-fun acceptableTimeInterval(start: LocalTime, end: LocalTime): Boolean {
-    return Duration.between(start, end).toMinutes() > 0
+fun acceptableTimeInterval(start: LocalTime?, end: LocalTime?): Boolean {
+    return if (start != null && end != null) {
+        Duration.between(start, end).toMinutes() > 0
+    } else {
+        false
+    }
+}
+
+fun toLiteralDateParser(date: String): String {
+    val headerDate = LocalDate.parse(date)
+        .format(DateTimeFormatter.ofPattern("dd MMMM yyyy"))
+
+    return headerDate.split(" ")[0] + " " + headerDate.split(" ")[1].replaceFirstChar { it.uppercase() } + " " + headerDate.split(" ")[2]
 }

@@ -26,34 +26,26 @@ fun BottomNavBar(navController: NavHostController) {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentDestination = navBackStackEntry?.destination
 
-    Box {
 
-        Surface(color = MaterialTheme.colorScheme.surface) {
-            rememberSystemUiController().setNavigationBarColor(
-                color = MaterialTheme.colorScheme.primary.copy(alpha = 0.08F),
-                darkIcons = !isSystemInDarkTheme()
-            )
-            NavigationBar(modifier = Modifier.navigationBarsPadding()) {
-                items.forEach { item ->
-                    NavigationBarItem(
-                        selected = currentDestination?.hierarchy?.any {
-                            it.route == item.route
-                        } == true,
-                        onClick = {
-                            if (currentDestination?.route != item.route) {
-                                navController.navigate(item.route)
-                            }
-                        },
-                        icon = {
-                            Icon(
-                                painterResource(id = item.icon),
-                                contentDescription = item.title
-                            )
-                        },
-                        label = { Text(text = item.title) }
+    NavigationBar(modifier = Modifier.navigationBarsPadding()) {
+        items.forEach { item ->
+            NavigationBarItem(
+                selected = currentDestination?.hierarchy?.any {
+                    it.route == item.route
+                } == true,
+                onClick = {
+                    if (currentDestination?.route != item.route) {
+                        navController.navigate(item.route)
+                    }
+                },
+                icon = {
+                    Icon(
+                        painterResource(id = item.icon),
+                        contentDescription = item.title
                     )
-                }
-            }
+                },
+                label = { Text(text = item.title) }
+            )
         }
     }
 }
