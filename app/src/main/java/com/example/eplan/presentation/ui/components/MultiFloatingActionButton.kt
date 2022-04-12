@@ -6,6 +6,7 @@ import androidx.compose.animation.core.animateFloat
 import androidx.compose.animation.core.updateTransition
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
@@ -64,7 +65,11 @@ fun MultiFloatingActionButton(
                             modifier = Modifier.padding(all = 6.dp)
                         )
                     }
-                    SmallFloatingActionButton(onClick = { onRecordClick() }) {
+                    SmallFloatingActionButton(
+                        onClick = { onRecordClick() },
+                        containerColor = if (isSystemInDarkTheme()) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.primaryContainer,
+                        contentColor = if (isSystemInDarkTheme()) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onPrimaryContainer
+                    ) {
                         Icon(imageVector = Icons.Filled.PlayArrow, contentDescription = "")
                     }
                 }
@@ -79,7 +84,11 @@ fun MultiFloatingActionButton(
                             modifier = Modifier.padding(all = 6.dp)
                         )
                     }
-                    SmallFloatingActionButton(onClick = { onAddClick() }) {
+                    SmallFloatingActionButton(
+                        onClick = { onAddClick() },
+                        containerColor = if (isSystemInDarkTheme()) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.primaryContainer,
+                        contentColor = if (isSystemInDarkTheme()) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onPrimaryContainer
+                    ) {
                         Icon(imageVector = Icons.Filled.Create, contentDescription = "")
                     }
                 }
