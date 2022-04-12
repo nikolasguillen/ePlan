@@ -4,17 +4,16 @@ import java.time.LocalDate
 import java.time.LocalTime
 
 data class WorkActivity(
-    val idAttivita: String,
-    val id: String,
-    val title: String,
-    val description: String,
-    val date: LocalDate,
-    val start: LocalTime,
-    val end: LocalTime,
-    val movingTime: String,
-    val km: String
+    val idAttivita: String = "",
+    val id: String = "",
+    val title: String = "",
+    val description: String = "",
+    val date: LocalDate = LocalDate.now(),
+    val start: LocalTime = LocalTime.of(LocalTime.now().hour, LocalTime.now().minute),
+    val end: LocalTime = LocalTime.of(LocalTime.now().hour, LocalTime.now().minute),
+    val movingTime: String = "",
+    val km: String = ""
 ) {
-
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (javaClass != other?.javaClass) return false

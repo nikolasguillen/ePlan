@@ -27,7 +27,7 @@ fun CustomTimeButton(startTime: String, label: String, onClick: (LocalTime) -> U
     Column(horizontalAlignment = Alignment.CenterHorizontally, modifier = modifier) {
         Card(
             modifier = Modifier
-                .width(150.dp)
+                .width(170.dp)
                 .clip(RoundedCornerShape(11.dp))
                 .clickable { dialogState.show() }
         )

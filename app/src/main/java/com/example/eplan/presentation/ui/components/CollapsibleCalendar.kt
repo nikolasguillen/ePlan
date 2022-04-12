@@ -9,7 +9,7 @@ import com.example.eplan.presentation.util.fromLocalDateToDate
 import java.time.LocalDate
 
 @Composable
-fun CollapsibleCalendar_v2(
+fun CollapsibleCalendar(
     date: String,
     onDayChange: (String) -> Unit
 ) {

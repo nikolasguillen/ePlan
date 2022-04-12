@@ -1,8 +1,10 @@
 package com.example.eplan.presentation.navigation
 
+import android.util.Log
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.Dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -13,6 +15,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import androidx.navigation.navigation
 import com.example.eplan.di.NetworkModule
+import com.example.eplan.domain.util.toJson
 import com.example.eplan.presentation.navigation.NestedNavGraphs.*
 import com.example.eplan.presentation.ui.account.AccountScreen
 import com.example.eplan.presentation.ui.appointmentList.AppointmentListScreen
@@ -25,6 +28,8 @@ import com.example.eplan.presentation.ui.workActivity.ActivityDetailViewModel
 import com.example.eplan.presentation.ui.workActivity.ActivityDetailsScreen
 import com.example.eplan.presentation.ui.workActivityList.ActivitiesListScreen
 import com.example.eplan.presentation.ui.workActivityList.ActivityListViewModel
+import com.example.eplan.presentation.util.TAG
+import java.time.LocalDate
 
 @ExperimentalMaterial3Api
 @Composable
@@ -34,7 +39,6 @@ fun NavGraph(navController: NavHostController) {
         startDestination = LoginGraph.route,
         modifier = Modifier.statusBarsPadding()
     ) {
-
 
         navigation(startDestination = LoginGraph.startDestination, route = LoginGraph.route) {
             composable(route = Screen.Login.route) {
@@ -55,11 +59,20 @@ fun NavGraph(navController: NavHostController) {
                 startDestination = WorkActivityGraph.startDestination,
                 route = WorkActivityGraph.route
             ) {
+
+                val selectedDate = mutableStateOf(LocalDate.now())
+
                 composable(route = Screen.WorkActivityList.route) {
                     val viewModel = hiltViewModel<ActivityListViewModel>()
                     ActivitiesListScreen(
                         viewModel = viewModel,
-                        onNavigate = navController::navigate
+                        onNavigate = navController::navigate,
+                        onAddClick = {
+                            val id = "null"
+                            val route = Screen.WorkActivityDetails.route + "/${id}"
+                            navController.navigate(route = route)
+                        },
+                        selectedDate = selectedDate
                     )
                 }
 
@@ -82,7 +95,8 @@ fun NavGraph(navController: NavHostController) {
                         onDeletePressed = {
                             viewModel.onTriggerEvent(DeleteActivityEvent)
                             navController.popBackStack()
-                        }
+                        },
+                        date = selectedDate.value
                     )
                 }
             }

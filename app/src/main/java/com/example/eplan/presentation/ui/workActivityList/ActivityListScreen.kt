@@ -1,33 +1,46 @@
 package com.example.eplan.presentation.ui.workActivityList
 
+import android.util.Log
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.Crossfade
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material.icons.outlined.Create
+import androidx.compose.material.ripple.rememberRipple
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.navigation.compose.rememberNavController
 import com.example.eplan.R
 import com.example.eplan.presentation.navigation.NestedNavGraphs
+import com.example.eplan.presentation.navigation.Screen
 import com.example.eplan.presentation.ui.components.*
+import com.example.eplan.presentation.util.TAG
 import com.example.eplan.presentation.util.bottomNavPadding
 import com.example.eplan.presentation.util.toLiteralDateParser
+import java.time.LocalDate
 
 
 @ExperimentalMaterial3Api
 @Composable
 fun ActivitiesListScreen(
     viewModel: ActivityListViewModel,
-    onNavigate: (String) -> Unit
+    onNavigate: (String) -> Unit,
+    onAddClick: () -> Unit,
+    selectedDate: MutableState<LocalDate>
 ) {
 
     val workActivities = viewModel.workActivities
@@ -38,6 +51,11 @@ fun ActivitiesListScreen(
 
     val calendarVisibility = remember { mutableStateOf(false) }
 
+    val isExpanded = remember {
+        mutableStateOf(false)
+    }
+
+
     Scaffold(
         modifier = Modifier.padding(bottom = bottomNavPadding),
         topBar = {
@@ -46,15 +64,15 @@ fun ActivitiesListScreen(
                 navigate = { onNavigate(NestedNavGraphs.AccountGraph.route) })
         },
         floatingActionButton = {
-            FloatingActionButton(
-                onClick = { /*TODO*/ },
-                containerColor = MaterialTheme.colorScheme.primary
-            ) {
-                Icon(
-                    imageVector = Icons.Outlined.Create,
-                    contentDescription = stringResource(R.string.aggiungi_attivita)
-                )
-            }
+            MultiFloatingActionButton(
+                onAddClick = {
+                    isExpanded.value = !isExpanded.value
+                    onAddClick()
+                },
+                onExpandClick = {
+                    isExpanded.value = !isExpanded.value
+                }
+            )
         },
         content = {
             Column {
@@ -83,9 +101,10 @@ fun ActivitiesListScreen(
                     }
                 }
                 AnimatedVisibility(visible = calendarVisibility.value) {
-                    CollapsibleCalendar_v2(
+                    CollapsibleCalendar(
                         date = date,
                         onDayChange = { date ->
+                            selectedDate.value = LocalDate.parse(date)
                             viewModel.onTriggerEvent(ActivityListEvent.DayChangeEvent(date = date))
                             calendarVisibility.value = false
                         }
@@ -119,6 +138,14 @@ fun ActivitiesListScreen(
                         )
                     }
                 }
+            }
+            AnimatedVisibility(visible = isExpanded.value, enter = fadeIn(), exit = fadeOut()) {
+                Box(
+                    modifier = Modifier
+                        .background(Color.Black.copy(alpha = 0.5F))
+                        .clickable(enabled = false, onClick = {})
+                        .fillMaxSize()
+                )
             }
         }
     )

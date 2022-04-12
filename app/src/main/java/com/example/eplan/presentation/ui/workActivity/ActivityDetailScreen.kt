@@ -38,10 +38,7 @@ import androidx.compose.ui.unit.dp
 import com.example.eplan.R
 import com.example.eplan.domain.model.WorkActivity
 import com.example.eplan.presentation.navigation.BottomNavBarItems
-import com.example.eplan.presentation.ui.components.BottomSaveBar
-import com.example.eplan.presentation.ui.components.CustomDateButton
-import com.example.eplan.presentation.ui.components.CustomTimeButton
-import com.example.eplan.presentation.ui.components.PlaceholderDetails
+import com.example.eplan.presentation.ui.components.*
 import com.example.eplan.presentation.ui.workActivity.ActivityDetailEvent.GetActivityEvent
 import com.example.eplan.presentation.util.acceptableTimeInterval
 import com.example.eplan.presentation.util.fromDateToLocalDate
@@ -50,6 +47,7 @@ import com.google.accompanist.placeholder.material.placeholder
 import com.google.accompanist.placeholder.material.shimmer
 import kotlinx.coroutines.launch
 import java.time.Duration
+import java.time.LocalDate
 import java.time.LocalTime
 import java.time.format.DateTimeFormatter
 
@@ -59,21 +57,28 @@ import java.time.format.DateTimeFormatter
 fun ActivityDetailsScreen(
     viewModel: ActivityDetailViewModel,
     activityId: String,
+    date: LocalDate,
     onBackPressed: () -> Unit,
     onSavePressed: () -> Unit,
     onDeletePressed: () -> Unit
 ) {
 
-    // Evita di rifare la chiamata API ad ogni recomposition
-    val onLoad = viewModel.onLoad.value
-    if (!onLoad) {
-        viewModel.onLoad.value = true
-        viewModel.onTriggerEvent(GetActivityEvent(activityId))
+    val workActivity = viewModel.workActivity
+
+    if (activityId != "null") {
+        // Evita di rifare la chiamata API ad ogni recomposition
+        val onLoad = viewModel.onLoad.value
+        if (!onLoad) {
+            viewModel.onLoad.value = true
+            viewModel.onTriggerEvent(GetActivityEvent(activityId))
+        }
+    } else {
+        val temp = WorkActivity(date = date)
+        viewModel.initialState.value = temp
+        workActivity.value = temp
     }
 
     val loading = viewModel.loading.value
-
-    val workActivity = viewModel.workActivity.value
 
     val keyboardController = LocalSoftwareKeyboardController.current
 
@@ -89,7 +94,7 @@ fun ActivityDetailsScreen(
     Scaffold(
         topBar = {
             MediumTopAppBar(
-                title = { Text(text = stringResource(R.string.attivita)) },
+                title = { Text(text = stringResource(R.string.intervento)) },
                 navigationIcon = {
                     IconButton(onClick = {
                         if (viewModel.checkChanges()) {
@@ -129,8 +134,8 @@ fun ActivityDetailsScreen(
                         saveAction = onSavePressed,
                         saveCondition = {
                             acceptableTimeInterval(
-                                workActivity?.start,
-                                workActivity?.end
+                                workActivity.value?.start,
+                                workActivity.value?.end
                             )
                         },
                         elseBranch = {
@@ -155,91 +160,12 @@ fun ActivityDetailsScreen(
             if (loading) {
                 PlaceholderDetails()
             } else {
-                workActivity?.let {
-                    Column(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .padding(
-                                start = 16.dp,
-                                end = 16.dp,
-                                top = 16.dp,
-                                bottom = paddingValues.calculateBottomPadding()
-                            )
-                            .verticalScroll(rememberScrollState()),
-                        verticalArrangement = Arrangement.spacedBy(16.dp)
-                    ) {
-                        OutlinedTextField(
-                            value = it.title,
-                            onValueChange = { viewModel.updateTitle(it) },
-                            label = { Text(text = stringResource(R.string.attivita)) },
-                            modifier = Modifier
-                                .fillMaxWidth()
-                        )
-                        OutlinedTextField(
-                            value = it.description,
-                            onValueChange = { viewModel.updateDescription(it) },
-                            label = { Text(text = stringResource(R.string.descrizione)) },
-                            modifier = Modifier.fillMaxWidth()
-                        )
-                        Row(modifier = Modifier.fillMaxWidth()) {
-                            CustomDateButton(
-                                date = it.date,
-                                onDateSelected = {
-                                    viewModel.updateDate(fromDateToLocalDate(it))
-                                }
-                            )
-                        }
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.SpaceBetween
-                        ) {
-                            CustomTimeButton(
-                                startTime = it.start.toString(),
-                                label = stringResource(R.string.ora_inizio),
-                                onClick = { time ->
-                                    viewModel.updateStart(time)
-                                },
-                                modifier = Modifier.weight(3F)
-                            )
-                            Spacer(modifier = Modifier.weight(1F))
-                            CustomTimeButton(
-                                startTime = it.end.toString(),
-                                label = stringResource(R.string.ora_fine),
-                                onClick = { time ->
-                                    viewModel.updateEnd(time)
-                                },
-                                modifier = Modifier.weight(3F)
-                            )
-                        }
-                        OutlinedTextField(
-                            value = it.movingTime,
-                            onValueChange = { viewModel.updateMovingTime(it) },
-                            label = { Text(text = stringResource(R.string.ore_spostamento)) },
-                            modifier = Modifier.fillMaxWidth(),
-                            singleLine = true,
-                            keyboardOptions = KeyboardOptions.Default.copy(
-                                keyboardType = KeyboardType.Number,
-                                imeAction = ImeAction.Done
-                            ),
-                            keyboardActions = KeyboardActions(
-                                onDone = { keyboardController?.hide() }
-                            )
-                        )
-                        OutlinedTextField(
-                            value = it.km,
-                            onValueChange = { viewModel.updateKm(it) },
-                            label = { Text(text = stringResource(R.string.km_percorsi)) },
-                            modifier = Modifier.fillMaxWidth(),
-                            singleLine = true,
-                            keyboardOptions = KeyboardOptions.Default.copy(
-                                keyboardType = KeyboardType.Number,
-                                imeAction = ImeAction.Done
-                            ),
-                            keyboardActions = KeyboardActions(
-                                onDone = { keyboardController?.hide() }
-                            )
-                        )
-                    }
+                workActivity.value?.let {
+                    WorkActivityDetail(
+                        viewModel = viewModel,
+                        workActivity = it,
+                        bottomPadding = paddingValues.calculateBottomPadding()
+                    )
                 }
             }
         }

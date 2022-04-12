@@ -41,7 +41,8 @@ constructor(
 
     val query = mutableStateOf("")
 
-    private var initialState: MutableState<WorkActivity?> = mutableStateOf(null)
+    var initialState: MutableState<WorkActivity?> = mutableStateOf(null)
+        private set
     var workActivity: MutableState<WorkActivity?> = mutableStateOf(null)
         private set
 
