@@ -26,6 +26,7 @@ import com.example.eplan.presentation.ui.workActivity.ActivityDetailEvent.Delete
 import com.example.eplan.presentation.ui.workActivity.ActivityDetailEvent.UpdateActivityEvent
 import com.example.eplan.presentation.ui.workActivity.ActivityDetailViewModel
 import com.example.eplan.presentation.ui.workActivity.ActivityDetailsScreen
+import com.example.eplan.presentation.ui.workActivity.ActivityTimerScreen
 import com.example.eplan.presentation.ui.workActivityList.ActivitiesListScreen
 import com.example.eplan.presentation.ui.workActivityList.ActivityListViewModel
 import com.example.eplan.presentation.util.TAG
@@ -67,13 +68,12 @@ fun NavGraph(navController: NavHostController) {
                     ActivitiesListScreen(
                         viewModel = viewModel,
                         onNavigate = navController::navigate,
-                        onAddClick = {
-                            val id = "null"
-                            val route = Screen.WorkActivityDetails.route + "/${id}"
-                            navController.navigate(route = route)
-                        },
                         selectedDate = selectedDate
                     )
+                }
+
+                composable(route = Screen.WorkActivityTimer.route) {
+                    ActivityTimerScreen()
                 }
 
                 composable(

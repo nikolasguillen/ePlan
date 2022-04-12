@@ -3,6 +3,8 @@ package com.example.eplan.presentation.ui.workActivityList
 import android.util.Log
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.Crossfade
+import androidx.compose.animation.core.animateFloat
+import androidx.compose.animation.core.updateTransition
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.background
@@ -14,12 +16,10 @@ import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material.icons.outlined.Create
 import androidx.compose.material.ripple.rememberRipple
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -39,7 +39,6 @@ import java.time.LocalDate
 fun ActivitiesListScreen(
     viewModel: ActivityListViewModel,
     onNavigate: (String) -> Unit,
-    onAddClick: () -> Unit,
     selectedDate: MutableState<LocalDate>
 ) {
 
@@ -67,10 +66,15 @@ fun ActivitiesListScreen(
             MultiFloatingActionButton(
                 onAddClick = {
                     isExpanded.value = !isExpanded.value
-                    onAddClick()
+                    val id = "null"
+                    val route = Screen.WorkActivityDetails.route + "/${id}"
+                    onNavigate(route)
                 },
                 onExpandClick = {
                     isExpanded.value = !isExpanded.value
+                },
+                onRecordClick = {
+                    onNavigate(Screen.WorkActivityTimer.route)
                 }
             )
         },
@@ -86,19 +90,16 @@ fun ActivitiesListScreen(
                         text = toLiteralDateParser(date = date),
                         style = MaterialTheme.typography.titleMedium
                     )
-                    Crossfade(targetState = calendarVisibility.value) { isVisible ->
-                        if (isVisible) {
-                            Icon(
-                                imageVector = Icons.Filled.KeyboardArrowUp,
-                                contentDescription = "Chiudi il calendario"
-                            )
-                        } else {
-                            Icon(
-                                imageVector = Icons.Filled.KeyboardArrowDown,
-                                contentDescription = "Apri il calendario"
-                            )
-                        }
+                    val transition =
+                        updateTransition(targetState = calendarVisibility.value, label = "Expand calendar")
+                    val rotation: Float by transition.animateFloat(label = "Expand calendar") { state ->
+                        if (state) -180F else 0F
                     }
+                    Icon(
+                        imageVector = Icons.Filled.KeyboardArrowUp,
+                        contentDescription = "Apri o chiudi il calendario",
+                        modifier = Modifier.rotate(rotation)
+                    )
                 }
                 AnimatedVisibility(visible = calendarVisibility.value) {
                     CollapsibleCalendar(

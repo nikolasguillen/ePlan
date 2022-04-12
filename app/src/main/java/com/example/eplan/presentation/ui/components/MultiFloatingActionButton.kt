@@ -1,5 +1,6 @@
 package com.example.eplan.presentation.ui.components
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.animateFloat
 import androidx.compose.animation.core.updateTransition
@@ -7,9 +8,11 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Create
 import androidx.compose.material.icons.filled.PlayArrow
+import androidx.compose.material.icons.rounded.Add
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -27,6 +30,7 @@ import com.example.eplan.R
 fun MultiFloatingActionButton(
     onExpandClick: () -> Unit,
     onAddClick: () -> Unit,
+    onRecordClick: () -> Unit
 ) {
 
     val isExpanded = remember {
@@ -60,7 +64,7 @@ fun MultiFloatingActionButton(
                             modifier = Modifier.padding(all = 6.dp)
                         )
                     }
-                    FloatingActionButton(onClick = { /*TODO*/ }) {
+                    SmallFloatingActionButton(onClick = { onRecordClick() }) {
                         Icon(imageVector = Icons.Filled.PlayArrow, contentDescription = "")
                     }
                 }
@@ -75,7 +79,7 @@ fun MultiFloatingActionButton(
                             modifier = Modifier.padding(all = 6.dp)
                         )
                     }
-                    FloatingActionButton(onClick = { onAddClick() }) {
+                    SmallFloatingActionButton(onClick = { onAddClick() }) {
                         Icon(imageVector = Icons.Filled.Create, contentDescription = "")
                     }
                 }
@@ -91,10 +95,10 @@ fun MultiFloatingActionButton(
             val transition =
                 updateTransition(targetState = isExpanded.value, label = "Add button rotation")
             val rotation: Float by transition.animateFloat(label = "Add button rotation") { state ->
-                if (state) 0F else -45F
+                if (state) 45F else 0F
             }
             Icon(
-                imageVector = Icons.Filled.Close,
+                imageVector = Icons.Rounded.Add,
                 contentDescription = stringResource(R.string.aggiungi_attivita),
                 modifier = Modifier.rotate(rotation)
             )

@@ -29,7 +29,7 @@ constructor(
             //TODO controlla che ci sia connessione internet
             sendWorkActivity(token = token, workActivity = workActivity)
 
-            delay(3000)
+            delay(1500)
 
             emit(DataState.success(true))
         } catch (e: Exception) {
