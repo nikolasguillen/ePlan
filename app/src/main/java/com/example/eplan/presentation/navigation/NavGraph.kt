@@ -1,12 +1,10 @@
 package com.example.eplan.presentation.navigation
 
-import android.util.Log
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.Dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
@@ -15,7 +13,6 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import androidx.navigation.navigation
 import com.example.eplan.di.NetworkModule
-import com.example.eplan.domain.util.toJson
 import com.example.eplan.presentation.navigation.NestedNavGraphs.*
 import com.example.eplan.presentation.ui.account.AccountScreen
 import com.example.eplan.presentation.ui.appointmentList.AppointmentListScreen
@@ -29,7 +26,6 @@ import com.example.eplan.presentation.ui.workActivity.ActivityDetailsScreen
 import com.example.eplan.presentation.ui.workActivity.ActivityTimerScreen
 import com.example.eplan.presentation.ui.workActivityList.ActivitiesListScreen
 import com.example.eplan.presentation.ui.workActivityList.ActivityListViewModel
-import com.example.eplan.presentation.util.TAG
 import java.time.LocalDate
 
 @ExperimentalMaterial3Api
@@ -49,7 +45,7 @@ fun NavGraph(navController: NavHostController) {
                     onLoginAttempted = { viewModel.onTriggerEvent(LoginAttemptEvent) }
                 )
                 if (viewModel.successfulLoginAttempt.value) {
-                    NetworkModule.userToken = viewModel.getToken()
+                    NetworkModule.setToken(viewModel.getToken())
                     navController.popBackStack()
                     navController.navigate(WorkActivityGraph.route)
                     viewModel.successfulLoginAttempt.value = false

@@ -14,6 +14,6 @@ interface UserDao {
     @Query("DELETE FROM users")
     suspend fun deleteAllUsers()
 
-    @Query("SELECT token FROM users WHERE username = :username ")
-    suspend fun getUserToken(username: String): String
+    @Query("SELECT token FROM users")
+    suspend fun getUserToken(): String
 }

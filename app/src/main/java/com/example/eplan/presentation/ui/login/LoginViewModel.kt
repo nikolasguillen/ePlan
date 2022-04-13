@@ -23,7 +23,7 @@ constructor(
 
     val username = mutableStateOf("n.guillen")
     val password = mutableStateOf("0FeZbLUO")
-    val statusCode = mutableStateOf(0)
+    private val statusCode = mutableStateOf(0)
     val message = mutableStateOf("")
     val loading = mutableStateOf(false)
     val successfulLoginAttempt = mutableStateOf(false)
@@ -70,6 +70,6 @@ constructor(
             }
         }.launchIn(viewModelScope)
 
-        Log.d(TAG, "status and message: $statusCode, $message")
+        Log.d(TAG, "status and message: ${statusCode.value}, ${message.value}")
     }
 }

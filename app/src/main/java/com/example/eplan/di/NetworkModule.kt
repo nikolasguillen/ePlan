@@ -1,5 +1,6 @@
 package com.example.eplan.di
 
+import com.example.eplan.cache.UserDao
 import com.example.eplan.network.LoginService
 import com.example.eplan.network.WorkActivityService
 import com.example.eplan.network.model.UserDtoMapper
@@ -10,8 +11,10 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import kotlinx.coroutines.coroutineScope
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import javax.inject.Inject
 import javax.inject.Named
 import javax.inject.Singleton
 
@@ -20,7 +23,16 @@ import javax.inject.Singleton
 object NetworkModule {
 
     private const val TOKEN_HEADER = "Bearer "
-    var userToken = ""
+    private var userToken = ""
+
+    fun setToken(token: String) {
+        userToken = token
+    }
+
+    fun getToken(): String {
+        return TOKEN_HEADER + userToken
+    }
+
 
     @Singleton
     @Provides
@@ -62,12 +74,5 @@ object NetworkModule {
             .addConverterFactory(GsonConverterFactory.create(GsonBuilder().create()))
             .build()
             .create(UserService::class.java)
-    }
-
-    @Singleton
-    @Provides
-    @Named("auth_token")
-    fun provideUserToken(): String {
-        return TOKEN_HEADER + userToken
     }
 }

@@ -6,6 +6,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.eplan.di.NetworkModule
 import com.example.eplan.domain.model.WorkActivity
 import com.example.eplan.interactors.workActivityDetail.GetById
 import com.example.eplan.interactors.workActivityDetail.UpdateActivity
@@ -22,7 +23,8 @@ import javax.inject.Inject
 import javax.inject.Named
 
 
-const val STATE_KEY_ACTIVITY = "state.key.workActivityId"
+const val STATE_KEY_ACTIVITY = "activity.state.workActivityId.key"
+const val STATE_KEY_TOKEN = "activity.state.token.key"
 
 @HiltViewModel
 class ActivityDetailViewModel
@@ -31,7 +33,6 @@ constructor(
     private val getById: GetById,
     private val updateActivity: UpdateActivity,
     private val repository: WorkActivityRepository,
-    @Named("auth_token") private val userToken: String,
     private val savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
@@ -79,6 +80,10 @@ constructor(
     }
 
     init {
+        savedStateHandle.get<String>(STATE_KEY_TOKEN)?.let { restoredToken ->
+            NetworkModule.setToken(restoredToken)
+        }
+
         savedStateHandle.get<String>(STATE_KEY_ACTIVITY)?.let { workActivityId ->
             onTriggerEvent(GetActivityEvent(workActivityId))
         }
@@ -108,10 +113,9 @@ constructor(
     }
 
     private fun getActivity() {
-        Log.d(TAG, "get by Id (viewModel): query: ${query.value}")
         resetActivity()
 
-        getById.execute(token = userToken, id = query.value).onEach { dataState ->
+        getById.execute(token = NetworkModule.getToken(), id = query.value).onEach { dataState ->
             loading.value = dataState.loading
 
             dataState.data?.let { newActivity ->
@@ -129,23 +133,29 @@ constructor(
     private fun updateActivity() {
         workActivity.value?.let {
 
-            updateActivity.execute(token = userToken, workActivity = it).onEach { dataState ->
-                loading.value = dataState.loading
+            updateActivity.execute(token = NetworkModule.getToken(), workActivity = it)
+                .onEach { dataState ->
+                    loading.value = dataState.loading
 
-                dataState.data?.let { result ->
-                    if (result) resetActivity()
-                }
+                    dataState.data?.let { result ->
+                        if (result) resetActivity()
+                    }
 
-                dataState.error?.let { error ->
-                    Log.e(TAG, "updateActivity: $error")
-                    //TODO gestire errori
-                }
-            }.launchIn(viewModelScope)
+                    dataState.error?.let { error ->
+                        Log.e(TAG, "updateActivity: $error")
+                        //TODO gestire errori
+                    }
+                }.launchIn(viewModelScope)
         }
     }
 
     private suspend fun deleteActivity() {
-        workActivity.value?.let { repository.deleteWorkActivity(userToken = userToken, id = it.id) }
+        workActivity.value?.let {
+            repository.deleteWorkActivity(
+                userToken = NetworkModule.getToken(),
+                id = it.id
+            )
+        }
         resetActivity()
         savedStateHandle.remove<String>(STATE_KEY_ACTIVITY)
     }
@@ -156,7 +166,14 @@ constructor(
     }
 
     private fun setQuery(query: String) {
+        if (savedStateHandle.get<String>(STATE_KEY_TOKEN).isNullOrBlank()) {
+            saveToken()
+        }
         this.query.value = query
         savedStateHandle.set(STATE_KEY_ACTIVITY, query)
+    }
+
+    private fun saveToken() {
+        savedStateHandle.set(STATE_KEY_TOKEN, NetworkModule.getToken().split(" ")[1])
     }
 }

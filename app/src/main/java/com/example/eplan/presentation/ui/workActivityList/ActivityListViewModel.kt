@@ -28,7 +28,6 @@ class ActivityListViewModel
 @Inject
 constructor(
     private val dayChange: DayChange,
-    @Named("auth_token") private val userToken: String,
     private val savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
@@ -40,23 +39,17 @@ constructor(
 
     init {
 
-        Log.d(TAG, "viewModel init: ${date.value}")
-
-        savedStateHandle.get<String>(STATE_KEY_TOKEN)?.let { t ->
-
-            // TODO non so come aggiornare il token dopo la process death
-            // TODO devo capire come rimandarti al login, e' la cosa piu' giusta da fare
+        savedStateHandle.get<String>(STATE_KEY_TOKEN)?.let { restoredToken ->
+            NetworkModule.setToken(restoredToken)
         }
 
         savedStateHandle.get<String>(STATE_KEY_QUERY)?.let { q ->
-            Log.d(TAG, "savedStateHandle -> query in init: $q")
             setDate(q)
         }
 
         if (date.value != LocalDate.now().toString()) {
             onTriggerEvent(RestoreStateEvent)
         } else {
-            savedStateHandle.set(STATE_KEY_TOKEN, userToken)
             onTriggerEvent(DayChangeEvent(date.value))
         }
     }
@@ -66,12 +59,11 @@ constructor(
             try {
                 when (event) {
                     is DayChangeEvent -> {
-                        Log.d(TAG, "token: $userToken")
                         setDate(event.date)
                         dayChange()
                     }
                     RestoreStateEvent -> {
-                        restoreState()
+                        dayChange()
                     }
                 }
             } catch (e: Exception) {
@@ -82,10 +74,9 @@ constructor(
 
 
     private fun dayChange() {
-        Log.d(TAG, "dayChange: query: ${date.value}")
         resetActivitiesState()
 
-        dayChange.execute(token = userToken, query = date.value).onEach { dataState ->
+        dayChange.execute(token = NetworkModule.getToken(), query = date.value).onEach { dataState ->
             loading.value = dataState.loading
 
             dataState.data?.let { list ->
@@ -99,30 +90,19 @@ constructor(
         }.launchIn(viewModelScope)
     }
 
-    private fun restoreState() {
-        Log.d(TAG, "restoreState: query: ${this.date.value}")
-        resetActivitiesState()
-
-        dayChange.execute(token = userToken, query = date.value).onEach { dataState ->
-            loading.value = dataState.loading
-
-            dataState.data?.let { list ->
-                workActivities.value = list
-            }
-
-            dataState.error?.let { error ->
-                Log.e(TAG, "restoreState: $error")
-                // TODO gestire errori
-            }
-        }.launchIn(viewModelScope)
-    }
-
     private fun resetActivitiesState() {
         workActivities.value = listOf()
     }
 
     private fun setDate(date: String) {
+        if (savedStateHandle.get<String>(STATE_KEY_TOKEN).isNullOrBlank()) {
+            saveToken()
+        }
         this.date.value = date
         savedStateHandle.set(STATE_KEY_QUERY, date)
+    }
+
+    private fun saveToken() {
+        savedStateHandle.set(STATE_KEY_TOKEN, NetworkModule.getToken().split(" ")[1])
     }
 }
