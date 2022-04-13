@@ -29,8 +29,12 @@ object NetworkModule {
         userToken = token
     }
 
-    fun getToken(): String {
-        return TOKEN_HEADER + userToken
+    fun getToken(header: Boolean = true): String {
+        return if (header) {
+            TOKEN_HEADER + userToken
+        } else {
+            userToken
+        }
     }
 
 

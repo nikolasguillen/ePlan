@@ -103,6 +103,6 @@ constructor(
     }
 
     private fun saveToken() {
-        savedStateHandle.set(STATE_KEY_TOKEN, NetworkModule.getToken().split(" ")[1])
+        savedStateHandle.set(STATE_KEY_TOKEN, NetworkModule.getToken(header = false))
     }
 }
