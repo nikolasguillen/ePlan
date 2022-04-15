@@ -72,12 +72,6 @@ constructor(
                 savedStateHandle.get<String>(STATE_KEY_QUERY)?.let { q ->
                     setDate(q)
                 }
-
-                if (date.value != LocalDate.now().toString()) {
-                    onTriggerEvent(RestoreStateEvent)
-                } else {
-                    onTriggerEvent(DayChangeEvent(date.value))
-                }
             }
 
             dataState.error?.let { error ->

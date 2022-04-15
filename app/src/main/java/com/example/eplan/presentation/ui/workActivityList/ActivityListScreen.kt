@@ -1,8 +1,6 @@
 package com.example.eplan.presentation.ui.workActivityList
 
-import android.util.Log
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.Crossfade
 import androidx.compose.animation.core.animateFloat
 import androidx.compose.animation.core.updateTransition
 import androidx.compose.animation.fadeIn
@@ -11,10 +9,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.KeyboardArrowUp
-import androidx.compose.material.icons.outlined.Create
-import androidx.compose.material.ripple.rememberRipple
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -23,12 +18,10 @@ import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.navigation.compose.rememberNavController
 import com.example.eplan.R
 import com.example.eplan.presentation.navigation.NestedNavGraphs
 import com.example.eplan.presentation.navigation.Screen
 import com.example.eplan.presentation.ui.components.*
-import com.example.eplan.presentation.util.TAG
 import com.example.eplan.presentation.util.bottomNavPadding
 import com.example.eplan.presentation.util.toLiteralDateParser
 import java.time.LocalDate
@@ -39,7 +32,6 @@ import java.time.LocalDate
 fun ActivitiesListScreen(
     viewModel: ActivityListViewModel,
     onNavigate: (String) -> Unit,
-    selectedDate: MutableState<LocalDate>
 ) {
 
     val workActivities = viewModel.workActivities
@@ -50,8 +42,14 @@ fun ActivitiesListScreen(
 
     val calendarVisibility = remember { mutableStateOf(false) }
 
+    val selectedDate = remember { mutableStateOf(LocalDate.parse(date)) }
+
     val isExpanded = remember {
         mutableStateOf(false)
+    }
+
+    LaunchedEffect(date) {
+        viewModel.onTriggerEvent(ActivityListEvent.DayChangeEvent(date = date))
     }
 
 
@@ -91,7 +89,10 @@ fun ActivitiesListScreen(
                         style = MaterialTheme.typography.titleMedium
                     )
                     val transition =
-                        updateTransition(targetState = calendarVisibility.value, label = "Expand calendar")
+                        updateTransition(
+                            targetState = calendarVisibility.value,
+                            label = "Expand calendar"
+                        )
                     val rotation: Float by transition.animateFloat(label = "Expand calendar") { state ->
                         if (state) -180F else 0F
                     }

@@ -28,4 +28,5 @@
     <string name="app_info">Informazioni sull\'app</string>
     <string name="torna_indietro">Torna indietro</string>
     <string name="intervento">Intervento</string>
+    <string name="errore">Errore</string>
 </resources>

@@ -44,6 +44,9 @@ constructor(
 
     val query = mutableStateOf("")
 
+    var error: String? = null
+        private set
+
     private var userToken = USER_TOKEN
 
     var initialState: MutableState<WorkActivity?> = mutableStateOf(null)
@@ -141,7 +144,8 @@ constructor(
 
                 dataState.error?.let { error ->
                     Log.e(TAG, "getActivity: $error")
-                    // TODO gestire errori
+                    this.error = error
+                    // TODO gestire testo errore
                 }
             }.launchIn(viewModelScope)
         }
