@@ -1,5 +1,6 @@
 package com.example.eplan.presentation.ui.workActivity
 
+import android.util.Log
 import android.widget.Toast
 import androidx.activity.compose.BackHandler
 import androidx.compose.material.icons.Icons
@@ -20,6 +21,7 @@ import com.example.eplan.presentation.ui.components.BottomSaveBar
 import com.example.eplan.presentation.ui.components.PlaceholderDetails
 import com.example.eplan.presentation.ui.components.WorkActivityDetail
 import com.example.eplan.presentation.ui.workActivity.ActivityDetailEvent.GetActivityEvent
+import com.example.eplan.presentation.util.TAG
 import com.example.eplan.presentation.util.acceptableTimeInterval
 import java.time.LocalDate
 

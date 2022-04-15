@@ -24,9 +24,7 @@ constructor(
 
             // TODO controlla che ci sia connessione a internet
             val workActivities = getWorkActivitiesFromNetwork(token = token, query = query)
-
-            // TODO non so se tenerlo o meno quindi boh
-            delay(200)
+            delay(300)
 
             emit(DataState.success(workActivities))
         } catch (e: Exception) {

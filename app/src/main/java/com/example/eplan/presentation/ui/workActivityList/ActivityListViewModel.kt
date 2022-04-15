@@ -8,50 +8,42 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.eplan.di.NetworkModule
 import com.example.eplan.domain.model.WorkActivity
+import com.example.eplan.interactors.GetToken
 import com.example.eplan.interactors.workActivityList.DayChange
 import com.example.eplan.presentation.ui.workActivityList.ActivityListEvent.DayChangeEvent
 import com.example.eplan.presentation.ui.workActivityList.ActivityListEvent.RestoreStateEvent
 import com.example.eplan.presentation.util.TAG
+import com.example.eplan.presentation.util.USER_TOKEN
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import java.time.LocalDate
+import java.time.LocalTime
 import javax.inject.Inject
 import javax.inject.Named
 
 const val STATE_KEY_QUERY = "activity.state.query.key"
-const val STATE_KEY_TOKEN = "activity.state.token.key"
 
 @HiltViewModel
 class ActivityListViewModel
 @Inject
 constructor(
     private val dayChange: DayChange,
+    private val getToken: GetToken,
     private val savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
     val workActivities: MutableState<List<WorkActivity>> = mutableStateOf(listOf())
+
+    private var userToken = USER_TOKEN
 
     val loading = mutableStateOf(false)
 
     val date = mutableStateOf(LocalDate.now().toString())
 
     init {
-
-        savedStateHandle.get<String>(STATE_KEY_TOKEN)?.let { restoredToken ->
-            NetworkModule.setToken(restoredToken)
-        }
-
-        savedStateHandle.get<String>(STATE_KEY_QUERY)?.let { q ->
-            setDate(q)
-        }
-
-        if (date.value != LocalDate.now().toString()) {
-            onTriggerEvent(RestoreStateEvent)
-        } else {
-            onTriggerEvent(DayChangeEvent(date.value))
-        }
+        getToken()
     }
 
     fun onTriggerEvent(event: ActivityListEvent) {
@@ -62,7 +54,7 @@ constructor(
                         setDate(event.date)
                         dayChange()
                     }
-                    RestoreStateEvent -> {
+                    is RestoreStateEvent -> {
                         dayChange()
                     }
                 }
@@ -72,22 +64,46 @@ constructor(
         }
     }
 
+    private fun getToken() {
+        getToken.execute().onEach { dataState ->
+
+            dataState.data?.let { token ->
+                userToken += token
+                savedStateHandle.get<String>(STATE_KEY_QUERY)?.let { q ->
+                    setDate(q)
+                }
+
+                if (date.value != LocalDate.now().toString()) {
+                    onTriggerEvent(RestoreStateEvent)
+                } else {
+                    onTriggerEvent(DayChangeEvent(date.value))
+                }
+            }
+
+            dataState.error?.let { error ->
+                Log.e(TAG, "getToken: $error")
+                //TODO gestire errori
+            }
+        }.launchIn(viewModelScope)
+    }
+
 
     private fun dayChange() {
         resetActivitiesState()
 
-        dayChange.execute(token = NetworkModule.getToken(), query = date.value).onEach { dataState ->
-            loading.value = dataState.loading
+        dayChange.execute(token = userToken, query = date.value)
+            .onEach { dataState ->
+                loading.value = dataState.loading
 
-            dataState.data?.let { list ->
-                workActivities.value = list
-            }
+                dataState.data?.let { list ->
+                    workActivities.value = list
+                }
 
-            dataState.error?.let { error ->
-                Log.e(TAG, "dayChange: $error")
-                // TODO "Gestire errori"
-            }
-        }.launchIn(viewModelScope)
+                dataState.error?.let { error ->
+                    Log.e(TAG, "dayChange: $error")
+                    // TODO "Gestire errori"
+                }
+            }.launchIn(viewModelScope)
     }
 
     private fun resetActivitiesState() {
@@ -95,14 +111,7 @@ constructor(
     }
 
     private fun setDate(date: String) {
-        if (savedStateHandle.get<String>(STATE_KEY_TOKEN).isNullOrBlank()) {
-            saveToken()
-        }
         this.date.value = date
         savedStateHandle.set(STATE_KEY_QUERY, date)
-    }
-
-    private fun saveToken() {
-        savedStateHandle.set(STATE_KEY_TOKEN, NetworkModule.getToken(header = false))
     }
 }

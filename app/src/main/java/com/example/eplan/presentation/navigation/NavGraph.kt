@@ -45,7 +45,6 @@ fun NavGraph(navController: NavHostController) {
                     onLoginAttempted = { viewModel.onTriggerEvent(LoginAttemptEvent) }
                 )
                 if (viewModel.successfulLoginAttempt.value) {
-                    NetworkModule.setToken(viewModel.getToken())
                     navController.popBackStack()
                     navController.navigate(WorkActivityGraph.route)
                     viewModel.successfulLoginAttempt.value = false

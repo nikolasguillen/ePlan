@@ -1,5 +1,7 @@
 package com.example.eplan.di
 
+import com.example.eplan.cache.UserDao
+import com.example.eplan.interactors.GetToken
 import com.example.eplan.interactors.login.LoginAttempt
 import com.example.eplan.interactors.workActivityDetail.GetById
 import com.example.eplan.interactors.workActivityDetail.UpdateActivity
@@ -32,10 +34,12 @@ object InteractorsModule {
     @ViewModelScoped
     @Provides
     fun provideLoginResponse(
-        service: LoginService
+        service: LoginService,
+        userDao: UserDao
     ): LoginAttempt {
         return LoginAttempt(
-            service = service
+            service = service,
+            userDao = userDao
         )
     }
 
@@ -61,5 +65,13 @@ object InteractorsModule {
             service = service,
             mapper = mapper
         )
+    }
+
+    @ViewModelScoped
+    @Provides
+    fun provideUserToken(
+        userDao: UserDao
+    ): GetToken {
+        return GetToken(userDao = userDao)
     }
 }

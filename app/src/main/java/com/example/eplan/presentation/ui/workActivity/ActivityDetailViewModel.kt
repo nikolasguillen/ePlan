@@ -8,12 +8,15 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.eplan.di.NetworkModule
 import com.example.eplan.domain.model.WorkActivity
+import com.example.eplan.interactors.GetToken
 import com.example.eplan.interactors.workActivityDetail.GetById
 import com.example.eplan.interactors.workActivityDetail.UpdateActivity
 import com.example.eplan.presentation.ui.workActivity.ActivityDetailEvent.*
 import com.example.eplan.presentation.util.TAG
+import com.example.eplan.presentation.util.USER_TOKEN
 import com.example.eplan.repository.WorkActivityRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
@@ -24,7 +27,6 @@ import javax.inject.Named
 
 
 const val STATE_KEY_ACTIVITY = "activity.state.workActivityId.key"
-const val STATE_KEY_TOKEN = "activity.state.token.key"
 
 @HiltViewModel
 class ActivityDetailViewModel
@@ -32,7 +34,7 @@ class ActivityDetailViewModel
 constructor(
     private val getById: GetById,
     private val updateActivity: UpdateActivity,
-    private val repository: WorkActivityRepository,
+    private val getToken: GetToken,
     private val savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
@@ -41,6 +43,8 @@ constructor(
     val loading = mutableStateOf(false)
 
     val query = mutableStateOf("")
+
+    private var userToken = USER_TOKEN
 
     var initialState: MutableState<WorkActivity?> = mutableStateOf(null)
         private set
@@ -80,13 +84,7 @@ constructor(
     }
 
     init {
-        savedStateHandle.get<String>(STATE_KEY_TOKEN)?.let { restoredToken ->
-            NetworkModule.setToken(restoredToken)
-        }
-
-        savedStateHandle.get<String>(STATE_KEY_ACTIVITY)?.let { workActivityId ->
-            onTriggerEvent(GetActivityEvent(workActivityId))
-        }
+        getToken()
     }
 
     fun onTriggerEvent(event: ActivityDetailEvent) {
@@ -112,22 +110,41 @@ constructor(
 
     }
 
-    private fun getActivity() {
-        resetActivity()
+    private fun getToken() {
+        getToken.execute().onEach { dataState ->
 
-        getById.execute(token = NetworkModule.getToken(), id = query.value).onEach { dataState ->
-            loading.value = dataState.loading
-
-            dataState.data?.let { newActivity ->
-                initialState.value = newActivity
-                workActivity.value = newActivity
+            dataState.data?.let { token ->
+                userToken += token
+                savedStateHandle.get<String>(STATE_KEY_ACTIVITY)?.let { workActivityId ->
+                    onTriggerEvent(GetActivityEvent(workActivityId))
+                }
             }
 
             dataState.error?.let { error ->
-                Log.e(TAG, "getActivity: $error")
-                // TODO gestire errori
+                Log.e(TAG, "getToken: $error")
+                //TODO gestire errori
             }
         }.launchIn(viewModelScope)
+    }
+
+    private fun getActivity() {
+        resetActivity()
+
+        if (userToken != USER_TOKEN) {
+            getById.execute(token = userToken, id = query.value).onEach { dataState ->
+                loading.value = dataState.loading
+
+                dataState.data?.let { newActivity ->
+                    initialState.value = newActivity
+                    workActivity.value = newActivity
+                }
+
+                dataState.error?.let { error ->
+                    Log.e(TAG, "getActivity: $error")
+                    // TODO gestire errori
+                }
+            }.launchIn(viewModelScope)
+        }
     }
 
     private fun updateActivity() {
@@ -151,10 +168,7 @@ constructor(
 
     private suspend fun deleteActivity() {
         workActivity.value?.let {
-            repository.deleteWorkActivity(
-                userToken = NetworkModule.getToken(),
-                id = it.id
-            )
+            //TODO
         }
         resetActivity()
         savedStateHandle.remove<String>(STATE_KEY_ACTIVITY)
@@ -166,14 +180,7 @@ constructor(
     }
 
     private fun setQuery(query: String) {
-        if (savedStateHandle.get<String>(STATE_KEY_TOKEN).isNullOrBlank()) {
-            saveToken()
-        }
         this.query.value = query
         savedStateHandle.set(STATE_KEY_ACTIVITY, query)
-    }
-
-    private fun saveToken() {
-        savedStateHandle.set(STATE_KEY_TOKEN, NetworkModule.getToken(header = false))
     }
 }

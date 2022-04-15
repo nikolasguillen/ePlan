@@ -1,5 +1,7 @@
 package com.example.eplan.interactors.login
 
+import com.example.eplan.cache.UserDao
+import com.example.eplan.cache.model.UserEntity
 import com.example.eplan.domain.data.DataState
 import com.example.eplan.network.LoginService
 import com.example.eplan.network.model.CredentialsDto
@@ -11,7 +13,8 @@ import javax.inject.Inject
 class LoginAttempt
 @Inject
 constructor(
-    private val service: LoginService
+    private val service: LoginService,
+    private val userDao: UserDao
 ) {
     fun execute(
         username: String,
@@ -35,6 +38,8 @@ constructor(
         password: String
     ): Pair<Int, String> {
         val response = service.login(CredentialsDto(username = username, password = password))
+        userDao.deleteAllUsers()
+        userDao.insertUser(UserEntity(username = username, password = password, token = response.message))
         return Pair(response.statusCode, response.message)
     }
 }
