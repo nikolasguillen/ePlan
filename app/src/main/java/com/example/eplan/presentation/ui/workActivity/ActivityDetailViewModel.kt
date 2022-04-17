@@ -14,16 +14,13 @@ import com.example.eplan.interactors.workActivityDetail.UpdateActivity
 import com.example.eplan.presentation.ui.workActivity.ActivityDetailEvent.*
 import com.example.eplan.presentation.util.TAG
 import com.example.eplan.presentation.util.USER_TOKEN
-import com.example.eplan.repository.WorkActivityRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import java.time.LocalDate
 import java.time.LocalTime
 import javax.inject.Inject
-import javax.inject.Named
 
 
 const val STATE_KEY_ACTIVITY = "activity.state.workActivityId.key"
@@ -154,7 +151,7 @@ constructor(
     private fun updateActivity() {
         workActivity.value?.let {
 
-            updateActivity.execute(token = NetworkModule.getToken(), workActivity = it)
+            updateActivity.execute(token = userToken, workActivity = it)
                 .onEach { dataState ->
                     loading.value = dataState.loading
 
@@ -170,7 +167,7 @@ constructor(
         }
     }
 
-    private suspend fun deleteActivity() {
+    private fun deleteActivity() {
         workActivity.value?.let {
             //TODO
         }
