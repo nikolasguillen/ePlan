@@ -31,7 +31,7 @@ import java.time.LocalDate
 @Composable
 fun ActivitiesListScreen(
     viewModel: ActivityListViewModel,
-    onNavigate: (String) -> Unit,
+    onNavigate: (String) -> Unit
 ) {
 
     val workActivities = viewModel.workActivities
@@ -78,40 +78,17 @@ fun ActivitiesListScreen(
         },
         content = {
             Column {
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .clickable { calendarVisibility.value = !calendarVisibility.value }
-                        .padding(16.dp)
-                ) {
-                    Text(
-                        text = toLiteralDateParser(date = date),
-                        style = MaterialTheme.typography.titleMedium
-                    )
-                    val transition =
-                        updateTransition(
-                            targetState = calendarVisibility.value,
-                            label = "Expand calendar"
-                        )
-                    val rotation: Float by transition.animateFloat(label = "Expand calendar") { state ->
-                        if (state) -180F else 0F
+                // Riga con data che al click apre/chiude il calendario
+                CollapsibleCalendar(
+                    calendarVisibility = calendarVisibility,
+                    date = date,
+                    onDayChange = { date ->
+                        selectedDate.value = LocalDate.parse(date)
+                        viewModel.onTriggerEvent(ActivityListEvent.DayChangeEvent(date = date))
+                        calendarVisibility.value = false
                     }
-                    Icon(
-                        imageVector = Icons.Filled.KeyboardArrowUp,
-                        contentDescription = "Apri o chiudi il calendario",
-                        modifier = Modifier.rotate(rotation)
-                    )
-                }
-                AnimatedVisibility(visible = calendarVisibility.value) {
-                    CollapsibleCalendar(
-                        date = date,
-                        onDayChange = { date ->
-                            selectedDate.value = LocalDate.parse(date)
-                            viewModel.onTriggerEvent(ActivityListEvent.DayChangeEvent(date = date))
-                            calendarVisibility.value = false
-                        }
-                    )
-                }
+                )
+
                 if (loading) {
                     repeat(3) {
                         PlaceholderCard()
@@ -141,6 +118,8 @@ fun ActivitiesListScreen(
                     }
                 }
             }
+
+            // Ombra per quando apro il multi action FAB
             AnimatedVisibility(visible = isExpanded.value, enter = fadeIn(), exit = fadeOut()) {
                 Box(
                     modifier = Modifier

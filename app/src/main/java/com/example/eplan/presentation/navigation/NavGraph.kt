@@ -19,6 +19,7 @@ import com.example.eplan.di.NetworkModule
 import com.example.eplan.presentation.navigation.NestedNavGraphs.*
 import com.example.eplan.presentation.ui.account.AccountScreen
 import com.example.eplan.presentation.ui.appointmentList.AppointmentListScreen
+import com.example.eplan.presentation.ui.appointmentList.AppointmentListViewModel
 import com.example.eplan.presentation.ui.login.LoginEvent.LoginAttemptEvent
 import com.example.eplan.presentation.ui.login.LoginScreen
 import com.example.eplan.presentation.ui.login.LoginViewModel
@@ -64,6 +65,7 @@ fun NavGraph(navController: NavHostController) {
 
                 composable(route = Screen.WorkActivityList.route) {
                     val viewModel = hiltViewModel<ActivityListViewModel>()
+                    selectedDate.value = LocalDate.parse(viewModel.date.value)
                     ActivitiesListScreen(
                         viewModel = viewModel,
                         onNavigate = navController::navigate,
@@ -105,7 +107,11 @@ fun NavGraph(navController: NavHostController) {
             ) {
                 /*TODO da sistemare*/
                 composable(route = Screen.AppointmentList.route) {
-                    AppointmentListScreen(navController = navController)
+                    val viewModel = hiltViewModel<AppointmentListViewModel>()
+                    AppointmentListScreen(
+                        viewModel = viewModel,
+                        onNavigate = navController::navigate
+                    )
 
                 }
             }

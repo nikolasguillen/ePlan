@@ -1,30 +1,40 @@
 package com.example.eplan.presentation.ui.appointmentList
 
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Create
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavHostController
 import com.example.eplan.R
+import com.example.eplan.presentation.navigation.NestedNavGraphs
 import com.example.eplan.presentation.navigation.Screen
 import com.example.eplan.presentation.ui.components.TopBar
+import com.example.eplan.presentation.util.bottomNavPadding
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AppointmentListScreen(navController: NavHostController) {
+fun AppointmentListScreen(
+    viewModel: AppointmentListViewModel,
+    onNavigate: (String) -> Unit
+) {
 
     Scaffold(
+        modifier = Modifier.padding(bottom = bottomNavPadding),
         topBar = {
-            TopBar(stringResource(R.string.appuntamenti), navigate = {
-                navController.navigate(
-                    Screen.Account.route
-                )
-            })
+            TopBar(
+                title = stringResource(R.string.appuntamenti),
+                navigate = { onNavigate(NestedNavGraphs.AccountGraph.route) })
         },
         floatingActionButton = {
             FloatingActionButton(
-                onClick = { /*TODO*/ },
+                onClick = {
+                    val id = "null"
+                    val route = Screen.AppointmentDetails.route + "/${id}"
+                    onNavigate(route)
+                },
                 containerColor = MaterialTheme.colorScheme.primary
             ) {
                 Icon(
@@ -34,25 +44,7 @@ fun AppointmentListScreen(navController: NavHostController) {
             }
         },
         content = {
-            /*Column(modifier = Modifier.padding(bottom = it.calculateBottomPadding())) {
-                CollapsibleCalendar(onDaySelected = { dayOfMonth, month, year ->
-                    viewModel.onTriggerEvent(
-                        ActivityListEvent.DayChangeEvent(
-                            dayOfMonth = dayOfMonth,
-                            month = month,
-                            year = year
-                        )
-                    )
-                })
-                LazyColumn {
-                    items(appointments) { appointment ->
-                        AppointmentCard(
-                            appointment = appointment,
-                            navController = navController
-                        )
-                    }
-                }
-            }*/
+
         }
     )
 }

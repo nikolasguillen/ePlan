@@ -2,7 +2,6 @@ package com.example.eplan.network.model
 
 import com.example.eplan.domain.model.WorkActivity
 import com.example.eplan.domain.util.DomainMapper
-import com.example.eplan.domain.util.durationCalculator
 import java.time.LocalDate
 import java.time.LocalTime
 
@@ -13,7 +12,7 @@ class WorkActivityDtoMapper : DomainMapper<WorkActivityDto, WorkActivity> {
         val endDateTime = dateTimeParser(model.end)
 
         return WorkActivity(
-            idAttivita = model.idAttivita,
+            activityId = model.idAttivita,
             id = model.id,
             title = model.title,
             description = model.description,
@@ -30,7 +29,7 @@ class WorkActivityDtoMapper : DomainMapper<WorkActivityDto, WorkActivity> {
         val endDateTime = dateToNetwork(domainModel.date) + " " + domainModel.end
 
         return WorkActivityDto(
-            idAttivita = domainModel.idAttivita,
+            idAttivita = domainModel.activityId,
             id = domainModel.id,
             title = domainModel.title,
             description = domainModel.description,

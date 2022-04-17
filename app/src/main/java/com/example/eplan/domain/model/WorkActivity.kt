@@ -2,15 +2,16 @@ package com.example.eplan.domain.model
 
 import java.time.LocalDate
 import java.time.LocalTime
+import java.time.temporal.ChronoUnit
 
 data class WorkActivity(
-    val idAttivita: String = "",
+    val activityId: String = "",
     val id: String = "",
     val title: String = "",
     val description: String = "",
     val date: LocalDate = LocalDate.now(),
     val start: LocalTime = LocalTime.of(LocalTime.now().hour, LocalTime.now().minute),
-    val end: LocalTime = LocalTime.of(LocalTime.now().hour, LocalTime.now().minute),
+    val end: LocalTime = LocalTime.now().plusMinutes(10).truncatedTo(ChronoUnit.MINUTES),
     val movingTime: String = "",
     val km: String = ""
 ) {
@@ -20,7 +21,7 @@ data class WorkActivity(
 
         other as WorkActivity
 
-        if (idAttivita != other.idAttivita) return false
+        if (activityId != other.activityId) return false
         if (id != other.id) return false
         if (title != other.title) return false
         if (description != other.description) return false
@@ -35,7 +36,7 @@ data class WorkActivity(
 
     override fun hashCode(): Int {
         var result = id.hashCode()
-        result = 31 * result + idAttivita.hashCode()
+        result = 31 * result + activityId.hashCode()
         result = 31 * result + title.hashCode()
         result = 31 * result + description.hashCode()
         result = 31 * result + date.hashCode()
