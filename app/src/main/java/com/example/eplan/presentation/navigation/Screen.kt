@@ -6,7 +6,7 @@ sealed class Screen(val route: String, val name: String) {
 
     object WorkActivityList: Screen(route = "workActivityList", name = "Foglio ore")
 
-    object WorkActivityTimer: Screen(route = "workActivityTimer", name = "Timer")
+    object WorkActivityRecord: Screen(route = "workActivityTimer", name = "Timer")
 
     object WorkActivityDetails: Screen(route = "workActivityDetails", name = "Attività")
 

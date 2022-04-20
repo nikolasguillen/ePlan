@@ -76,11 +76,12 @@ dependencies {
     def hilt_navigation = "1.0.0"
     implementation("androidx.hilt:hilt-navigation-compose:$hilt_navigation")
 
-    // CollapsibleCalendar
-    implementation 'com.github.shrikanth7698:Collapsible-Calendar-View-Android:v1.0.3'
+    // Lottie files
+    def lottieVersion = "5.0.3"
+    implementation "com.airbnb.android:lottie-compose:$lottieVersion"
 
     // Coil image library
-    def coil_version = "2.0.0-rc02"
+    def coil_version = "2.0.0-rc03"
     implementation "io.coil-kt:coil:$coil_version"
     implementation "io.coil-kt:coil-compose:$coil_version"
     implementation "io.coil-kt:coil-gif:$coil_version"
