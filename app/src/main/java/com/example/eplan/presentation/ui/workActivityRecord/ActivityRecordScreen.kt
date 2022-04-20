@@ -39,9 +39,7 @@ fun ActivityRecordScreen(
 
     // TODO questa roba sarà da mettere nella viewmodel, non direttamente nel composable
     val start = remember {
-        mutableStateOf(
-            LocalTime.now().truncatedTo(ChronoUnit.MINUTES)
-        )
+        mutableStateOf(LocalTime.now())
     }
     val end = remember { mutableStateOf(LocalTime.now()) }
 
@@ -49,7 +47,11 @@ fun ActivityRecordScreen(
         modifier = Modifier.padding(bottom = bottomNavPadding),
         floatingActionButtonPosition = FabPosition.Center,
         floatingActionButton = {
-            LargeFloatingActionButton(onClick = { recording.value = !recording.value }) {
+            LargeFloatingActionButton(
+                onClick = {
+                    start.value = LocalTime.now().truncatedTo(ChronoUnit.MINUTES)
+                    recording.value = !recording.value
+                }) {
                 if (recording.value) {
                     Icon(
                         painter = painterResource(id = R.drawable.ic_baseline_stop_24),

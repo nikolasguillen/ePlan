@@ -66,9 +66,7 @@ fun MultiFloatingActionButton(
                         )
                     }
                     SmallFloatingActionButton(
-                        onClick = { onRecordClick() },
-                        containerColor = if (isSystemInDarkTheme()) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.primaryContainer,
-                        contentColor = if (isSystemInDarkTheme()) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onPrimaryContainer
+                        onClick = { onRecordClick() }
                     ) {
                         Icon(imageVector = Icons.Filled.PlayArrow, contentDescription = "")
                     }
@@ -85,9 +83,7 @@ fun MultiFloatingActionButton(
                         )
                     }
                     SmallFloatingActionButton(
-                        onClick = { onAddClick() },
-                        containerColor = if (isSystemInDarkTheme()) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.primaryContainer,
-                        contentColor = if (isSystemInDarkTheme()) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onPrimaryContainer
+                        onClick = { onAddClick() }
                     ) {
                         Icon(imageVector = Icons.Filled.Create, contentDescription = "")
                     }
@@ -98,8 +94,7 @@ fun MultiFloatingActionButton(
             onClick = {
                 isExpanded.value = !isExpanded.value
                 onExpandClick()
-            },
-            containerColor = MaterialTheme.colorScheme.primary
+            }
         ) {
             val transition =
                 updateTransition(targetState = isExpanded.value, label = "Add button rotation")
