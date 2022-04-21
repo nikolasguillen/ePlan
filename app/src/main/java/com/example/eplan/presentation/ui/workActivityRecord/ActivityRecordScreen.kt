@@ -3,13 +3,13 @@ package com.example.eplan.presentation.ui.workActivityRecord
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
-import androidx.compose.foundation.gestures.Orientation
-import androidx.compose.foundation.gestures.scrollable
+import androidx.compose.foundation.combinedClickable
+import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.PlayArrow
+import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -17,72 +17,69 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.airbnb.lottie.compose.*
+import com.airbnb.lottie.compose.LottieAnimation
+import com.airbnb.lottie.compose.LottieCompositionSpec
+import com.airbnb.lottie.compose.LottieConstants
+import com.airbnb.lottie.compose.rememberLottieComposition
 import com.example.eplan.R
+import com.example.eplan.presentation.navigation.Screen
 import com.example.eplan.presentation.util.bottomNavPadding
+import java.time.LocalDate
 import java.time.LocalTime
-import java.time.format.DateTimeFormatter
-import java.time.temporal.ChronoUnit
-import java.time.temporal.TemporalAdjusters
-import java.util.*
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 @Composable
-@Preview
 fun ActivityRecordScreen(
+    onSave: (String) -> Unit,
+    viewModel: ActivityRecordViewModel
 ) {
-    val recording = remember { mutableStateOf(false) }
     val composition by rememberLottieComposition(spec = LottieCompositionSpec.RawRes(R.raw.walking_turkey))
-
-    // TODO questa roba sarà da mettere nella viewmodel, non direttamente nel composable
-    val start = remember {
-        mutableStateOf(LocalTime.now())
-    }
-    val end = remember { mutableStateOf(LocalTime.now()) }
+    val start = viewModel.start.value
+    val end = viewModel.end.value
+    val showReset = remember { mutableStateOf(false) }
 
     Scaffold(
-        modifier = Modifier.padding(bottom = bottomNavPadding),
-        floatingActionButtonPosition = FabPosition.Center,
-        floatingActionButton = {
-            LargeFloatingActionButton(
-                onClick = {
-                    start.value = LocalTime.now().truncatedTo(ChronoUnit.MINUTES)
-                    recording.value = !recording.value
-                }) {
-                if (recording.value) {
-                    Icon(
-                        painter = painterResource(id = R.drawable.ic_baseline_stop_24),
-                        contentDescription = "Avvia registrazione"
-                    )
-                } else {
-                    Icon(
-                        imageVector = Icons.Filled.PlayArrow,
-                        contentDescription = "Avvia registrazione"
-                    )
-                    // TODO sistemare ripetizione ridondante
-                }
-            }
-        },
         content = {
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.Center,
+                verticalArrangement = Arrangement.SpaceBetween,
                 modifier = Modifier
                     .fillMaxSize()
                     .background(MaterialTheme.colorScheme.surface)
-                    .scrollable(state = rememberScrollState(), orientation = Orientation.Vertical)
+                    .padding(bottom = bottomNavPadding, top = 150.dp)
             ) {
-                Row() {
-                    Column {
-                        Text(text = "Orario inizio")
-                        Text(text = if (!recording.value) "--:--" else start.value.toString())
+                Row(
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    modifier = Modifier
+                        .padding(horizontal = 16.dp)
+                        .fillMaxWidth()
+                ) {
+                    Column(horizontalAlignment = Alignment.Start) {
+                        Text(
+                            text = "Orario inizio",
+                            style = MaterialTheme.typography.titleLarge
+                        )
+                        Text(
+                            text = start,
+                            style = MaterialTheme.typography.bodyLarge
+                        )
+                    }
+                    Column(horizontalAlignment = Alignment.End) {
+                        Text(
+                            text = "Orario fine",
+                            style = MaterialTheme.typography.titleLarge
+                        )
+                        Text(
+                            text = end,
+                            style = MaterialTheme.typography.bodyLarge
+                        )
                     }
                 }
                 AnimatedVisibility(
-                    visible = recording.value,
+                    visible = viewModel.isRecording(),
                     enter = fadeIn(),
                     exit = fadeOut()
                 ) {
@@ -93,6 +90,60 @@ fun ActivityRecordScreen(
                             width = 200.dp, height = 200.dp
                         )
                     )
+                }
+                Row(
+                    horizontalArrangement = Arrangement.SpaceAround,
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Box(modifier = Modifier.weight(1f), contentAlignment = Alignment.Center) {
+                        if (showReset.value) {
+                            FloatingActionButton(
+                                onClick = { viewModel.reset() }
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Filled.Refresh,
+                                    contentDescription = ""
+                                )
+                            }
+                        }
+                    }
+                    Box(modifier = Modifier.weight(1f), contentAlignment = Alignment.Center) {
+                        LargeFloatingActionButton(
+                            onClick = {
+                                if (viewModel.isOver()) {
+                                    val route = Screen.WorkActivityDetails.route + "/activityId=null?date=${LocalDate.now()}?start=${start}?end=${end}"
+                                    onSave(route)
+                                } else {
+                                    when (viewModel.isRecording()) {
+                                        false -> {
+                                            viewModel.setStart(LocalTime.now())
+                                            showReset.value = true
+                                        }
+                                        true -> viewModel.setEnd(LocalTime.now())
+                                    }
+                                }
+                            },
+                            containerColor = MaterialTheme.colorScheme.primary,
+                            contentColor = MaterialTheme.colorScheme.onPrimary
+                        ) {
+                            Icon(
+                                painter =
+                                if (viewModel.isOver()) {
+                                    painterResource(id = R.drawable.ic_baseline_save_24)
+                                } else {
+                                    when (viewModel.isRecording()) {
+                                        true -> painterResource(id = R.drawable.ic_baseline_stop_24)
+                                        false -> painterResource(id = R.drawable.ic_baseline_play_arrow_24)
+                                    }
+                                },
+                                contentDescription = "Avvia registrazione"
+                            )
+                        }
+                    }
+
+                    //Placeholder per spaziare bene la riga
+                    Box(modifier = Modifier.weight(1f))
                 }
             }
         }

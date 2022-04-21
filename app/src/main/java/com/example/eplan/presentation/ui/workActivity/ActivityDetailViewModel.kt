@@ -39,7 +39,7 @@ constructor(
 
     val loading = mutableStateOf(false)
 
-    val query = mutableStateOf("")
+    private val query = mutableStateOf("")
 
     var error: String? = null
         private set

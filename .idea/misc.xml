@@ -23,6 +23,8 @@
         <entry key="app/src/main/res/drawable/black_circle.xml" value="0.278" />
         <entry key="app/src/main/res/drawable/calendar_selector.xml" value="0.1655" />
         <entry key="app/src/main/res/drawable/ic_baseline_circle_24.xml" value="0.278" />
+        <entry key="app/src/main/res/drawable/ic_baseline_date_range_24.xml" value="0.201" />
+        <entry key="app/src/main/res/drawable/ic_baseline_play_arrow_24.xml" value="0.201" />
         <entry key="app/src/main/res/drawable/ic_outline_note_24.xml" value="0.1515" />
         <entry key="app/src/main/res/drawable/lightPurple_circle.xml" value="0.278" />
         <entry key="app/src/main/res/drawable/light_purple_circle.xml" value="0.278" />

@@ -32,6 +32,7 @@ import com.example.eplan.presentation.ui.workActivity.ActivityDetailEvent.GetAct
 import com.example.eplan.presentation.util.TAG
 import com.example.eplan.presentation.util.acceptableTimeInterval
 import java.time.LocalDate
+import java.time.LocalTime
 
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class)
@@ -40,6 +41,8 @@ fun ActivityDetailsScreen(
     viewModel: ActivityDetailViewModel,
     activityId: String,
     date: LocalDate,
+    start: LocalTime? = null,
+    end: LocalTime? = null,
     onBackPressed: () -> Unit,
     onSavePressed: () -> Unit,
     onDeletePressed: () -> Unit
@@ -55,9 +58,15 @@ fun ActivityDetailsScreen(
             viewModel.onTriggerEvent(GetActivityEvent(activityId))
         }
     } else {
-        val temp = WorkActivity(date = date)
-        viewModel.initialState.value = temp
-        workActivity.value = temp
+        if (start != null && end != null) {
+            val temp = WorkActivity(date = date, start = start, end = end)
+            viewModel.initialState.value = temp
+            workActivity.value = temp
+        } else {
+            val temp = WorkActivity(date = date)
+            viewModel.initialState.value = temp
+            workActivity.value = temp
+        }
     }
 
     val loading = viewModel.loading.value
@@ -106,10 +115,12 @@ fun ActivityDetailsScreen(
                     text = "Attenzione",
                     style = MaterialTheme.typography.titleLarge
                 )
-                Text(text = "Intervento non trovato",
+                Text(
+                    text = "Intervento non trovato",
                     style = MaterialTheme.typography.bodyLarge
                 )
-                Text(text = "errore: ${viewModel.error}",
+                Text(
+                    text = "errore: ${viewModel.error}",
                     style = MaterialTheme.typography.labelLarge
                 )
             }
@@ -188,6 +199,7 @@ fun ActivityDetailsScreen(
                         WorkActivityDetail(
                             viewModel = viewModel,
                             workActivity = it,
+                            topPadding = paddingValues.calculateTopPadding(),
                             bottomPadding = paddingValues.calculateBottomPadding()
                         )
                     }

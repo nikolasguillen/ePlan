@@ -6,12 +6,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavHostController
-import androidx.navigation.NavType
+import androidx.navigation.*
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import androidx.navigation.navArgument
-import androidx.navigation.navigation
 import com.example.eplan.presentation.navigation.NestedNavGraphs.*
 import com.example.eplan.presentation.ui.account.AccountScreen
 import com.example.eplan.presentation.ui.appointmentList.AppointmentListScreen
@@ -26,7 +23,9 @@ import com.example.eplan.presentation.ui.workActivity.ActivityDetailsScreen
 import com.example.eplan.presentation.ui.workActivityRecord.ActivityRecordScreen
 import com.example.eplan.presentation.ui.workActivityList.ActivitiesListScreen
 import com.example.eplan.presentation.ui.workActivityList.ActivityListViewModel
+import com.example.eplan.presentation.ui.workActivityRecord.ActivityRecordViewModel
 import java.time.LocalDate
+import java.time.LocalTime
 
 @ExperimentalMaterial3Api
 @Composable
@@ -68,15 +67,35 @@ fun NavGraph(navController: NavHostController) {
                 }
 
                 composable(route = Screen.WorkActivityRecord.route) {
-                    ActivityRecordScreen()
+                    val viewModel = hiltViewModel<ActivityRecordViewModel>()
+                    ActivityRecordScreen(
+                        viewModel = viewModel,
+                        onSave = {
+                            navController.popBackStack()
+                            navController.navigate(it)
+                        }
+                    )
                 }
 
                 composable(
-                    route = Screen.WorkActivityDetails.route + "/{activityId}",
+                    route = Screen.WorkActivityDetails.route + "/activityId={activityId}?date={date}?start={start}?end={end}",
                     arguments = listOf(
                         navArgument("activityId") {
                             type = NavType.StringType
-                        })
+                        },
+                        navArgument("date") {
+                            type = NavType.StringType
+                            defaultValue = selectedDate.value.toString()
+                        },
+                        navArgument("start") {
+                            type = NavType.StringType
+                            nullable = true
+                        },
+                        navArgument("end") {
+                            type = NavType.StringType
+                            nullable = true
+                        }
+                    )
                 ) { navBackStackEntry ->
                     val viewModel = hiltViewModel<ActivityDetailViewModel>()
                     ActivityDetailsScreen(
@@ -91,7 +110,17 @@ fun NavGraph(navController: NavHostController) {
                             viewModel.onTriggerEvent(DeleteActivityEvent)
                             navController.popBackStack()
                         },
-                        date = selectedDate.value
+                        date = LocalDate.parse(navBackStackEntry.arguments?.getString("date")),
+                        start = if (navBackStackEntry.arguments?.getString("start") == null) {
+                            null
+                        } else {
+                            LocalTime.parse(navBackStackEntry.arguments?.getString("start"))
+                        },
+                        end = if (navBackStackEntry.arguments?.getString("end") == null) {
+                            null
+                        } else {
+                            LocalTime.parse(navBackStackEntry.arguments?.getString("end"))
+                        }
                     )
                 }
             }

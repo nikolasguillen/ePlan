@@ -3,6 +3,7 @@
     package="com.example.eplan">
 
     <uses-permission android:name="android.permission.INTERNET" />
+
     <application
         android:name=".presentation.BaseApplication"
         android:allowBackup="true"

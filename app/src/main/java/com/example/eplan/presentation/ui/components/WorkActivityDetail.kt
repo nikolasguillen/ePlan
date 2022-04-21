@@ -24,7 +24,12 @@ import com.example.eplan.presentation.util.fromDateToLocalDate
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class)
 @Composable
-fun WorkActivityDetail(viewModel: ActivityDetailViewModel, workActivity: WorkActivity, bottomPadding: Dp) {
+fun WorkActivityDetail(
+    viewModel: ActivityDetailViewModel,
+    workActivity: WorkActivity,
+    topPadding: Dp,
+    bottomPadding: Dp
+) {
 
     val keyboardController = LocalSoftwareKeyboardController.current
 
@@ -34,7 +39,7 @@ fun WorkActivityDetail(viewModel: ActivityDetailViewModel, workActivity: WorkAct
             .padding(
                 start = 16.dp,
                 end = 16.dp,
-                top = 16.dp,
+                top = topPadding,
                 bottom = bottomPadding
             )
             .verticalScroll(rememberScrollState()),
