@@ -59,7 +59,7 @@ fun ActivitiesListScreen(
                 onAddClick = {
                     isExpanded.value = !isExpanded.value
                     val id = "null"
-                    val route = Screen.WorkActivityDetails.route + "/${id}"
+                    val route = Screen.WorkActivityDetails.route + "/activityId=${id}?date=${date}"
                     onNavigate(route)
                 },
                 onExpandClick = {

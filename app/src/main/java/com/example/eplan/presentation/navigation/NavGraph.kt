@@ -1,9 +1,11 @@
 package com.example.eplan.presentation.navigation
 
+import android.util.Log
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.*
@@ -24,6 +26,7 @@ import com.example.eplan.presentation.ui.workActivityRecord.ActivityRecordScreen
 import com.example.eplan.presentation.ui.workActivityList.ActivitiesListScreen
 import com.example.eplan.presentation.ui.workActivityList.ActivityListViewModel
 import com.example.eplan.presentation.ui.workActivityRecord.ActivityRecordViewModel
+import com.example.eplan.presentation.util.TAG
 import java.time.LocalDate
 import java.time.LocalTime
 
@@ -59,7 +62,6 @@ fun NavGraph(navController: NavHostController) {
 
                 composable(route = Screen.WorkActivityList.route) {
                     val viewModel = hiltViewModel<ActivityListViewModel>()
-                    selectedDate.value = LocalDate.parse(viewModel.date.value)
                     ActivitiesListScreen(
                         viewModel = viewModel,
                         onNavigate = navController::navigate,
@@ -78,7 +80,7 @@ fun NavGraph(navController: NavHostController) {
                 }
 
                 composable(
-                    route = Screen.WorkActivityDetails.route + "/activityId={activityId}?date={date}?start={start}?end={end}",
+                    route = Screen.WorkActivityDetails.route + "/activityId={activityId}?date={date}&start={start}&end={end}",
                     arguments = listOf(
                         navArgument("activityId") {
                             type = NavType.StringType
@@ -111,16 +113,8 @@ fun NavGraph(navController: NavHostController) {
                             navController.popBackStack()
                         },
                         date = LocalDate.parse(navBackStackEntry.arguments?.getString("date")),
-                        start = if (navBackStackEntry.arguments?.getString("start") == null) {
-                            null
-                        } else {
-                            LocalTime.parse(navBackStackEntry.arguments?.getString("start"))
-                        },
-                        end = if (navBackStackEntry.arguments?.getString("end") == null) {
-                            null
-                        } else {
-                            LocalTime.parse(navBackStackEntry.arguments?.getString("end"))
-                        }
+                        start = if (navBackStackEntry.arguments?.getString("start") == null) null else LocalTime.parse(navBackStackEntry.arguments?.getString("start")),
+                        end = if (navBackStackEntry.arguments?.getString("end") == null) null else LocalTime.parse(navBackStackEntry.arguments?.getString("end"))
                     )
                 }
             }
