@@ -19,6 +19,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.airbnb.lottie.compose.LottieAnimation
 import com.airbnb.lottie.compose.LottieCompositionSpec
@@ -59,7 +60,7 @@ fun ActivityRecordScreen(
                 ) {
                     Column(horizontalAlignment = Alignment.Start) {
                         Text(
-                            text = "Orario inizio",
+                            text = stringResource(R.string.orario_inizio),
                             style = MaterialTheme.typography.titleLarge
                         )
                         Text(
@@ -69,7 +70,7 @@ fun ActivityRecordScreen(
                     }
                     Column(horizontalAlignment = Alignment.End) {
                         Text(
-                            text = "Orario fine",
+                            text = stringResource(R.string.orario_fine),
                             style = MaterialTheme.typography.titleLarge
                         )
                         Text(
@@ -86,9 +87,7 @@ fun ActivityRecordScreen(
                     LottieAnimation(
                         composition = composition,
                         iterations = LottieConstants.IterateForever,
-                        modifier = Modifier.size(
-                            width = 200.dp, height = 200.dp
-                        )
+                        modifier = Modifier.size(size = 200.dp)
                     )
                 }
                 Row(
@@ -103,7 +102,7 @@ fun ActivityRecordScreen(
                             ) {
                                 Icon(
                                     imageVector = Icons.Filled.Refresh,
-                                    contentDescription = ""
+                                    contentDescription = stringResource(R.string.ripristina)
                                 )
                             }
                         }
@@ -137,7 +136,7 @@ fun ActivityRecordScreen(
                                         false -> painterResource(id = R.drawable.ic_baseline_play_arrow_24)
                                     }
                                 },
-                                contentDescription = "Avvia registrazione"
+                                contentDescription = stringResource(R.string.registra)
                             )
                         }
                     }

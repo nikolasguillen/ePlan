@@ -13,6 +13,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.airbnb.lottie.compose.LottieAnimation
+import com.airbnb.lottie.compose.LottieCompositionSpec
+import com.airbnb.lottie.compose.LottieConstants
+import com.airbnb.lottie.compose.rememberLottieComposition
 import com.example.eplan.R
 import com.example.eplan.presentation.navigation.NestedNavGraphs
 import com.example.eplan.presentation.navigation.Screen
@@ -41,6 +45,8 @@ fun ActivitiesListScreen(
     val isExpanded = remember {
         mutableStateOf(false)
     }
+
+    val composition by rememberLottieComposition(spec = LottieCompositionSpec.RawRes(R.raw.empty_box))
 
     LaunchedEffect(date) {
         viewModel.onTriggerEvent(ActivityListEvent.DayChangeEvent(date = date))
@@ -93,14 +99,15 @@ fun ActivitiesListScreen(
                             modifier = Modifier.fillMaxSize(),
                             horizontalAlignment = Alignment.CenterHorizontally
                         ) {
-                            GifImage(
-                                imageID = R.drawable.travolta,
+                            LottieAnimation(
+                                composition = composition,
+                                iterations = LottieConstants.IterateForever,
                                 modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(all = 64.dp)
+                                    .size(size = 200.dp)
+                                    .padding(all = 16.dp)
                             )
                             Text(
-                                text = "Non ci sono interventi da mostrare",
+                                text = stringResource(R.string.no_interventi),
                                 style = MaterialTheme.typography.bodyLarge
                             )
                         }
