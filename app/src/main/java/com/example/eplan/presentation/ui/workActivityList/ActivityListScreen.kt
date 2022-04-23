@@ -48,7 +48,7 @@ fun ActivitiesListScreen(
 
     val composition by rememberLottieComposition(spec = LottieCompositionSpec.RawRes(R.raw.empty_box))
 
-    LaunchedEffect(date) {
+    LaunchedEffect(key1 = true) {
         viewModel.onTriggerEvent(ActivityListEvent.DayChangeEvent(date = date))
     }
 
