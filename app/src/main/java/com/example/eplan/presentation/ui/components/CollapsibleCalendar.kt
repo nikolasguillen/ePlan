@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -53,7 +54,7 @@ fun CollapsibleCalendar(
                 if (state) -180F else 0F
             }
             Icon(
-                imageVector = Icons.Filled.KeyboardArrowUp,
+                imageVector = Icons.Filled.KeyboardArrowDown,
                 contentDescription = "Apri o chiudi il calendario",
                 modifier = Modifier.rotate(rotation)
             )

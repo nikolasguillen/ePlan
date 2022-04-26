@@ -43,7 +43,7 @@ class MainActivity : AppCompatActivity() {
 
         WindowCompat.setDecorFitsSystemWindows(window, false)
 
-        setContent() {
+        setContent {
 
             val navController = rememberNavController()
             val systemUiController = rememberSystemUiController()
