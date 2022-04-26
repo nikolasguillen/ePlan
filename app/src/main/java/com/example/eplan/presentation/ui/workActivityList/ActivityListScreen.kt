@@ -5,22 +5,23 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
-import androidx.compose.material3.*
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
-import com.airbnb.lottie.compose.LottieAnimation
-import com.airbnb.lottie.compose.LottieCompositionSpec
-import com.airbnb.lottie.compose.LottieConstants
-import com.airbnb.lottie.compose.rememberLottieComposition
 import com.example.eplan.R
 import com.example.eplan.presentation.navigation.NestedNavGraphs
 import com.example.eplan.presentation.navigation.Screen
-import com.example.eplan.presentation.ui.components.*
+import com.example.eplan.presentation.ui.components.ActivitiesList
+import com.example.eplan.presentation.ui.components.CollapsibleCalendar
+import com.example.eplan.presentation.ui.components.MultiFloatingActionButton
+import com.example.eplan.presentation.ui.components.TopBar
 import com.example.eplan.presentation.util.bottomNavPadding
 import java.time.LocalDate
 
@@ -36,7 +37,7 @@ fun ActivitiesListScreen(
 
     val date = viewModel.date.value
 
-    val loading = viewModel.loading.value
+    val isRefreshing by viewModel.isRefreshing.collectAsState()
 
     val calendarVisibility = remember { mutableStateOf(false) }
 
@@ -45,8 +46,6 @@ fun ActivitiesListScreen(
     val isExpanded = remember {
         mutableStateOf(false)
     }
-
-    val composition by rememberLottieComposition(spec = LottieCompositionSpec.RawRes(R.raw.empty_box))
 
     LaunchedEffect(key1 = true) {
         viewModel.onTriggerEvent(ActivityListEvent.DayChangeEvent(date = date))
@@ -89,35 +88,18 @@ fun ActivitiesListScreen(
                     }
                 )
 
-                if (loading) {
-                    repeat(3) {
-                        PlaceholderCard()
-                    }
-                } else {
-                    if (workActivities.value.isEmpty()) {
-                        Column(
-                            modifier = Modifier.fillMaxSize(),
-                            horizontalAlignment = Alignment.CenterHorizontally
-                        ) {
-                            LottieAnimation(
-                                composition = composition,
-                                iterations = LottieConstants.IterateForever,
-                                modifier = Modifier
-                                    .size(size = 200.dp)
-                                    .padding(all = 16.dp)
+                ActivitiesList(
+                    workActivities = workActivities.value,
+                    onNavigateToActivityDetailScreen = onNavigate,
+                    isRefreshing = isRefreshing,
+                    onRefresh = {
+                        viewModel.onTriggerEvent(
+                            ActivityListEvent.DayChangeEvent(
+                                date = date
                             )
-                            Text(
-                                text = stringResource(R.string.no_interventi),
-                                style = MaterialTheme.typography.bodyLarge
-                            )
-                        }
-                    } else {
-                        ActivitiesList(
-                            workActivities = workActivities.value,
-                            onNavigateToActivityDetailScreen = onNavigate
                         )
                     }
-                }
+                )
             }
 
             // Ombra per quando apro il multi action FAB

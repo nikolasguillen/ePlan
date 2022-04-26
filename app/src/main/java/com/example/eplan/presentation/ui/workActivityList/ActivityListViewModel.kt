@@ -15,8 +15,7 @@ import com.example.eplan.presentation.ui.workActivityList.ActivityListEvent.Rest
 import com.example.eplan.presentation.util.TAG
 import com.example.eplan.presentation.util.USER_TOKEN
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import java.time.LocalDate
 import java.time.LocalTime
@@ -39,6 +38,11 @@ constructor(
     private var userToken = USER_TOKEN
 
     val loading = mutableStateOf(false)
+
+    private val _isRefreshing = MutableStateFlow(false)
+
+    val isRefreshing: StateFlow<Boolean>
+        get() = _isRefreshing.asStateFlow()
 
     val date = mutableStateOf(LocalDate.now().toString())
 
@@ -88,6 +92,7 @@ constructor(
         dayChange.execute(token = userToken, query = date.value)
             .onEach { dataState ->
                 loading.value = dataState.loading
+                _isRefreshing.value = dataState.loading
 
                 dataState.data?.let { list ->
                     workActivities.value = list

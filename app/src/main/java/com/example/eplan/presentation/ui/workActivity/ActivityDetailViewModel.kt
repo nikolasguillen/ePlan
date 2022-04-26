@@ -174,7 +174,6 @@ constructor(
                     dataState.error?.let { error ->
                         Log.e(TAG, "updateActivity: $error")
                         this.error = error
-                        //TODO gestire errori
                     }
                 }.launchIn(viewModelScope)
         }

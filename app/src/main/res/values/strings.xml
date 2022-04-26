@@ -33,5 +33,6 @@
     <string name="ripristina">Ripristina</string>
     <string name="orario_inizio">Orario inizio</string>
     <string name="orario_fine">Orario fine</string>
-    <string name="no_interventi">Non ci sono interventi da mostrare</string>
+    <string name="no_interventi">Non ci sono interventi da mostrare.</string>
+    <string name="swipe_to_refresh">Trascina verso il basso per aggiornare oppure seleziona un\'altra giornata.</string>
 </resources>
