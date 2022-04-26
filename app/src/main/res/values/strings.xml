@@ -35,4 +35,5 @@
     <string name="orario_fine">Orario fine</string>
     <string name="no_interventi">Non ci sono interventi da mostrare.</string>
     <string name="swipe_to_refresh">Trascina verso il basso per aggiornare oppure seleziona un\'altra giornata.</string>
+    <string name="logout">Logout</string>
 </resources>

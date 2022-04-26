@@ -69,7 +69,5 @@ constructor(
                 // TODO Gestire errori
             }
         }.launchIn(viewModelScope)
-
-        Log.d(TAG, "status and message: ${statusCode.value}, ${message.value}")
     }
 }

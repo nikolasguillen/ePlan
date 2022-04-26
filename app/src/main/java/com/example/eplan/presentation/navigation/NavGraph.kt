@@ -14,6 +14,7 @@ import androidx.navigation.navArgument
 import androidx.navigation.navigation
 import com.example.eplan.presentation.navigation.NestedNavGraphs.*
 import com.example.eplan.presentation.ui.account.AccountScreen
+import com.example.eplan.presentation.ui.account.AccountViewModel
 import com.example.eplan.presentation.ui.appointmentList.AppointmentListScreen
 import com.example.eplan.presentation.ui.appointmentList.AppointmentListViewModel
 import com.example.eplan.presentation.ui.login.LoginEvent.LoginAttemptEvent
@@ -143,11 +144,17 @@ fun NavGraph(navController: NavHostController) {
                 route = AccountGraph.route
             ) {
                 composable(route = Screen.Account.route) {
+                    val viewModel = hiltViewModel<AccountViewModel>()
                     AccountScreen(
+                        viewModel = viewModel,
                         onBackPressed = navController::popBackStack,
                         toProfile = {},
                         toAppInfo = {},
-                        toSettings = {}
+                        toSettings = {},
+                        logout = {
+                            navController.popBackStack(route = LoginGraph.startDestination, inclusive = true)
+                            navController.navigate(route = LoginGraph.startDestination)
+                        }
                     )
                 }
             }

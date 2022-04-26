@@ -119,17 +119,24 @@ dependencies {
     implementation("androidx.room:room-ktx:$roomVersion")
 
     // Accompanist dependencies
-    def accompanist_version = "0.24.5-alpha"
+    def accompanist_version = "0.24.7-alpha"
+    implementation "com.google.accompanist:accompanist-swiperefresh:$accompanist_version"
+    implementation "com.google.accompanist:accompanist-navigation-animation:$accompanist_version"
+    implementation "com.google.accompanist:accompanist-systemuicontroller:$accompanist_version"
+    implementation "com.google.accompanist:accompanist-placeholder-material:$accompanist_version"
+    implementation "com.google.accompanist:accompanist-permissions:$accompanist_version"
+
+    // CameraX
+    def camerax_version = "1.1.0-beta03"
+
+    implementation "androidx.camera:camera-camera2:$camerax_version"
+    implementation "androidx.camera:camera-lifecycle:$camerax_version"
+    implementation "androidx.camera:camera-view:$camerax_version"
 
     // DataStore dependencies
     def dataStore_version = "1.0.0"
     implementation("androidx.datastore:datastore:$dataStore_version")
     implementation("androidx.datastore:datastore-preferences:$dataStore_version")
-
-    implementation "com.google.accompanist:accompanist-swiperefresh:$accompanist_version"
-    implementation "com.google.accompanist:accompanist-navigation-animation:$accompanist_version"
-    implementation "com.google.accompanist:accompanist-systemuicontroller:$accompanist_version"
-    implementation "com.google.accompanist:accompanist-placeholder-material:$accompanist_version"
 
     def nav_version = "2.4.2"
 
