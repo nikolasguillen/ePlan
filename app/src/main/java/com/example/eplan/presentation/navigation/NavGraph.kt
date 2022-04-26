@@ -1,16 +1,17 @@
 package com.example.eplan.presentation.navigation
 
-import android.util.Log
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.*
+import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.navArgument
+import androidx.navigation.navigation
 import com.example.eplan.presentation.navigation.NestedNavGraphs.*
 import com.example.eplan.presentation.ui.account.AccountScreen
 import com.example.eplan.presentation.ui.appointmentList.AppointmentListScreen
@@ -22,11 +23,10 @@ import com.example.eplan.presentation.ui.workActivity.ActivityDetailEvent.Delete
 import com.example.eplan.presentation.ui.workActivity.ActivityDetailEvent.UpdateActivityEvent
 import com.example.eplan.presentation.ui.workActivity.ActivityDetailViewModel
 import com.example.eplan.presentation.ui.workActivity.ActivityDetailsScreen
-import com.example.eplan.presentation.ui.workActivityRecord.ActivityRecordScreen
 import com.example.eplan.presentation.ui.workActivityList.ActivitiesListScreen
 import com.example.eplan.presentation.ui.workActivityList.ActivityListViewModel
+import com.example.eplan.presentation.ui.workActivityRecord.ActivityRecordScreen
 import com.example.eplan.presentation.ui.workActivityRecord.ActivityRecordViewModel
-import com.example.eplan.presentation.util.TAG
 import java.time.LocalDate
 import java.time.LocalTime
 
@@ -105,7 +105,6 @@ fun NavGraph(navController: NavHostController) {
                         viewModel = viewModel,
                         onSavePressed = {
                             viewModel.onTriggerEvent(UpdateActivityEvent)
-//                            navController.popBackStack()
 
                         },
                         onBackPressed = navController::popBackStack,

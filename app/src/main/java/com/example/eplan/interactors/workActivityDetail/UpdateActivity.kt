@@ -30,7 +30,7 @@ constructor(
     ): Flow<DataState<Boolean>> = flow {
         try {
 
-            if (acceptableTimeInterval(start = workActivity.start, end = workActivity.end)) {
+            if (!acceptableTimeInterval(start = workActivity.start, end = workActivity.end)) {
                 emit(DataState.error("L'ora di fine intervento deve essere successiva a quella di inizio!"))
             } else {
                 emit(DataState.loading())

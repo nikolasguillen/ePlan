@@ -34,9 +34,7 @@ fun WorkActivityDetail(
 
     val keyboardController = LocalSoftwareKeyboardController.current
 
-    val workActivity = viewModel.workActivity.value
-
-    if (workActivity != null) {
+    viewModel.workActivity.value?.let { workActivity ->
         Column(
             modifier = Modifier
                 .fillMaxSize()
