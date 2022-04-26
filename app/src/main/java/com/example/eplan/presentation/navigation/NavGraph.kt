@@ -105,7 +105,8 @@ fun NavGraph(navController: NavHostController) {
                         viewModel = viewModel,
                         onSavePressed = {
                             viewModel.onTriggerEvent(UpdateActivityEvent)
-                            navController.popBackStack()
+//                            navController.popBackStack()
+
                         },
                         onBackPressed = navController::popBackStack,
                         onDeletePressed = {
@@ -113,8 +114,12 @@ fun NavGraph(navController: NavHostController) {
                             navController.popBackStack()
                         },
                         date = LocalDate.parse(navBackStackEntry.arguments?.getString("date")),
-                        start = if (navBackStackEntry.arguments?.getString("start") == null) null else LocalTime.parse(navBackStackEntry.arguments?.getString("start")),
-                        end = if (navBackStackEntry.arguments?.getString("end") == null) null else LocalTime.parse(navBackStackEntry.arguments?.getString("end"))
+                        start = if (navBackStackEntry.arguments?.getString("start") == null) null else LocalTime.parse(
+                            navBackStackEntry.arguments?.getString("start")
+                        ),
+                        end = if (navBackStackEntry.arguments?.getString("end") == null) null else LocalTime.parse(
+                            navBackStackEntry.arguments?.getString("end")
+                        )
                     )
                 }
             }

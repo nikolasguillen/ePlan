@@ -1,6 +1,5 @@
 package com.example.eplan.presentation.ui.workActivity
 
-import android.util.Log
 import android.widget.Toast
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Arrangement
@@ -14,6 +13,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
@@ -22,15 +22,13 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.navigation.compose.rememberNavController
 import com.example.eplan.R
 import com.example.eplan.domain.model.WorkActivity
 import com.example.eplan.presentation.ui.components.BottomSaveBar
 import com.example.eplan.presentation.ui.components.PlaceholderDetails
 import com.example.eplan.presentation.ui.components.WorkActivityDetail
 import com.example.eplan.presentation.ui.workActivity.ActivityDetailEvent.GetActivityEvent
-import com.example.eplan.presentation.util.TAG
-import com.example.eplan.presentation.util.acceptableTimeInterval
+import kotlinx.coroutines.launch
 import java.time.LocalDate
 import java.time.LocalTime
 
@@ -48,8 +46,6 @@ fun ActivityDetailsScreen(
     onDeletePressed: () -> Unit
 ) {
 
-    val workActivity = viewModel.workActivity
-
     if (activityId != "null") {
         // Evita di rifare la chiamata API ad ogni recomposition
         val onLoad = viewModel.onLoad.value
@@ -60,20 +56,29 @@ fun ActivityDetailsScreen(
     } else {
         if (start != null && end != null) {
             val temp = WorkActivity(date = date, start = start, end = end)
+//            viewModel.initialState.value = WorkActivity()
+            viewModel.workActivity.value = WorkActivity()
+            viewModel.updateDate(date = date)
+            viewModel.updateStart(time = start)
+            viewModel.updateEnd(time = end)
             viewModel.initialState.value = temp
-            workActivity.value = temp
         } else {
             val temp = WorkActivity(date = date)
-            viewModel.initialState.value = temp
-            workActivity.value = temp
+            viewModel.createManualActivity(date = date)
         }
     }
+
+    val workActivity = viewModel.workActivity
 
     val loading = viewModel.loading.value
 
     val keyboardController = LocalSoftwareKeyboardController.current
 
     val backDialog = remember { mutableStateOf(false) }
+
+    val scope = rememberCoroutineScope()
+
+    val snackBarHostState = remember { SnackbarHostState() }
 
     val toast = Toast.makeText(
         LocalContext.current,
@@ -165,23 +170,31 @@ fun ActivityDetailsScreen(
             bottomBar = {
                 BottomSaveBar(onClick = {
                     if (!loading) {
-                        onSaveClick(
-                            saveAction = onSavePressed,
-                            saveCondition = {
-                                acceptableTimeInterval(
-                                    workActivity.value?.start,
-                                    workActivity.value?.end
-                                )
-                            },
-                            elseBranch = {
-                                toast.cancel()
-                                toast.setText(R.string.errore_orario)
-                                toast.show()
+//                        onSaveClick(
+//                            saveAction = onSavePressed,
+//                            saveCondition = {
+////                                acceptableTimeInterval(
+////                                    workActivity.value?.start,
+////                                    workActivity.value?.end
+////                                )
+//                                            true
+//                            },
+//                            elseBranch = {
+//                                toast.cancel()
+//                                toast.setText(R.string.errore_orario)
+//                                toast.show()
+//                            }
+//                        )
+                        onSavePressed()
+                        if (viewModel.error != null) {
+                            scope.launch {
+                                snackBarHostState.showSnackbar(message = viewModel.error!!)
                             }
-                        )
+                        }
                     }
                 })
             },
+            snackbarHost = { SnackbarHost(hostState = snackBarHostState) },
             content = { paddingValues ->
                 BackHandler(enabled = true) {
                     if (viewModel.checkChanges()) {
@@ -195,14 +208,12 @@ fun ActivityDetailsScreen(
                 if (loading) {
                     PlaceholderDetails()
                 } else {
-                    workActivity.value?.let {
                         WorkActivityDetail(
                             viewModel = viewModel,
-                            workActivity = it,
                             topPadding = paddingValues.calculateTopPadding(),
                             bottomPadding = paddingValues.calculateBottomPadding()
                         )
-                    }
+
                 }
             }
         )
@@ -239,10 +250,13 @@ private fun onSaveClick(
     saveAction: () -> Unit,
     saveCondition: () -> Boolean,
     elseBranch: () -> Unit
-) {
-    if (saveCondition()) {
-        saveAction()
-    } else {
-        elseBranch()
-    }
+): Boolean {
+//    if (saveCondition()) {
+//        saveAction()
+//    } else {
+//        elseBranch()
+//    }
+    saveAction()
+    return true
 }
+

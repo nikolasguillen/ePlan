@@ -51,6 +51,16 @@ constructor(
     var workActivity: MutableState<WorkActivity?> = mutableStateOf(null)
         private set
 
+    fun createManualActivity(date: LocalDate) {
+        workActivity.value = WorkActivity(date = date)
+        initialState.value = WorkActivity(date = date)
+    }
+
+    fun createRecordedActivity(date: LocalDate, start: LocalTime, end: LocalTime) {
+        workActivity.value = WorkActivity(date = date, start = start, end = end)
+        initialState.value = WorkActivity(date = date, start = start, end = end)
+    }
+
     fun updateTitle(title: String) {
         workActivity.value = workActivity.value?.copy(title = title)
     }
@@ -65,6 +75,7 @@ constructor(
 
     fun updateStart(time: LocalTime) {
         workActivity.value = workActivity.value?.copy(start = time)
+        Log.d(TAG, workActivity.value!!.start.toString())
     }
 
     fun updateEnd(time: LocalTime) {
@@ -149,6 +160,7 @@ constructor(
     }
 
     private fun updateActivity() {
+        this.error = null
         workActivity.value?.let {
 
             updateActivity.execute(token = userToken, workActivity = it)
@@ -161,6 +173,7 @@ constructor(
 
                     dataState.error?.let { error ->
                         Log.e(TAG, "updateActivity: $error")
+                        this.error = error
                         //TODO gestire errori
                     }
                 }.launchIn(viewModelScope)
