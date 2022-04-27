@@ -24,6 +24,7 @@ import com.example.eplan.presentation.ui.workActivity.ActivityDetailEvent.Delete
 import com.example.eplan.presentation.ui.workActivity.ActivityDetailEvent.UpdateActivityEvent
 import com.example.eplan.presentation.ui.workActivity.ActivityDetailViewModel
 import com.example.eplan.presentation.ui.workActivity.ActivityDetailsScreen
+import com.example.eplan.presentation.ui.workActivity.ActivityFormEvent
 import com.example.eplan.presentation.ui.workActivityList.ActivitiesListScreen
 import com.example.eplan.presentation.ui.workActivityList.ActivityListViewModel
 import com.example.eplan.presentation.ui.workActivityRecord.ActivityRecordScreen
@@ -105,7 +106,7 @@ fun NavGraph(navController: NavHostController) {
                         activityId = navBackStackEntry.arguments?.getString("activityId")!!,
                         viewModel = viewModel,
                         onSavePressed = {
-                            viewModel.onTriggerEvent(UpdateActivityEvent)
+                            viewModel.onFormEvent(ActivityFormEvent.Submit)
 
                         },
                         onBackPressed = navController::popBackStack,

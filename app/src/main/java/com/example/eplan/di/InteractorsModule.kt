@@ -5,6 +5,8 @@ import com.example.eplan.interactors.GetToken
 import com.example.eplan.interactors.login.LoginAttempt
 import com.example.eplan.interactors.workActivityDetail.GetById
 import com.example.eplan.interactors.workActivityDetail.UpdateActivity
+import com.example.eplan.interactors.workActivityDetail.ValidateDescription
+import com.example.eplan.interactors.workActivityDetail.ValidateTime
 import com.example.eplan.interactors.workActivityList.DayChange
 import com.example.eplan.network.LoginService
 import com.example.eplan.network.WorkActivityService
@@ -57,7 +59,7 @@ object InteractorsModule {
 
     @ViewModelScoped
     @Provides
-    fun provideSendWorkActivity(
+    fun provideSubmitWorkActivity(
         service: WorkActivityService,
         mapper: WorkActivityDtoMapper
     ): UpdateActivity {
@@ -65,6 +67,18 @@ object InteractorsModule {
             service = service,
             mapper = mapper
         )
+    }
+
+    @ViewModelScoped
+    @Provides
+    fun provideValidateDescription(): ValidateDescription {
+        return ValidateDescription()
+    }
+
+    @ViewModelScoped
+    @Provides
+    fun provideValidateTime(): ValidateTime {
+        return ValidateTime()
     }
 
     @ViewModelScoped
