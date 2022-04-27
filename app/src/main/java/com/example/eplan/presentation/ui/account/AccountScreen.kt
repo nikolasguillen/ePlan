@@ -1,5 +1,6 @@
 package com.example.eplan.presentation.ui.account
 
+import android.util.Log
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -20,6 +21,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.example.eplan.R
+import com.example.eplan.presentation.ui.components.CameraView
+import com.example.eplan.presentation.util.TAG
 import com.google.accompanist.permissions.*
 
 const val name = "Nikolas"
@@ -67,7 +70,12 @@ fun AccountScreen(
             ) {
 
                 if (show.value) {
-                    FeatureThatRequiresCameraPermission(cameraPermissionState)
+                    CameraView(onImageCaptured = { uri, fromGallery ->
+                        Log.d(TAG, "Image Uri Captured from Camera View")
+//Todo : use the uri as needed
+
+                    }, onError = { imageCaptureException ->
+                    })
                 }
 
                 val rowModifier = Modifier.fillMaxWidth()
@@ -86,9 +94,12 @@ fun AccountScreen(
                             .size(72.dp)
                             .clip(CircleShape)
                             .clickable {
-                                when(cameraPermissionState.status) {
+                                when (cameraPermissionState.status) {
                                     PermissionStatus.Granted -> {
-
+                                        show.value = !show.value
+                                    }
+                                    else -> {
+                                        cameraPermissionState.launchPermissionRequest()
                                     }
                                 }
                             }
