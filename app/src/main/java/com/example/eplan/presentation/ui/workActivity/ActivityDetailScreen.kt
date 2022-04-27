@@ -55,7 +55,6 @@ fun ActivityDetailsScreen(
                 }
                 is ActivityDetailViewModel.ValidationEvent.RetrieveError -> {
                     snackBarHostState.showSnackbar(message = event.error)
-                    delay(2000)
                     onBackPressed()
                 }
             }
@@ -148,40 +147,39 @@ fun ActivityDetailsScreen(
                 )
 
             }
-        }
-    )
 
-    if (sending) {
-        Dialog(onDismissRequest = {}) {
-            SendAnimation()
-        }
-    }
-
-
-    if (backDialog.value) {
-        AlertDialog(
-            onDismissRequest = {
-                backDialog.value = false
-            },
-            title = { Text(text = stringResource(R.string.chiudi_senza_salvare)) },
-            confirmButton = {
-                TextButton(onClick = {
-                    backDialog.value = false
-                    onBackPressed()
-                }
-                ) {
-                    Text(text = stringResource(R.string.conferma))
-                }
-            },
-            dismissButton = {
-                TextButton(onClick = {
-                    backDialog.value = false
-                }
-                ) {
-                    Text(text = stringResource(R.string.annulla))
+            if (sending) {
+                Dialog(onDismissRequest = {}) {
+                    SendAnimation()
                 }
             }
-        )
-    }
+
+            if (backDialog.value) {
+                AlertDialog(
+                    onDismissRequest = {
+                        backDialog.value = false
+                    },
+                    title = { Text(text = stringResource(R.string.chiudi_senza_salvare)) },
+                    confirmButton = {
+                        TextButton(onClick = {
+                            backDialog.value = false
+                            onBackPressed()
+                        }
+                        ) {
+                            Text(text = stringResource(R.string.conferma))
+                        }
+                    },
+                    dismissButton = {
+                        TextButton(onClick = {
+                            backDialog.value = false
+                        }
+                        ) {
+                            Text(text = stringResource(R.string.annulla))
+                        }
+                    }
+                )
+            }
+        }
+    )
 }
 

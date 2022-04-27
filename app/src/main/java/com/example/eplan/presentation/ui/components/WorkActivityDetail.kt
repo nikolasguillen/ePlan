@@ -1,6 +1,5 @@
 package com.example.eplan.presentation.ui.components
 
-import android.util.Log
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardActions
@@ -11,7 +10,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
@@ -24,8 +22,6 @@ import androidx.compose.ui.unit.dp
 import com.example.eplan.R
 import com.example.eplan.presentation.ui.workActivity.ActivityDetailViewModel
 import com.example.eplan.presentation.ui.workActivity.ActivityFormEvent
-import com.example.eplan.presentation.util.TAG
-import com.example.eplan.presentation.util.fromDateToLocalDate
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class)
 @Composable

@@ -67,7 +67,8 @@ constructor(
                 workActivity.value = workActivity.value?.copy(description = event.description)
             }
             is ActivityFormEvent.DateChanged -> {
-                workActivity.value = workActivity.value?.copy(date = fromDateToLocalDate(event.date))
+                workActivity.value =
+                    workActivity.value?.copy(date = fromDateToLocalDate(event.date))
             }
             is ActivityFormEvent.StartChanged -> {
                 workActivity.value = workActivity.value?.copy(start = event.time)
@@ -98,7 +99,7 @@ constructor(
     }
 
     fun checkChanges(): Boolean {
-        return initialState.value != workActivity.value
+        return workActivity.value != initialState.value
     }
 
     init {
@@ -128,22 +129,17 @@ constructor(
 
     fun onTriggerEvent(event: ActivityDetailEvent) {
 
-        viewModelScope.launch {
-            try {
-                when (event) {
-                    is GetActivityEvent -> {
-                        setQuery(event.id)
-                        getActivity()
-                    }
-                    is UpdateActivityEvent -> {
-                        updateActivity()
-                    }
-                    is DeleteActivityEvent -> {
-                        deleteActivity()
-                    }
-                }
-            } catch (e: Exception) {
-                Log.e("ActivityDetailViewModel", "onTriggerEvent: Exception $e, ${e.cause}")
+
+        when (event) {
+            is GetActivityEvent -> {
+                setQuery(event.id)
+                getActivity()
+            }
+            is UpdateActivityEvent -> {
+                updateActivity()
+            }
+            is DeleteActivityEvent -> {
+                deleteActivity()
             }
         }
     }
@@ -166,7 +162,6 @@ constructor(
     }
 
     private fun getActivity() {
-        resetActivity()
 
         if (userToken != USER_TOKEN) {
             getById.execute(token = userToken, id = query.value).onEach { dataState ->
@@ -195,7 +190,6 @@ constructor(
                     dataState.data?.let { result ->
                         if (result) {
                             validationEventChannel.send(ValidationEvent.Success)
-                            resetActivity()
                         }
                     }
 
@@ -211,13 +205,7 @@ constructor(
         workActivity.value?.let {
             //TODO
         }
-        resetActivity()
         savedStateHandle.remove<String>(STATE_KEY_ACTIVITY)
-    }
-
-    private fun resetActivity() {
-        workActivity.value = null
-        initialState.value = null
     }
 
     private fun setQuery(query: String) {
