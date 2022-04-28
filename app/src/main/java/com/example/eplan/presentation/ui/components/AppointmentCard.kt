@@ -16,6 +16,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.example.eplan.domain.model.Appointment
 import com.example.eplan.domain.util.toJson
+import com.example.eplan.presentation.util.spacing
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -26,14 +27,14 @@ fun AppointmentCard(
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = 10.dp, vertical = 5.dp)
-            .clip(RoundedCornerShape(11.dp))
+            .clip(MaterialTheme.shapes.medium)
             .clickable {
+                //TODO aggiornare al nuovo modo
                 val argument = appointment.toJson()
                 navController.navigate("appointmentDetails/$argument")
             },
     ) {
-        Column(modifier = Modifier.padding(16.dp)) {
+        Column(modifier = Modifier.padding(MaterialTheme.spacing.medium)) {
             Text(
                 text = appointment.activity.replaceFirstChar { it.uppercase() },
                 style = MaterialTheme.typography.titleMedium
@@ -41,7 +42,7 @@ fun AppointmentCard(
             Text(
                 text = appointment.description.replaceFirstChar { it.uppercase() },
                 style = MaterialTheme.typography.bodyMedium,
-                modifier = Modifier.padding(bottom = 3.dp)
+                modifier = Modifier.padding(bottom = MaterialTheme.spacing.extraSmall)
             )
             Text(text = appointment.start, style = MaterialTheme.typography.labelSmall)
             Text(text = appointment.end, style = MaterialTheme.typography.labelSmall)

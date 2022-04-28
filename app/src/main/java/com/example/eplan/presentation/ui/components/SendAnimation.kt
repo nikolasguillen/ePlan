@@ -1,6 +1,5 @@
 package com.example.eplan.presentation.ui.components
 
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -22,6 +21,5 @@ fun SendAnimation() {
         iterations = LottieConstants.IterateForever,
         modifier = Modifier
             .size(size = 200.dp)
-            .padding(all = 16.dp)
     )
 }

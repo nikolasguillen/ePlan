@@ -1,16 +1,12 @@
 package com.example.eplan.presentation.ui.components
 
-import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.animateFloat
 import androidx.compose.animation.core.updateTransition
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Create
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.rounded.Add
@@ -23,8 +19,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
 import com.example.eplan.R
+import com.example.eplan.presentation.util.spacing
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -50,42 +46,52 @@ fun MultiFloatingActionButton(
             Column(
                 modifier = Modifier
                     .wrapContentSize()
-                    .padding(bottom = 16.dp),
+                    .padding(bottom = MaterialTheme.spacing.medium),
                 horizontalAlignment = Alignment.End,
-                verticalArrangement = Arrangement.spacedBy(16.dp)
+                verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.medium)
             ) {
                 Row(
-                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    horizontalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.small),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Card() {
                         Text(
-                            text = "Registra intervento",
+                            text = stringResource(R.string.registra_intervento),
                             style = MaterialTheme.typography.labelLarge,
-                            modifier = Modifier.padding(all = 6.dp)
+                            modifier = Modifier.padding(all = MaterialTheme.spacing.small)
                         )
                     }
                     SmallFloatingActionButton(
                         onClick = { onRecordClick() }
                     ) {
-                        Icon(imageVector = Icons.Filled.PlayArrow, contentDescription = "")
+                        Icon(
+                            imageVector = Icons.Filled.PlayArrow,
+                            contentDescription = stringResource(
+                                id = R.string.registra_intervento
+                            )
+                        )
                     }
                 }
                 Row(
-                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    horizontalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.small),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Card() {
                         Text(
-                            text = "Inserisci manualmente",
+                            text = stringResource(R.string.inserisci_manualmente),
                             style = MaterialTheme.typography.labelLarge,
-                            modifier = Modifier.padding(all = 6.dp)
+                            modifier = Modifier.padding(all = MaterialTheme.spacing.small)
                         )
                     }
                     SmallFloatingActionButton(
                         onClick = { onAddClick() }
                     ) {
-                        Icon(imageVector = Icons.Filled.Create, contentDescription = "")
+                        Icon(
+                            imageVector = Icons.Filled.Create,
+                            contentDescription = stringResource(
+                                id = R.string.inserisci_manualmente
+                            )
+                        )
                     }
                 }
             }

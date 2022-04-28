@@ -1,12 +1,9 @@
 package com.example.eplan.presentation.ui.components
 
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
 import com.example.eplan.R
-import com.example.eplan.presentation.util.fromLocalTimeToString
 import com.example.eplan.presentation.util.fromStringToLocalTime
 import com.vanpra.composematerialdialogs.MaterialDialog
 import com.vanpra.composematerialdialogs.MaterialDialogState
@@ -37,7 +34,7 @@ fun CustomTimePicker(startTime: String, dialogState: MaterialDialogState, onClic
                 )
             },
             backgroundColor = MaterialTheme.colorScheme.secondaryContainer,
-            shape = RoundedCornerShape(11.dp)
+            shape = MaterialTheme.shapes.medium
         ) {
             timepicker(
                 title = stringResource(R.string.seleziona_orario),

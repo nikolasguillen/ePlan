@@ -4,9 +4,12 @@ import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.SideEffect
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import com.example.eplan.presentation.util.LocalSpacing
+import com.example.eplan.presentation.util.Spacing
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 
 private val LightThemeColors = lightColorScheme(
@@ -86,9 +89,12 @@ fun AppTheme(
             DarkThemeColors
         }
     }
-    MaterialTheme(
-        content = content,
-        colorScheme = colorScheme,
-        typography = AppTypography
-    )
+
+    CompositionLocalProvider(LocalSpacing provides Spacing()) {
+        MaterialTheme(
+            content = content,
+            colorScheme = colorScheme,
+            typography = AppTypography
+        )
+    }
 }

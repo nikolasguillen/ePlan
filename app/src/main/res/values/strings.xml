@@ -36,4 +36,6 @@
     <string name="no_interventi">Non ci sono interventi da mostrare.</string>
     <string name="swipe_to_refresh">Trascina verso il basso per aggiornare oppure seleziona un\'altra giornata.</string>
     <string name="logout">Logout</string>
+    <string name="registra_intervento">Registra intervento</string>
+    <string name="inserisci_manualmente">Inserisci manualmente</string>
 </resources>

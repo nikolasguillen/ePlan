@@ -21,7 +21,6 @@ import com.example.eplan.presentation.ui.login.LoginEvent.LoginAttemptEvent
 import com.example.eplan.presentation.ui.login.LoginScreen
 import com.example.eplan.presentation.ui.login.LoginViewModel
 import com.example.eplan.presentation.ui.workActivity.ActivityDetailEvent.DeleteActivityEvent
-import com.example.eplan.presentation.ui.workActivity.ActivityDetailEvent.UpdateActivityEvent
 import com.example.eplan.presentation.ui.workActivity.ActivityDetailViewModel
 import com.example.eplan.presentation.ui.workActivity.ActivityDetailsScreen
 import com.example.eplan.presentation.ui.workActivity.ActivityFormEvent

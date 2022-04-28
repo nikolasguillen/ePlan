@@ -23,6 +23,7 @@ import androidx.navigation.NavHostController
 import com.example.eplan.R
 import com.example.eplan.presentation.ui.components.CameraView
 import com.example.eplan.presentation.util.TAG
+import com.example.eplan.presentation.util.spacing
 import com.google.accompanist.permissions.*
 
 const val name = "Nikolas"
@@ -79,8 +80,16 @@ fun AccountScreen(
                 }
 
                 val rowModifier = Modifier.fillMaxWidth()
-                val textModifier = Modifier.padding(end = 16.dp, top = 8.dp, bottom = 8.dp)
-                val iconModifier = Modifier.padding(start = 16.dp, top = 8.dp, bottom = 8.dp)
+                val textModifier = Modifier.padding(
+                    end = MaterialTheme.spacing.medium,
+                    top = MaterialTheme.spacing.small,
+                    bottom = MaterialTheme.spacing.small
+                )
+                val iconModifier = Modifier.padding(
+                    start = MaterialTheme.spacing.medium,
+                    top = MaterialTheme.spacing.small,
+                    bottom = MaterialTheme.spacing.small
+                )
 
                 Row(
                     horizontalArrangement = Arrangement.Start,
@@ -91,7 +100,7 @@ fun AccountScreen(
                         imageVector = Icons.Filled.AccountCircle,
                         contentDescription = stringResource(R.string.profilo),
                         modifier = iconModifier
-                            .size(72.dp)
+                            .size(MaterialTheme.spacing.extraLarge)
                             .clip(CircleShape)
                             .clickable {
                                 when (cameraPermissionState.status) {
@@ -104,7 +113,7 @@ fun AccountScreen(
                                 }
                             }
                     )
-                    Spacer(modifier = Modifier.width(16.dp))
+                    Spacer(modifier = Modifier.width(MaterialTheme.spacing.medium))
                     Text(
                         text = stringResource(R.string.profilo),
                         style = MaterialTheme.typography.headlineMedium,
@@ -122,7 +131,7 @@ fun AccountScreen(
                         contentDescription = stringResource(R.string.impostazioni),
                         modifier = iconModifier
                     )
-                    Spacer(modifier = Modifier.width(16.dp))
+                    Spacer(modifier = Modifier.width(MaterialTheme.spacing.medium))
                     Text(
                         text = stringResource(R.string.impostazioni),
                         style = MaterialTheme.typography.headlineMedium,
@@ -140,7 +149,7 @@ fun AccountScreen(
                         contentDescription = stringResource(R.string.app_info),
                         modifier = iconModifier
                     )
-                    Spacer(modifier = Modifier.width(16.dp))
+                    Spacer(modifier = Modifier.width(MaterialTheme.spacing.medium))
                     Text(
                         text = stringResource(R.string.app_info),
                         style = MaterialTheme.typography.headlineMedium,

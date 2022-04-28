@@ -4,7 +4,6 @@ import android.widget.CalendarView
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.animateFloat
 import androidx.compose.animation.core.updateTransition
-import androidx.compose.animation.slideInVertically
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -12,7 +11,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowDown
-import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -23,8 +21,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
-import com.example.eplan.presentation.ui.workActivityList.ActivityListEvent
 import com.example.eplan.presentation.util.fromLocalDateToDate
+import com.example.eplan.presentation.util.spacing
 import com.example.eplan.presentation.util.toLiteralDateParser
 import java.time.LocalDate
 
@@ -39,7 +37,7 @@ fun CollapsibleCalendar(
             modifier = Modifier
                 .fillMaxWidth()
                 .clickable { calendarVisibility.value = !calendarVisibility.value }
-                .padding(16.dp)
+                .padding(MaterialTheme.spacing.medium)
         ) {
             Text(
                 text = toLiteralDateParser(date = date),
@@ -60,7 +58,7 @@ fun CollapsibleCalendar(
             )
         }
         AnimatedVisibility(visible = calendarVisibility.value) {
-            Calendar (
+            Calendar(
                 date = date,
                 onDayChange = onDayChange
             )

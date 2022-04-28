@@ -14,7 +14,8 @@ import coil.decode.ImageDecoderDecoder
 @Composable
 fun GifImage(
     modifier: Modifier = Modifier,
-    imageID: Int
+    imageID: Int,
+    imageDescription: String
 ) {
     val context = LocalContext.current
     val imageLoader = ImageLoader.Builder(context = context)
@@ -29,7 +30,7 @@ fun GifImage(
 
     Image(
         painter = rememberAsyncImagePainter(model = imageID, imageLoader = imageLoader),
-        contentDescription = null,
+        contentDescription = imageDescription,
         modifier = modifier
     )
 }

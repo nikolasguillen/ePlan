@@ -1,7 +1,12 @@
 package com.example.eplan.presentation.ui.workActivity
 
 import androidx.activity.compose.BackHandler
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.outlined.Delete
@@ -23,6 +28,7 @@ import com.example.eplan.presentation.ui.components.PlaceholderDetails
 import com.example.eplan.presentation.ui.components.SendAnimation
 import com.example.eplan.presentation.ui.components.WorkActivityDetail
 import com.example.eplan.presentation.ui.workActivity.ActivityDetailEvent.GetActivityEvent
+import com.example.eplan.presentation.util.spacing
 import kotlinx.coroutines.delay
 import java.time.LocalDate
 import java.time.LocalTime
@@ -137,15 +143,25 @@ fun ActivityDetailsScreen(
                 }
             }
 
-            if (retrieving) {
-                PlaceholderDetails()
-            } else {
-                WorkActivityDetail(
-                    viewModel = viewModel,
-                    topPadding = paddingValues.calculateTopPadding(),
-                    bottomPadding = paddingValues.calculateBottomPadding()
-                )
-
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(
+                        start = MaterialTheme.spacing.medium,
+                        end = MaterialTheme.spacing.medium,
+                        top = paddingValues.calculateTopPadding(),
+                        bottom = paddingValues.calculateBottomPadding()
+                    )
+                    .verticalScroll(rememberScrollState()),
+                verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.medium)
+            ) {
+                if (retrieving) {
+                    PlaceholderDetails()
+                } else {
+                    WorkActivityDetail(
+                        viewModel = viewModel
+                    )
+                }
             }
 
             if (sending) {

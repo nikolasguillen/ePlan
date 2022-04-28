@@ -1,14 +1,19 @@
 package com.example.eplan.presentation.ui.components
 
-import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import com.example.eplan.R
 import com.example.eplan.domain.model.WorkActivity
 import com.example.eplan.presentation.navigation.Screen
+import com.example.eplan.presentation.util.spacing
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 
@@ -23,26 +28,36 @@ fun ActivitiesList(
         state = rememberSwipeRefreshState(isRefreshing = isRefreshing),
         onRefresh = { onRefresh() }
     ) {
-        if (isRefreshing) {
-            LazyColumn {
-                items(count = 3) {
-                    PlaceholderCard()
+
+        LazyColumn(
+            verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.small),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(horizontal = MaterialTheme.spacing.medium)
+        ) {
+            when (isRefreshing) {
+                true -> {
+                    items(count = 3) {
+                        PlaceholderCard()
+                    }
                 }
-            }
-        } else {
-            if (workActivities.isEmpty()) {
-                PlaceholderEmptyList(stringResource(id = R.string.no_interventi))
-            } else {
-                LazyColumn(modifier = Modifier.fillMaxHeight()) {
-                    items(workActivities) { workActivity ->
-                        ActivityCard(
-                            workActivity = workActivity,
-                            onClick = {
-                                val route =
-                                    Screen.WorkActivityDetails.route + "/activityId=${workActivity.id}"
-                                onNavigateToActivityDetailScreen(route)
-                            }
-                        )
+                false -> {
+                    if (workActivities.isEmpty()) {
+                        items(count = 1) {
+                            AnimationEmptyList(stringResource(id = R.string.no_interventi))
+                        }
+                    } else {
+                        items(workActivities) { workActivity ->
+                            ActivityCard(
+                                workActivity = workActivity,
+                                onClick = {
+                                    val route =
+                                        Screen.WorkActivityDetails.route + "/activityId=${workActivity.id}"
+                                    onNavigateToActivityDetailScreen(route)
+                                }
+                            )
+                        }
                     }
                 }
             }

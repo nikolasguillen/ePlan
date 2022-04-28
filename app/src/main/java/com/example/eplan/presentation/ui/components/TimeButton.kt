@@ -2,6 +2,7 @@ package com.example.eplan.presentation.ui.components
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -14,20 +15,29 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
+import com.example.eplan.presentation.util.spacing
 import com.vanpra.composematerialdialogs.rememberMaterialDialogState
 import java.time.LocalTime
 
 @ExperimentalMaterial3Api
 @Composable
-fun CustomTimeButton(time: String, label: String, onClick: (LocalTime) -> Unit, modifier: Modifier) {
+fun CustomTimeButton(
+    time: String,
+    label: String,
+    onClick: (LocalTime) -> Unit,
+    modifier: Modifier
+) {
 
     val dialogState = rememberMaterialDialogState()
 
-    Column(horizontalAlignment = Alignment.CenterHorizontally, modifier = modifier) {
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = modifier
+    ) {
         Card(
             modifier = Modifier
-                .width(170.dp)
-                .clip(RoundedCornerShape(11.dp))
+                .fillMaxWidth()
+                .clip(MaterialTheme.shapes.medium)
                 .clickable { dialogState.show() }
         )
         {
@@ -35,7 +45,7 @@ fun CustomTimeButton(time: String, label: String, onClick: (LocalTime) -> Unit, 
                 text = "$label: $time",
                 style = MaterialTheme.typography.bodyMedium,
                 modifier = Modifier
-                    .padding(16.dp)
+                    .padding(MaterialTheme.spacing.medium)
                     .align(Alignment.CenterHorizontally)
             )
         }

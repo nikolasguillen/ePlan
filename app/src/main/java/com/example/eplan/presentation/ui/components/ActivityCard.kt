@@ -15,6 +15,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.example.eplan.domain.model.WorkActivity
+import com.example.eplan.presentation.util.spacing
 import com.google.accompanist.placeholder.PlaceholderHighlight
 import com.google.accompanist.placeholder.material.placeholder
 import com.google.accompanist.placeholder.material.shimmer
@@ -28,24 +29,23 @@ fun ActivityCard(
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = 10.dp, vertical = 5.dp)
-            .clip(RoundedCornerShape(11.dp))
+            .clip(MaterialTheme.shapes.medium)
             .clickable(onClick = onClick)
     ) {
-        Column(modifier = Modifier.padding(16.dp)) {
+        Column(modifier = Modifier.padding(MaterialTheme.spacing.medium)) {
             Text(
                 text = workActivity.title.replaceFirstChar { it.uppercase() },
                 style = MaterialTheme.typography.titleMedium,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis
             )
-            if (workActivity.description != "") {
+            if (workActivity.description.isNotBlank()) {
                 Text(
                     text = workActivity.description.replaceFirstChar { it.uppercase() },
                     style = MaterialTheme.typography.bodyMedium,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
-                    modifier = Modifier.padding(bottom = 3.dp)
+                    modifier = Modifier.padding(bottom = MaterialTheme.spacing.extraSmall)
                 )
             }
             Text(text = workActivity.start.toString(), style = MaterialTheme.typography.labelSmall)
