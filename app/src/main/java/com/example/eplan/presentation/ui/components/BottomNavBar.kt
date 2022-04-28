@@ -1,40 +1,28 @@
 package com.example.eplan.presentation.ui.components
 
-import androidx.compose.foundation.isSystemInDarkTheme
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.navigationBarsPadding
-import androidx.compose.material3.*
+import androidx.compose.material3.Icon
+import androidx.compose.material3.NavigationBar
+import androidx.compose.material3.NavigationBarItem
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
-import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavHostController
-import androidx.navigation.compose.currentBackStackEntryAsState
 import com.example.eplan.presentation.navigation.BottomNavBarItems
-import com.google.accompanist.systemuicontroller.rememberSystemUiController
+import com.example.eplan.presentation.util.getCurrentRoute
 
 @Composable
-fun BottomNavBar(navController: NavHostController) {
+fun BottomNavBar(navController: NavHostController, items: List<BottomNavBarItems>) {
 
-    val items = listOf(
-        BottomNavBarItems.Home,
-        BottomNavBarItems.Appointments
-    )
-
-    val navBackStackEntry by navController.currentBackStackEntryAsState()
-    val currentDestination = navBackStackEntry?.destination
-
+    val currentRoute = getCurrentRoute(navController = navController)
 
     NavigationBar(modifier = Modifier.navigationBarsPadding()) {
         items.forEach { item ->
             NavigationBarItem(
-                selected = currentDestination?.hierarchy?.any {
-                    it.route == item.route
-                } == true,
+                selected =  currentRoute == item.route,
                 onClick = {
-                    if (currentDestination?.route != item.route) {
+                    if (currentRoute != item.route) {
                         navController.navigate(item.route)
                     }
                 },

@@ -1,5 +1,9 @@
 package com.example.eplan.presentation.util
 
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.currentBackStackEntryAsState
 import java.time.Duration
 import java.time.LocalDate
 import java.time.LocalTime
@@ -39,4 +43,10 @@ fun toLiteralDateParser(date: String): String {
         .format(DateTimeFormatter.ofPattern("dd MMMM yyyy"))
 
     return headerDate.split(" ")[0] + " " + headerDate.split(" ")[1].replaceFirstChar { it.uppercase() } + " " + headerDate.split(" ")[2]
+}
+
+@Composable
+fun getCurrentRoute(navController: NavHostController): String? {
+    val navBackStackEntry by navController.currentBackStackEntryAsState()
+    return navBackStackEntry?.destination?.route
 }

@@ -102,6 +102,9 @@ fun NavGraph(navController: NavHostController) {
                     )
                 ) { navBackStackEntry ->
                     val viewModel = hiltViewModel<ActivityDetailViewModel>()
+                    val date = LocalDate.parse(navBackStackEntry.arguments?.getString("date"))
+                    val start = navBackStackEntry.arguments?.getString("start")
+                    val end = navBackStackEntry.arguments?.getString("end")
                     ActivityDetailsScreen(
                         activityId = navBackStackEntry.arguments?.getString("activityId")!!,
                         viewModel = viewModel,
@@ -114,13 +117,9 @@ fun NavGraph(navController: NavHostController) {
                             viewModel.onTriggerEvent(DeleteActivityEvent)
                             navController.popBackStack()
                         },
-                        date = LocalDate.parse(navBackStackEntry.arguments?.getString("date")),
-                        start = if (navBackStackEntry.arguments?.getString("start") == null) null else LocalTime.parse(
-                            navBackStackEntry.arguments?.getString("start")
-                        ),
-                        end = if (navBackStackEntry.arguments?.getString("end") == null) null else LocalTime.parse(
-                            navBackStackEntry.arguments?.getString("end")
-                        )
+                        date = date,
+                        start = if (start == null) null else LocalTime.parse(start),
+                        end = if (end == null) null else LocalTime.parse(end)
                     )
                 }
             }
