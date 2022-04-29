@@ -37,7 +37,6 @@ constructor(
         password: String
     ): Pair<Int, String> {
         val response = service.login(CredentialsDto(username = username, password = password))
-        userDao.deleteAllUsers()
         userDao.insertUser(UserEntity(username = username, password = password, token = response.message))
         return Pair(response.statusCode, response.message)
     }

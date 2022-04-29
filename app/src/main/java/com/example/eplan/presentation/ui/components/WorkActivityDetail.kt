@@ -43,7 +43,8 @@ fun WorkActivityDetail(
                     viewModel.onFormEvent(ActivityFormEvent.DescriptionChanged(it))
                 },
                 label = { Text(text = stringResource(R.string.descrizione)) },
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth(),
+                isError = workActivity.descriptionError != null
             )
             if (workActivity.descriptionError != null) {
                 Text(

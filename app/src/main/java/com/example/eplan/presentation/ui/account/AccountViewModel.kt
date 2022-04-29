@@ -1,13 +1,16 @@
 package com.example.eplan.presentation.ui.account
 
+import android.content.SharedPreferences
 import android.net.Uri
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.eplan.cache.UserDao
 import com.example.eplan.interactors.GetProfilePicUri
 import com.example.eplan.interactors.GetToken
 import com.example.eplan.presentation.ui.workActivityList.ActivityListEvent
 import com.example.eplan.presentation.ui.workActivityList.STATE_KEY_QUERY
+import com.example.eplan.presentation.util.STAY_LOGGED
 import com.example.eplan.presentation.util.TAG
 import com.example.eplan.presentation.util.USER_TOKEN
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -21,7 +24,9 @@ class AccountViewModel
 @Inject
 constructor(
     private val getToken: GetToken,
-    private val getProfilePicUri: GetProfilePicUri
+    private val getProfilePicUri: GetProfilePicUri,
+    private val userDao: UserDao,
+    private val sharedPreferences: SharedPreferences
 ) : ViewModel() {
 
     private var userToken = USER_TOKEN
@@ -37,6 +42,9 @@ constructor(
                 when (event) {
                     is AccountEvent.GetUriEvent -> {
                         getImageUri()
+                    }
+                    is AccountEvent.Logout -> {
+                        logout()
                     }
                 }
             } catch (e: Exception) {
@@ -70,5 +78,10 @@ constructor(
                 Log.e(TAG, "getImageUri: $error")
             }
         }.launchIn(viewModelScope)
+    }
+
+    private suspend fun logout() {
+        sharedPreferences.edit().putBoolean(STAY_LOGGED, false).apply()
+        userDao.deleteAllUsers()
     }
 }

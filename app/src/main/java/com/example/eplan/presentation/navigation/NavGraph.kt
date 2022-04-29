@@ -14,6 +14,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import androidx.navigation.navigation
 import com.example.eplan.presentation.navigation.NestedNavGraphs.*
+import com.example.eplan.presentation.ui.account.AccountEvent
 import com.example.eplan.presentation.ui.account.AccountScreen
 import com.example.eplan.presentation.ui.account.AccountViewModel
 import com.example.eplan.presentation.ui.appointmentList.AppointmentListScreen
@@ -157,6 +158,11 @@ fun NavGraph(navController: NavHostController) {
                         toAppInfo = {},
                         toSettings = {},
                         logout = {
+                            viewModel.onTriggerEvent(AccountEvent.Logout)
+                            navController.popBackStack(route = AccountGraph.startDestination, inclusive = true)
+                            navController.popBackStack(route = AppointmentGraph.startDestination, inclusive = true)
+                            navController.popBackStack(route = WorkActivityGraph.startDestination, inclusive = true)
+                            navController.popBackStack(route = LoginGraph.startDestination, inclusive = true)
                             navController.navigate(route = LoginGraph.startDestination)
                         }
                     )

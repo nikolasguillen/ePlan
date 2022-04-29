@@ -4,6 +4,7 @@ import com.example.eplan.cache.UserDao
 import com.example.eplan.interactors.GetProfilePicUri
 import com.example.eplan.interactors.GetToken
 import com.example.eplan.interactors.camera.SaveProfilePicUri
+import com.example.eplan.interactors.login.GetCredentialsFromCache
 import com.example.eplan.interactors.login.LoginAttempt
 import com.example.eplan.interactors.workActivityDetail.GetById
 import com.example.eplan.interactors.workActivityDetail.UpdateActivity
@@ -105,5 +106,13 @@ object InteractorsModule {
         userDao: UserDao
     ): GetProfilePicUri {
         return GetProfilePicUri(userDao = userDao)
+    }
+
+    @ViewModelScoped
+    @Provides
+    fun provideGetCredentialsFromCache(
+        userDao: UserDao
+    ): GetCredentialsFromCache {
+        return GetCredentialsFromCache(userDao = userDao)
     }
 }

@@ -1,16 +1,15 @@
 package com.example.eplan.cache
 
-import android.net.Uri
 import androidx.room.Dao
 import androidx.room.Insert
+import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import androidx.room.Update
 import com.example.eplan.cache.model.UserEntity
 
 @Dao
 interface UserDao {
 
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertUser(userEntity: UserEntity): Long
 
     @Query("DELETE FROM users")
@@ -27,4 +26,7 @@ interface UserDao {
 
     @Query("SELECT username FROM users")
     suspend fun getUsername(): String
+
+    @Query("SELECT password FROM users")
+    suspend fun getPassword(): String
 }

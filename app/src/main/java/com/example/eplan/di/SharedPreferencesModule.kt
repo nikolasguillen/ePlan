@@ -2,7 +2,6 @@ package com.example.eplan.di
 
 import android.content.Context
 import android.content.SharedPreferences
-import com.example.eplan.presentation.BaseApplication
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -12,11 +11,11 @@ import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-object AppModule {
+object SharedPreferencesModule {
 
     @Singleton
     @Provides
-    fun provideApplication(@ApplicationContext app: Context): BaseApplication {
-        return app as BaseApplication
+    fun provideSharedPreferences(@ApplicationContext context: Context): SharedPreferences {
+        return context.getSharedPreferences("preferences_eplan", Context.MODE_PRIVATE)
     }
 }
