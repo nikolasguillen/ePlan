@@ -17,6 +17,8 @@ import com.example.eplan.presentation.util.USER_TOKEN
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
+import okhttp3.internal.notify
+import okhttp3.internal.wait
 import java.time.LocalDate
 import java.time.LocalTime
 import javax.inject.Inject
@@ -36,14 +38,10 @@ constructor(
     val workActivities: MutableState<List<WorkActivity>> = mutableStateOf(listOf())
 
     private var userToken = USER_TOKEN
-
     val loading = mutableStateOf(false)
-
     private val _isRefreshing = MutableStateFlow(false)
-
     val isRefreshing: StateFlow<Boolean>
         get() = _isRefreshing.asStateFlow()
-
     val date = mutableStateOf(LocalDate.now().toString())
 
     init {
@@ -51,19 +49,13 @@ constructor(
     }
 
     fun onTriggerEvent(event: ActivityListEvent) {
-        viewModelScope.launch {
-            try {
-                when (event) {
-                    is DayChangeEvent -> {
-                        setDate(event.date)
-                        dayChange()
-                    }
-                    is RestoreStateEvent -> {
-                        dayChange()
-                    }
-                }
-            } catch (e: Exception) {
-                Log.e("ActivityListViewModel", "onTriggerEvent: Exception $e, ${e.cause}")
+        when (event) {
+            is DayChangeEvent -> {
+                setDate(event.date)
+                dayChange()
+            }
+            is RestoreStateEvent -> {
+                dayChange()
             }
         }
     }
@@ -84,7 +76,6 @@ constructor(
             }
         }.launchIn(viewModelScope)
     }
-
 
     private fun dayChange() {
         resetActivitiesState()

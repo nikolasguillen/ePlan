@@ -42,21 +42,19 @@ constructor(
 ) : ViewModel() {
 
     val onLoad = mutableStateOf(false)
-
     val retrieving = mutableStateOf(false)
-
     val sending = mutableStateOf(false)
-
     private val query = mutableStateOf("")
-
     private var userToken = USER_TOKEN
-
     private var initialState: MutableState<WorkActivity?> = mutableStateOf(null)
     var workActivity: MutableState<WorkActivity?> = mutableStateOf(null)
         private set
-
     private val validationEventChannel = Channel<ValidationEvent>()
     val validationEvents = validationEventChannel.receiveAsFlow()
+
+    init {
+        getToken()
+    }
 
     fun onFormEvent(event: ActivityFormEvent) {
         when (event) {
@@ -102,10 +100,6 @@ constructor(
         return workActivity.value != initialState.value
     }
 
-    init {
-        getToken()
-    }
-
     private fun submitData() {
         workActivity.value?.let {
             val descriptionResult = validateDescription.execute(it.description)
@@ -144,7 +138,6 @@ constructor(
 
     private fun getToken() {
         getToken.execute().onEach { dataState ->
-
             dataState.data?.let { token ->
                 userToken += token
                 savedStateHandle.get<String>(STATE_KEY_ACTIVITY)?.let { workActivityId ->
@@ -160,7 +153,6 @@ constructor(
     }
 
     private fun getActivity() {
-
         if (userToken != USER_TOKEN) {
             getById.execute(token = userToken, id = query.value).onEach { dataState ->
                 retrieving.value = dataState.loading

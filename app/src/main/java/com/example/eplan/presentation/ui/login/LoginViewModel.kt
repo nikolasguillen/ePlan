@@ -2,6 +2,7 @@ package com.example.eplan.presentation.ui.login
 
 import android.content.SharedPreferences
 import android.util.Log
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -30,6 +31,8 @@ constructor(
 
     val username = mutableStateOf("")
     val password = mutableStateOf("")
+    var usernameError: MutableState<String?> = mutableStateOf(null)
+    var passwordError: MutableState<String?> = mutableStateOf(null)
     private val statusCode = mutableStateOf(0)
     val message = mutableStateOf("")
     val loading = mutableStateOf(false)
@@ -74,23 +77,28 @@ constructor(
 
         message.value = ""
 
-        loginAttempt.execute(username = username, password = password).onEach { dataState ->
+        if (username.isNotBlank() && password.isNotBlank()) {
+            loginAttempt.execute(username = username, password = password).onEach { dataState ->
 
-            loading.value = dataState.loading
+                loading.value = dataState.loading
 
-            dataState.data?.let { pair ->
-                statusCode.value = pair.first
-                userToken = pair.second
-                successfulLoginAttempt.value = true
-            }
+                dataState.data?.let { pair ->
+                    statusCode.value = pair.first
+                    userToken = pair.second
+                    successfulLoginAttempt.value = true
+                }
 
-            dataState.error?.let { error ->
-                Log.e(TAG, "loginAttempt: $error")
-                message.value = error
-                successfulLoginAttempt.value = false
-                // TODO Gestire errori
-            }
-        }.launchIn(viewModelScope)
+                dataState.error?.let { error ->
+                    Log.e(TAG, "loginAttempt: $error")
+                    message.value = error
+                    successfulLoginAttempt.value = false
+                    // TODO Gestire errori
+                }
+            }.launchIn(viewModelScope)
+        } else {
+            usernameError.value = "Questo campo non può essere vuoto"
+            passwordError.value = "Questo campo non può essere vuoto"
+        }
     }
 
     private fun getCredentialsFromCache() {

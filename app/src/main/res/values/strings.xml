@@ -49,4 +49,5 @@
     <string name="password">Password</string>
     <string name="mostra_password">Mostra password</string>
     <string name="nascondi_password">Nascondi password</string>
+    <string name="campo_vuoto">Questo campo non può essere vuoto</string>
 </resources>

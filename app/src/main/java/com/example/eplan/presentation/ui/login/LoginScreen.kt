@@ -17,6 +17,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.window.Dialog
 import com.airbnb.lottie.compose.LottieAnimation
 import com.airbnb.lottie.compose.LottieCompositionSpec
@@ -47,36 +48,64 @@ fun LoginScreen(
             Column(
                 verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.small),
                 horizontalAlignment = Alignment.CenterHorizontally,
-                modifier = Modifier.padding(MaterialTheme.spacing.medium)
+                modifier = Modifier
+                    .padding(MaterialTheme.spacing.large)
+                    .fillMaxWidth()
             ) {
                 if (!error.value) {
                     Text(text = viewModel.message.value, color = Color.Red)
                 }
-                OutlinedTextField(
-                    value = viewModel.username.value,
-                    onValueChange = { viewModel.username.value = it },
-                    placeholder = { Text(text = stringResource(R.string.username)) }
-                )
-
-                OutlinedTextField(
-                    value = viewModel.password.value,
-                    onValueChange = { viewModel.password.value = it },
-                    placeholder = { Text(text = stringResource(R.string.password)) },
-                    visualTransformation = if (passwordVisibility) VisualTransformation.None else PasswordVisualTransformation(),
-                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
-                    trailingIcon = {
-                        val image =
-                            if (passwordVisibility) Icons.Filled.Visibility else Icons.Filled.VisibilityOff
-
-                        val description =
-                            if (passwordVisibility) stringResource(R.string.nascondi_password)
-                            else stringResource(R.string.mostra_password)
-
-                        IconButton(onClick = { passwordVisibility = !passwordVisibility }) {
-                            Icon(imageVector = image, description)
-                        }
+                Column(verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.extraSmall)) {
+                    OutlinedTextField(
+                        value = viewModel.username.value,
+                        onValueChange = { viewModel.username.value = it },
+                        placeholder = { Text(text = stringResource(R.string.username)) },
+                        isError = viewModel.usernameError.value != null,
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                    if (viewModel.usernameError.value != null) {
+                        Text(
+                            text = stringResource(R.string.campo_vuoto),
+                            color = MaterialTheme.colorScheme.error,
+                            style = MaterialTheme.typography.labelMedium,
+                            textAlign = TextAlign.End,
+                            modifier = Modifier.fillMaxWidth()
+                        )
                     }
-                )
+                }
+
+                Column(verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.extraSmall)) {
+                    OutlinedTextField(
+                        value = viewModel.password.value,
+                        onValueChange = { viewModel.password.value = it },
+                        placeholder = { Text(text = stringResource(R.string.password)) },
+                        visualTransformation = if (passwordVisibility) VisualTransformation.None else PasswordVisualTransformation(),
+                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
+                        trailingIcon = {
+                            val image =
+                                if (passwordVisibility) Icons.Filled.Visibility else Icons.Filled.VisibilityOff
+
+                            val description =
+                                if (passwordVisibility) stringResource(R.string.nascondi_password)
+                                else stringResource(R.string.mostra_password)
+
+                            IconButton(onClick = { passwordVisibility = !passwordVisibility }) {
+                                Icon(imageVector = image, description)
+                            }
+                        },
+                        isError = viewModel.passwordError.value != null,
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                    if (viewModel.passwordError.value != null) {
+                        Text(
+                            text = stringResource(R.string.campo_vuoto),
+                            color = MaterialTheme.colorScheme.error,
+                            style = MaterialTheme.typography.labelMedium,
+                            textAlign = TextAlign.End,
+                            modifier = Modifier.fillMaxWidth()
+                        )
+                    }
+                }
                 Row(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
