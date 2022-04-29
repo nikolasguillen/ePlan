@@ -22,7 +22,7 @@ import androidx.compose.ui.res.stringResource
 import com.example.eplan.R
 import com.example.eplan.presentation.util.spacing
 
-@OptIn(ExperimentalMaterial3Api::class)
+@ExperimentalMaterial3Api
 @Composable
 fun MultiFloatingActionButton(
     onExpandClick: () -> Unit,
@@ -54,7 +54,7 @@ fun MultiFloatingActionButton(
                     horizontalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.small),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Card() {
+                    Card {
                         Text(
                             text = stringResource(R.string.registra_intervento),
                             style = MaterialTheme.typography.labelLarge,
@@ -76,7 +76,7 @@ fun MultiFloatingActionButton(
                     horizontalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.small),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Card() {
+                    Card {
                         Text(
                             text = stringResource(R.string.inserisci_manualmente),
                             style = MaterialTheme.typography.labelLarge,

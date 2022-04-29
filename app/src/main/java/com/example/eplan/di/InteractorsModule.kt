@@ -1,7 +1,9 @@
 package com.example.eplan.di
 
 import com.example.eplan.cache.UserDao
+import com.example.eplan.interactors.GetProfilePicUri
 import com.example.eplan.interactors.GetToken
+import com.example.eplan.interactors.camera.SaveProfilePicUri
 import com.example.eplan.interactors.login.LoginAttempt
 import com.example.eplan.interactors.workActivityDetail.GetById
 import com.example.eplan.interactors.workActivityDetail.UpdateActivity
@@ -87,5 +89,21 @@ object InteractorsModule {
         userDao: UserDao
     ): GetToken {
         return GetToken(userDao = userDao)
+    }
+
+    @ViewModelScoped
+    @Provides
+    fun provideSaveProfilePicUri(
+        userDao: UserDao
+    ): SaveProfilePicUri {
+        return SaveProfilePicUri(userDao = userDao)
+    }
+
+    @ViewModelScoped
+    @Provides
+    fun provideGetProfilePicUri(
+        userDao: UserDao
+    ): GetProfilePicUri {
+        return GetProfilePicUri(userDao = userDao)
     }
 }

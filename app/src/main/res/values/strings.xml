@@ -38,4 +38,10 @@
     <string name="logout">Logout</string>
     <string name="registra_intervento">Registra intervento</string>
     <string name="inserisci_manualmente">Inserisci manualmente</string>
+    <string name="inverti_fotocamera">Inverti fotocamera</string>
+    <string name="scatta_foto">Scatta foto</string>
+    <string name="apri_galleria">Apri galleria</string>
+    <string name="immagine_scelta">Immagine scelta</string>
+    <string name="scatta_nuova_foto">Scatta una nuova foto</string>
+    <string name="conferma_foto">Conferma foto</string>
 </resources>

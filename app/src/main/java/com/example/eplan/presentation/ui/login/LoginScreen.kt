@@ -1,5 +1,7 @@
 package com.example.eplan.presentation.ui.login
 
+import android.app.Activity
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -10,6 +12,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.window.Dialog
 import com.example.eplan.R
@@ -27,8 +30,12 @@ fun LoginScreen(
     val loading = remember {
         viewModel.loading
     }
+    val activity = LocalContext.current as Activity
 
     Scaffold {
+        BackHandler(enabled = true) {
+            activity.finish()
+        }
         Box(contentAlignment = Alignment.Center, modifier = Modifier.fillMaxSize()) {
             Column(
                 verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.small),

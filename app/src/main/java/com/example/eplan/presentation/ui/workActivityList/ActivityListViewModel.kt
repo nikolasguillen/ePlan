@@ -89,20 +89,19 @@ constructor(
     private fun dayChange() {
         resetActivitiesState()
 
-        dayChange.execute(token = userToken, query = date.value)
-            .onEach { dataState ->
-                loading.value = dataState.loading
-                _isRefreshing.value = dataState.loading
+        dayChange.execute(token = userToken, query = date.value).onEach { dataState ->
+            loading.value = dataState.loading
+            _isRefreshing.value = dataState.loading
 
-                dataState.data?.let { list ->
-                    workActivities.value = list
-                }
+            dataState.data?.let { list ->
+                workActivities.value = list
+            }
 
-                dataState.error?.let { error ->
-                    Log.e(TAG, "dayChange: $error")
-                    // TODO "Gestire errori"
-                }
-            }.launchIn(viewModelScope)
+            dataState.error?.let { error ->
+                Log.e(TAG, "dayChange: $error")
+                // TODO "Gestire errori"
+            }
+        }.launchIn(viewModelScope)
     }
 
     private fun resetActivitiesState() {

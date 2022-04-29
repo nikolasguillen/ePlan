@@ -128,8 +128,6 @@ constructor(
     }
 
     fun onTriggerEvent(event: ActivityDetailEvent) {
-
-
         when (event) {
             is GetActivityEvent -> {
                 setQuery(event.id)

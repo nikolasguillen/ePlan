@@ -33,7 +33,8 @@ import kotlinx.coroutines.delay
 import java.time.LocalDate
 import java.time.LocalTime
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class)
+@ExperimentalMaterial3Api
+@ExperimentalComposeUiApi
 @Composable
 fun ActivityDetailsScreen(
     viewModel: ActivityDetailViewModel,
@@ -47,8 +48,11 @@ fun ActivityDetailsScreen(
 ) {
 
     val context = LocalContext.current
-
     val snackBarHostState = remember { SnackbarHostState() }
+    val retrieving = viewModel.retrieving.value
+    val sending = viewModel.sending.value
+    val keyboardController = LocalSoftwareKeyboardController.current
+    val backDialog = remember { mutableStateOf(false) }
 
     LaunchedEffect(key1 = context) {
         viewModel.validationEvents.collect { event ->
@@ -81,13 +85,6 @@ fun ActivityDetailsScreen(
             viewModel.createManualActivity(date = date)
         }
     }
-
-    val retrieving = viewModel.retrieving.value
-    val sending = viewModel.sending.value
-
-    val keyboardController = LocalSoftwareKeyboardController.current
-
-    val backDialog = remember { mutableStateOf(false) }
 
     Scaffold(
         topBar = {

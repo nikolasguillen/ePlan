@@ -1,9 +1,11 @@
-package com.example.eplan.presentation.navigation
+package com.example.eplan.presentation.ui.camera
 
 import android.content.Context
 import android.media.MediaScannerConnection
 import android.net.Uri
+import android.os.Build
 import android.webkit.MimeTypeMap
+import androidx.annotation.RequiresApi
 import androidx.camera.core.CameraSelector
 import androidx.camera.core.ImageCapture
 import androidx.camera.core.ImageCaptureException
@@ -48,7 +50,7 @@ fun ImageCapture.takePicture(
                     context,
                     arrayOf(savedUri.toFile().absolutePath),
                     arrayOf(mimeType)
-                ) { _, uri ->
+                ) { _, _ ->
 
                 }
                 onImageCaptured(savedUri, false)
@@ -70,12 +72,11 @@ fun getOutputFileOptions(
         // Mirror image when using the front camera
         isReversedHorizontal = lensFacing == CameraSelector.LENS_FACING_FRONT
     }
+
     // Create output options object which contains file + metadata
-    val outputOptions = ImageCapture.OutputFileOptions.Builder(photoFile)
+    return ImageCapture.OutputFileOptions.Builder(photoFile)
         .setMetadata(metadata)
         .build()
-
-    return outputOptions
 }
 
 fun createFile(baseFolder: File, format: String, extension: String) =
@@ -89,6 +90,7 @@ fun Context.getOutputDirectory(): File {
     val mediaDir = this.externalMediaDirs.firstOrNull()?.let {
         File(it, this.resources.getString(R.string.app_name)).apply { mkdirs() }
     }
+
     return if (mediaDir != null && mediaDir.exists())
         mediaDir else this.filesDir
 }

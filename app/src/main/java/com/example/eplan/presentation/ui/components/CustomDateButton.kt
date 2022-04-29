@@ -20,7 +20,7 @@ import com.example.eplan.presentation.util.toLiteralDateParser
 import java.time.LocalDate
 import java.util.*
 
-@OptIn(ExperimentalMaterial3Api::class)
+@ExperimentalMaterial3Api
 @Composable
 fun CustomDateButton(date: LocalDate, onDateSelected: (Date) -> Unit) {
 

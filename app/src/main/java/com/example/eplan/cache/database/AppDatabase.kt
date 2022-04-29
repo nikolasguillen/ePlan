@@ -5,12 +5,12 @@ import androidx.room.RoomDatabase
 import com.example.eplan.cache.UserDao
 import com.example.eplan.cache.model.UserEntity
 
-@Database(entities = [UserEntity::class], version = 1)
+@Database(entities = [UserEntity::class], version = 2)
 abstract class AppDatabase: RoomDatabase() {
 
     abstract fun userDao(): UserDao
 
     companion object {
-        val DATABASE_NAME = "eplan_db"
+        const val DATABASE_NAME = "eplan_db"
     }
 }

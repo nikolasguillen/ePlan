@@ -18,7 +18,7 @@ import com.example.eplan.domain.model.Appointment
 import com.example.eplan.domain.util.toJson
 import com.example.eplan.presentation.util.spacing
 
-@OptIn(ExperimentalMaterial3Api::class)
+@ExperimentalMaterial3Api
 @Composable
 fun AppointmentCard(
     appointment: Appointment,

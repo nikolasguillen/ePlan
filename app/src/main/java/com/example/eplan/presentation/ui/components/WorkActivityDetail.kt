@@ -19,7 +19,8 @@ import com.example.eplan.R
 import com.example.eplan.presentation.ui.workActivity.ActivityDetailViewModel
 import com.example.eplan.presentation.ui.workActivity.ActivityFormEvent
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class)
+@ExperimentalMaterial3Api
+@ExperimentalComposeUiApi
 @Composable
 fun WorkActivityDetail(
     viewModel: ActivityDetailViewModel

@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
@@ -17,6 +18,9 @@ import com.example.eplan.presentation.ui.account.AccountScreen
 import com.example.eplan.presentation.ui.account.AccountViewModel
 import com.example.eplan.presentation.ui.appointmentList.AppointmentListScreen
 import com.example.eplan.presentation.ui.appointmentList.AppointmentListViewModel
+import com.example.eplan.presentation.ui.camera.CameraEvent
+import com.example.eplan.presentation.ui.camera.CameraScreen
+import com.example.eplan.presentation.ui.camera.CameraViewModel
 import com.example.eplan.presentation.ui.login.LoginEvent.LoginAttemptEvent
 import com.example.eplan.presentation.ui.login.LoginScreen
 import com.example.eplan.presentation.ui.login.LoginViewModel
@@ -31,6 +35,7 @@ import com.example.eplan.presentation.ui.workActivityRecord.ActivityRecordViewMo
 import java.time.LocalDate
 import java.time.LocalTime
 
+@ExperimentalComposeUiApi
 @ExperimentalMaterial3Api
 @Composable
 fun NavGraph(navController: NavHostController) {
@@ -147,12 +152,23 @@ fun NavGraph(navController: NavHostController) {
                     AccountScreen(
                         viewModel = viewModel,
                         onBackPressed = navController::popBackStack,
+                        navigateToCamera = { navController.navigate(Screen.Camera.route) },
                         toProfile = {},
                         toAppInfo = {},
                         toSettings = {},
                         logout = {
-                            navController.popBackStack(route = LoginGraph.startDestination, inclusive = true)
                             navController.navigate(route = LoginGraph.startDestination)
+                        }
+                    )
+                }
+                composable(route = Screen.Camera.route) {
+                    val viewModel = hiltViewModel<CameraViewModel>()
+                    CameraScreen(
+                        viewModel = viewModel,
+                        onBackPressed = navController::popBackStack,
+                        onImageSelected = {
+                            viewModel.onTriggerEvent(CameraEvent.SaveUriInCache)
+                            navController.popBackStack()
                         }
                     )
                 }

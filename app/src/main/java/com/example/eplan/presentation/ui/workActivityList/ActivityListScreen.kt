@@ -25,7 +25,6 @@ import com.example.eplan.presentation.ui.components.TopBar
 import com.example.eplan.presentation.util.bottomNavPadding
 import java.time.LocalDate
 
-
 @ExperimentalMaterial3Api
 @Composable
 fun ActivitiesListScreen(

@@ -29,7 +29,7 @@ import com.example.eplan.presentation.util.spacing
 import java.time.LocalDate
 import java.time.LocalTime
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
+@ExperimentalMaterial3Api
 @Composable
 fun ActivityRecordScreen(
     onSave: (String) -> Unit,

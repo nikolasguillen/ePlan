@@ -1,9 +1,11 @@
 package com.example.eplan.presentation.ui.account
 
+import android.media.ThumbnailUtils
+import android.net.Uri
 import android.util.Log
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
@@ -15,13 +17,16 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.clipToBounds
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavHostController
+import androidx.core.graphics.drawable.toIcon
+import androidx.core.net.toFile
+import coil.compose.rememberAsyncImagePainter
 import com.example.eplan.R
-import com.example.eplan.presentation.ui.components.CameraView
+import com.example.eplan.presentation.ui.camera.CameraView
 import com.example.eplan.presentation.util.TAG
 import com.example.eplan.presentation.util.spacing
 import com.google.accompanist.permissions.*
@@ -34,6 +39,7 @@ const val name = "Nikolas"
 fun AccountScreen(
     viewModel: AccountViewModel,
     onBackPressed: () -> Unit,
+    navigateToCamera: () -> Unit,
     toProfile: () -> Unit,
     toSettings: () -> Unit,
     toAppInfo: () -> Unit,
@@ -44,7 +50,9 @@ fun AccountScreen(
         android.Manifest.permission.CAMERA
     )
 
-    val show = remember { mutableStateOf(false) }
+    LaunchedEffect(key1 = true) {
+        viewModel.onTriggerEvent(AccountEvent.GetUriEvent)
+    }
 
     Scaffold(
         topBar = {
@@ -69,16 +77,6 @@ fun AccountScreen(
                     top = it.calculateTopPadding()
                 )
             ) {
-
-                if (show.value) {
-                    CameraView(onImageCaptured = { uri, fromGallery ->
-                        Log.d(TAG, "Image Uri Captured from Camera View")
-//Todo : use the uri as needed
-
-                    }, onError = { imageCaptureException ->
-                    })
-                }
-
                 val rowModifier = Modifier.fillMaxWidth()
                 val textModifier = Modifier.padding(
                     end = MaterialTheme.spacing.medium,
@@ -96,8 +94,13 @@ fun AccountScreen(
                     verticalAlignment = Alignment.CenterVertically,
                     modifier = rowModifier
                         .clickable { toProfile() }) {
-                    Icon(
-                        imageVector = Icons.Filled.AccountCircle,
+                    Image(
+                        painter = if (viewModel.imageUri != Uri.EMPTY) {
+                            rememberAsyncImagePainter(model = viewModel.imageUri)
+                        } else {
+                            painterResource(id = R.drawable.ic_baseline_account_circle_24)
+                        },
+                        contentScale = ContentScale.FillWidth,
                         contentDescription = stringResource(R.string.profilo),
                         modifier = iconModifier
                             .size(MaterialTheme.spacing.extraLarge)
@@ -105,7 +108,7 @@ fun AccountScreen(
                             .clickable {
                                 when (cameraPermissionState.status) {
                                     PermissionStatus.Granted -> {
-                                        show.value = !show.value
+                                        navigateToCamera()
                                     }
                                     else -> {
                                         cameraPermissionState.launchPermissionRequest()

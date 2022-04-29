@@ -1,5 +1,6 @@
 package com.example.eplan.cache.model
 
+import android.net.Uri
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
@@ -15,5 +16,8 @@ data class UserEntity(
     var password: String,
 
     @ColumnInfo(name = "token")
-    var token: String
+    var token: String,
+
+    @ColumnInfo(name = "imageUri")
+    var pictureUri: String? = null
 )
