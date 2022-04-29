@@ -33,20 +33,15 @@ fun ActivitiesListScreen(
 ) {
 
     val workActivities = viewModel.workActivities
-
     val date = viewModel.date.value
-
     val isRefreshing by viewModel.isRefreshing.collectAsState()
-
     val calendarVisibility = remember { mutableStateOf(false) }
-
     val selectedDate = remember { mutableStateOf(LocalDate.parse(date)) }
-
     val isExpanded = remember {
         mutableStateOf(false)
     }
 
-    LaunchedEffect(key1 = true) {
+    LaunchedEffect(key1 = viewModel.isReady) {
         viewModel.onTriggerEvent(ActivityListEvent.DayChangeEvent(date = date))
     }
 
