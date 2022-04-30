@@ -50,4 +50,5 @@
     <string name="mostra_password">Mostra password</string>
     <string name="nascondi_password">Nascondi password</string>
     <string name="campo_vuoto">Questo campo non può essere vuoto</string>
+    <string name="accesso_in_corso">Accesso in corso...</string>
 </resources>

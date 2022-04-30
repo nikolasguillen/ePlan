@@ -133,7 +133,7 @@ fun LoginScreen(
                     ) {
                         CircularProgressIndicator()
                         Spacer(modifier = Modifier.size(MaterialTheme.spacing.medium))
-                        Text(text = "Accesso in corso...")
+                        Text(text = stringResource(R.string.accesso_in_corso))
                     }
                 }
             }
