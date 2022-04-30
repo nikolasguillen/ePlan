@@ -1,6 +1,7 @@
 package com.example.eplan.presentation.ui.components
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -23,6 +24,7 @@ import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 fun ActivitiesList(
     workActivities: List<WorkActivity>,
     onNavigateToActivityDetailScreen: (String) -> Unit,
+    isReady: Boolean,
     isRefreshing: Boolean,
     onRefresh: () -> Unit
 ) {
@@ -30,7 +32,6 @@ fun ActivitiesList(
         state = rememberSwipeRefreshState(isRefreshing = isRefreshing),
         onRefresh = { onRefresh() }
     ) {
-
         LazyColumn(
             verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.small),
             horizontalAlignment = Alignment.CenterHorizontally,
@@ -41,28 +42,37 @@ fun ActivitiesList(
                     vertical = MaterialTheme.spacing.small
                 )
         ) {
-            when (isRefreshing) {
+            when(isReady) {
                 true -> {
-                    items(count = 3) {
-                        PlaceholderCard()
+                    when(isRefreshing) {
+                        true -> {
+                            items(3) {
+                                PlaceholderCard()
+                            }
+                        }
+                        false -> {
+                            if (workActivities.isEmpty()) {
+                                item {
+                                    AnimationEmptyList(stringResource(id = R.string.no_interventi))
+                                }
+                            } else {
+                                items(workActivities) { workActivity ->
+                                    ActivityCard(
+                                        workActivity = workActivity,
+                                        onClick = {
+                                            val route =
+                                                Screen.WorkActivityDetails.route + "/activityId=${workActivity.id}"
+                                            onNavigateToActivityDetailScreen(route)
+                                        }
+                                    )
+                                }
+                            }
+                        }
                     }
                 }
                 false -> {
-                    if (workActivities.isEmpty()) {
-                        items(count = 1) {
-                            AnimationEmptyList(stringResource(id = R.string.no_interventi))
-                        }
-                    } else {
-                        items(workActivities) { workActivity ->
-                            ActivityCard(
-                                workActivity = workActivity,
-                                onClick = {
-                                    val route =
-                                        Screen.WorkActivityDetails.route + "/activityId=${workActivity.id}"
-                                    onNavigateToActivityDetailScreen(route)
-                                }
-                            )
-                        }
+                    items(3) {
+                        PlaceholderCard()
                     }
                 }
             }

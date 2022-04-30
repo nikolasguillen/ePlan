@@ -42,7 +42,9 @@ fun ActivitiesListScreen(
     }
 
     LaunchedEffect(key1 = viewModel.isReady) {
-        viewModel.onTriggerEvent(ActivityListEvent.DayChangeEvent(date = date))
+        if (viewModel.isReady) {
+            viewModel.onTriggerEvent(ActivityListEvent.DayChangeEvent(date = date))
+        }
     }
 
 
@@ -85,6 +87,7 @@ fun ActivitiesListScreen(
                 ActivitiesList(
                     workActivities = workActivities.value,
                     onNavigateToActivityDetailScreen = onNavigate,
+                    isReady = viewModel.isReady,
                     isRefreshing = isRefreshing,
                     onRefresh = {
                         viewModel.onTriggerEvent(

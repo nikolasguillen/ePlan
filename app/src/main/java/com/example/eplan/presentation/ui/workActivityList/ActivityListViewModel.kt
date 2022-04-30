@@ -49,6 +49,7 @@ constructor(
     val date = mutableStateOf(LocalDate.now().toString())
 
     init {
+        Log.d(TAG, "isReady: $isReady")
         getToken()
     }
 
