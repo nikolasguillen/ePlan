@@ -42,9 +42,9 @@ fun ActivitiesList(
                     vertical = MaterialTheme.spacing.small
                 )
         ) {
-            when(isReady) {
+            when (isReady) {
                 true -> {
-                    when(isRefreshing) {
+                    when (isRefreshing) {
                         true -> {
                             items(3) {
                                 PlaceholderCard()
