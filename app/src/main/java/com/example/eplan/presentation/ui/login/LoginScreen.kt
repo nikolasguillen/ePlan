@@ -19,6 +19,7 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.window.Dialog
+import androidx.compose.ui.window.DialogProperties
 import com.airbnb.lottie.compose.LottieAnimation
 import com.airbnb.lottie.compose.LottieCompositionSpec
 import com.airbnb.lottie.compose.LottieConstants
@@ -38,7 +39,6 @@ fun LoginScreen(
     val loading = viewModel.loading
     val activity = LocalContext.current as Activity
     var passwordVisibility by remember { mutableStateOf(false) }
-    val composition by rememberLottieComposition(spec = LottieCompositionSpec.RawRes(R.raw.fingerprint))
 
     Scaffold {
         BackHandler(enabled = true) {
@@ -124,11 +124,18 @@ fun LoginScreen(
             }
         }
         if (loading.value) {
-            Dialog(onDismissRequest = { loading.value = false }) {
-                LottieAnimation(
-                    composition = composition,
-                    iterations = LottieConstants.IterateForever
-                )
+            Dialog(onDismissRequest = {}) {
+                Surface(shape = MaterialTheme.shapes.medium) {
+                    Column(
+                        verticalArrangement = Arrangement.Center,
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        modifier = Modifier.padding(all = MaterialTheme.spacing.large)
+                    ) {
+                        CircularProgressIndicator()
+                        Spacer(modifier = Modifier.size(MaterialTheme.spacing.medium))
+                        Text(text = "Accesso in corso...")
+                    }
+                }
             }
         }
     }
