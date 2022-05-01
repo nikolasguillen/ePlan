@@ -87,10 +87,11 @@ fun NavGraph(navController: NavHostController) {
                 }
 
                 composable(
-                    route = Screen.WorkActivityDetails.route + "/activityId={activityId}?date={date}&start={start}&end={end}",
+                    route = Screen.WorkActivityDetails.route + "/?activityId={activityId}&date={date}&start={start}&end={end}",
                     arguments = listOf(
                         navArgument("activityId") {
                             type = NavType.StringType
+                            nullable = true
                         },
                         navArgument("date") {
                             type = NavType.StringType
@@ -105,13 +106,9 @@ fun NavGraph(navController: NavHostController) {
                             nullable = true
                         }
                     )
-                ) { navBackStackEntry ->
+                ) {
                     val viewModel = hiltViewModel<ActivityDetailViewModel>()
-                    val date = LocalDate.parse(navBackStackEntry.arguments?.getString("date"))
-                    val start = navBackStackEntry.arguments?.getString("start")
-                    val end = navBackStackEntry.arguments?.getString("end")
                     ActivityDetailsScreen(
-                        activityId = navBackStackEntry.arguments?.getString("activityId")!!,
                         viewModel = viewModel,
                         onSavePressed = {
                             viewModel.onFormEvent(ActivityFormEvent.Submit)
@@ -121,10 +118,7 @@ fun NavGraph(navController: NavHostController) {
                         onDeletePressed = {
                             viewModel.onTriggerEvent(DeleteActivityEvent)
                             navController.popBackStack()
-                        },
-                        date = date,
-                        start = if (start == null) null else LocalTime.parse(start),
-                        end = if (end == null) null else LocalTime.parse(end)
+                        }
                     )
                 }
             }

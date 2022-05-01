@@ -38,10 +38,6 @@ import java.time.LocalTime
 @Composable
 fun ActivityDetailsScreen(
     viewModel: ActivityDetailViewModel,
-    activityId: String,
-    date: LocalDate,
-    start: LocalTime? = null,
-    end: LocalTime? = null,
     onBackPressed: () -> Unit,
     onSavePressed: () -> Unit,
     onDeletePressed: () -> Unit
@@ -68,21 +64,6 @@ fun ActivityDetailsScreen(
                     onBackPressed()
                 }
             }
-        }
-    }
-
-    if (activityId != "null") {
-        // Evita di rifare la chiamata API ad ogni recomposition
-        val onLoad = viewModel.onLoad.value
-        if (!onLoad) {
-            viewModel.onLoad.value = true
-            viewModel.onTriggerEvent(GetActivityEvent(activityId))
-        }
-    } else {
-        if (start != null && end != null) {
-            viewModel.createRecordedActivity(date = date, start = start, end = end)
-        } else {
-            viewModel.createManualActivity(date = date)
         }
     }
 

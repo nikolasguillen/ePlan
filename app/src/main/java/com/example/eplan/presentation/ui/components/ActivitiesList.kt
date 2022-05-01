@@ -58,7 +58,7 @@ fun ActivitiesList(
                                 workActivity = workActivity,
                                 onClick = {
                                     val route =
-                                        Screen.WorkActivityDetails.route + "/activityId=${workActivity.id}"
+                                        Screen.WorkActivityDetails.route + "/?activityId=${workActivity.id}"
                                     onNavigateToActivityDetailScreen(route)
                                 }
                             )

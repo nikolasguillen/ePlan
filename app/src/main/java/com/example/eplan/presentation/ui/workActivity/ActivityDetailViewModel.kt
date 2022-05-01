@@ -54,6 +54,25 @@ constructor(
 
     init {
         getToken()
+
+        val id = savedStateHandle.get<String?>("activityId")
+        val date = savedStateHandle.get<String>("date")
+        val start = savedStateHandle.get<String?>("start")
+        val end = savedStateHandle.get<String?>("end")
+
+        if (id == null) {
+            if (start == null && end == null) {
+                createManualActivity(date = LocalDate.parse(date))
+            } else {
+                createRecordedActivity(
+                    date = LocalDate.parse(date),
+                    start = LocalTime.parse(start),
+                    end = LocalTime.parse(end)
+                )
+            }
+        } else {
+            onTriggerEvent(GetActivityEvent(id = id))
+        }
     }
 
     fun onFormEvent(event: ActivityFormEvent) {
@@ -138,6 +157,8 @@ constructor(
 
     private fun getToken() {
         getToken.execute().onEach { dataState ->
+            retrieving.value = dataState.loading
+
             dataState.data?.let { token ->
                 userToken += token
                 savedStateHandle.get<String>(STATE_KEY_ACTIVITY)?.let { workActivityId ->

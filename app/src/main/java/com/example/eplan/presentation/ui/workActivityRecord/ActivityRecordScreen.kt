@@ -109,7 +109,7 @@ fun ActivityRecordScreen(
                         LargeFloatingActionButton(
                             onClick = {
                                 if (viewModel.isOver()) {
-                                    val route = Screen.WorkActivityDetails.route + "/activityId=null?date=${LocalDate.now()}&start=${start}&end=${end}"
+                                    val route = Screen.WorkActivityDetails.route + "/?date=${LocalDate.now()}&start=${start}&end=${end}"
                                     onSave(route)
                                 } else {
                                     when (viewModel.isRecording()) {

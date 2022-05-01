@@ -58,8 +58,7 @@ fun ActivitiesListScreen(
             MultiFloatingActionButton(
                 onAddClick = {
                     isExpanded.value = !isExpanded.value
-                    val id = "null"
-                    val route = Screen.WorkActivityDetails.route + "/activityId=${id}?date=${date}"
+                    val route = Screen.WorkActivityDetails.route + "/?date=${date}"
                     onNavigate(route)
                 },
                 onExpandClick = {
