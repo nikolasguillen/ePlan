@@ -47,7 +47,6 @@ fun ActivitiesListScreen(
         }
     }
 
-
     Scaffold(
         modifier = Modifier.padding(bottom = bottomNavPadding),
         topBar = {
@@ -83,11 +82,9 @@ fun ActivitiesListScreen(
                         calendarVisibility.value = false
                     }
                 )
-
                 ActivitiesList(
                     workActivities = workActivities.value,
                     onNavigateToActivityDetailScreen = onNavigate,
-                    isReady = viewModel.isReady,
                     isRefreshing = isRefreshing,
                     onRefresh = {
                         viewModel.onTriggerEvent(

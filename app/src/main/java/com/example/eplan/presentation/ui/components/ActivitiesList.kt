@@ -24,7 +24,6 @@ import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 fun ActivitiesList(
     workActivities: List<WorkActivity>,
     onNavigateToActivityDetailScreen: (String) -> Unit,
-    isReady: Boolean,
     isRefreshing: Boolean,
     onRefresh: () -> Unit
 ) {
@@ -42,37 +41,28 @@ fun ActivitiesList(
                     vertical = MaterialTheme.spacing.small
                 )
         ) {
-            when (isReady) {
+            when (isRefreshing) {
                 true -> {
-                    when (isRefreshing) {
-                        true -> {
-                            items(3) {
-                                PlaceholderCard()
-                            }
-                        }
-                        false -> {
-                            if (workActivities.isEmpty()) {
-                                item {
-                                    AnimationEmptyList(stringResource(id = R.string.no_interventi))
-                                }
-                            } else {
-                                items(workActivities) { workActivity ->
-                                    ActivityCard(
-                                        workActivity = workActivity,
-                                        onClick = {
-                                            val route =
-                                                Screen.WorkActivityDetails.route + "/activityId=${workActivity.id}"
-                                            onNavigateToActivityDetailScreen(route)
-                                        }
-                                    )
-                                }
-                            }
-                        }
+                    items(3) {
+                        PlaceholderCard()
                     }
                 }
                 false -> {
-                    items(3) {
-                        PlaceholderCard()
+                    if (workActivities.isEmpty()) {
+                        item {
+                            AnimationEmptyList(stringResource(id = R.string.no_interventi))
+                        }
+                    } else {
+                        items(workActivities) { workActivity ->
+                            ActivityCard(
+                                workActivity = workActivity,
+                                onClick = {
+                                    val route =
+                                        Screen.WorkActivityDetails.route + "/activityId=${workActivity.id}"
+                                    onNavigateToActivityDetailScreen(route)
+                                }
+                            )
+                        }
                     }
                 }
             }

@@ -67,6 +67,8 @@ constructor(
 
     private fun getToken() {
         getToken.execute().onEach { dataState ->
+            loading.value = dataState.loading
+            _isRefreshing.value = dataState.loading
 
             dataState.data?.let { token ->
                 userToken += token
