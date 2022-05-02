@@ -2,6 +2,8 @@ package com.example.eplan.network.model
 
 import com.example.eplan.domain.model.WorkActivity
 import com.example.eplan.domain.util.DomainMapper
+import com.example.eplan.network.util.dateTimeParser
+import com.example.eplan.network.util.dateToNetwork
 import java.time.LocalDate
 import java.time.LocalTime
 
@@ -35,7 +37,6 @@ class WorkActivityDtoMapper : DomainMapper<WorkActivityDto, WorkActivity> {
             description = domainModel.description,
             start = startDateTime,
             end = endDateTime,
-            duration = "",
             moveTime = domainModel.movingTime,
             moveDistance = domainModel.km,
             color = ""
@@ -50,28 +51,5 @@ class WorkActivityDtoMapper : DomainMapper<WorkActivityDto, WorkActivity> {
         return initial.map { mapFromDomainModel(it) }
     }
 
-    private fun dateTimeParser(dateTime: String): Pair<LocalDate, LocalTime> {
-        return Pair(
-            first = dateFromNetwork(dateTime.split(" ")[0]),
-            second = LocalTime.parse(dateTime.split(" ")[1])
-        )
-    }
 
-    /* Converte la data dal formato yyyy-MM-dd a dd-MM-yyyy */
-    private fun dateFromNetwork(date: String): LocalDate {
-        val dayOfMonth = date.split("-")[2].toInt()
-        val month = date.split("-")[1].toInt()
-        val year = date.split("-")[0].toInt()
-
-        return LocalDate.of(year, month, dayOfMonth)
-    }
-
-    /* Converte la data dal formato dd-MM-yyyy a yyyy-MM-dd */
-    private fun dateToNetwork(date: LocalDate): String {
-        val dayOfMonth = date.dayOfMonth
-        val month = date.monthValue
-        val year = date.year
-
-        return "$year-$month-$dayOfMonth"
-    }
 }

@@ -7,16 +7,16 @@ import com.google.gson.annotations.SerializedName
 data class AppointmentDto(
 
     @SerializedName("id_appuntamenti")
-    var id: String,
+    var idAppuntamento: String,
 
     @SerializedName("id_attivita")
     var idAttivita: String,
 
+    @SerializedName("title")
+    var title: String,
+
     @SerializedName("description")
     var description: String,
-
-    @SerializedName("date")
-    var date: String,
 
     @SerializedName("start")
     var start: String,
