@@ -1,10 +1,7 @@
 package com.example.eplan.presentation.ui.workActivityList
 
 import android.util.Log
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.*
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -38,7 +35,7 @@ constructor(
 ) : ViewModel() {
 
     private var userToken = USER_TOKEN
-    val workActivities: MutableState<List<WorkActivity>> = mutableStateOf(listOf())
+    val workActivities = mutableStateListOf<WorkActivity>()
     val loading = mutableStateOf(false)
     private val _isRefreshing = MutableStateFlow(false)
     val isRefreshing: StateFlow<Boolean>
@@ -87,7 +84,8 @@ constructor(
             _isRefreshing.value = dataState.loading
 
             dataState.data?.let { list ->
-                workActivities.value = list
+                workActivities.clear()
+                workActivities.addAll(list)
             }
 
             dataState.error?.let { error ->

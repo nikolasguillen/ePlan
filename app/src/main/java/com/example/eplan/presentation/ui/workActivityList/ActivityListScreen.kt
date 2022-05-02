@@ -75,7 +75,7 @@ fun ActivitiesListScreen(
                     }
                 )
                 ActivitiesList(
-                    workActivities = workActivities.value,
+                    workActivities = workActivities,
                     onNavigateToActivityDetailScreen = onNavigate,
                     isRefreshing = isRefreshing,
                     onRefresh = {

@@ -60,4 +60,6 @@
     <string name="minuti">Minuti</string>
     <string name="ore">Ore</string>
     <string name="giorni">Giorni</string>
+    <string name="apri_chiudi_calendario">Apri o chiudi il calendario</string>
+    <string name="vai_a_oggi">Vai alla data di oggi</string>
 </resources>
