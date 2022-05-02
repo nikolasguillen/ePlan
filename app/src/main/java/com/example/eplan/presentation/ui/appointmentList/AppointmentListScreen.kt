@@ -34,8 +34,7 @@ fun AppointmentListScreen(
                     val id = "null"
                     val route = Screen.AppointmentDetails.route + "/${id}"
                     onNavigate(route)
-                },
-                containerColor = MaterialTheme.colorScheme.primary
+                }
             ) {
                 Icon(
                     imageVector = Icons.Outlined.Create,

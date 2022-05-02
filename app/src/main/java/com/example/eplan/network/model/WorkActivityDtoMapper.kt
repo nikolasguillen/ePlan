@@ -3,6 +3,7 @@ package com.example.eplan.network.model
 import com.example.eplan.domain.model.WorkActivity
 import com.example.eplan.domain.util.DomainMapper
 import com.example.eplan.network.util.dateTimeParser
+import com.example.eplan.network.util.removeHtmlBreak
 
 class WorkActivityDtoMapper : DomainMapper<WorkActivityDto, WorkActivity> {
 
@@ -14,7 +15,7 @@ class WorkActivityDtoMapper : DomainMapper<WorkActivityDto, WorkActivity> {
             activityId = model.idAttivita,
             id = model.id,
             title = model.title,
-            description = model.description,
+            description = removeHtmlBreak(model.description),
             date = startDateTime.first,
             start = startDateTime.second,
             end = endDateTime.second,

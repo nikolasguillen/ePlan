@@ -5,6 +5,7 @@ import com.example.eplan.domain.util.DomainMapper
 import com.example.eplan.domain.util.Periodicity
 import com.example.eplan.domain.util.WarningUnit
 import com.example.eplan.network.util.dateTimeParser
+import com.example.eplan.network.util.removeHtmlBreak
 import java.time.LocalDate
 
 class AppointmentDtoMapper : DomainMapper<AppointmentDto, Appointment> {
@@ -22,7 +23,7 @@ class AppointmentDtoMapper : DomainMapper<AppointmentDto, Appointment> {
             id = model.idAppuntamento,
             activityId = model.idAttivita,
             title = model.title,
-            description = model.description,
+            description = removeHtmlBreak(model.description),
             date = startDateTime.first,
             start = startDateTime.second,
             end = endDateTime.second,
