@@ -82,8 +82,6 @@ constructor(
     }
 
     private fun dayChange() {
-        resetActivitiesState()
-
         dayChange.execute(token = userToken, query = date.value).onEach { dataState ->
             loading.value = dataState.loading
             _isRefreshing.value = dataState.loading
@@ -97,10 +95,6 @@ constructor(
                 // TODO "Gestire errori"
             }
         }.launchIn(viewModelScope)
-    }
-
-    private fun resetActivitiesState() {
-        workActivities.value = listOf()
     }
 
     private fun setDate(date: String) {

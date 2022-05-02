@@ -65,7 +65,6 @@ fun ActivitiesListScreen(
         },
         content = {
             Column(modifier = Modifier.padding(top = it.calculateTopPadding())) {
-                // Riga con data che al click apre/chiude il calendario
                 CollapsibleCalendar(
                     calendarVisibility = calendarVisibility,
                     date = date,
