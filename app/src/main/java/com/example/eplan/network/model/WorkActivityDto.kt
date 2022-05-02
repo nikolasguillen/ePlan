@@ -16,8 +16,9 @@ data class WorkActivityDto(
     @SerializedName("start")
     var start: String,
 
-    @SerializedName("durata")
-    var duration: String,
+//    TODO controllare se serve ancora
+//    @SerializedName("durata")
+//    var duration: String,
 
     @SerializedName("id_interventi")
     var id: String,

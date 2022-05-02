@@ -11,7 +11,7 @@ data class WorkActivity(
     val description: String = "",
     val descriptionError: String? = null,
     val date: LocalDate = LocalDate.now(),
-    val start: LocalTime = LocalTime.of(LocalTime.now().hour, LocalTime.now().minute),
+    val start: LocalTime = LocalTime.now().truncatedTo(ChronoUnit.MINUTES),
     val end: LocalTime = LocalTime.now().plusMinutes(10).truncatedTo(ChronoUnit.MINUTES),
     val timeError: String? = null,
     val movingTime: String = "",

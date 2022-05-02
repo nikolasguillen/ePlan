@@ -6,7 +6,7 @@ import com.example.eplan.interactors.GetToken
 import com.example.eplan.interactors.camera.SaveProfilePicUri
 import com.example.eplan.interactors.login.GetCredentialsFromCache
 import com.example.eplan.interactors.login.LoginAttempt
-import com.example.eplan.interactors.workActivityDetail.GetById
+import com.example.eplan.interactors.workActivityDetail.GetActivityById
 import com.example.eplan.interactors.workActivityDetail.UpdateActivity
 import com.example.eplan.interactors.workActivityDetail.ValidateDescription
 import com.example.eplan.interactors.workActivityDetail.ValidateTime
@@ -53,8 +53,8 @@ object InteractorsModule {
     fun provideActivityById(
         service: WorkActivityService,
         mapper: WorkActivityDtoMapper
-    ): GetById {
-        return GetById(
+    ): GetActivityById {
+        return GetActivityById(
             service = service,
             mapper = mapper
         )

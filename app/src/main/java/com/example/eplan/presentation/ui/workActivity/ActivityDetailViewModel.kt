@@ -8,7 +8,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.eplan.domain.model.WorkActivity
 import com.example.eplan.interactors.GetToken
-import com.example.eplan.interactors.workActivityDetail.GetById
+import com.example.eplan.interactors.workActivityDetail.GetActivityById
 import com.example.eplan.interactors.workActivityDetail.UpdateActivity
 import com.example.eplan.interactors.workActivityDetail.ValidateDescription
 import com.example.eplan.interactors.workActivityDetail.ValidateTime
@@ -21,7 +21,6 @@ import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.receiveAsFlow
-import kotlinx.coroutines.launch
 import java.time.LocalDate
 import java.time.LocalTime
 import javax.inject.Inject
@@ -33,7 +32,7 @@ const val STATE_KEY_ACTIVITY = "activity.state.workActivityId.key"
 class ActivityDetailViewModel
 @Inject
 constructor(
-    private val getById: GetById,
+    private val getActivityById: GetActivityById,
     private val updateActivity: UpdateActivity,
     private val getToken: GetToken,
     private val validateDescription: ValidateDescription,
@@ -41,7 +40,6 @@ constructor(
     private val savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
-    val onLoad = mutableStateOf(false)
     val retrieving = mutableStateOf(false)
     val sending = mutableStateOf(false)
     private val query = mutableStateOf("")
@@ -105,12 +103,12 @@ constructor(
         }
     }
 
-    fun createManualActivity(date: LocalDate) {
+    private fun createManualActivity(date: LocalDate) {
         workActivity.value = WorkActivity(date = date)
         initialState.value = WorkActivity(date = date)
     }
 
-    fun createRecordedActivity(date: LocalDate, start: LocalTime, end: LocalTime) {
+    private fun createRecordedActivity(date: LocalDate, start: LocalTime, end: LocalTime) {
         workActivity.value = WorkActivity(date = date, start = start, end = end)
         initialState.value = WorkActivity(date = date, start = start, end = end)
     }
@@ -175,7 +173,7 @@ constructor(
 
     private fun getActivity() {
         if (userToken != USER_TOKEN) {
-            getById.execute(token = userToken, id = query.value).onEach { dataState ->
+            getActivityById.execute(token = userToken, id = query.value).onEach { dataState ->
                 retrieving.value = dataState.loading
 
                 dataState.data?.let { newActivity ->

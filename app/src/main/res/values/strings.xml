@@ -51,4 +51,13 @@
     <string name="nascondi_password">Nascondi password</string>
     <string name="campo_vuoto">Questo campo non può essere vuoto</string>
     <string name="accesso_in_corso">Accesso in corso...</string>
+    <string name="nessuna">Nessuna</string>
+    <string name="giornaliera">Giornaliera</string>
+    <string name="settimanale">Settimanale</string>
+    <string name="bisettimanale">Bisettimanale</string>
+    <string name="mensile">Mensile</string>
+    <string name="bimestrale">Bimestrale</string>
+    <string name="minuti">Minuti</string>
+    <string name="ore">Ore</string>
+    <string name="giorni">Giorni</string>
 </resources>

@@ -1,60 +1,42 @@
 package com.example.eplan.domain.model
 
+import android.content.res.Resources
+import androidx.compose.ui.text.decapitalize
+import com.example.eplan.R
+import java.time.LocalDate
+import java.time.LocalTime
+import java.time.temporal.ChronoUnit
+
+enum class Periodicity(name: String) {
+    NESSUNA(Resources.getSystem().getString(R.string.nessuna)),
+    GIORNALIERA(Resources.getSystem().getString(R.string.giornaliera)),
+    SETTIMANALE(Resources.getSystem().getString(R.string.settimanale)),
+    BISETTIMANALE(Resources.getSystem().getString(R.string.bisettimanale)),
+    MENSILE(Resources.getSystem().getString(R.string.mensile)),
+    BIMESTRALE(Resources.getSystem().getString(R.string.bimestrale))
+}
+
+enum class WarningUnit(name: String) {
+    MINUTI(Resources.getSystem().getString(R.string.minuti)),
+    ORE(Resources.getSystem().getString(R.string.ore)),
+    GIORNI(Resources.getSystem().getString(R.string.giorni))
+}
+
 data class Appointment(
-    val activity: String,
-    val title: String,
-    val description: String,
-    val date: String,
-    val start: String,
-    val end: String,
-    val planning: Boolean,
-    val intervention: Boolean,
-    val invited: Map<String, Boolean>,
-    val periodicity: String,
-    val periodicityEnd: String,
-    val memo: Boolean,
-    val warningTime: String,
-    val warningUnit: String
+    val activityId: String = "",
+    val title: String = "",
+    val description: String = "",
+    val date: LocalDate = LocalDate.now(),
+    val start: LocalTime = LocalTime.now().truncatedTo(ChronoUnit.MINUTES),
+    val end: LocalTime = LocalTime.now().plusMinutes(10).truncatedTo(ChronoUnit.MINUTES),
+    val planning: Boolean = false,
+    val intervention: Boolean = false,
+    val invited: Map<User, Boolean>,
+    val periodicity: Periodicity = Periodicity.NESSUNA,
+    val periodicityEnd: LocalDate = LocalDate.now(),
+    val memo: Boolean = false,
+    val warningTime: Int,
+    val warningUnit: WarningUnit
 ) {
-    override fun equals(other: Any?): Boolean {
-        if (this === other) return true
-        if (javaClass != other?.javaClass) return false
 
-        other as Appointment
-
-        if (activity != other.activity) return false
-        if (title != other.title) return false
-        if (description != other.description) return false
-        if (date != other.date) return false
-        if (start != other.start) return false
-        if (end != other.end) return false
-        if (planning != other.planning) return false
-        if (intervention != other.intervention) return false
-        if (invited != other.invited) return false
-        if (periodicity != other.periodicity) return false
-        if (periodicityEnd != other.periodicityEnd) return false
-        if (memo != other.memo) return false
-        if (warningTime != other.warningTime) return false
-        if (warningUnit != other.warningUnit) return false
-
-        return true
-    }
-
-    override fun hashCode(): Int {
-        var result = activity.hashCode()
-        result = 31 * result + title.hashCode()
-        result = 31 * result + description.hashCode()
-        result = 31 * result + date.hashCode()
-        result = 31 * result + start.hashCode()
-        result = 31 * result + end.hashCode()
-        result = 31 * result + planning.hashCode()
-        result = 31 * result + intervention.hashCode()
-        result = 31 * result + invited.hashCode()
-        result = 31 * result + periodicity.hashCode()
-        result = 31 * result + periodicityEnd.hashCode()
-        result = 31 * result + memo.hashCode()
-        result = 31 * result + warningTime.hashCode()
-        result = 31 * result + warningUnit.hashCode()
-        return result
-    }
 }

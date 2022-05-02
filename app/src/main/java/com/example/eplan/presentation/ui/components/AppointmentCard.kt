@@ -36,7 +36,7 @@ fun AppointmentCard(
     ) {
         Column(modifier = Modifier.padding(MaterialTheme.spacing.medium)) {
             Text(
-                text = appointment.activity.replaceFirstChar { it.uppercase() },
+                text = appointment.activityId.replaceFirstChar { it.uppercase() },
                 style = MaterialTheme.typography.titleMedium
             )
             Text(
@@ -44,8 +44,8 @@ fun AppointmentCard(
                 style = MaterialTheme.typography.bodyMedium,
                 modifier = Modifier.padding(bottom = MaterialTheme.spacing.extraSmall)
             )
-            Text(text = appointment.start, style = MaterialTheme.typography.labelSmall)
-            Text(text = appointment.end, style = MaterialTheme.typography.labelSmall)
+            Text(text = appointment.start.toString(), style = MaterialTheme.typography.labelSmall)
+            Text(text = appointment.end.toString(), style = MaterialTheme.typography.labelSmall)
         }
     }
 }
