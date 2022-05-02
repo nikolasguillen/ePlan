@@ -53,7 +53,7 @@ fun ActivityDetailsScreen(
                     snackBarHostState.showSnackbar(message = event.error)
                 }
                 is ActivityDetailViewModel.ValidationEvent.RetrieveError -> {
-                    snackBarHostState.showSnackbar(message = event.error)
+                    snackBarHostState.showSnackbar(message = "${event.error}\nTorno indietro...")
                     onBackPressed()
                 }
             }

@@ -37,11 +37,8 @@ constructor(
     private val savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
-    val workActivities: MutableState<List<WorkActivity>> = mutableStateOf(listOf())
-
-    var isReady by mutableStateOf(false)
-        private set
     private var userToken = USER_TOKEN
+    val workActivities: MutableState<List<WorkActivity>> = mutableStateOf(listOf())
     val loading = mutableStateOf(false)
     private val _isRefreshing = MutableStateFlow(false)
     val isRefreshing: StateFlow<Boolean>
@@ -49,7 +46,6 @@ constructor(
     val date = mutableStateOf(LocalDate.now().toString())
 
     init {
-        Log.d(TAG, "isReady: $isReady")
         getToken()
     }
 
@@ -75,7 +71,7 @@ constructor(
                 savedStateHandle.get<String>(STATE_KEY_QUERY)?.let { q ->
                     setDate(q)
                 }
-                isReady = true
+                dayChange()
             }
 
             dataState.error?.let { error ->

@@ -41,12 +41,6 @@ fun ActivitiesListScreen(
         mutableStateOf(false)
     }
 
-    LaunchedEffect(key1 = viewModel.isReady) {
-        if (viewModel.isReady) {
-            viewModel.onTriggerEvent(ActivityListEvent.DayChangeEvent(date = date))
-        }
-    }
-
     Scaffold(
         modifier = Modifier.padding(bottom = bottomNavPadding),
         topBar = {

@@ -2,7 +2,9 @@ package com.example.eplan.presentation.ui.workActivity
 
 import android.util.Log
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -51,7 +53,43 @@ constructor(
 
     init {
         getToken()
+    }
 
+    fun onTriggerEvent(event: ActivityDetailEvent) {
+        when (event) {
+            is GetActivityEvent -> {
+                setQuery(event.id)
+                getActivity()
+            }
+            is UpdateActivityEvent -> {
+                updateActivity()
+            }
+            is DeleteActivityEvent -> {
+                deleteActivity()
+            }
+        }
+    }
+
+    private fun getToken() {
+        getToken.execute().onEach { dataState ->
+            retrieving.value = dataState.loading
+
+            dataState.data?.let { token ->
+                userToken += token
+                savedStateHandle.get<String>(STATE_KEY_ACTIVITY)?.let { workActivityId ->
+                    onTriggerEvent(GetActivityEvent(workActivityId))
+                }
+                onCreation()
+            }
+
+            dataState.error?.let { error ->
+                Log.e(TAG, "getToken: $error")
+                //TODO gestire errori
+            }
+        }.launchIn(viewModelScope)
+    }
+
+    private fun onCreation() {
         val id = savedStateHandle.get<String?>("activityId")
         val date = savedStateHandle.get<String>("date")
         val start = savedStateHandle.get<String?>("start")
@@ -70,6 +108,16 @@ constructor(
         } else {
             onTriggerEvent(GetActivityEvent(id = id))
         }
+    }
+
+    private fun createManualActivity(date: LocalDate) {
+        workActivity.value = WorkActivity(date = date)
+        initialState.value = WorkActivity(date = date)
+    }
+
+    private fun createRecordedActivity(date: LocalDate, start: LocalTime, end: LocalTime) {
+        workActivity.value = WorkActivity(date = date, start = start, end = end)
+        initialState.value = WorkActivity(date = date, start = start, end = end)
     }
 
     fun onFormEvent(event: ActivityFormEvent) {
@@ -102,16 +150,6 @@ constructor(
         }
     }
 
-    private fun createManualActivity(date: LocalDate) {
-        workActivity.value = WorkActivity(date = date)
-        initialState.value = WorkActivity(date = date)
-    }
-
-    private fun createRecordedActivity(date: LocalDate, start: LocalTime, end: LocalTime) {
-        workActivity.value = WorkActivity(date = date, start = start, end = end)
-        initialState.value = WorkActivity(date = date, start = start, end = end)
-    }
-
     fun checkChanges(): Boolean {
         return workActivity.value != initialState.value
     }
@@ -135,39 +173,6 @@ constructor(
             }
             onTriggerEvent(UpdateActivityEvent)
         }
-    }
-
-    fun onTriggerEvent(event: ActivityDetailEvent) {
-        when (event) {
-            is GetActivityEvent -> {
-                setQuery(event.id)
-                getActivity()
-            }
-            is UpdateActivityEvent -> {
-                updateActivity()
-            }
-            is DeleteActivityEvent -> {
-                deleteActivity()
-            }
-        }
-    }
-
-    private fun getToken() {
-        getToken.execute().onEach { dataState ->
-            retrieving.value = dataState.loading
-
-            dataState.data?.let { token ->
-                userToken += token
-                savedStateHandle.get<String>(STATE_KEY_ACTIVITY)?.let { workActivityId ->
-                    onTriggerEvent(GetActivityEvent(workActivityId))
-                }
-            }
-
-            dataState.error?.let { error ->
-                Log.e(TAG, "getToken: $error")
-                //TODO gestire errori
-            }
-        }.launchIn(viewModelScope)
     }
 
     private fun getActivity() {
