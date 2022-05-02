@@ -37,9 +37,7 @@ fun ActivitiesListScreen(
     val isRefreshing by viewModel.isRefreshing.collectAsState()
     val calendarVisibility = remember { mutableStateOf(false) }
     val selectedDate = remember { mutableStateOf(LocalDate.parse(date)) }
-    val isExpanded = remember {
-        mutableStateOf(false)
-    }
+    var isExpanded by remember { mutableStateOf(false) }
 
     Scaffold(
         modifier = Modifier.padding(bottom = bottomNavPadding),
@@ -51,12 +49,12 @@ fun ActivitiesListScreen(
         floatingActionButton = {
             MultiFloatingActionButton(
                 onAddClick = {
-                    isExpanded.value = !isExpanded.value
-                    val route = Screen.WorkActivityDetails.route + "/?date=${date}"
+                    isExpanded = !isExpanded
+                    val route = Screen.WorkActivityDetails.route + "/?date=$date"
                     onNavigate(route)
                 },
                 onExpandClick = {
-                    isExpanded.value = !isExpanded.value
+                    isExpanded = !isExpanded
                 },
                 onRecordClick = {
                     onNavigate(Screen.WorkActivityRecord.route)
@@ -89,7 +87,7 @@ fun ActivitiesListScreen(
             }
 
             // Ombra per quando apro il multi action FAB
-            AnimatedVisibility(visible = isExpanded.value, enter = fadeIn(), exit = fadeOut()) {
+            AnimatedVisibility(visible = isExpanded, enter = fadeIn(), exit = fadeOut()) {
                 Box(
                     modifier = Modifier
                         .background(Color.Black.copy(alpha = 0.5F))

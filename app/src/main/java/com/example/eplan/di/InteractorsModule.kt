@@ -5,6 +5,7 @@ import com.example.eplan.interactors.GetProfilePicUri
 import com.example.eplan.interactors.GetToken
 import com.example.eplan.interactors.appointmentDetail.GetAppointmentById
 import com.example.eplan.interactors.appointmentDetail.UpdateAppointment
+import com.example.eplan.interactors.appointmentList.DayChangeAppointment
 import com.example.eplan.interactors.camera.SaveProfilePicUri
 import com.example.eplan.interactors.login.GetCredentialsFromCache
 import com.example.eplan.interactors.login.LoginAttempt
@@ -12,7 +13,7 @@ import com.example.eplan.interactors.workActivityDetail.GetActivityById
 import com.example.eplan.interactors.workActivityDetail.SubmitActivity
 import com.example.eplan.interactors.workActivityDetail.ValidateDescription
 import com.example.eplan.interactors.workActivityDetail.ValidateTime
-import com.example.eplan.interactors.workActivityList.DayChange
+import com.example.eplan.interactors.workActivityList.DayChangeWorkActivity
 import com.example.eplan.network.model.AppointmentDtoMapper
 import com.example.eplan.network.model.WorkActivityDtoMapper
 import com.example.eplan.network.services.AppointmentService
@@ -35,8 +36,8 @@ object InteractorsModule {
     fun provideDayActivities(
         service: WorkActivityService,
         mapper: WorkActivityDtoMapper
-    ): DayChange {
-        return DayChange(
+    ): DayChangeWorkActivity {
+        return DayChangeWorkActivity(
             service = service,
             mapper = mapper
         )
@@ -147,5 +148,14 @@ object InteractorsModule {
         mapper: AppointmentDtoMapper
     ): UpdateAppointment {
         return UpdateAppointment(service = service, mapper = mapper)
+    }
+
+    @ViewModelScoped
+    @Provides
+    fun provideDayChangeAppointment(
+        service: AppointmentService,
+        mapper: AppointmentDtoMapper
+    ): DayChangeAppointment {
+        return DayChangeAppointment(service = service, mapper = mapper)
     }
 }

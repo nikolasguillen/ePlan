@@ -1,27 +1,21 @@
 package com.example.eplan.presentation.ui.workActivityList
 
 import android.util.Log
-import androidx.compose.runtime.*
+import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.eplan.di.NetworkModule
 import com.example.eplan.domain.model.WorkActivity
 import com.example.eplan.interactors.GetToken
-import com.example.eplan.interactors.workActivityList.DayChange
+import com.example.eplan.interactors.workActivityList.DayChangeWorkActivity
 import com.example.eplan.presentation.ui.workActivityList.ActivityListEvent.DayChangeEvent
-import com.example.eplan.presentation.ui.workActivityList.ActivityListEvent.RestoreStateEvent
 import com.example.eplan.presentation.util.TAG
 import com.example.eplan.presentation.util.USER_TOKEN
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.*
-import kotlinx.coroutines.launch
-import okhttp3.internal.notify
-import okhttp3.internal.wait
 import java.time.LocalDate
-import java.time.LocalTime
 import javax.inject.Inject
-import javax.inject.Named
 
 const val STATE_KEY_QUERY = "activity.state.query.key"
 
@@ -29,7 +23,7 @@ const val STATE_KEY_QUERY = "activity.state.query.key"
 class ActivityListViewModel
 @Inject
 constructor(
-    private val dayChange: DayChange,
+    private val dayChangeWorkActivity: DayChangeWorkActivity,
     private val getToken: GetToken,
     private val savedStateHandle: SavedStateHandle
 ) : ViewModel() {
@@ -50,9 +44,6 @@ constructor(
         when (event) {
             is DayChangeEvent -> {
                 setDate(event.date)
-                dayChange()
-            }
-            is RestoreStateEvent -> {
                 dayChange()
             }
         }
@@ -79,7 +70,7 @@ constructor(
     }
 
     private fun dayChange() {
-        dayChange.execute(token = userToken, query = date.value).onEach { dataState ->
+        dayChangeWorkActivity.execute(token = userToken, query = date.value).onEach { dataState ->
             loading.value = dataState.loading
             _isRefreshing.value = dataState.loading
 
@@ -89,8 +80,8 @@ constructor(
             }
 
             dataState.error?.let { error ->
-                Log.e(TAG, "dayChange: $error")
-                // TODO "Gestire errori"
+                Log.e(TAG, "dayChange (workActivity): $error")
+                // TODO Gestire errori
             }
         }.launchIn(viewModelScope)
     }

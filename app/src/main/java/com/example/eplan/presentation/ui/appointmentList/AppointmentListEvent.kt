@@ -1,4 +1,8 @@
 package com.example.eplan.presentation.ui.appointmentList
 
-class AppointmentListEvent {
+sealed class AppointmentListEvent {
+
+    data class DayChangeEvent(
+        val date: String
+    ): AppointmentListEvent()
 }

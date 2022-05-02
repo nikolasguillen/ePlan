@@ -1,5 +1,6 @@
 package com.example.eplan.presentation.ui.appointmentList
 
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Create
@@ -11,6 +12,7 @@ import androidx.navigation.NavHostController
 import com.example.eplan.R
 import com.example.eplan.presentation.navigation.NestedNavGraphs
 import com.example.eplan.presentation.navigation.Screen
+import com.example.eplan.presentation.ui.components.CollapsibleCalendar
 import com.example.eplan.presentation.ui.components.TopBar
 import com.example.eplan.presentation.util.bottomNavPadding
 import java.time.LocalDate
@@ -26,9 +28,7 @@ fun AppointmentListScreen(
     val isRefreshing by viewModel.isRefreshing.collectAsState()
     val calendarVisibility = remember { mutableStateOf(false) }
     val selectedDate = remember { mutableStateOf(LocalDate.parse(date)) }
-    val isExpanded = remember {
-        mutableStateOf(false)
-    }
+    var isExpanded by remember { mutableStateOf(false) }
 
     Scaffold(
         modifier = Modifier.padding(bottom = bottomNavPadding),
@@ -40,8 +40,8 @@ fun AppointmentListScreen(
         floatingActionButton = {
             FloatingActionButton(
                 onClick = {
-                    val id = "null"
-                    val route = Screen.AppointmentDetails.route + "/${id}"
+                    isExpanded = !isExpanded
+                    val route = Screen.AppointmentDetails.route + "/?date=$date"
                     onNavigate(route)
                 }
             ) {
@@ -52,7 +52,17 @@ fun AppointmentListScreen(
             }
         },
         content = {
-
+            Column(modifier = Modifier.padding(top = it.calculateTopPadding())) {
+                CollapsibleCalendar(
+                    calendarVisibility = calendarVisibility,
+                    date = date,
+                    onDayChange = { date ->
+                        selectedDate.value = LocalDate.parse(date)
+                        viewModel.onTriggerEvent(AppointmentListEvent.DayChangeEvent(date = date))
+                        calendarVisibility.value = false
+                    }
+                )
+            }
         }
     )
 }
