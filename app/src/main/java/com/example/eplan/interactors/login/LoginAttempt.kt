@@ -3,7 +3,7 @@ package com.example.eplan.interactors.login
 import com.example.eplan.cache.UserDao
 import com.example.eplan.cache.model.UserEntity
 import com.example.eplan.domain.data.DataState
-import com.example.eplan.network.LoginService
+import com.example.eplan.network.services.LoginService
 import com.example.eplan.network.model.CredentialsDto
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow

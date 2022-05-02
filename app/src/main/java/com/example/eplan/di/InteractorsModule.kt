@@ -3,17 +3,21 @@ package com.example.eplan.di
 import com.example.eplan.cache.UserDao
 import com.example.eplan.interactors.GetProfilePicUri
 import com.example.eplan.interactors.GetToken
+import com.example.eplan.interactors.appointmentDetail.GetAppointmentById
+import com.example.eplan.interactors.appointmentDetail.UpdateAppointment
 import com.example.eplan.interactors.camera.SaveProfilePicUri
 import com.example.eplan.interactors.login.GetCredentialsFromCache
 import com.example.eplan.interactors.login.LoginAttempt
 import com.example.eplan.interactors.workActivityDetail.GetActivityById
-import com.example.eplan.interactors.workActivityDetail.UpdateActivity
+import com.example.eplan.interactors.workActivityDetail.SubmitActivity
 import com.example.eplan.interactors.workActivityDetail.ValidateDescription
 import com.example.eplan.interactors.workActivityDetail.ValidateTime
 import com.example.eplan.interactors.workActivityList.DayChange
-import com.example.eplan.network.LoginService
-import com.example.eplan.network.WorkActivityService
+import com.example.eplan.network.model.AppointmentDtoMapper
 import com.example.eplan.network.model.WorkActivityDtoMapper
+import com.example.eplan.network.services.AppointmentService
+import com.example.eplan.network.services.LoginService
+import com.example.eplan.network.services.WorkActivityService
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -24,6 +28,8 @@ import dagger.hilt.android.scopes.ViewModelScoped
 @InstallIn(ViewModelComponent::class)
 object InteractorsModule {
 
+    /** Provider degli interactors degli interventi **/
+
     @ViewModelScoped
     @Provides
     fun provideDayActivities(
@@ -33,18 +39,6 @@ object InteractorsModule {
         return DayChange(
             service = service,
             mapper = mapper
-        )
-    }
-
-    @ViewModelScoped
-    @Provides
-    fun provideLoginResponse(
-        service: LoginService,
-        userDao: UserDao
-    ): LoginAttempt {
-        return LoginAttempt(
-            service = service,
-            userDao = userDao
         )
     }
 
@@ -65,12 +59,14 @@ object InteractorsModule {
     fun provideSubmitWorkActivity(
         service: WorkActivityService,
         mapper: WorkActivityDtoMapper
-    ): UpdateActivity {
-        return UpdateActivity(
+    ): SubmitActivity {
+        return SubmitActivity(
             service = service,
             mapper = mapper
         )
     }
+
+    /** Provider dei validatori delle form **/
 
     @ViewModelScoped
     @Provides
@@ -84,6 +80,22 @@ object InteractorsModule {
         return ValidateTime()
     }
 
+    /** Interactors login **/
+
+    @ViewModelScoped
+    @Provides
+    fun provideLoginResponse(
+        service: LoginService,
+        userDao: UserDao
+    ): LoginAttempt {
+        return LoginAttempt(
+            service = service,
+            userDao = userDao
+        )
+    }
+
+    /** Provider dello user token **/
+
     @ViewModelScoped
     @Provides
     fun provideUserToken(
@@ -92,6 +104,7 @@ object InteractorsModule {
         return GetToken(userDao = userDao)
     }
 
+    /** Provider immagine profilo TODO cancellarli **/
     @ViewModelScoped
     @Provides
     fun provideSaveProfilePicUri(
@@ -114,5 +127,25 @@ object InteractorsModule {
         userDao: UserDao
     ): GetCredentialsFromCache {
         return GetCredentialsFromCache(userDao = userDao)
+    }
+
+    /** Provider degli interactors degli appuntamenti **/
+
+    @ViewModelScoped
+    @Provides
+    fun provideGetAppointmentById(
+        service: AppointmentService,
+        mapper: AppointmentDtoMapper
+    ): GetAppointmentById {
+        return GetAppointmentById(service = service, mapper = mapper)
+    }
+
+    @ViewModelScoped
+    @Provides
+    fun provideUpdateAppointment(
+        service: AppointmentService,
+        mapper: AppointmentDtoMapper
+    ): UpdateAppointment {
+        return UpdateAppointment(service = service, mapper = mapper)
     }
 }

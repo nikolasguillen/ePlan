@@ -19,19 +19,12 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.window.Dialog
-import com.airbnb.lottie.compose.LottieAnimation
-import com.airbnb.lottie.compose.LottieCompositionSpec
-import com.airbnb.lottie.compose.rememberLottieComposition
 import com.example.eplan.R
 import com.example.eplan.presentation.ui.components.BottomSaveBar
 import com.example.eplan.presentation.ui.components.PlaceholderDetails
 import com.example.eplan.presentation.ui.components.SendAnimation
 import com.example.eplan.presentation.ui.components.WorkActivityDetail
-import com.example.eplan.presentation.ui.workActivity.ActivityDetailEvent.GetActivityEvent
 import com.example.eplan.presentation.util.spacing
-import kotlinx.coroutines.delay
-import java.time.LocalDate
-import java.time.LocalTime
 
 @ExperimentalMaterial3Api
 @ExperimentalComposeUiApi
@@ -53,7 +46,7 @@ fun ActivityDetailsScreen(
     LaunchedEffect(key1 = context) {
         viewModel.validationEvents.collect { event ->
             when (event) {
-                is ActivityDetailViewModel.ValidationEvent.Success -> {
+                is ActivityDetailViewModel.ValidationEvent.UpdateSuccess -> {
                     onBackPressed()
                 }
                 is ActivityDetailViewModel.ValidationEvent.SubmitError -> {

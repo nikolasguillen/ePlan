@@ -9,7 +9,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.eplan.domain.model.WorkActivity
 import com.example.eplan.interactors.GetToken
 import com.example.eplan.interactors.workActivityDetail.GetActivityById
-import com.example.eplan.interactors.workActivityDetail.UpdateActivity
+import com.example.eplan.interactors.workActivityDetail.SubmitActivity
 import com.example.eplan.interactors.workActivityDetail.ValidateDescription
 import com.example.eplan.interactors.workActivityDetail.ValidateTime
 import com.example.eplan.presentation.ui.workActivity.ActivityDetailEvent.*
@@ -25,7 +25,6 @@ import java.time.LocalDate
 import java.time.LocalTime
 import javax.inject.Inject
 
-
 const val STATE_KEY_ACTIVITY = "activity.state.workActivityId.key"
 
 @HiltViewModel
@@ -33,17 +32,17 @@ class ActivityDetailViewModel
 @Inject
 constructor(
     private val getActivityById: GetActivityById,
-    private val updateActivity: UpdateActivity,
+    private val submitActivity: SubmitActivity,
     private val getToken: GetToken,
     private val validateDescription: ValidateDescription,
     private val validateTime: ValidateTime,
     private val savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
+    private var userToken = USER_TOKEN
     val retrieving = mutableStateOf(false)
     val sending = mutableStateOf(false)
-    private val query = mutableStateOf("")
-    private var userToken = USER_TOKEN
+    private var query = ""
     private var initialState: MutableState<WorkActivity?> = mutableStateOf(null)
     var workActivity: MutableState<WorkActivity?> = mutableStateOf(null)
         private set
@@ -172,33 +171,30 @@ constructor(
     }
 
     private fun getActivity() {
-        if (userToken != USER_TOKEN) {
-            getActivityById.execute(token = userToken, id = query.value).onEach { dataState ->
-                retrieving.value = dataState.loading
+        getActivityById.execute(token = userToken, id = query).onEach { dataState ->
+            retrieving.value = dataState.loading
 
-                dataState.data?.let { newActivity ->
-                    initialState.value = newActivity
-                    workActivity.value = newActivity
-                }
+            dataState.data?.let { newActivity ->
+                initialState.value = newActivity
+                workActivity.value = newActivity
+            }
 
-                dataState.error?.let { error ->
-                    Log.e(TAG, "getActivity: $error")
-                    validationEventChannel.send(ValidationEvent.RetrieveError(error = error))
-                }
-            }.launchIn(viewModelScope)
-        }
+            dataState.error?.let { error ->
+                Log.e(TAG, "getActivity: $error")
+                validationEventChannel.send(ValidationEvent.RetrieveError(error = error))
+            }
+        }.launchIn(viewModelScope)
     }
 
     private fun updateActivity() {
         workActivity.value?.let {
-
-            updateActivity.execute(token = userToken, workActivity = it)
+            submitActivity.execute(token = userToken, workActivity = it)
                 .onEach { dataState ->
                     sending.value = dataState.loading
 
                     dataState.data?.let { result ->
                         if (result) {
-                            validationEventChannel.send(ValidationEvent.Success)
+                            validationEventChannel.send(ValidationEvent.UpdateSuccess)
                         }
                     }
 
@@ -218,12 +214,12 @@ constructor(
     }
 
     private fun setQuery(query: String) {
-        this.query.value = query
+        this.query = query
         savedStateHandle.set(STATE_KEY_ACTIVITY, query)
     }
 
     sealed class ValidationEvent {
-        object Success : ValidationEvent()
+        object UpdateSuccess : ValidationEvent()
         data class SubmitError(val error: String) : ValidationEvent()
         data class RetrieveError(val error: String) : ValidationEvent()
     }

@@ -1,26 +1,10 @@
 package com.example.eplan.domain.model
 
-import android.content.res.Resources
-import androidx.compose.ui.text.decapitalize
-import com.example.eplan.R
+import com.example.eplan.domain.util.Periodicity
+import com.example.eplan.domain.util.WarningUnit
 import java.time.LocalDate
 import java.time.LocalTime
 import java.time.temporal.ChronoUnit
-
-enum class Periodicity(name: String) {
-    NESSUNA(Resources.getSystem().getString(R.string.nessuna)),
-    GIORNALIERA(Resources.getSystem().getString(R.string.giornaliera)),
-    SETTIMANALE(Resources.getSystem().getString(R.string.settimanale)),
-    BISETTIMANALE(Resources.getSystem().getString(R.string.bisettimanale)),
-    MENSILE(Resources.getSystem().getString(R.string.mensile)),
-    BIMESTRALE(Resources.getSystem().getString(R.string.bimestrale))
-}
-
-enum class WarningUnit(name: String) {
-    MINUTI(Resources.getSystem().getString(R.string.minuti)),
-    ORE(Resources.getSystem().getString(R.string.ore)),
-    GIORNI(Resources.getSystem().getString(R.string.giorni))
-}
 
 data class Appointment(
     val id: String = "",

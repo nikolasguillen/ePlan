@@ -2,7 +2,7 @@ package com.example.eplan.interactors.workActivityList
 
 import com.example.eplan.domain.data.DataState
 import com.example.eplan.domain.model.WorkActivity
-import com.example.eplan.network.WorkActivityService
+import com.example.eplan.network.services.WorkActivityService
 import com.example.eplan.network.model.WorkActivityDtoMapper
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow

@@ -2,14 +2,14 @@ package com.example.eplan.interactors.workActivityDetail
 
 import com.example.eplan.domain.data.DataState
 import com.example.eplan.domain.model.WorkActivity
-import com.example.eplan.network.WorkActivityService
+import com.example.eplan.network.services.WorkActivityService
 import com.example.eplan.network.model.WorkActivityDtoMapper
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 
-class UpdateActivity
+class SubmitActivity
 @Inject
 constructor(
     private val service: WorkActivityService,
@@ -24,8 +24,7 @@ constructor(
 
             //TODO controlla che ci sia connessione internet
             sendWorkActivity(token = token, workActivity = workActivity)
-
-            delay(1500)
+            delay(1000)
 
             emit(DataState.success(true))
         } catch (e: Exception) {

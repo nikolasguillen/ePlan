@@ -3,9 +3,6 @@ package com.example.eplan.network.model
 import com.example.eplan.domain.model.WorkActivity
 import com.example.eplan.domain.util.DomainMapper
 import com.example.eplan.network.util.dateTimeParser
-import com.example.eplan.network.util.dateToNetwork
-import java.time.LocalDate
-import java.time.LocalTime
 
 class WorkActivityDtoMapper : DomainMapper<WorkActivityDto, WorkActivity> {
 
@@ -27,8 +24,8 @@ class WorkActivityDtoMapper : DomainMapper<WorkActivityDto, WorkActivity> {
     }
 
     override fun mapFromDomainModel(domainModel: WorkActivity): WorkActivityDto {
-        val startDateTime = dateToNetwork(domainModel.date) + " " + domainModel.start
-        val endDateTime = dateToNetwork(domainModel.date) + " " + domainModel.end
+        val startDateTime = "${domainModel.date} ${domainModel.start}"
+        val endDateTime = "${domainModel.date} ${domainModel.end}"
 
         return WorkActivityDto(
             idAttivita = domainModel.activityId,

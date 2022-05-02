@@ -1,6 +1,5 @@
 package com.example.eplan.network.model
 
-import com.example.eplan.domain.model.Periodicity
 import com.example.eplan.domain.model.User
 import com.google.gson.annotations.SerializedName
 

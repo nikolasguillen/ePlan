@@ -1,4 +1,4 @@
-package com.example.eplan.network
+package com.example.eplan.network.services
 
 import com.example.eplan.network.model.CredentialsDto
 import com.example.eplan.network.responses.LoginResponse
