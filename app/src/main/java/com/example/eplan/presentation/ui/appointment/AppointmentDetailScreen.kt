@@ -25,13 +25,17 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.snapshots.Snapshot
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
@@ -42,77 +46,113 @@ import com.example.eplan.R
 import com.example.eplan.domain.model.Appointment
 import com.example.eplan.domain.model.User
 import com.example.eplan.presentation.navigation.BottomNavBarItems
+import com.example.eplan.presentation.ui.components.BottomSaveBar
+import com.example.eplan.presentation.ui.components.PlaceholderDetails
+import com.example.eplan.presentation.ui.components.SendAnimation
+import com.example.eplan.presentation.util.spacing
 
+@ExperimentalMaterial3Api
+@ExperimentalComposeUiApi
 @Composable
 fun AppointmentDetailsScreen(
-    appointment: Appointment,
-    navController: NavHostController
+    viewModel: AppointmentDetailViewModel,
+    onBackPressed: () -> Unit,
+    onSavePressed: () -> Unit,
+    onDeletePressed: () -> Unit
 ) {
 
-//    val name = remember { mutableStateOf(appointment.activity) }
-//    val title = remember { mutableStateOf(appointment.title) }
-//    val desc = remember { mutableStateOf(appointment.description) }
-//    val date = remember { mutableStateOf(appointment.date) }
-//    val start = remember { mutableStateOf(appointment.start) }
-//    val end = remember { mutableStateOf(appointment.end) }
-//    val planning = remember { mutableStateOf(appointment.planning) }
-//    val intervention = remember { mutableStateOf(appointment.intervention) }
-//    val people = remember { createPeople(appointment.invited) }
-//    val periodicity = remember { mutableStateOf(appointment.periodicity) }
-//    val periodicityEnd = remember { mutableStateOf(appointment.periodicityEnd) }
-//    val memo = remember { mutableStateOf(appointment.memo) }
-//    val warningTime = remember { mutableStateOf(appointment.warningTime) }
-//    val warningUnit = remember { mutableStateOf(appointment.warningUnit) }
-//
-//    val items = listOf(
-//        BottomNavBarItems.Save,
-//    )
-//
-//    val backDialog = remember { mutableStateOf(false) }
-//    val invitedDialog = remember { mutableStateOf(false) }
-//    val periodicityDialog = remember { mutableStateOf(false) }
-//    val timeUnitDialog = remember { mutableStateOf(false) }
-//
-//    Scaffold(
-//        topBar = {
-//            MediumTopAppBar(
-//                title = { Text(text = "Appuntamento") },
-//                navigationIcon = {
-//                    IconButton(onClick = { backDialog.value = true }) {
-//                        Icon(
-//                            imageVector = Icons.Filled.ArrowBack,
-//                            contentDescription = "Back"
-//                        )
-//                    }
-//                },
-//                actions = {
-//                    IconButton(onClick = { *//*TODO*//* }) {
-//                        Icon(
-//                            imageVector = Icons.Outlined.Delete,
-//                            tint = Color.Red,
-//                            contentDescription = "Elimina commessa"
-//                        )
-//                    }
-//                })
-//        },
-//        bottomBar = {
-//            NavigationBar {
-//                items.forEach { item ->
-//                    NavigationBarItem(
-//                        selected = false,
-//                        onClick = { navController.navigateUp() },
-//                        icon = {
-//                            Icon(
-//                                painterResource(id = item.icon),
-//                                contentDescription = item.title
-//                            )
-//                        },
-//                        label = { Text(text = item.title) },
-//                        modifier = Modifier.background(Color.Transparent, CircleShape)
-//                    )
-//                }
-//            }
-//        },
+    val context = LocalContext.current
+    val snackBarHostState = remember { SnackbarHostState() }
+    val retrieving = viewModel.retrieving
+    val sending = viewModel.sending
+    val keyboardController = LocalSoftwareKeyboardController.current
+    val backDialog = remember { mutableStateOf(false) }
+    val invitedDialog = remember { mutableStateOf(false) }
+    val periodicityDialog = remember { mutableStateOf(false) }
+    val timeUnitDialog = remember { mutableStateOf(false) }
+
+    LaunchedEffect(key1 = context) {
+
+    }
+
+    Scaffold(
+        topBar = {
+            MediumTopAppBar(
+                title = { Text(text = stringResource(R.string.appuntamento)) },
+                navigationIcon = {
+                    IconButton(onClick = {
+                        if (viewModel.checkChanges()) {
+                            backDialog.value = true
+                        } else {
+                            onBackPressed()
+                            keyboardController?.hide()
+                        }
+                    }) {
+                        Icon(
+                            imageVector = Icons.Filled.ArrowBack,
+                            contentDescription = stringResource(id = R.string.indietro)
+                        )
+                    }
+                },
+                actions = {
+                    IconButton(
+                        onClick = { onDeletePressed() },
+                        enabled = !retrieving
+                    ) {
+                        Icon(
+                            imageVector = Icons.Outlined.Delete,
+                            tint = if (retrieving) MaterialTheme.colorScheme.tertiary else Color.Red,
+                            contentDescription = stringResource(id = R.string.elimina_commessa)
+                        )
+                    }
+                }
+            )
+        },
+        bottomBar = {
+            BottomSaveBar(
+                onClick = {
+                    if (!retrieving) {
+                        onSavePressed()
+                    }
+                }
+            )
+        },
+        snackbarHost = { SnackbarHost(hostState = snackBarHostState) },
+        content = { paddingValues ->
+            BackHandler(enabled = true) {
+                if (viewModel.checkChanges()) {
+                    backDialog.value = true
+                } else {
+                    onBackPressed()
+                    keyboardController?.hide()
+                }
+            }
+
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(
+                        start = MaterialTheme.spacing.medium,
+                        end = MaterialTheme.spacing.medium,
+                        top = paddingValues.calculateTopPadding(),
+                        bottom = paddingValues.calculateBottomPadding()
+                    )
+                    .verticalScroll(rememberScrollState()),
+                verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.medium)
+            ) {
+                if (retrieving) {
+                    PlaceholderDetails()
+                } else {
+                    //TODO dettaglio appuntamento
+                }
+            }
+
+            if (sending) {
+                Dialog(onDismissRequest = {}) {
+                    SendAnimation()
+                }
+            }
+        }
 //        content = { it ->
 //            BackHandler(enabled = true) {
 //                backDialog.value = true
@@ -284,8 +324,8 @@ fun AppointmentDetailsScreen(
 //                }
 //            }
 //        }
-//    )
-//
+    )
+
 //    if (timeUnitDialog.value) {
 //        Dialog(onDismissRequest = { timeUnitDialog.value = false }) {
 //            Box(
@@ -447,13 +487,4 @@ fun AppointmentDetailsScreen(
 //                }
 //            })
 //    }
-//}
-//
-//
-//fun createPeople(people: Map<String, Boolean>): MutableList<User> {
-//    val list = mutableListOf<User>()
-//    for (person in people) {
-//        list.add(User(person.key, mutableStateOf(person.value)))
-//    }
-//    return list
 }

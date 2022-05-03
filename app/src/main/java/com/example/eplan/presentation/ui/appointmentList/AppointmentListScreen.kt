@@ -14,6 +14,7 @@ import com.example.eplan.presentation.navigation.NestedNavGraphs
 import com.example.eplan.presentation.navigation.Screen
 import com.example.eplan.presentation.ui.components.CollapsibleCalendar
 import com.example.eplan.presentation.ui.components.TopBar
+import com.example.eplan.presentation.ui.components.WorkActivitiesList
 import com.example.eplan.presentation.util.bottomNavPadding
 import java.time.LocalDate
 
@@ -62,7 +63,14 @@ fun AppointmentListScreen(
                         calendarVisibility.value = false
                     }
                 )
-
+                WorkActivitiesList(
+                    workActivities = appointments,
+                    onNavigateToActivityDetailScreen = onNavigate,
+                    isRefreshing = isRefreshing,
+                    onRefresh = {
+                        viewModel.onTriggerEvent(AppointmentListEvent.DayChangeEvent(date = date))
+                    }
+                )
             }
         }
     )

@@ -19,7 +19,11 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.window.Dialog
+import androidx.lifecycle.ViewModel
 import com.example.eplan.R
+import com.example.eplan.presentation.ui.ValidationEvent
+import com.example.eplan.presentation.ui.WorkActivityDetailViewModel
+import com.example.eplan.presentation.ui.appointment.AppointmentDetailViewModel
 import com.example.eplan.presentation.ui.components.BottomSaveBar
 import com.example.eplan.presentation.ui.components.PlaceholderDetails
 import com.example.eplan.presentation.ui.components.SendAnimation
@@ -30,7 +34,7 @@ import com.example.eplan.presentation.util.spacing
 @ExperimentalComposeUiApi
 @Composable
 fun InterventionDetailsScreen(
-    viewModel: InterventionDetailViewModel,
+    viewModel: WorkActivityDetailViewModel,
     onBackPressed: () -> Unit,
     onSavePressed: () -> Unit,
     onDeletePressed: () -> Unit
@@ -38,21 +42,21 @@ fun InterventionDetailsScreen(
 
     val context = LocalContext.current
     val snackBarHostState = remember { SnackbarHostState() }
-    val retrieving = viewModel.retrieving.value
-    val sending = viewModel.sending.value
+    val retrieving = viewModel.retrieving
+    val sending = viewModel.sending
     val keyboardController = LocalSoftwareKeyboardController.current
     val backDialog = remember { mutableStateOf(false) }
 
     LaunchedEffect(key1 = context) {
         viewModel.validationEvents.collect { event ->
             when (event) {
-                is InterventionDetailViewModel.ValidationEvent.UpdateSuccess -> {
+                is ValidationEvent.UpdateSuccess -> {
                     onBackPressed()
                 }
-                is InterventionDetailViewModel.ValidationEvent.SubmitError -> {
+                is ValidationEvent.SubmitError -> {
                     snackBarHostState.showSnackbar(message = event.error)
                 }
-                is InterventionDetailViewModel.ValidationEvent.RetrieveError -> {
+                is ValidationEvent.RetrieveError -> {
                     snackBarHostState.showSnackbar(message = "${event.error}\nTorno indietro...")
                     onBackPressed()
                 }
@@ -81,15 +85,12 @@ fun InterventionDetailsScreen(
                 },
                 actions = {
                     IconButton(
-                        onClick = {
-                            if (!retrieving) {
-                                onDeletePressed()
-                            }
-                        }
+                        onClick = { onDeletePressed() },
+                        enabled = !retrieving
                     ) {
                         Icon(
                             imageVector = Icons.Outlined.Delete,
-                            tint = Color.Red,
+                            tint = if (retrieving) MaterialTheme.colorScheme.tertiary else Color.Red,
                             contentDescription = stringResource(R.string.elimina_commessa)
                         )
                     }
@@ -97,11 +98,13 @@ fun InterventionDetailsScreen(
             )
         },
         bottomBar = {
-            BottomSaveBar(onClick = {
-                if (!retrieving) {
-                    onSavePressed()
+            BottomSaveBar(
+                onClick = {
+                    if (!retrieving) {
+                        onSavePressed()
+                    }
                 }
-            })
+            )
         },
         snackbarHost = { SnackbarHost(hostState = snackBarHostState) },
         content = { paddingValues ->
@@ -129,9 +132,14 @@ fun InterventionDetailsScreen(
                 if (retrieving) {
                     PlaceholderDetails()
                 } else {
-                    InterventionDetail(
-                        viewModel = viewModel
-                    )
+                    when (viewModel) {
+                        is InterventionDetailViewModel -> {
+                            InterventionDetail(viewModel = viewModel)
+                        }
+                        is AppointmentDetailViewModel -> {
+//                            AppointmentDetail(viewModel = viewModel)
+                        }
+                    }
                 }
             }
 

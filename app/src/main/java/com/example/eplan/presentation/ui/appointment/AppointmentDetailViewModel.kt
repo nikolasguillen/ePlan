@@ -2,26 +2,22 @@ package com.example.eplan.presentation.ui.appointment
 
 import android.util.Log
 import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.lifecycle.SavedStateHandle
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.eplan.domain.model.Appointment
 import com.example.eplan.interactors.GetToken
 import com.example.eplan.interactors.appointmentDetail.GetAppointmentById
 import com.example.eplan.interactors.appointmentDetail.UpdateAppointment
 import com.example.eplan.interactors.interventionDetail.ValidateTime
+import com.example.eplan.presentation.ui.ValidationEvent
+import com.example.eplan.presentation.ui.WorkActivityDetailViewModel
 import com.example.eplan.presentation.ui.appointment.AppointmentDetailEvent.*
 import com.example.eplan.presentation.ui.intervention.STATE_KEY_INTERVENTION
 import com.example.eplan.presentation.util.TAG
-import com.example.eplan.presentation.util.USER_TOKEN
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
-import kotlinx.coroutines.flow.receiveAsFlow
 import javax.inject.Inject
 
 const val STATE_KEY_APPOINTMENT = "appointment.state.appointmentId.key"
@@ -35,19 +31,11 @@ constructor(
     private val submitAppointment: UpdateAppointment,
     private val validateTime: ValidateTime,
     private val savedStateHandle: SavedStateHandle
-) : ViewModel() {
+) : WorkActivityDetailViewModel() {
 
-    private var userToken = USER_TOKEN
-    private var query = ""
-    var retrieving by mutableStateOf(false)
-        private set
-    var sending by mutableStateOf(false)
-        private set
     private var initialState: MutableState<Appointment?> = mutableStateOf(null)
     var appointment: MutableState<Appointment?> = mutableStateOf(null)
         private set
-    private val validationEventChannel = Channel<ValidationEvent>()
-    val validationEvents = validationEventChannel.receiveAsFlow()
 
     init {
         getToken()
@@ -56,7 +44,7 @@ constructor(
     fun onTriggerEvent(event: AppointmentDetailEvent) {
         when (event) {
             is GetAppointmentEvent -> {
-                setQuery(event.id)
+                changeQuery(event.id)
                 getAppointment()
             }
             is UpdateAppointmentEvent -> {
@@ -66,6 +54,10 @@ constructor(
                 deleteAppointment()
             }
         }
+    }
+
+    override fun checkChanges(): Boolean {
+        return appointment.value != initialState.value
     }
 
     private fun getToken() {
@@ -129,14 +121,8 @@ constructor(
         savedStateHandle.remove<String>(STATE_KEY_APPOINTMENT)
     }
 
-    private fun setQuery(query: String) {
+    override fun changeQuery(query: String) {
         this.query = query
         savedStateHandle.set(STATE_KEY_APPOINTMENT, query)
-    }
-
-    sealed class ValidationEvent {
-        object UpdateSuccess : ValidationEvent()
-        data class SubmitError(val error: String) : ValidationEvent()
-        data class RetrieveError(val error: String) : ValidationEvent()
     }
 }

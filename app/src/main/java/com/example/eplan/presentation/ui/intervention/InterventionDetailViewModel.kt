@@ -4,7 +4,6 @@ import android.util.Log
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.SavedStateHandle
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.eplan.domain.model.Intervention
 import com.example.eplan.interactors.GetToken
@@ -12,16 +11,15 @@ import com.example.eplan.interactors.interventionDetail.GetInterventionById
 import com.example.eplan.interactors.interventionDetail.SubmitIntervention
 import com.example.eplan.interactors.interventionDetail.ValidateDescription
 import com.example.eplan.interactors.interventionDetail.ValidateTime
+import com.example.eplan.presentation.ui.ValidationEvent
+import com.example.eplan.presentation.ui.WorkActivityDetailViewModel
 import com.example.eplan.presentation.ui.intervention.InterventionDetailEvent.*
 import com.example.eplan.presentation.ui.intervention.InterventionFormEvent.*
 import com.example.eplan.presentation.util.TAG
-import com.example.eplan.presentation.util.USER_TOKEN
 import com.example.eplan.presentation.util.fromDateToLocalDate
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
-import kotlinx.coroutines.flow.receiveAsFlow
 import java.time.LocalDate
 import java.time.LocalTime
 import javax.inject.Inject
@@ -32,23 +30,17 @@ const val STATE_KEY_INTERVENTION = "intervention.state.interventionId.key"
 class InterventionDetailViewModel
 @Inject
 constructor(
+    private val getToken: GetToken,
     private val getInterventionById: GetInterventionById,
     private val submitIntervention: SubmitIntervention,
-    private val getToken: GetToken,
     private val validateDescription: ValidateDescription,
     private val validateTime: ValidateTime,
     private val savedStateHandle: SavedStateHandle
-) : ViewModel() {
+) : WorkActivityDetailViewModel() {
 
-    private var userToken = USER_TOKEN
-    val retrieving = mutableStateOf(false)
-    val sending = mutableStateOf(false)
-    private var query = ""
     private var initialState: MutableState<Intervention?> = mutableStateOf(null)
     var intervention: MutableState<Intervention?> = mutableStateOf(null)
         private set
-    private val validationEventChannel = Channel<ValidationEvent>()
-    val validationEvents = validationEventChannel.receiveAsFlow()
 
     init {
         getToken()
@@ -57,7 +49,7 @@ constructor(
     fun onTriggerEvent(event: InterventionDetailEvent) {
         when (event) {
             is GetInterventionEvent -> {
-                setQuery(event.id)
+                changeQuery(event.id)
                 getIntervention()
             }
             is UpdateInterventionEvent -> {
@@ -71,7 +63,7 @@ constructor(
 
     private fun getToken() {
         getToken.execute().onEach { dataState ->
-            retrieving.value = dataState.loading
+            retrieving = dataState.loading
 
             dataState.data?.let { token ->
                 userToken += token
@@ -149,7 +141,7 @@ constructor(
         }
     }
 
-    fun checkChanges(): Boolean {
+    override fun checkChanges(): Boolean {
         return intervention.value != initialState.value
     }
 
@@ -176,7 +168,7 @@ constructor(
 
     private fun getIntervention() {
         getInterventionById.execute(token = userToken, id = query).onEach { dataState ->
-            retrieving.value = dataState.loading
+            retrieving = dataState.loading
 
             dataState.data?.let { newIntervention ->
                 initialState.value = newIntervention
@@ -194,7 +186,7 @@ constructor(
         intervention.value?.let {
             submitIntervention.execute(token = userToken, intervention = it)
                 .onEach { dataState ->
-                    sending.value = dataState.loading
+                    sending = dataState.loading
 
                     dataState.data?.let { result ->
                         if (result) {
@@ -217,14 +209,8 @@ constructor(
         savedStateHandle.remove<String>(STATE_KEY_INTERVENTION)
     }
 
-    private fun setQuery(query: String) {
+    override fun changeQuery(query: String) {
         this.query = query
         savedStateHandle.set(STATE_KEY_INTERVENTION, query)
-    }
-
-    sealed class ValidationEvent {
-        object UpdateSuccess : ValidationEvent()
-        data class SubmitError(val error: String) : ValidationEvent()
-        data class RetrieveError(val error: String) : ValidationEvent()
     }
 }

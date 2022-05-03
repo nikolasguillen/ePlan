@@ -77,11 +77,7 @@ fun InterventionListScreen(
                     onNavigateToActivityDetailScreen = onNavigate,
                     isRefreshing = isRefreshing,
                     onRefresh = {
-                        viewModel.onTriggerEvent(
-                            InterventionListEvent.DayChangeEvent(
-                                date = date
-                            )
-                        )
+                        viewModel.onTriggerEvent(InterventionListEvent.DayChangeEvent(date = date))
                     }
                 )
             }
