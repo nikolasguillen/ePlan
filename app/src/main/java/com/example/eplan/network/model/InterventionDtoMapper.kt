@@ -1,17 +1,17 @@
 package com.example.eplan.network.model
 
-import com.example.eplan.domain.model.WorkActivity
+import com.example.eplan.domain.model.Intervention
 import com.example.eplan.domain.util.DomainMapper
 import com.example.eplan.network.util.dateTimeParser
 import com.example.eplan.network.util.removeHtmlBreak
 
-class WorkActivityDtoMapper : DomainMapper<WorkActivityDto, WorkActivity> {
+class InterventionDtoMapper : DomainMapper<InterventionDto, Intervention> {
 
-    override fun mapToDomainModel(model: WorkActivityDto): WorkActivity {
+    override fun mapToDomainModel(model: InterventionDto): Intervention {
         val startDateTime = dateTimeParser(model.start)
         val endDateTime = dateTimeParser(model.end)
 
-        return WorkActivity(
+        return Intervention(
             activityId = model.idAttivita,
             id = model.id,
             title = model.title,
@@ -24,11 +24,11 @@ class WorkActivityDtoMapper : DomainMapper<WorkActivityDto, WorkActivity> {
         )
     }
 
-    override fun mapFromDomainModel(domainModel: WorkActivity): WorkActivityDto {
+    override fun mapFromDomainModel(domainModel: Intervention): InterventionDto {
         val startDateTime = "${domainModel.date} ${domainModel.start}"
         val endDateTime = "${domainModel.date} ${domainModel.end}"
 
-        return WorkActivityDto(
+        return InterventionDto(
             idAttivita = domainModel.activityId,
             id = domainModel.id,
             title = domainModel.title,
@@ -41,11 +41,11 @@ class WorkActivityDtoMapper : DomainMapper<WorkActivityDto, WorkActivity> {
         )
     }
 
-    fun toDomainList(initial: List<WorkActivityDto>): List<WorkActivity> {
+    fun toDomainList(initial: List<InterventionDto>): List<Intervention> {
         return initial.map { mapToDomainModel(it) }
     }
 
-    fun fromDomainList(initial: List<WorkActivity>): List<WorkActivityDto> {
+    fun fromDomainList(initial: List<Intervention>): List<InterventionDto> {
         return initial.map { mapFromDomainModel(it) }
     }
 

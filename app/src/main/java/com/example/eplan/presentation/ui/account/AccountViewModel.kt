@@ -8,8 +8,6 @@ import androidx.lifecycle.viewModelScope
 import com.example.eplan.cache.UserDao
 import com.example.eplan.interactors.GetProfilePicUri
 import com.example.eplan.interactors.GetToken
-import com.example.eplan.presentation.ui.workActivityList.ActivityListEvent
-import com.example.eplan.presentation.ui.workActivityList.STATE_KEY_QUERY
 import com.example.eplan.presentation.util.STAY_LOGGED
 import com.example.eplan.presentation.util.TAG
 import com.example.eplan.presentation.util.USER_TOKEN

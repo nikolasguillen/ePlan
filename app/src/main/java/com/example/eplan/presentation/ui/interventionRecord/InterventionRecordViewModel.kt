@@ -1,4 +1,4 @@
-package com.example.eplan.presentation.ui.workActivityRecord
+package com.example.eplan.presentation.ui.interventionRecord
 
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.SavedStateHandle
@@ -8,12 +8,12 @@ import java.time.LocalTime
 import java.time.temporal.ChronoUnit
 import javax.inject.Inject
 
-const val STATE_KEY_START = "activity.state.start.key"
-const val STATE_KEY_END = "activity.state.end.key"
-const val STATE_KEY_ISRECORDING = "activity.state.isrecording.key"
+const val STATE_KEY_START = "intervention.state.start.key"
+const val STATE_KEY_END = "intervention.state.end.key"
+const val STATE_KEY_ISRECORDING = "intervention.state.isrecording.key"
 
 @HiltViewModel
-class ActivityRecordViewModel
+class InterventionRecordViewModel
 @Inject
 constructor(
     private val savedStateHandle: SavedStateHandle

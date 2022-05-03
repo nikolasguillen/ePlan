@@ -1,4 +1,4 @@
-package com.example.eplan.interactors.workActivityDetail
+package com.example.eplan.interactors.interventionDetail
 
 data class ValidationResult(
     val successful: Boolean,

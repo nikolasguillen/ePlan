@@ -1,7 +1,6 @@
 package com.example.eplan.presentation.ui.components
 
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -13,7 +12,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import com.example.eplan.R
-import com.example.eplan.domain.model.WorkActivity
+import com.example.eplan.domain.model.Intervention
 import com.example.eplan.presentation.navigation.Screen
 import com.example.eplan.presentation.util.spacing
 import com.google.accompanist.swiperefresh.SwipeRefresh
@@ -22,7 +21,7 @@ import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 @ExperimentalMaterial3Api
 @Composable
 fun ActivitiesList(
-    workActivities: List<WorkActivity>,
+    interventions: List<Intervention>,
     onNavigateToActivityDetailScreen: (String) -> Unit,
     isRefreshing: Boolean,
     onRefresh: () -> Unit
@@ -48,17 +47,17 @@ fun ActivitiesList(
                     }
                 }
                 false -> {
-                    if (workActivities.isEmpty()) {
+                    if (interventions.isEmpty()) {
                         item {
                             AnimationEmptyList(stringResource(id = R.string.no_interventi))
                         }
                     } else {
-                        items(workActivities) { workActivity ->
+                        items(interventions) { workActivity ->
                             ActivityCard(
-                                workActivity = workActivity,
+                                intervention = workActivity,
                                 onClick = {
                                     val route =
-                                        Screen.WorkActivityDetails.route + "/?activityId=${workActivity.id}"
+                                        Screen.InterventionDetails.route + "/?activityId=${workActivity.id}"
                                     onNavigateToActivityDetailScreen(route)
                                 }
                             )

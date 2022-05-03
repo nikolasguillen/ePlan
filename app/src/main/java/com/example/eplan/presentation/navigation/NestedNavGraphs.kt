@@ -4,7 +4,7 @@ sealed class NestedNavGraphs(val startDestination: String, val route: String) {
 
     object LoginGraph: NestedNavGraphs(startDestination = Screen.Login.route, route = "loginGraph")
 
-    object WorkActivityGraph: NestedNavGraphs(startDestination = Screen.WorkActivityList.route, route = "workActivityGraph")
+    object InterventionGraph: NestedNavGraphs(startDestination = Screen.InterventionList.route, route = "interventionGraph")
 
     object AppointmentGraph: NestedNavGraphs(startDestination = Screen.AppointmentList.route, route = "appointmentGraph")
 

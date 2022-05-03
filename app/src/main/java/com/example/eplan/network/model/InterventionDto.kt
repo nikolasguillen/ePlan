@@ -2,7 +2,7 @@ package com.example.eplan.network.model
 
 import com.google.gson.annotations.SerializedName
 
-data class WorkActivityDto(
+data class InterventionDto(
 
     @SerializedName("id_attivita")
     var idAttivita: String,

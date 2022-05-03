@@ -2,8 +2,8 @@ package com.example.eplan.di
 
 import com.example.eplan.network.model.AppointmentDtoMapper
 import com.example.eplan.network.services.LoginService
-import com.example.eplan.network.services.WorkActivityService
-import com.example.eplan.network.model.WorkActivityDtoMapper
+import com.example.eplan.network.services.InterventionService
+import com.example.eplan.network.model.InterventionDtoMapper
 import com.example.eplan.network.services.AppointmentService
 import com.google.gson.GsonBuilder
 import dagger.Module
@@ -24,18 +24,18 @@ object NetworkModule {
 
     @Singleton
     @Provides
-    fun provideWorkActivityDtoMapper(): WorkActivityDtoMapper {
-        return WorkActivityDtoMapper()
+    fun provideInterventionDtoMapper(): InterventionDtoMapper {
+        return InterventionDtoMapper()
     }
 
     @Singleton
     @Provides
-    fun provideWorkActivityService(): WorkActivityService {
+    fun provideInterventionService(): InterventionService {
         return Retrofit.Builder()
             .baseUrl(URL)
             .addConverterFactory(GsonConverterFactory.create(GsonBuilder().create()))
             .build()
-            .create(WorkActivityService::class.java)
+            .create(InterventionService::class.java)
     }
 
     /** Providers per login **/

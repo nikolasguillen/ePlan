@@ -1,4 +1,4 @@
-package com.example.eplan.presentation.ui.workActivityList
+package com.example.eplan.presentation.ui.interventionList
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
@@ -27,12 +27,12 @@ import java.time.LocalDate
 
 @ExperimentalMaterial3Api
 @Composable
-fun ActivitiesListScreen(
-    viewModel: ActivityListViewModel,
+fun InterventionListScreen(
+    viewModel: InterventionListViewModel,
     onNavigate: (String) -> Unit
 ) {
 
-    val workActivities = viewModel.workActivities
+    val interventions = viewModel.interventions
     val date = viewModel.date.value
     val isRefreshing by viewModel.isRefreshing.collectAsState()
     val calendarVisibility = remember { mutableStateOf(false) }
@@ -50,14 +50,14 @@ fun ActivitiesListScreen(
             MultiFloatingActionButton(
                 onAddClick = {
                     isExpanded = !isExpanded
-                    val route = Screen.WorkActivityDetails.route + "/?date=$date"
+                    val route = Screen.InterventionDetails.route + "/?date=$date"
                     onNavigate(route)
                 },
                 onExpandClick = {
                     isExpanded = !isExpanded
                 },
                 onRecordClick = {
-                    onNavigate(Screen.WorkActivityRecord.route)
+                    onNavigate(Screen.InterventionRecord.route)
                 }
             )
         },
@@ -68,17 +68,17 @@ fun ActivitiesListScreen(
                     date = date,
                     onDayChange = { date ->
                         selectedDate.value = LocalDate.parse(date)
-                        viewModel.onTriggerEvent(ActivityListEvent.DayChangeEvent(date = date))
+                        viewModel.onTriggerEvent(InterventionListEvent.DayChangeEvent(date = date))
                         calendarVisibility.value = false
                     }
                 )
                 ActivitiesList(
-                    workActivities = workActivities,
+                    interventions = interventions,
                     onNavigateToActivityDetailScreen = onNavigate,
                     isRefreshing = isRefreshing,
                     onRefresh = {
                         viewModel.onTriggerEvent(
-                            ActivityListEvent.DayChangeEvent(
+                            InterventionListEvent.DayChangeEvent(
                                 date = date
                             )
                         )

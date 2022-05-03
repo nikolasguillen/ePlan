@@ -1,4 +1,4 @@
-package com.example.eplan.presentation.ui.workActivityList
+package com.example.eplan.presentation.ui.interventionList
 
 import android.util.Log
 import androidx.compose.runtime.mutableStateListOf
@@ -6,10 +6,10 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.eplan.domain.model.WorkActivity
+import com.example.eplan.domain.model.Intervention
 import com.example.eplan.interactors.GetToken
-import com.example.eplan.interactors.workActivityList.DayChangeWorkActivity
-import com.example.eplan.presentation.ui.workActivityList.ActivityListEvent.DayChangeEvent
+import com.example.eplan.interactors.interventionList.DayChangeIntervention
+import com.example.eplan.presentation.ui.interventionList.InterventionListEvent.DayChangeEvent
 import com.example.eplan.presentation.util.TAG
 import com.example.eplan.presentation.util.USER_TOKEN
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -20,16 +20,16 @@ import javax.inject.Inject
 const val STATE_KEY_QUERY = "activity.state.query.key"
 
 @HiltViewModel
-class ActivityListViewModel
+class InterventionListViewModel
 @Inject
 constructor(
-    private val dayChangeWorkActivity: DayChangeWorkActivity,
+    private val dayChangeIntervention: DayChangeIntervention,
     private val getToken: GetToken,
     private val savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
     private var userToken = USER_TOKEN
-    val workActivities = mutableStateListOf<WorkActivity>()
+    val interventions = mutableStateListOf<Intervention>()
     val loading = mutableStateOf(false)
     private val _isRefreshing = MutableStateFlow(false)
     val isRefreshing: StateFlow<Boolean>
@@ -40,7 +40,7 @@ constructor(
         getToken()
     }
 
-    fun onTriggerEvent(event: ActivityListEvent) {
+    fun onTriggerEvent(event: InterventionListEvent) {
         when (event) {
             is DayChangeEvent -> {
                 setDate(event.date)
@@ -70,13 +70,13 @@ constructor(
     }
 
     private fun dayChange() {
-        dayChangeWorkActivity.execute(token = userToken, query = date.value).onEach { dataState ->
+        dayChangeIntervention.execute(token = userToken, query = date.value).onEach { dataState ->
             loading.value = dataState.loading
             _isRefreshing.value = dataState.loading
 
             dataState.data?.let { list ->
-                workActivities.clear()
-                workActivities.addAll(list)
+                interventions.clear()
+                interventions.addAll(list)
             }
 
             dataState.error?.let { error ->

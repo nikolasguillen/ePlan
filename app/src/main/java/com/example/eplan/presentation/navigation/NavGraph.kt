@@ -25,16 +25,15 @@ import com.example.eplan.presentation.ui.camera.CameraViewModel
 import com.example.eplan.presentation.ui.login.LoginEvent.LoginAttemptEvent
 import com.example.eplan.presentation.ui.login.LoginScreen
 import com.example.eplan.presentation.ui.login.LoginViewModel
-import com.example.eplan.presentation.ui.workActivity.ActivityDetailEvent.DeleteActivityEvent
-import com.example.eplan.presentation.ui.workActivity.ActivityDetailViewModel
-import com.example.eplan.presentation.ui.workActivity.ActivityDetailsScreen
-import com.example.eplan.presentation.ui.workActivity.ActivityFormEvent
-import com.example.eplan.presentation.ui.workActivityList.ActivitiesListScreen
-import com.example.eplan.presentation.ui.workActivityList.ActivityListViewModel
-import com.example.eplan.presentation.ui.workActivityRecord.ActivityRecordScreen
-import com.example.eplan.presentation.ui.workActivityRecord.ActivityRecordViewModel
+import com.example.eplan.presentation.ui.intervention.InterventionDetailEvent.DeleteInterventionEvent
+import com.example.eplan.presentation.ui.intervention.InterventionDetailViewModel
+import com.example.eplan.presentation.ui.intervention.InterventionDetailsScreen
+import com.example.eplan.presentation.ui.intervention.InterventionFormEvent
+import com.example.eplan.presentation.ui.interventionList.InterventionListScreen
+import com.example.eplan.presentation.ui.interventionList.InterventionListViewModel
+import com.example.eplan.presentation.ui.interventionRecord.InterventionRecordScreen
+import com.example.eplan.presentation.ui.interventionRecord.InterventionRecordViewModel
 import java.time.LocalDate
-import java.time.LocalTime
 
 @ExperimentalComposeUiApi
 @ExperimentalMaterial3Api
@@ -55,29 +54,29 @@ fun NavGraph(navController: NavHostController) {
                 )
                 if (viewModel.successfulLoginAttempt.value) {
                     navController.popBackStack()
-                    navController.navigate(WorkActivityGraph.route)
+                    navController.navigate(InterventionGraph.route)
                     viewModel.successfulLoginAttempt.value = false
                 }
             }
 
             navigation(
-                startDestination = WorkActivityGraph.startDestination,
-                route = WorkActivityGraph.route
+                startDestination = InterventionGraph.startDestination,
+                route = InterventionGraph.route
             ) {
 
                 val selectedDate = mutableStateOf(LocalDate.now())
 
-                composable(route = Screen.WorkActivityList.route) {
-                    val viewModel = hiltViewModel<ActivityListViewModel>()
-                    ActivitiesListScreen(
+                composable(route = Screen.InterventionList.route) {
+                    val viewModel = hiltViewModel<InterventionListViewModel>()
+                    InterventionListScreen(
                         viewModel = viewModel,
                         onNavigate = navController::navigate,
                     )
                 }
 
-                composable(route = Screen.WorkActivityRecord.route) {
-                    val viewModel = hiltViewModel<ActivityRecordViewModel>()
-                    ActivityRecordScreen(
+                composable(route = Screen.InterventionRecord.route) {
+                    val viewModel = hiltViewModel<InterventionRecordViewModel>()
+                    InterventionRecordScreen(
                         viewModel = viewModel,
                         onSave = {
                             navController.popBackStack()
@@ -87,7 +86,7 @@ fun NavGraph(navController: NavHostController) {
                 }
 
                 composable(
-                    route = Screen.WorkActivityDetails.route + "/?activityId={activityId}&date={date}&start={start}&end={end}",
+                    route = Screen.InterventionDetails.route + "/?activityId={activityId}&date={date}&start={start}&end={end}",
                     arguments = listOf(
                         navArgument("activityId") {
                             type = NavType.StringType
@@ -107,16 +106,16 @@ fun NavGraph(navController: NavHostController) {
                         }
                     )
                 ) {
-                    val viewModel = hiltViewModel<ActivityDetailViewModel>()
-                    ActivityDetailsScreen(
+                    val viewModel = hiltViewModel<InterventionDetailViewModel>()
+                    InterventionDetailsScreen(
                         viewModel = viewModel,
                         onSavePressed = {
-                            viewModel.onFormEvent(ActivityFormEvent.Submit)
+                            viewModel.onFormEvent(InterventionFormEvent.Submit)
 
                         },
                         onBackPressed = navController::popBackStack,
                         onDeletePressed = {
-                            viewModel.onTriggerEvent(DeleteActivityEvent)
+                            viewModel.onTriggerEvent(DeleteInterventionEvent)
                             navController.popBackStack()
                         }
                     )
@@ -155,7 +154,7 @@ fun NavGraph(navController: NavHostController) {
                             viewModel.onTriggerEvent(AccountEvent.Logout)
                             navController.popBackStack(route = AccountGraph.startDestination, inclusive = true)
                             navController.popBackStack(route = AppointmentGraph.startDestination, inclusive = true)
-                            navController.popBackStack(route = WorkActivityGraph.startDestination, inclusive = true)
+                            navController.popBackStack(route = InterventionGraph.startDestination, inclusive = true)
                             navController.popBackStack(route = LoginGraph.startDestination, inclusive = true)
                             navController.navigate(route = LoginGraph.startDestination)
                         }

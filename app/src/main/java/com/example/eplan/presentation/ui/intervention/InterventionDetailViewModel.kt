@@ -1,20 +1,19 @@
-package com.example.eplan.presentation.ui.workActivity
+package com.example.eplan.presentation.ui.intervention
 
 import android.util.Log
 import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.eplan.domain.model.WorkActivity
+import com.example.eplan.domain.model.Intervention
 import com.example.eplan.interactors.GetToken
-import com.example.eplan.interactors.workActivityDetail.GetActivityById
-import com.example.eplan.interactors.workActivityDetail.SubmitActivity
-import com.example.eplan.interactors.workActivityDetail.ValidateDescription
-import com.example.eplan.interactors.workActivityDetail.ValidateTime
-import com.example.eplan.presentation.ui.workActivity.ActivityDetailEvent.*
+import com.example.eplan.interactors.interventionDetail.GetInterventionById
+import com.example.eplan.interactors.interventionDetail.SubmitIntervention
+import com.example.eplan.interactors.interventionDetail.ValidateDescription
+import com.example.eplan.interactors.interventionDetail.ValidateTime
+import com.example.eplan.presentation.ui.intervention.InterventionDetailEvent.*
+import com.example.eplan.presentation.ui.intervention.InterventionFormEvent.*
 import com.example.eplan.presentation.util.TAG
 import com.example.eplan.presentation.util.USER_TOKEN
 import com.example.eplan.presentation.util.fromDateToLocalDate
@@ -27,14 +26,14 @@ import java.time.LocalDate
 import java.time.LocalTime
 import javax.inject.Inject
 
-const val STATE_KEY_ACTIVITY = "activity.state.workActivityId.key"
+const val STATE_KEY_INTERVENTION = "intervention.state.interventionId.key"
 
 @HiltViewModel
-class ActivityDetailViewModel
+class InterventionDetailViewModel
 @Inject
 constructor(
-    private val getActivityById: GetActivityById,
-    private val submitActivity: SubmitActivity,
+    private val getInterventionById: GetInterventionById,
+    private val submitIntervention: SubmitIntervention,
     private val getToken: GetToken,
     private val validateDescription: ValidateDescription,
     private val validateTime: ValidateTime,
@@ -45,8 +44,8 @@ constructor(
     val retrieving = mutableStateOf(false)
     val sending = mutableStateOf(false)
     private var query = ""
-    private var initialState: MutableState<WorkActivity?> = mutableStateOf(null)
-    var workActivity: MutableState<WorkActivity?> = mutableStateOf(null)
+    private var initialState: MutableState<Intervention?> = mutableStateOf(null)
+    var intervention: MutableState<Intervention?> = mutableStateOf(null)
         private set
     private val validationEventChannel = Channel<ValidationEvent>()
     val validationEvents = validationEventChannel.receiveAsFlow()
@@ -55,17 +54,17 @@ constructor(
         getToken()
     }
 
-    fun onTriggerEvent(event: ActivityDetailEvent) {
+    fun onTriggerEvent(event: InterventionDetailEvent) {
         when (event) {
-            is GetActivityEvent -> {
+            is GetInterventionEvent -> {
                 setQuery(event.id)
-                getActivity()
+                getIntervention()
             }
-            is UpdateActivityEvent -> {
-                updateActivity()
+            is UpdateInterventionEvent -> {
+                updateIntervention()
             }
-            is DeleteActivityEvent -> {
-                deleteActivity()
+            is DeleteInterventionEvent -> {
+                deleteIntervention()
             }
         }
     }
@@ -76,8 +75,8 @@ constructor(
 
             dataState.data?.let { token ->
                 userToken += token
-                savedStateHandle.get<String>(STATE_KEY_ACTIVITY)?.let { workActivityId ->
-                    onTriggerEvent(GetActivityEvent(workActivityId))
+                savedStateHandle.get<String>(STATE_KEY_INTERVENTION)?.let { workActivityId ->
+                    onTriggerEvent(GetInterventionEvent(workActivityId))
                 }
                 onCreation()
             }
@@ -97,65 +96,65 @@ constructor(
 
         if (id == null) {
             if (start == null && end == null) {
-                createManualActivity(date = LocalDate.parse(date))
+                createInterventionManually(date = LocalDate.parse(date))
             } else {
-                createRecordedActivity(
+                createRecordedIntervention(
                     date = LocalDate.parse(date),
                     start = LocalTime.parse(start),
                     end = LocalTime.parse(end)
                 )
             }
         } else {
-            onTriggerEvent(GetActivityEvent(id = id))
+            onTriggerEvent(GetInterventionEvent(id = id))
         }
     }
 
-    private fun createManualActivity(date: LocalDate) {
-        workActivity.value = WorkActivity(date = date)
-        initialState.value = WorkActivity(date = date)
+    private fun createInterventionManually(date: LocalDate) {
+        intervention.value = Intervention(date = date)
+        initialState.value = Intervention(date = date)
     }
 
-    private fun createRecordedActivity(date: LocalDate, start: LocalTime, end: LocalTime) {
-        workActivity.value = WorkActivity(date = date, start = start, end = end)
-        initialState.value = WorkActivity(date = date, start = start, end = end)
+    private fun createRecordedIntervention(date: LocalDate, start: LocalTime, end: LocalTime) {
+        intervention.value = Intervention(date = date, start = start, end = end)
+        initialState.value = Intervention(date = date, start = start, end = end)
     }
 
-    fun onFormEvent(event: ActivityFormEvent) {
+    fun onFormEvent(event: InterventionFormEvent) {
         when (event) {
-            is ActivityFormEvent.TitleChanged -> {
-                workActivity.value = workActivity.value?.copy(title = event.title)
+            is TitleChanged -> {
+                intervention.value = intervention.value?.copy(title = event.title)
             }
-            is ActivityFormEvent.DescriptionChanged -> {
-                workActivity.value = workActivity.value?.copy(description = event.description)
+            is DescriptionChanged -> {
+                intervention.value = intervention.value?.copy(description = event.description)
             }
-            is ActivityFormEvent.DateChanged -> {
-                workActivity.value =
-                    workActivity.value?.copy(date = fromDateToLocalDate(event.date))
+            is DateChanged -> {
+                intervention.value =
+                    intervention.value?.copy(date = fromDateToLocalDate(event.date))
             }
-            is ActivityFormEvent.StartChanged -> {
-                workActivity.value = workActivity.value?.copy(start = event.time)
+            is StartChanged -> {
+                intervention.value = intervention.value?.copy(start = event.time)
             }
-            is ActivityFormEvent.EndChanged -> {
-                workActivity.value = workActivity.value?.copy(end = event.time)
+            is EndChanged -> {
+                intervention.value = intervention.value?.copy(end = event.time)
             }
-            is ActivityFormEvent.MovingTimeChanged -> {
-                workActivity.value = workActivity.value?.copy(movingTime = event.time)
+            is MovingTimeChanged -> {
+                intervention.value = intervention.value?.copy(movingTime = event.time)
             }
-            is ActivityFormEvent.KmChanged -> {
-                workActivity.value = workActivity.value?.copy(km = event.km)
+            is KmChanged -> {
+                intervention.value = intervention.value?.copy(km = event.km)
             }
-            is ActivityFormEvent.Submit -> {
+            is Submit -> {
                 submitData()
             }
         }
     }
 
     fun checkChanges(): Boolean {
-        return workActivity.value != initialState.value
+        return intervention.value != initialState.value
     }
 
     private fun submitData() {
-        workActivity.value?.let {
+        intervention.value?.let {
             val descriptionResult = validateDescription.execute(it.description)
             val timeResult = validateTime.execute(it.start, it.end)
 
@@ -165,35 +164,35 @@ constructor(
             ).any { result -> !result.successful }
 
             if (hasErrors) {
-                workActivity.value = workActivity.value?.copy(
+                intervention.value = intervention.value?.copy(
                     descriptionError = descriptionResult.errorMessage,
                     timeError = timeResult.errorMessage
                 )
                 return
             }
-            onTriggerEvent(UpdateActivityEvent)
+            onTriggerEvent(UpdateInterventionEvent)
         }
     }
 
-    private fun getActivity() {
-        getActivityById.execute(token = userToken, id = query).onEach { dataState ->
+    private fun getIntervention() {
+        getInterventionById.execute(token = userToken, id = query).onEach { dataState ->
             retrieving.value = dataState.loading
 
-            dataState.data?.let { newActivity ->
-                initialState.value = newActivity
-                workActivity.value = newActivity
+            dataState.data?.let { newIntervention ->
+                initialState.value = newIntervention
+                intervention.value = newIntervention
             }
 
             dataState.error?.let { error ->
-                Log.e(TAG, "getActivity: $error")
+                Log.e(TAG, "getIntervention: $error")
                 validationEventChannel.send(ValidationEvent.RetrieveError(error = error))
             }
         }.launchIn(viewModelScope)
     }
 
-    private fun updateActivity() {
-        workActivity.value?.let {
-            submitActivity.execute(token = userToken, workActivity = it)
+    private fun updateIntervention() {
+        intervention.value?.let {
+            submitIntervention.execute(token = userToken, intervention = it)
                 .onEach { dataState ->
                     sending.value = dataState.loading
 
@@ -204,23 +203,23 @@ constructor(
                     }
 
                     dataState.error?.let { error ->
-                        Log.e(TAG, "updateActivity: $error")
+                        Log.e(TAG, "updateIntervention: $error")
                         validationEventChannel.send(ValidationEvent.SubmitError(error = error))
                     }
                 }.launchIn(viewModelScope)
         }
     }
 
-    private fun deleteActivity() {
-        workActivity.value?.let {
+    private fun deleteIntervention() {
+        intervention.value?.let {
             //TODO
         }
-        savedStateHandle.remove<String>(STATE_KEY_ACTIVITY)
+        savedStateHandle.remove<String>(STATE_KEY_INTERVENTION)
     }
 
     private fun setQuery(query: String) {
         this.query = query
-        savedStateHandle.set(STATE_KEY_ACTIVITY, query)
+        savedStateHandle.set(STATE_KEY_INTERVENTION, query)
     }
 
     sealed class ValidationEvent {

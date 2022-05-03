@@ -1,4 +1,4 @@
-package com.example.eplan.presentation.ui.workActivity
+package com.example.eplan.presentation.ui.intervention
 
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Arrangement
@@ -23,14 +23,14 @@ import com.example.eplan.R
 import com.example.eplan.presentation.ui.components.BottomSaveBar
 import com.example.eplan.presentation.ui.components.PlaceholderDetails
 import com.example.eplan.presentation.ui.components.SendAnimation
-import com.example.eplan.presentation.ui.components.WorkActivityDetail
+import com.example.eplan.presentation.ui.components.InterventionDetail
 import com.example.eplan.presentation.util.spacing
 
 @ExperimentalMaterial3Api
 @ExperimentalComposeUiApi
 @Composable
-fun ActivityDetailsScreen(
-    viewModel: ActivityDetailViewModel,
+fun InterventionDetailsScreen(
+    viewModel: InterventionDetailViewModel,
     onBackPressed: () -> Unit,
     onSavePressed: () -> Unit,
     onDeletePressed: () -> Unit
@@ -46,13 +46,13 @@ fun ActivityDetailsScreen(
     LaunchedEffect(key1 = context) {
         viewModel.validationEvents.collect { event ->
             when (event) {
-                is ActivityDetailViewModel.ValidationEvent.UpdateSuccess -> {
+                is InterventionDetailViewModel.ValidationEvent.UpdateSuccess -> {
                     onBackPressed()
                 }
-                is ActivityDetailViewModel.ValidationEvent.SubmitError -> {
+                is InterventionDetailViewModel.ValidationEvent.SubmitError -> {
                     snackBarHostState.showSnackbar(message = event.error)
                 }
-                is ActivityDetailViewModel.ValidationEvent.RetrieveError -> {
+                is InterventionDetailViewModel.ValidationEvent.RetrieveError -> {
                     snackBarHostState.showSnackbar(message = "${event.error}\nTorno indietro...")
                     onBackPressed()
                 }
@@ -129,7 +129,7 @@ fun ActivityDetailsScreen(
                 if (retrieving) {
                     PlaceholderDetails()
                 } else {
-                    WorkActivityDetail(
+                    InterventionDetail(
                         viewModel = viewModel
                     )
                 }

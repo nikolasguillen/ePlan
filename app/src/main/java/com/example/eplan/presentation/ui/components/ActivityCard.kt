@@ -4,7 +4,6 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
@@ -13,17 +12,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.unit.dp
-import com.example.eplan.domain.model.WorkActivity
+import com.example.eplan.domain.model.Intervention
 import com.example.eplan.presentation.util.spacing
-import com.google.accompanist.placeholder.PlaceholderHighlight
-import com.google.accompanist.placeholder.material.placeholder
-import com.google.accompanist.placeholder.material.shimmer
 
 @ExperimentalMaterial3Api
 @Composable
 fun ActivityCard(
-    workActivity: WorkActivity,
+    intervention: Intervention,
     onClick: () -> Unit,
 ) {
     Card(
@@ -34,22 +29,22 @@ fun ActivityCard(
     ) {
         Column(modifier = Modifier.padding(MaterialTheme.spacing.medium)) {
             Text(
-                text = workActivity.title.replaceFirstChar { it.uppercase() },
+                text = intervention.title.replaceFirstChar { it.uppercase() },
                 style = MaterialTheme.typography.titleMedium,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis
             )
-            if (workActivity.description.isNotBlank()) {
+            if (intervention.description.isNotBlank()) {
                 Text(
-                    text = workActivity.description.replaceFirstChar { it.uppercase() },
+                    text = intervention.description.replaceFirstChar { it.uppercase() },
                     style = MaterialTheme.typography.bodyMedium,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
                     modifier = Modifier.padding(bottom = MaterialTheme.spacing.extraSmall)
                 )
             }
-            Text(text = workActivity.start.toString(), style = MaterialTheme.typography.labelSmall)
-            Text(text = workActivity.end.toString(), style = MaterialTheme.typography.labelSmall)
+            Text(text = intervention.start.toString(), style = MaterialTheme.typography.labelSmall)
+            Text(text = intervention.end.toString(), style = MaterialTheme.typography.labelSmall)
         }
     }
 }

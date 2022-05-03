@@ -1,9 +1,8 @@
-package com.example.eplan.presentation.ui.workActivityRecord
+package com.example.eplan.presentation.ui.interventionRecord
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
@@ -31,9 +30,9 @@ import java.time.LocalTime
 
 @ExperimentalMaterial3Api
 @Composable
-fun ActivityRecordScreen(
+fun InterventionRecordScreen(
     onSave: (String) -> Unit,
-    viewModel: ActivityRecordViewModel
+    viewModel: InterventionRecordViewModel
 ) {
     val composition by rememberLottieComposition(spec = LottieCompositionSpec.RawRes(R.raw.walking_turkey))
     val start = viewModel.start.value
@@ -109,7 +108,7 @@ fun ActivityRecordScreen(
                         LargeFloatingActionButton(
                             onClick = {
                                 if (viewModel.isOver()) {
-                                    val route = Screen.WorkActivityDetails.route + "/?date=${LocalDate.now()}&start=${start}&end=${end}"
+                                    val route = Screen.InterventionDetails.route + "/?date=${LocalDate.now()}&start=${start}&end=${end}"
                                     onSave(route)
                                 } else {
                                     when (viewModel.isRecording()) {

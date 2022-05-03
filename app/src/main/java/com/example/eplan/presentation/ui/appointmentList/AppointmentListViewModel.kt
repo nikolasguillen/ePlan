@@ -1,7 +1,6 @@
 package com.example.eplan.presentation.ui.appointmentList
 
 import android.util.Log
-import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.SavedStateHandle
@@ -57,7 +56,7 @@ constructor(
 
             dataState.data?.let { token ->
                 userToken += token
-                savedStateHandle.get<String>(com.example.eplan.presentation.ui.workActivityList.STATE_KEY_QUERY)?.let { q ->
+                savedStateHandle.get<String>(com.example.eplan.presentation.ui.interventionList.STATE_KEY_QUERY)?.let { q ->
                     setDate(q)
                 }
                 dayChange()

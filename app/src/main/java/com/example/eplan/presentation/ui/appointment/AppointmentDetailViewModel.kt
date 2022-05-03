@@ -12,9 +12,9 @@ import com.example.eplan.domain.model.Appointment
 import com.example.eplan.interactors.GetToken
 import com.example.eplan.interactors.appointmentDetail.GetAppointmentById
 import com.example.eplan.interactors.appointmentDetail.UpdateAppointment
-import com.example.eplan.interactors.workActivityDetail.ValidateTime
+import com.example.eplan.interactors.interventionDetail.ValidateTime
 import com.example.eplan.presentation.ui.appointment.AppointmentDetailEvent.*
-import com.example.eplan.presentation.ui.workActivity.STATE_KEY_ACTIVITY
+import com.example.eplan.presentation.ui.intervention.STATE_KEY_INTERVENTION
 import com.example.eplan.presentation.util.TAG
 import com.example.eplan.presentation.util.USER_TOKEN
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -74,7 +74,7 @@ constructor(
 
             dataState.data?.let { token ->
                 userToken += token
-                savedStateHandle.get<String>(STATE_KEY_ACTIVITY)?.let { appointmentId ->
+                savedStateHandle.get<String>(STATE_KEY_INTERVENTION)?.let { appointmentId ->
                     onTriggerEvent(GetAppointmentEvent(appointmentId))
                 }
             }

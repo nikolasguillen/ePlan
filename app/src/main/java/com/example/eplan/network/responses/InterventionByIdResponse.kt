@@ -1,9 +1,9 @@
 package com.example.eplan.network.responses
 
-import com.example.eplan.network.model.WorkActivityDto
+import com.example.eplan.network.model.InterventionDto
 import com.google.gson.annotations.SerializedName
 
-class WorkActivityByIdResponse(
+class InterventionByIdResponse(
     @SerializedName("intervento")
-    var workActivity: WorkActivityDto
+    var intervention: InterventionDto
 )

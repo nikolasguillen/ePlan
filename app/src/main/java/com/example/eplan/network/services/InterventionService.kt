@@ -1,29 +1,29 @@
 package com.example.eplan.network.services
 
-import com.example.eplan.network.model.WorkActivityDto
+import com.example.eplan.network.model.InterventionDto
 import com.example.eplan.network.util.HEADER_AUTH
 import retrofit2.http.*
 
-interface WorkActivityService {
+interface InterventionService {
 
     @GET("interventi")
     suspend fun getDayActivities(
         @Header(HEADER_AUTH) token: String,
         @Query("start") start: String,
         @Query("end") end: String
-    ): List<WorkActivityDto>
+    ): List<InterventionDto>
 
     @GET("interventi")
     suspend fun getActivity(
         @Header(HEADER_AUTH) token: String,
         @Query("id") id: String
-    ): WorkActivityDto
+    ): InterventionDto
 
 
     @POST("saveInterventi")
     suspend fun updateActivity(
         @Header(HEADER_AUTH) token: String,
-        @Body workActivityDto: WorkActivityDto
+        @Body interventionDto: InterventionDto
     )
 
     @DELETE("delete")

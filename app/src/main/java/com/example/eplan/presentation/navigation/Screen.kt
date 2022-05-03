@@ -4,11 +4,11 @@ sealed class Screen(val route: String, val name: String) {
 
     object Login: Screen(route = "login", name = "Login")
 
-    object WorkActivityList: Screen(route = "workActivityList", name = "Foglio ore")
+    object InterventionList: Screen(route = "interventionList", name = "Foglio ore")
 
-    object WorkActivityRecord: Screen(route = "workActivityTimer", name = "Timer")
+    object InterventionRecord: Screen(route = "interventionTimer", name = "Timer")
 
-    object WorkActivityDetails: Screen(route = "workActivityDetails", name = "Attività")
+    object InterventionDetails: Screen(route = "interventionDetails", name = "Attività")
 
     object AppointmentList: Screen(route = "appointmentList", name = "Appuntamenti")
 

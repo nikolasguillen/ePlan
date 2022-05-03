@@ -16,39 +16,39 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import com.example.eplan.R
-import com.example.eplan.presentation.ui.workActivity.ActivityDetailViewModel
-import com.example.eplan.presentation.ui.workActivity.ActivityFormEvent
+import com.example.eplan.presentation.ui.intervention.InterventionDetailViewModel
+import com.example.eplan.presentation.ui.intervention.InterventionFormEvent
 
 @ExperimentalMaterial3Api
 @ExperimentalComposeUiApi
 @Composable
-fun WorkActivityDetail(
-    viewModel: ActivityDetailViewModel
+fun InterventionDetail(
+    viewModel: InterventionDetailViewModel
 ) {
 
     val keyboardController = LocalSoftwareKeyboardController.current
 
-    viewModel.workActivity.value?.let { workActivity ->
+    viewModel.intervention.value?.let { intervention ->
         OutlinedTextField(
-            value = workActivity.title,
-            onValueChange = { viewModel.onFormEvent(ActivityFormEvent.TitleChanged(it)) },
+            value = intervention.title,
+            onValueChange = { viewModel.onFormEvent(InterventionFormEvent.TitleChanged(it)) },
             label = { Text(text = stringResource(R.string.attivita)) },
             modifier = Modifier
                 .fillMaxWidth()
         )
         Column {
             OutlinedTextField(
-                value = workActivity.description,
+                value = intervention.description,
                 onValueChange = {
-                    viewModel.onFormEvent(ActivityFormEvent.DescriptionChanged(it))
+                    viewModel.onFormEvent(InterventionFormEvent.DescriptionChanged(it))
                 },
                 label = { Text(text = stringResource(R.string.descrizione)) },
                 modifier = Modifier.fillMaxWidth(),
-                isError = workActivity.descriptionError != null
+                isError = intervention.descriptionError != null
             )
-            if (workActivity.descriptionError != null) {
+            if (intervention.descriptionError != null) {
                 Text(
-                    text = workActivity.descriptionError,
+                    text = intervention.descriptionError,
                     color = MaterialTheme.colorScheme.error,
                     style = MaterialTheme.typography.labelMedium,
                     textAlign = TextAlign.End,
@@ -58,9 +58,9 @@ fun WorkActivityDetail(
         }
         Row(modifier = Modifier.fillMaxWidth()) {
             CustomDateButton(
-                date = workActivity.date,
+                date = intervention.date,
                 onDateSelected = {
-                    viewModel.onFormEvent(ActivityFormEvent.DateChanged(it))
+                    viewModel.onFormEvent(InterventionFormEvent.DateChanged(it))
                 }
             )
         }
@@ -70,26 +70,26 @@ fun WorkActivityDetail(
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 CustomTimeButton(
-                    time = workActivity.start.toString(),
+                    time = intervention.start.toString(),
                     label = stringResource(R.string.ora_inizio),
                     onClick = { time ->
-                        viewModel.onFormEvent(ActivityFormEvent.StartChanged(time))
+                        viewModel.onFormEvent(InterventionFormEvent.StartChanged(time))
                     },
                     modifier = Modifier.weight(4F)
                 )
                 Spacer(modifier = Modifier.weight(1F))
                 CustomTimeButton(
-                    time = workActivity.end.toString(),
+                    time = intervention.end.toString(),
                     label = stringResource(R.string.ora_fine),
                     onClick = { time ->
-                        viewModel.onFormEvent(ActivityFormEvent.EndChanged(time))
+                        viewModel.onFormEvent(InterventionFormEvent.EndChanged(time))
                     },
                     modifier = Modifier.weight(4F)
                 )
             }
-            if (workActivity.timeError != null) {
+            if (intervention.timeError != null) {
                 Text(
-                    text = workActivity.timeError,
+                    text = intervention.timeError,
                     color = MaterialTheme.colorScheme.error,
                     style = MaterialTheme.typography.labelMedium,
                     textAlign = TextAlign.End,
@@ -98,8 +98,8 @@ fun WorkActivityDetail(
             }
         }
         OutlinedTextField(
-            value = workActivity.movingTime,
-            onValueChange = { viewModel.onFormEvent(ActivityFormEvent.MovingTimeChanged(it)) },
+            value = intervention.movingTime,
+            onValueChange = { viewModel.onFormEvent(InterventionFormEvent.MovingTimeChanged(it)) },
             label = { Text(text = stringResource(R.string.ore_spostamento)) },
             modifier = Modifier.fillMaxWidth(),
             singleLine = true,
@@ -112,8 +112,8 @@ fun WorkActivityDetail(
             )
         )
         OutlinedTextField(
-            value = workActivity.km,
-            onValueChange = { viewModel.onFormEvent(ActivityFormEvent.KmChanged(it)) },
+            value = intervention.km,
+            onValueChange = { viewModel.onFormEvent(InterventionFormEvent.KmChanged(it)) },
             label = { Text(text = stringResource(R.string.km_percorsi)) },
             modifier = Modifier.fillMaxWidth(),
             singleLine = true,

@@ -4,7 +4,7 @@ import java.time.LocalDate
 import java.time.LocalTime
 import java.time.temporal.ChronoUnit
 
-data class WorkActivity(
+data class Intervention(
     val id: String = "",
     val activityId: String = "",
     val title: String = "",
@@ -21,7 +21,7 @@ data class WorkActivity(
         if (this === other) return true
         if (javaClass != other?.javaClass) return false
 
-        other as WorkActivity
+        other as Intervention
 
         if (id != other.id) return false
         if (activityId != other.activityId) return false

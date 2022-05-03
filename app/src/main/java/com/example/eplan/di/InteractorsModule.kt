@@ -9,16 +9,16 @@ import com.example.eplan.interactors.appointmentList.DayChangeAppointment
 import com.example.eplan.interactors.camera.SaveProfilePicUri
 import com.example.eplan.interactors.login.GetCredentialsFromCache
 import com.example.eplan.interactors.login.LoginAttempt
-import com.example.eplan.interactors.workActivityDetail.GetActivityById
-import com.example.eplan.interactors.workActivityDetail.SubmitActivity
-import com.example.eplan.interactors.workActivityDetail.ValidateDescription
-import com.example.eplan.interactors.workActivityDetail.ValidateTime
-import com.example.eplan.interactors.workActivityList.DayChangeWorkActivity
+import com.example.eplan.interactors.interventionDetail.GetInterventionById
+import com.example.eplan.interactors.interventionDetail.SubmitIntervention
+import com.example.eplan.interactors.interventionDetail.ValidateDescription
+import com.example.eplan.interactors.interventionDetail.ValidateTime
+import com.example.eplan.interactors.interventionList.DayChangeIntervention
 import com.example.eplan.network.model.AppointmentDtoMapper
-import com.example.eplan.network.model.WorkActivityDtoMapper
+import com.example.eplan.network.model.InterventionDtoMapper
 import com.example.eplan.network.services.AppointmentService
 import com.example.eplan.network.services.LoginService
-import com.example.eplan.network.services.WorkActivityService
+import com.example.eplan.network.services.InterventionService
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -34,10 +34,10 @@ object InteractorsModule {
     @ViewModelScoped
     @Provides
     fun provideDayActivities(
-        service: WorkActivityService,
-        mapper: WorkActivityDtoMapper
-    ): DayChangeWorkActivity {
-        return DayChangeWorkActivity(
+        service: InterventionService,
+        mapper: InterventionDtoMapper
+    ): DayChangeIntervention {
+        return DayChangeIntervention(
             service = service,
             mapper = mapper
         )
@@ -46,10 +46,10 @@ object InteractorsModule {
     @ViewModelScoped
     @Provides
     fun provideActivityById(
-        service: WorkActivityService,
-        mapper: WorkActivityDtoMapper
-    ): GetActivityById {
-        return GetActivityById(
+        service: InterventionService,
+        mapper: InterventionDtoMapper
+    ): GetInterventionById {
+        return GetInterventionById(
             service = service,
             mapper = mapper
         )
@@ -57,11 +57,11 @@ object InteractorsModule {
 
     @ViewModelScoped
     @Provides
-    fun provideSubmitWorkActivity(
-        service: WorkActivityService,
-        mapper: WorkActivityDtoMapper
-    ): SubmitActivity {
-        return SubmitActivity(
+    fun provideSubmitIntervention(
+        service: InterventionService,
+        mapper: InterventionDtoMapper
+    ): SubmitIntervention {
+        return SubmitIntervention(
             service = service,
             mapper = mapper
         )
