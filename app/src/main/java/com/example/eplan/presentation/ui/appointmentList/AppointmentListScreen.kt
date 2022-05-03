@@ -62,6 +62,7 @@ fun AppointmentListScreen(
                         calendarVisibility.value = false
                     }
                 )
+
             }
         }
     )
