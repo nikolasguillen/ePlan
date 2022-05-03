@@ -13,12 +13,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.style.TextOverflow
 import com.example.eplan.domain.model.Intervention
+import com.example.eplan.domain.model.WorkActivity
 import com.example.eplan.presentation.util.spacing
 
 @ExperimentalMaterial3Api
 @Composable
-fun ActivityCard(
-    intervention: Intervention,
+fun WorkActivityCard(
+    workActivity: WorkActivity,
     onClick: () -> Unit,
 ) {
     Card(
@@ -29,22 +30,22 @@ fun ActivityCard(
     ) {
         Column(modifier = Modifier.padding(MaterialTheme.spacing.medium)) {
             Text(
-                text = intervention.title.replaceFirstChar { it.uppercase() },
+                text = workActivity.title.replaceFirstChar { it.uppercase() },
                 style = MaterialTheme.typography.titleMedium,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis
             )
-            if (intervention.description.isNotBlank()) {
+            if (workActivity.description.isNotBlank()) {
                 Text(
-                    text = intervention.description.replaceFirstChar { it.uppercase() },
+                    text = workActivity.description.replaceFirstChar { it.uppercase() },
                     style = MaterialTheme.typography.bodyMedium,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
                     modifier = Modifier.padding(bottom = MaterialTheme.spacing.extraSmall)
                 )
             }
-            Text(text = intervention.start.toString(), style = MaterialTheme.typography.labelSmall)
-            Text(text = intervention.end.toString(), style = MaterialTheme.typography.labelSmall)
+            Text(text = workActivity.start.toString(), style = MaterialTheme.typography.labelSmall)
+            Text(text = workActivity.end.toString(), style = MaterialTheme.typography.labelSmall)
         }
     }
 }

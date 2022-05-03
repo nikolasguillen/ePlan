@@ -12,7 +12,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import com.example.eplan.R
+import com.example.eplan.domain.model.Appointment
 import com.example.eplan.domain.model.Intervention
+import com.example.eplan.domain.model.WorkActivity
 import com.example.eplan.presentation.navigation.Screen
 import com.example.eplan.presentation.util.spacing
 import com.google.accompanist.swiperefresh.SwipeRefresh
@@ -20,8 +22,8 @@ import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 
 @ExperimentalMaterial3Api
 @Composable
-fun ActivitiesList(
-    interventions: List<Intervention>,
+fun WorkActivitiesList(
+    workActivities: List<WorkActivity>,
     onNavigateToActivityDetailScreen: (String) -> Unit,
     isRefreshing: Boolean,
     onRefresh: () -> Unit
@@ -47,24 +49,43 @@ fun ActivitiesList(
                     }
                 }
                 false -> {
-                    if (interventions.isEmpty()) {
+                    if (workActivities.isEmpty()) {
                         item {
                             AnimationEmptyList(stringResource(id = R.string.no_interventi))
                         }
                     } else {
-                        items(interventions) { workActivity ->
-                            ActivityCard(
-                                intervention = workActivity,
+                        items(workActivities) { workActivity ->
+                            WorkActivityCard(
+                                workActivity = workActivity,
                                 onClick = {
-                                    val route =
-                                        Screen.InterventionDetails.route + "/?activityId=${workActivity.id}"
-                                    onNavigateToActivityDetailScreen(route)
+                                    onClick(
+                                        workActivity = workActivity,
+                                        onNavigateToActivityDetailScreen = onNavigateToActivityDetailScreen
+                                    )
                                 }
                             )
                         }
                     }
                 }
             }
+        }
+    }
+}
+
+private fun onClick(
+    workActivity: WorkActivity,
+    onNavigateToActivityDetailScreen: (String) -> Unit
+) {
+    when (workActivity) {
+        is Intervention -> {
+            val route =
+                Screen.InterventionDetails.route + "/?activityId=${workActivity.id}"
+            onNavigateToActivityDetailScreen(route)
+        }
+        is Appointment -> {
+            val route =
+                Screen.AppointmentDetails.route + "/?appointmentId=${workActivity.id}"
+            onNavigateToActivityDetailScreen(route)
         }
     }
 }

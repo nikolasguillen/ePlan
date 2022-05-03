@@ -7,13 +7,13 @@ import java.time.LocalTime
 import java.time.temporal.ChronoUnit
 
 data class Appointment(
-    val id: String = "",
+    override val id: String = "",
     val activityId: String = "",
-    val title: String = "",
-    val description: String = "",
-    val date: LocalDate = LocalDate.now(),
-    val start: LocalTime = LocalTime.now().truncatedTo(ChronoUnit.MINUTES),
-    val end: LocalTime = LocalTime.now().plusMinutes(10).truncatedTo(ChronoUnit.MINUTES),
+    override val title: String = "",
+    override val description: String = "",
+    override val date: LocalDate = LocalDate.now(),
+    override val start: LocalTime = LocalTime.now().truncatedTo(ChronoUnit.MINUTES),
+    override val end: LocalTime = LocalTime.now().plusMinutes(10).truncatedTo(ChronoUnit.MINUTES),
     val planning: Boolean = false,
     val intervention: Boolean = false,
     val invited: Map<User, Boolean>,
@@ -24,7 +24,7 @@ data class Appointment(
     val memoType: List<String> = listOf(),
     val warningTime: Int,
     val warningUnit: WarningUnit
-) {
+): WorkActivity {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (javaClass != other?.javaClass) return false
@@ -44,6 +44,7 @@ data class Appointment(
         if (periodicity != other.periodicity) return false
         if (periodicityEnd != other.periodicityEnd) return false
         if (memo != other.memo) return false
+        if (memoType != other.memoType) return false
         if (warningTime != other.warningTime) return false
         if (warningUnit != other.warningUnit) return false
 
@@ -64,6 +65,7 @@ data class Appointment(
         result = 31 * result + periodicity.hashCode()
         result = 31 * result + periodicityEnd.hashCode()
         result = 31 * result + memo.hashCode()
+        result = 31 * result + memoType.hashCode()
         result = 31 * result + warningTime
         result = 31 * result + warningUnit.hashCode()
         return result

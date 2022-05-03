@@ -5,18 +5,18 @@ import java.time.LocalTime
 import java.time.temporal.ChronoUnit
 
 data class Intervention(
-    val id: String = "",
+    override val id: String = "",
     val activityId: String = "",
-    val title: String = "",
-    val description: String = "",
+    override val title: String = "",
+    override val description: String = "",
     val descriptionError: String? = null,
-    val date: LocalDate = LocalDate.now(),
-    val start: LocalTime = LocalTime.now().truncatedTo(ChronoUnit.MINUTES),
-    val end: LocalTime = LocalTime.now().plusMinutes(10).truncatedTo(ChronoUnit.MINUTES),
+    override val date: LocalDate = LocalDate.now(),
+    override val start: LocalTime = LocalTime.now().truncatedTo(ChronoUnit.MINUTES),
+    override val end: LocalTime = LocalTime.now().plusMinutes(10).truncatedTo(ChronoUnit.MINUTES),
     val timeError: String? = null,
     val movingTime: String = "",
     val km: String = ""
-) {
+): WorkActivity {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (javaClass != other?.javaClass) return false

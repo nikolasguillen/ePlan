@@ -18,7 +18,7 @@ import androidx.compose.ui.res.stringResource
 import com.example.eplan.R
 import com.example.eplan.presentation.navigation.NestedNavGraphs
 import com.example.eplan.presentation.navigation.Screen
-import com.example.eplan.presentation.ui.components.ActivitiesList
+import com.example.eplan.presentation.ui.components.WorkActivitiesList
 import com.example.eplan.presentation.ui.components.CollapsibleCalendar
 import com.example.eplan.presentation.ui.components.MultiFloatingActionButton
 import com.example.eplan.presentation.ui.components.TopBar
@@ -72,8 +72,8 @@ fun InterventionListScreen(
                         calendarVisibility.value = false
                     }
                 )
-                ActivitiesList(
-                    interventions = interventions,
+                WorkActivitiesList(
+                    workActivities = interventions,
                     onNavigateToActivityDetailScreen = onNavigate,
                     isRefreshing = isRefreshing,
                     onRefresh = {
