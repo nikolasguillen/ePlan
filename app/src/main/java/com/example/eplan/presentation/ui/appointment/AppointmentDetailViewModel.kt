@@ -13,7 +13,7 @@ import com.example.eplan.interactors.interventionDetail.ValidateTime
 import com.example.eplan.presentation.ui.ValidationEvent
 import com.example.eplan.presentation.ui.WorkActivityDetailViewModel
 import com.example.eplan.presentation.ui.appointment.AppointmentDetailEvent.*
-import com.example.eplan.presentation.ui.intervention.STATE_KEY_INTERVENTION
+import com.example.eplan.presentation.ui.intervention.STATE_KEY_INTERVENTION_ID
 import com.example.eplan.presentation.util.TAG
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.launchIn
@@ -38,7 +38,7 @@ constructor(
         private set
 
     init {
-        getToken()
+        getToken(getToken = getToken, onTokenRetrieved = {/*TODO*/})
     }
 
     fun onTriggerEvent(event: AppointmentDetailEvent) {
@@ -58,24 +58,6 @@ constructor(
 
     override fun checkChanges(): Boolean {
         return appointment.value != initialState.value
-    }
-
-    private fun getToken() {
-        getToken.execute().onEach { dataState ->
-            retrieving = dataState.loading
-
-            dataState.data?.let { token ->
-                userToken += token
-                savedStateHandle.get<String>(STATE_KEY_INTERVENTION)?.let { appointmentId ->
-                    onTriggerEvent(GetAppointmentEvent(appointmentId))
-                }
-            }
-
-            dataState.error?.let { error ->
-                Log.e(TAG, "getToken: $error")
-                //TODO gestire errori
-            }
-        }.launchIn(viewModelScope)
     }
 
     private fun getAppointment() {

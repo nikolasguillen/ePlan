@@ -24,13 +24,13 @@ import java.time.LocalDate
 import java.time.LocalTime
 import javax.inject.Inject
 
-const val STATE_KEY_INTERVENTION = "intervention.state.interventionId.key"
+const val STATE_KEY_INTERVENTION_ID = "intervention.state.interventionId.key"
 
 @HiltViewModel
 class InterventionDetailViewModel
 @Inject
 constructor(
-    private val getToken: GetToken,
+    getToken: GetToken,
     private val getInterventionById: GetInterventionById,
     private val submitIntervention: SubmitIntervention,
     private val validateDescription: ValidateDescription,
@@ -43,7 +43,7 @@ constructor(
         private set
 
     init {
-        getToken()
+        getToken(getToken = getToken, onTokenRetrieved = { onCreation() })
     }
 
     fun onTriggerEvent(event: InterventionDetailEvent) {
@@ -59,25 +59,6 @@ constructor(
                 deleteIntervention()
             }
         }
-    }
-
-    private fun getToken() {
-        getToken.execute().onEach { dataState ->
-            retrieving = dataState.loading
-
-            dataState.data?.let { token ->
-                userToken += token
-                savedStateHandle.get<String>(STATE_KEY_INTERVENTION)?.let { workActivityId ->
-                    onTriggerEvent(GetInterventionEvent(workActivityId))
-                }
-                onCreation()
-            }
-
-            dataState.error?.let { error ->
-                Log.e(TAG, "getToken: $error")
-                //TODO gestire errori
-            }
-        }.launchIn(viewModelScope)
     }
 
     private fun onCreation() {
@@ -206,11 +187,11 @@ constructor(
         intervention.value?.let {
             //TODO
         }
-        savedStateHandle.remove<String>(STATE_KEY_INTERVENTION)
+        savedStateHandle.remove<String>(STATE_KEY_INTERVENTION_ID)
     }
 
     override fun changeQuery(query: String) {
         this.query = query
-        savedStateHandle.set(STATE_KEY_INTERVENTION, query)
+        savedStateHandle.set(STATE_KEY_INTERVENTION_ID, query)
     }
 }
