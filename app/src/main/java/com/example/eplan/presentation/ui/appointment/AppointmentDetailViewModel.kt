@@ -6,6 +6,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import com.example.eplan.domain.model.Appointment
+import com.example.eplan.domain.util.Periodicity
 import com.example.eplan.interactors.GetToken
 import com.example.eplan.interactors.appointmentDetail.GetAppointmentById
 import com.example.eplan.interactors.appointmentDetail.UpdateAppointment
@@ -18,6 +19,7 @@ import com.example.eplan.presentation.util.TAG
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import java.time.LocalDate
 import javax.inject.Inject
 
 const val STATE_KEY_APPOINTMENT = "appointment.state.appointmentId.key"
@@ -38,7 +40,7 @@ constructor(
         private set
 
     init {
-        getToken(getToken = getToken, onTokenRetrieved = {/*TODO*/})
+        getToken(getToken = getToken, onTokenRetrieved = { onCreation() })
     }
 
     fun onTriggerEvent(event: AppointmentDetailEvent) {
@@ -53,6 +55,16 @@ constructor(
             is DeleteAppointmentEvent -> {
                 deleteAppointment()
             }
+        }
+    }
+
+    private fun onCreation() {
+        val id = savedStateHandle.get<String?>("appointmentId")
+        val date = savedStateHandle.get<String>("date")
+
+        if (id == null) {
+            initialState.value = Appointment(date = LocalDate.parse(date))
+            appointment.value = Appointment(date = LocalDate.parse(date))
         }
     }
 

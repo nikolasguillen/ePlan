@@ -16,14 +16,14 @@ data class Appointment(
     override val end: LocalTime = LocalTime.now().plusMinutes(10).truncatedTo(ChronoUnit.MINUTES),
     val planning: Boolean = false,
     val intervention: Boolean = false,
-    val invited: Map<User, Boolean>,
-    val periodicity: Periodicity = Periodicity.NESSUNA,
+    val invited: List<User> = listOf(),
+    val periodicity: Periodicity = Periodicity.NONE,
     val periodicityEnd: LocalDate = LocalDate.now(),
     val memo: Boolean = false,
     // TODO capire come gestire il parametro
     val memoType: List<String> = listOf(),
-    val warningTime: Int,
-    val warningUnit: WarningUnit
+    val warningTime: Int = 0,
+    val warningUnit: WarningUnit = WarningUnit.HOURS
 ): WorkActivity {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true

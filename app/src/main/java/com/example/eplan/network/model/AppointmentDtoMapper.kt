@@ -14,11 +14,6 @@ class AppointmentDtoMapper : DomainMapper<AppointmentDto, Appointment> {
         val startDateTime = dateTimeParser(model.start)
         val endDateTime = dateTimeParser(model.end)
 
-        val invited = mutableMapOf<User, Boolean>()
-        model.invited.forEach {
-            invited[it] = true
-        }
-
         return Appointment(
             id = model.idAppuntamento,
             activityId = model.idAttivita,
@@ -29,7 +24,7 @@ class AppointmentDtoMapper : DomainMapper<AppointmentDto, Appointment> {
             end = endDateTime.second,
             planning = model.planning,
             intervention = model.intervention,
-            invited = invited,
+            invited = model.invited,
             periodicity = Periodicity.valueOf(model.periodicity),
             periodicityEnd = LocalDate.parse(model.periodicityEnd),
             memo = model.memo,
@@ -42,10 +37,6 @@ class AppointmentDtoMapper : DomainMapper<AppointmentDto, Appointment> {
     override fun mapFromDomainModel(domainModel: Appointment): AppointmentDto {
         val startDateTime = "${domainModel.date} ${domainModel.start}"
         val endDateTime = "${domainModel.date} ${domainModel.end}"
-        val invited = mutableListOf<User>()
-        domainModel.invited.forEach {
-            invited.add(it.key)
-        }
 
         return AppointmentDto(
             idAppuntamento = domainModel.id,
@@ -56,7 +47,7 @@ class AppointmentDtoMapper : DomainMapper<AppointmentDto, Appointment> {
             end = endDateTime,
             planning = domainModel.planning,
             intervention = domainModel.intervention,
-            invited = invited,
+            invited = domainModel.invited,
             periodicity = domainModel.periodicity.name,
             periodicityEnd = domainModel.periodicityEnd.toString(),
             memo = domainModel.memo,

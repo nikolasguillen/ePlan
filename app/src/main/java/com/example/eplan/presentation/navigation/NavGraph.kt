@@ -13,10 +13,14 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import androidx.navigation.navigation
+import com.example.eplan.R
 import com.example.eplan.presentation.navigation.NestedNavGraphs.*
 import com.example.eplan.presentation.ui.account.AccountEvent
 import com.example.eplan.presentation.ui.account.AccountScreen
 import com.example.eplan.presentation.ui.account.AccountViewModel
+import com.example.eplan.presentation.ui.appointment.AppointmentDetailEvent
+import com.example.eplan.presentation.ui.appointment.AppointmentDetailViewModel
+import com.example.eplan.presentation.ui.appointment.AppointmentDetailScreen
 import com.example.eplan.presentation.ui.appointmentList.AppointmentListScreen
 import com.example.eplan.presentation.ui.appointmentList.AppointmentListViewModel
 import com.example.eplan.presentation.ui.camera.CameraEvent
@@ -109,9 +113,9 @@ fun NavGraph(navController: NavHostController) {
                     val viewModel = hiltViewModel<InterventionDetailViewModel>()
                     InterventionDetailsScreen(
                         viewModel = viewModel,
+                        topBarTitleResID = R.string.intervento,
                         onSavePressed = {
                             viewModel.onFormEvent(InterventionFormEvent.Submit)
-
                         },
                         onBackPressed = navController::popBackStack,
                         onDeletePressed = {
@@ -122,21 +126,52 @@ fun NavGraph(navController: NavHostController) {
                 }
             }
 
+            /** Sezione appuntamenti **/
             navigation(
                 startDestination = AppointmentGraph.startDestination,
                 route = AppointmentGraph.route
             ) {
-                /*TODO da sistemare*/
+
+                val selectedDate = mutableStateOf(LocalDate.now())
+
                 composable(route = Screen.AppointmentList.route) {
                     val viewModel = hiltViewModel<AppointmentListViewModel>()
                     AppointmentListScreen(
                         viewModel = viewModel,
                         onNavigate = navController::navigate
                     )
-
+                }
+                composable(
+                    route = Screen.AppointmentDetails.route + "/?appointmentId={appointmentId}&date={date}",
+                    arguments = listOf(
+                        navArgument("appointmentId") {
+                            type = NavType.StringType
+                            nullable = true
+                        },
+                        navArgument("date") {
+                            type = NavType.StringType
+                            defaultValue = selectedDate.value.toString()
+                        }
+                    )
+                ) {
+                    val viewModel = hiltViewModel<AppointmentDetailViewModel>()
+                    AppointmentDetailScreen(
+                        viewModel = viewModel,
+                        topBarTitleResID = R.string.appuntamento,
+                        // TODO da cambiare quando implementerò controllo form come nella form degli interventi
+                        onSavePressed = {
+                            viewModel.onTriggerEvent(AppointmentDetailEvent.UpdateAppointmentEvent)
+                        },
+                        onBackPressed = navController::popBackStack,
+                        onDeletePressed = {
+                            viewModel.onTriggerEvent(AppointmentDetailEvent.DeleteAppointmentEvent)
+                            navController.popBackStack()
+                        }
+                    )
                 }
             }
 
+            /** Sezione account **/
             navigation(
                 startDestination = AccountGraph.startDestination,
                 route = AccountGraph.route
@@ -152,10 +187,22 @@ fun NavGraph(navController: NavHostController) {
                         toSettings = {},
                         logout = {
                             viewModel.onTriggerEvent(AccountEvent.Logout)
-                            navController.popBackStack(route = AccountGraph.startDestination, inclusive = true)
-                            navController.popBackStack(route = AppointmentGraph.startDestination, inclusive = true)
-                            navController.popBackStack(route = InterventionGraph.startDestination, inclusive = true)
-                            navController.popBackStack(route = LoginGraph.startDestination, inclusive = true)
+                            navController.popBackStack(
+                                route = AccountGraph.startDestination,
+                                inclusive = true
+                            )
+                            navController.popBackStack(
+                                route = AppointmentGraph.startDestination,
+                                inclusive = true
+                            )
+                            navController.popBackStack(
+                                route = InterventionGraph.startDestination,
+                                inclusive = true
+                            )
+                            navController.popBackStack(
+                                route = LoginGraph.startDestination,
+                                inclusive = true
+                            )
                             navController.navigate(route = LoginGraph.startDestination)
                         }
                     )
