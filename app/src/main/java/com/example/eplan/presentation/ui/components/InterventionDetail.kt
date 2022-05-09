@@ -31,7 +31,7 @@ fun InterventionDetail(
     viewModel.intervention.value?.let { intervention ->
         OutlinedTextField(
             value = intervention.title,
-            onValueChange = { viewModel.onFormEvent(InterventionFormEvent.TitleChanged(it)) },
+            onValueChange = { viewModel.onFormEvent(InterventionFormEvent.ActivityNameChanged(it)) },
             label = { Text(text = stringResource(R.string.attivita)) },
             modifier = Modifier
                 .fillMaxWidth()

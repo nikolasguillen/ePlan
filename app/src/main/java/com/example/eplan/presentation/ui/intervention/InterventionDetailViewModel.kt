@@ -8,7 +8,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.eplan.domain.model.Intervention
 import com.example.eplan.interactors.GetToken
 import com.example.eplan.interactors.interventionDetail.GetInterventionById
-import com.example.eplan.interactors.interventionDetail.SubmitIntervention
+import com.example.eplan.interactors.interventionDetail.UpdateIntervention
 import com.example.eplan.interactors.workActivityDetail.ValidateActivityId
 import com.example.eplan.interactors.workActivityDetail.ValidateDescription
 import com.example.eplan.interactors.workActivityDetail.ValidateTime
@@ -33,7 +33,7 @@ class InterventionDetailViewModel
 constructor(
     getToken: GetToken,
     private val getInterventionById: GetInterventionById,
-    private val submitIntervention: SubmitIntervention,
+    private val updateIntervention: UpdateIntervention,
     private val validateActivityId: ValidateActivityId,
     private val validateDescription: ValidateDescription,
     private val validateTime: ValidateTime,
@@ -96,8 +96,8 @@ constructor(
 
     fun onFormEvent(event: InterventionFormEvent) {
         when (event) {
-            is TitleChanged -> {
-                intervention.value = intervention.value?.copy(title = event.title)
+            is ActivityNameChanged -> {
+                intervention.value = intervention.value?.copy(activityName = event.name)
             }
             is DescriptionChanged -> {
                 intervention.value = intervention.value?.copy(description = event.description)
@@ -171,7 +171,7 @@ constructor(
 
     private fun updateIntervention() {
         intervention.value?.let {
-            submitIntervention.execute(token = userToken, intervention = it)
+            updateIntervention.execute(token = userToken, intervention = it)
                 .onEach { dataState ->
                     sending = dataState.loading
 

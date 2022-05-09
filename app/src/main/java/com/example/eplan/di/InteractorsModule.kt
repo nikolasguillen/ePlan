@@ -10,7 +10,7 @@ import com.example.eplan.interactors.camera.SaveProfilePicUri
 import com.example.eplan.interactors.login.GetCredentialsFromCache
 import com.example.eplan.interactors.login.LoginAttempt
 import com.example.eplan.interactors.interventionDetail.GetInterventionById
-import com.example.eplan.interactors.interventionDetail.SubmitIntervention
+import com.example.eplan.interactors.interventionDetail.UpdateIntervention
 import com.example.eplan.interactors.workActivityDetail.ValidateDescription
 import com.example.eplan.interactors.workActivityDetail.ValidateTime
 import com.example.eplan.interactors.interventionList.DayChangeIntervention
@@ -61,8 +61,8 @@ object InteractorsModule {
     fun provideSubmitIntervention(
         service: InterventionService,
         mapper: InterventionDtoMapper
-    ): SubmitIntervention {
-        return SubmitIntervention(
+    ): UpdateIntervention {
+        return UpdateIntervention(
             service = service,
             mapper = mapper
         )

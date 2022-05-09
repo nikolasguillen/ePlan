@@ -9,7 +9,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 
-class SubmitIntervention
+class UpdateIntervention
 @Inject
 constructor(
     private val service: InterventionService,

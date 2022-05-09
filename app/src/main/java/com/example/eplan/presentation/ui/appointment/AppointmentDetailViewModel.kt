@@ -9,11 +9,15 @@ import com.example.eplan.domain.model.Appointment
 import com.example.eplan.interactors.GetToken
 import com.example.eplan.interactors.appointmentDetail.GetAppointmentById
 import com.example.eplan.interactors.appointmentDetail.UpdateAppointment
+import com.example.eplan.interactors.workActivityDetail.ValidateActivityId
+import com.example.eplan.interactors.workActivityDetail.ValidateDescription
 import com.example.eplan.interactors.workActivityDetail.ValidateTime
 import com.example.eplan.presentation.ui.ValidationEvent
 import com.example.eplan.presentation.ui.WorkActivityDetailViewModel
 import com.example.eplan.presentation.ui.appointment.AppointmentDetailEvent.*
+import com.example.eplan.presentation.ui.appointment.AppointmentFormEvent.*
 import com.example.eplan.presentation.util.TAG
+import com.example.eplan.presentation.util.fromDateToLocalDate
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -28,7 +32,9 @@ class AppointmentDetailViewModel
 constructor(
     private val getToken: GetToken,
     private val getAppointmentById: GetAppointmentById,
-    private val submitAppointment: UpdateAppointment,
+    private val updateAppointment: UpdateAppointment,
+    private val validateActivityId: ValidateActivityId,
+    private val validateDescription: ValidateDescription,
     private val validateTime: ValidateTime,
     private val savedStateHandle: SavedStateHandle
 ) : WorkActivityDetailViewModel() {
@@ -72,8 +78,80 @@ constructor(
         appointment.value = Appointment(date = date)
     }
 
+    fun onFormEvent(event: AppointmentFormEvent) {
+        when (event) {
+            is ActivityNameChanged -> {
+                appointment.value = appointment.value?.copy(activityName = event.name)
+            }
+            is DateChanged -> {
+                appointment.value = appointment.value?.copy(date = fromDateToLocalDate(event.date))
+            }
+            is DescriptionChanged -> {
+                appointment.value = appointment.value?.copy(description = event.description)
+            }
+            is EndChanged -> {
+                appointment.value = appointment.value?.copy(end = event.time)
+            }
+            is InterventionChanged -> {
+                appointment.value = appointment.value?.copy(intervention = event.selected)
+            }
+            is InvitedListChanged -> {
+                appointment.value = appointment.value?.copy(invited = event.invited)
+            }
+            is MemoChanged -> {
+                appointment.value = appointment.value?.copy(memo = event.selected)
+            }
+            is PeriodicityChanged -> {
+                appointment.value = appointment.value?.copy(periodicity = event.periodicity)
+            }
+            is PeriodicityEndChanged -> {
+                appointment.value = appointment.value?.copy(periodicityEnd = fromDateToLocalDate(event.date))
+            }
+            is PlanningChanged -> {
+                appointment.value = appointment.value?.copy(planning = event.selected)
+            }
+            is StartChanged -> {
+                appointment.value = appointment.value?.copy(start = event.time)
+            }
+            is WarningTimeChanged -> {
+                appointment.value = appointment.value?.copy(warningTime = event.warningTime)
+            }
+            is WarningUnitChanged -> {
+                appointment.value = appointment.value?.copy(warningUnit = event.warningUnit)
+            }
+            Submit -> {
+                submitData()
+            }
+        }
+    }
+
     override fun checkChanges(): Boolean {
         return appointment.value != initialState.value
+    }
+
+    private fun submitData() {
+        appointment.value?.let {
+            // TODO quando arrivo qua devo aver già popolato la mappa di attività (id, nome)
+            val activityIdResult = validateActivityId.execute(it.activityId, listOf())
+            val descriptionResult = validateDescription.execute(it.description)
+            val timeResult = validateTime.execute(it.start, it.end)
+
+            val hasErrors = listOf(
+                activityIdResult,
+                descriptionResult,
+                timeResult
+            ).any { result -> !result.successful }
+
+            if (hasErrors) {
+                appointment.value = appointment.value?.copy(
+                    activityIdError = activityIdResult.errorMessage,
+                    descriptionError = descriptionResult.errorMessage,
+                    timeError = timeResult.errorMessage
+                )
+                return
+            }
+            onTriggerEvent(UpdateAppointmentEvent)
+        }
     }
 
     private fun getAppointment() {
@@ -94,7 +172,7 @@ constructor(
 
     private fun updateAppointment() {
         appointment.value?.let {
-            submitAppointment.execute(token = userToken, appointment = it)
+            updateAppointment.execute(token = userToken, appointment = it)
                 .onEach { dataState ->
                     sending = dataState.loading
 

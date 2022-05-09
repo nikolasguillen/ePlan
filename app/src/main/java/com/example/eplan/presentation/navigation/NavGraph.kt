@@ -21,6 +21,7 @@ import com.example.eplan.presentation.ui.account.AccountViewModel
 import com.example.eplan.presentation.ui.appointment.AppointmentDetailEvent
 import com.example.eplan.presentation.ui.appointment.AppointmentDetailViewModel
 import com.example.eplan.presentation.ui.appointment.AppointmentDetailScreen
+import com.example.eplan.presentation.ui.appointment.AppointmentFormEvent
 import com.example.eplan.presentation.ui.appointmentList.AppointmentListScreen
 import com.example.eplan.presentation.ui.appointmentList.AppointmentListViewModel
 import com.example.eplan.presentation.ui.camera.CameraEvent
@@ -158,9 +159,8 @@ fun NavGraph(navController: NavHostController) {
                     AppointmentDetailScreen(
                         viewModel = viewModel,
                         topBarTitleResID = R.string.appuntamento,
-                        // TODO da cambiare quando implementerò controllo form come nella form degli interventi
                         onSavePressed = {
-                            viewModel.onTriggerEvent(AppointmentDetailEvent.UpdateAppointmentEvent)
+                            viewModel.onFormEvent(AppointmentFormEvent.Submit)
                         },
                         onBackPressed = navController::popBackStack,
                         onDeletePressed = {

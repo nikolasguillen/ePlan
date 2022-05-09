@@ -6,6 +6,7 @@ import java.time.LocalTime
 interface WorkActivity {
     val id: String
     val activityId: String
+    val activityName: String
     val title: String
     val description: String
     val date: LocalDate

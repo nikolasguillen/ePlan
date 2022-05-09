@@ -7,6 +7,7 @@ import java.time.temporal.ChronoUnit
 data class Intervention(
     override val id: String = "",
     override val activityId: String = "",
+    override val activityName: String = "",
     val activityIdError: String? = null,
     override val title: String = "",
     override val description: String = "",
@@ -26,6 +27,7 @@ data class Intervention(
 
         if (id != other.id) return false
         if (activityId != other.activityId) return false
+        if (activityName != other.activityName) return false
         if (activityIdError != other.activityIdError) return false
         if (title != other.title) return false
         if (description != other.description) return false
@@ -43,6 +45,7 @@ data class Intervention(
     override fun hashCode(): Int {
         var result = id.hashCode()
         result = 31 * result + activityId.hashCode()
+        result = 31 * result + activityName.hashCode()
         result = 31 * result + (activityIdError?.hashCode() ?: 0)
         result = 31 * result + title.hashCode()
         result = 31 * result + description.hashCode()
