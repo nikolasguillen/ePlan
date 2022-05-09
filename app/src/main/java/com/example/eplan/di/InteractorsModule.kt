@@ -11,9 +11,10 @@ import com.example.eplan.interactors.login.GetCredentialsFromCache
 import com.example.eplan.interactors.login.LoginAttempt
 import com.example.eplan.interactors.interventionDetail.GetInterventionById
 import com.example.eplan.interactors.interventionDetail.SubmitIntervention
-import com.example.eplan.interactors.interventionDetail.ValidateDescription
-import com.example.eplan.interactors.interventionDetail.ValidateTime
+import com.example.eplan.interactors.workActivityDetail.ValidateDescription
+import com.example.eplan.interactors.workActivityDetail.ValidateTime
 import com.example.eplan.interactors.interventionList.DayChangeIntervention
+import com.example.eplan.interactors.workActivityDetail.ValidateActivityId
 import com.example.eplan.network.model.AppointmentDtoMapper
 import com.example.eplan.network.model.InterventionDtoMapper
 import com.example.eplan.network.services.AppointmentService
@@ -69,6 +70,12 @@ object InteractorsModule {
 
     /** Provider dei validatori delle form **/
 
+    @ViewModelScoped
+    @Provides
+    fun provideValidateActivityId(): ValidateActivityId {
+        return ValidateActivityId()
+
+    }
     @ViewModelScoped
     @Provides
     fun provideValidateDescription(): ValidateDescription {

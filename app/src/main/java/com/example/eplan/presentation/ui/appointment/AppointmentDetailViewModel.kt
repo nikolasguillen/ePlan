@@ -6,15 +6,13 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import com.example.eplan.domain.model.Appointment
-import com.example.eplan.domain.util.Periodicity
 import com.example.eplan.interactors.GetToken
 import com.example.eplan.interactors.appointmentDetail.GetAppointmentById
 import com.example.eplan.interactors.appointmentDetail.UpdateAppointment
-import com.example.eplan.interactors.interventionDetail.ValidateTime
+import com.example.eplan.interactors.workActivityDetail.ValidateTime
 import com.example.eplan.presentation.ui.ValidationEvent
 import com.example.eplan.presentation.ui.WorkActivityDetailViewModel
 import com.example.eplan.presentation.ui.appointment.AppointmentDetailEvent.*
-import com.example.eplan.presentation.ui.intervention.STATE_KEY_INTERVENTION_ID
 import com.example.eplan.presentation.util.TAG
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.launchIn
@@ -63,9 +61,15 @@ constructor(
         val date = savedStateHandle.get<String>("date")
 
         if (id == null) {
-            initialState.value = Appointment(date = LocalDate.parse(date))
-            appointment.value = Appointment(date = LocalDate.parse(date))
+            createAppointmentManually(LocalDate.parse(date))
+        } else {
+            onTriggerEvent(GetAppointmentEvent(id))
         }
+    }
+
+    private fun createAppointmentManually(date: LocalDate) {
+        initialState.value = Appointment(date = date)
+        appointment.value = Appointment(date = date)
     }
 
     override fun checkChanges(): Boolean {

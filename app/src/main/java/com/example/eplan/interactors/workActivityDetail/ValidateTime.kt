@@ -1,4 +1,4 @@
-package com.example.eplan.interactors.interventionDetail
+package com.example.eplan.interactors.workActivityDetail
 
 import com.example.eplan.presentation.util.acceptableTimeInterval
 import java.time.LocalTime

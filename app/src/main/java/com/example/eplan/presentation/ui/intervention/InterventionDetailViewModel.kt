@@ -9,8 +9,9 @@ import com.example.eplan.domain.model.Intervention
 import com.example.eplan.interactors.GetToken
 import com.example.eplan.interactors.interventionDetail.GetInterventionById
 import com.example.eplan.interactors.interventionDetail.SubmitIntervention
-import com.example.eplan.interactors.interventionDetail.ValidateDescription
-import com.example.eplan.interactors.interventionDetail.ValidateTime
+import com.example.eplan.interactors.workActivityDetail.ValidateActivityId
+import com.example.eplan.interactors.workActivityDetail.ValidateDescription
+import com.example.eplan.interactors.workActivityDetail.ValidateTime
 import com.example.eplan.presentation.ui.ValidationEvent
 import com.example.eplan.presentation.ui.WorkActivityDetailViewModel
 import com.example.eplan.presentation.ui.intervention.InterventionDetailEvent.*
@@ -33,6 +34,7 @@ constructor(
     getToken: GetToken,
     private val getInterventionById: GetInterventionById,
     private val submitIntervention: SubmitIntervention,
+    private val validateActivityId: ValidateActivityId,
     private val validateDescription: ValidateDescription,
     private val validateTime: ValidateTime,
     private val savedStateHandle: SavedStateHandle
@@ -128,16 +130,20 @@ constructor(
 
     private fun submitData() {
         intervention.value?.let {
+            // TODO quando arrivo qua devo aver già popolato la mappa di attività (id, nome)
+            val activityIdResult = validateActivityId.execute(it.activityId, listOf())
             val descriptionResult = validateDescription.execute(it.description)
             val timeResult = validateTime.execute(it.start, it.end)
 
             val hasErrors = listOf(
+                activityIdResult,
                 descriptionResult,
                 timeResult
             ).any { result -> !result.successful }
 
             if (hasErrors) {
                 intervention.value = intervention.value?.copy(
+                    activityIdError = activityIdResult.errorMessage,
                     descriptionError = descriptionResult.errorMessage,
                     timeError = timeResult.errorMessage
                 )
