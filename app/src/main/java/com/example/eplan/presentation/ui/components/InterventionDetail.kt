@@ -30,7 +30,7 @@ fun InterventionDetail(
 
     viewModel.intervention.value?.let { intervention ->
         OutlinedTextField(
-            value = intervention.title,
+            value = intervention.activityName,
             onValueChange = { viewModel.onFormEvent(InterventionFormEvent.ActivityNameChanged(it)) },
             label = { Text(text = stringResource(R.string.attivita)) },
             modifier = Modifier

@@ -18,11 +18,16 @@ import com.example.eplan.presentation.util.fromLocalDateToDate
 import com.example.eplan.presentation.util.spacing
 import com.example.eplan.presentation.util.toLiteralDateParser
 import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 import java.util.*
 
 @ExperimentalMaterial3Api
 @Composable
-fun CustomDateButton(date: LocalDate, onDateSelected: (Date) -> Unit) {
+fun CustomDateButton(
+    date: LocalDate,
+    onDateSelected: (Date) -> Unit,
+    showLiteralDate: Boolean = true
+) {
 
     val showDialog = remember { mutableStateOf(false) }
     Card(
@@ -33,7 +38,7 @@ fun CustomDateButton(date: LocalDate, onDateSelected: (Date) -> Unit) {
     )
     {
         Text(
-            text = toLiteralDateParser(date.toString()),
+            text = if (showLiteralDate) toLiteralDateParser(date.toString()) else date.format(DateTimeFormatter.ofPattern("dd-MM-yyyy")),
             modifier = Modifier
                 .padding(MaterialTheme.spacing.medium)
                 .align(Alignment.CenterHorizontally)

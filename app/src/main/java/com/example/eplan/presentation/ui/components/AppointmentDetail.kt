@@ -1,13 +1,15 @@
 package com.example.eplan.presentation.ui.components
 
-import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.snapshots.Snapshot
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -15,10 +17,12 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.Dialog
 import com.example.eplan.R
 import com.example.eplan.domain.model.User
 import com.example.eplan.domain.util.WarningUnit
 import com.example.eplan.presentation.ui.appointment.AppointmentDetailViewModel
+import com.example.eplan.presentation.ui.appointment.AppointmentFormEvent.*
 import com.example.eplan.presentation.util.spacing
 
 @ExperimentalMaterial3Api
@@ -26,23 +30,33 @@ import com.example.eplan.presentation.util.spacing
 fun AppointmentDetail(
     viewModel: AppointmentDetailViewModel
 ) {
-
-    val context = LocalContext.current
-
     viewModel.appointment.value?.let { appointment ->
 
+        val context = LocalContext.current
+        val currentColor =
+            if (appointment.memo) MaterialTheme.colorScheme.onSurface else MaterialTheme.colorScheme.onSurface.copy(
+                alpha = 0.38F
+            )
+        var showTimeUnitDropdown by remember { mutableStateOf(false) }
+        var showInvitedDialog by remember { mutableStateOf(false) }
+        var showPeriodicityDialog by remember { mutableStateOf(false) }
+
         OutlinedTextField(
-            value = appointment.title,
-            onValueChange = { /*TODO*/ },
-            label = { Text(text = stringResource(id = R.string.attivita)) })
+            value = appointment.activityName,
+            onValueChange = { viewModel.onFormEvent(ActivityNameChanged(it)) },
+            label = { Text(text = stringResource(id = R.string.attivita)) },
+            modifier = Modifier.fillMaxWidth()
+        )
         OutlinedTextField(
             value = appointment.description,
-            onValueChange = { /*TODO*/ },
-            label = { Text(text = stringResource(id = R.string.descrizione)) })
+            onValueChange = { viewModel.onFormEvent(DescriptionChanged(it)) },
+            label = { Text(text = stringResource(id = R.string.descrizione)) },
+            modifier = Modifier.fillMaxWidth()
+        )
         Row(modifier = Modifier.fillMaxWidth()) {
             CustomDateButton(
                 date = appointment.date,
-                onDateSelected = {/*TODO*/ }
+                onDateSelected = { viewModel.onFormEvent(DateChanged(it)) }
             )
         }
         Row(
@@ -52,14 +66,14 @@ fun AppointmentDetail(
             CustomTimeButton(
                 time = appointment.start.toString(),
                 label = stringResource(id = R.string.ora_inizio),
-                onClick = { /*TODO*/ },
+                onClick = { viewModel.onFormEvent(StartChanged(it)) },
                 modifier = Modifier.weight(4F)
             )
             Spacer(modifier = Modifier.weight(1F))
             CustomTimeButton(
                 time = appointment.end.toString(),
                 label = stringResource(id = R.string.ora_inizio),
-                onClick = { /*TODO*/ },
+                onClick = { viewModel.onFormEvent(EndChanged(it)) },
                 modifier = Modifier.weight(4F)
             )
         }
@@ -75,7 +89,9 @@ fun AppointmentDetail(
                     style = MaterialTheme.typography.labelMedium
                 )
             }
-            Switch(checked = appointment.planning, onCheckedChange = {/*TODO*/ })
+            Switch(
+                checked = appointment.planning,
+                onCheckedChange = { viewModel.onFormEvent(PlanningChanged(it)) })
         }
         Row(
             verticalAlignment = Alignment.CenterVertically,
@@ -83,14 +99,16 @@ fun AppointmentDetail(
             modifier = Modifier.fillMaxWidth()
         ) {
             Text(text = "Contabilizza come intervento")
-            Switch(checked = appointment.intervention, onCheckedChange = {/*TODO*/ })
+            Switch(
+                checked = appointment.intervention,
+                onCheckedChange = { viewModel.onFormEvent(InterventionChanged(it)) })
         }
         Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
             Text(text = "Invita anche:")
             Card(
                 modifier = Modifier
                     .clip(MaterialTheme.shapes.medium)
-                    .clickable { /*TODO al click deve aprire il dialog con la lista di persone da invitare*/ }
+                    .clickable { showInvitedDialog = !showInvitedDialog }
                     .fillMaxWidth()
                     .wrapContentHeight()
             ) {
@@ -100,17 +118,6 @@ fun AppointmentDetail(
                         modifier = Modifier.padding(MaterialTheme.spacing.medium)
                     )
                 } else {
-                    /*TODO nella lista "invited" dell'appuntamento ho solo le persone effettivamente invitate,
-                    *  quindi per popolare la lista delle persone da poter invitare devo prendere i dati da un'altra chiamata
-                    **/
-                    val people = mutableListOf<User>()
-                    for (i in 1..10) {
-                        people.add(User(id = i.toString(), fullName = "Persona $i"))
-                    }
-                    people.forEach {
-
-                    }
-                    /**----------**/
                     appointment.invited.forEach {
                         Text(
                             text = it.fullName,
@@ -123,7 +130,7 @@ fun AppointmentDetail(
         Row(horizontalArrangement = Arrangement.SpaceBetween) {
             Column(
                 verticalArrangement = Arrangement.spacedBy(8.dp),
-                modifier = Modifier.weight(1f),
+                modifier = Modifier.weight(4F),
             ) {
                 Text(text = stringResource(R.string.periodicita))
                 Card(
@@ -136,22 +143,19 @@ fun AppointmentDetail(
                         text = appointment.periodicity.getName(context),
                         modifier = Modifier.padding(16.dp)
                     )
-                    DropdownMenu(
-                        expanded = false /*TODO mettere booleano per apertura/chiusura dropdown menu*/,
-                        onDismissRequest = { /*TODO*/ }) {
-
-                    }
                 }
             }
-            Spacer(modifier = Modifier.size(16.dp))
+            Spacer(modifier = Modifier.weight(1F))
             Column(
                 verticalArrangement = Arrangement.spacedBy(8.dp),
-                modifier = Modifier.weight(1f)
+                modifier = Modifier.weight(4F)
             ) {
                 Text(text = stringResource(R.string.fine_periodicita))
                 CustomDateButton(
                     date = appointment.periodicityEnd,
-                    onDateSelected = { date -> /*TODO Cambiare periodicity end al nuovo valore*/ })
+                    onDateSelected = { date -> viewModel.onFormEvent(PeriodicityEndChanged(date)) },
+                    showLiteralDate = false
+                )
             }
         }
         Row(
@@ -162,67 +166,150 @@ fun AppointmentDetail(
             Text(text = "Attiva promemoria")
             Switch(
                 checked = appointment.memo,
-                onCheckedChange = {/*TODO modificare appointment.memo al click*/ })
+                onCheckedChange = { viewModel.onFormEvent(MemoChanged(it)) })
         }
-        AnimatedVisibility(visible = true) {
-            Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
+        Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween,
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Text(text = "Avvisami tramite email", color = currentColor)
+                /*TODO capire come gestire notifiche push / mail*/
+                /*Switch(checked = appointment, onCheckedChange = )*/
+            }
+            Column(
+                verticalArrangement = Arrangement.spacedBy(8.dp),
+                modifier = Modifier.padding(bottom = MaterialTheme.spacing.small)
+            ) {
+                Text(text = "Con un preavviso di:", color = currentColor)
                 Row(
-                    verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.SpaceBetween,
                     modifier = Modifier.fillMaxWidth()
                 ) {
-                    Text(text = "Avvisami tramite email")
-                    /*TODO capire come gestire notifiche push / mail*/
-                    /*Switch(checked = appointment, onCheckedChange = )*/
-                }
-                Column(
-                    verticalArrangement = Arrangement.spacedBy(8.dp),
-                    modifier = Modifier.padding(bottom = MaterialTheme.spacing.small)
-                ) {
-                    Text(text = "Con un preavviso di:")
-                    Row(
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        modifier = Modifier.fillMaxWidth()
-                    ) {
-                        var test by remember { mutableStateOf(false) }
+                    OutlinedTextField(
+                        value = appointment.warningTime.toString(),
+                        onValueChange = { viewModel.onFormEvent(WarningTimeChanged(it.toInt())) },
+                        enabled = appointment.memo,
+                        textStyle = MaterialTheme.typography.bodyLarge,
+                        modifier = Modifier.weight(6F),
+                        singleLine = true,
+                        keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number)
+                    )
+                    Spacer(modifier = Modifier.weight(1F))
+                    Box(modifier = Modifier.weight(5F)) {
                         OutlinedTextField(
-                            value = appointment.warningTime.toString(),
-                            onValueChange = { /*TODO cambiare tempo preavviso appuntamento*/ },
-                            textStyle = MaterialTheme.typography.bodyLarge,
-                            modifier = Modifier.weight(6f),
-                            singleLine = true,
-                            keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number)
+                            value = appointment.warningUnit.getName(context),
+                            onValueChange = {},
+                            enabled = appointment.memo,
+                            readOnly = true,
+                            trailingIcon = {
+                                Icon(
+                                    imageVector = Icons.Filled.ArrowDropDown,
+                                    contentDescription = stringResource(R.string.espandi_unità_tempo)
+                                )
+                            }
                         )
-                        Spacer(modifier = Modifier.weight(1F))
-                        Box(modifier = Modifier.weight(3F)) {
-                            OutlinedTextField(
-                                value = appointment.warningUnit.getName(context),
-                                onValueChange = {},
-                                readOnly = true,
-                                trailingIcon = {
-                                    Icon(
-                                        imageVector = Icons.Filled.ArrowDropDown,
-                                        contentDescription = ""
+                        val boxModifier =
+                            if (appointment.memo) Modifier
+                                .clip(MaterialTheme.shapes.extraSmall)
+                                .clickable {
+                                    showTimeUnitDropdown = !showTimeUnitDropdown
+                                } else Modifier
+                        Box(
+                            modifier = boxModifier
+                                .matchParentSize()
+                        )
+                        DropdownMenu(
+                            expanded = showTimeUnitDropdown,
+                            onDismissRequest = { showTimeUnitDropdown = !showTimeUnitDropdown }) {
+                            WarningUnit.values().forEach {
+                                DropdownMenuItem(
+                                    text = { Text(text = it.getName(context = context)) },
+                                    onClick = {
+                                        viewModel.onFormEvent(WarningUnitChanged(it))
+                                        showTimeUnitDropdown = !showTimeUnitDropdown
+                                    }
+                                )
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+
+        /** Dialog degli invitati **/
+        if (showInvitedDialog) {
+            //TODO questa lista di gente andrà presa da una chiamata al server
+            val people = mutableListOf<User>()
+            for (i in 1..10) {
+                people.add(User(id = i.toString(), fullName = "Utente $i"))
+            }
+            Dialog(onDismissRequest = { showInvitedDialog = !showInvitedDialog }) {
+                Surface(
+                    shape = MaterialTheme.shapes.large,
+                    modifier = Modifier
+                        .padding(
+                            horizontal = MaterialTheme.spacing.medium,
+                            vertical = MaterialTheme.spacing.extraLarge
+                        )
+                        .fillMaxWidth()
+                        .wrapContentHeight()
+                ) {
+                    Column(
+                        verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.medium),
+                        modifier = Modifier.padding(vertical = MaterialTheme.spacing.medium)
+                    ) {
+                        Text(
+                            text = "Scegli chi invitare",
+                            style = MaterialTheme.typography.titleLarge,
+                            modifier = Modifier.padding(horizontal = MaterialTheme.spacing.medium)
+                        )
+                        LazyColumn(
+                            verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.small),
+                            modifier = Modifier.heightIn(max = 500.dp)
+                        ) {
+                            items(people) { person ->
+                                Row(
+                                    horizontalArrangement = Arrangement.SpaceBetween,
+                                    verticalAlignment = Alignment.CenterVertically,
+                                    modifier = Modifier.fillMaxWidth()
+                                ) {
+                                    Text(
+                                        text = person.fullName,
+                                        modifier = Modifier.padding(start = MaterialTheme.spacing.medium)
+                                    )
+                                    Checkbox(
+                                        checked = appointment.invited.contains(person),
+                                        onCheckedChange = {
+                                            if (appointment.invited.contains(person)) {
+                                                viewModel.onFormEvent(RemoveInvited(person))
+                                            } else {
+                                                viewModel.onFormEvent(AddInvited(person))
+                                            }
+                                        },
+                                        modifier = Modifier.padding(end = MaterialTheme.spacing.small)
                                     )
                                 }
-                            )
-                            Box(modifier = Modifier
-                                .clip(MaterialTheme.shapes.extraSmall)
-                                .clickable { test = !test }
-                                .matchParentSize())
-                            DropdownMenu(expanded = test, onDismissRequest = { test = !test }) {
-                                DropdownMenuItem(
-                                    text = { Text(text = WarningUnit.MINUTES.getName(context)) },
-                                    onClick = { /*TODO*/ }
-                                )
-                                DropdownMenuItem(
-                                    text = { Text(text = WarningUnit.HOURS.getName(context)) },
-                                    onClick = { /*TODO*/ }
-                                )
-                                DropdownMenuItem(
-                                    text = { Text(text = WarningUnit.DAYS.getName(context)) },
-                                    onClick = { /*TODO*/ }
-                                )
+                            }
+                        }
+                        Row(
+                            horizontalArrangement = Arrangement.Center,
+                            verticalAlignment = Alignment.CenterVertically,
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
+                            Button(onClick = {
+                                viewModel.onFormEvent(DismissInvitedList)
+                                showInvitedDialog = !showInvitedDialog
+                            }) {
+                                Text(text = stringResource(id = R.string.annulla))
+                            }
+                            Button(onClick = {
+                                viewModel.onFormEvent(ConfirmInvitedList)
+                                showInvitedDialog = !showInvitedDialog
+                            }) {
+                                Text(text = stringResource(id = R.string.conferma))
                             }
                         }
                     }
@@ -232,42 +319,7 @@ fun AppointmentDetail(
     }
 
 
-    /*if (timeUnitDialog.value) {
-        Dialog(onDismissRequest = { timeUnitDialog.value = false }) {
-            Box(
-                modifier = Modifier
-                    .background(MaterialTheme.colorScheme.surface, RoundedCornerShape(8.dp))
-            ) {
-                Column {
-                    LazyColumn(
-                        modifier = Modifier.fillMaxWidth()
-                    ) {
-                        items(listOf("minuti", "ore", "giorni")) { item ->
-                            Row(
-                                verticalAlignment = Alignment.CenterVertically,
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .wrapContentHeight()
-                                    .clickable {
-                                        warningUnit.value = item
-                                        timeUnitDialog.value = false
-                                    }
-                            ) {
-                                Text(
-                                    text = item,
-                                    modifier = Modifier.padding(
-                                        horizontal = 16.dp,
-                                        vertical = 12.dp
-                                    )
-                                )
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
-
+    /*
     if (invitedDialog.value) {
         val snapshot = Snapshot.takeSnapshot()
         Dialog(onDismissRequest = { invitedDialog.value = false }) {

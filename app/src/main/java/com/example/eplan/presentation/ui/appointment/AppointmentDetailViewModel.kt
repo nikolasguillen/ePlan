@@ -6,6 +6,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import com.example.eplan.domain.model.Appointment
+import com.example.eplan.domain.model.User
 import com.example.eplan.interactors.GetToken
 import com.example.eplan.interactors.appointmentDetail.GetAppointmentById
 import com.example.eplan.interactors.appointmentDetail.UpdateAppointment
@@ -42,6 +43,7 @@ constructor(
     private var initialState: MutableState<Appointment?> = mutableStateOf(null)
     var appointment: MutableState<Appointment?> = mutableStateOf(null)
         private set
+    val temporaryInvitedList = mutableListOf<User>()
 
     init {
         getToken(getToken = getToken, onTokenRetrieved = { onCreation() })
@@ -74,8 +76,16 @@ constructor(
     }
 
     private fun createAppointmentManually(date: LocalDate) {
-        initialState.value = Appointment(date = date)
-        appointment.value = Appointment(date = date)
+        initialState.value = Appointment(date = date, periodicityEnd = date)
+        appointment.value = Appointment(date = date, periodicityEnd = date)
+        resetTemporaryInvitedList()
+    }
+
+    private fun resetTemporaryInvitedList() {
+        temporaryInvitedList.clear()
+        appointment.value?.invited?.forEach {
+            temporaryInvitedList.add(it)
+        }
     }
 
     fun onFormEvent(event: AppointmentFormEvent) {
@@ -95,8 +105,25 @@ constructor(
             is InterventionChanged -> {
                 appointment.value = appointment.value?.copy(intervention = event.selected)
             }
-            is InvitedListChanged -> {
-                appointment.value = appointment.value?.copy(invited = event.invited)
+            is AddInvited -> {
+                val tempList = mutableListOf<User>()
+                appointment.value?.invited?.forEach {
+                    tempList.add(it)
+                }
+                tempList.add(event.invited)
+                appointment.value = appointment.value?.copy(invited = tempList)
+            }
+            is RemoveInvited -> {
+                val tempList = mutableListOf<User>()
+                appointment.value?.invited?.forEach {
+                    tempList.add(it)
+                }
+                tempList.remove(event.invited)
+                appointment.value = appointment.value?.copy(invited = tempList)
+            }
+            is ConfirmInvitedList -> {}
+            is DismissInvitedList -> {
+                appointment.value = appointment.value?.copy(invited = temporaryInvitedList)
             }
             is MemoChanged -> {
                 appointment.value = appointment.value?.copy(memo = event.selected)
@@ -132,6 +159,7 @@ constructor(
     private fun submitData() {
         appointment.value?.let {
             // TODO quando arrivo qua devo aver già popolato la mappa di attività (id, nome)
+            // TODO implementare controllo su data impostata nella periodicità > data appuntamento
             val activityIdResult = validateActivityId.execute(it.activityId, listOf())
             val descriptionResult = validateDescription.execute(it.description)
             val timeResult = validateTime.execute(it.start, it.end)

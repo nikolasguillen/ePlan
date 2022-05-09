@@ -50,7 +50,7 @@
     <string name="mostra_password">Mostra password</string>
     <string name="nascondi_password">Nascondi password</string>
     <string name="campo_vuoto">Questo campo non può essere vuoto</string>
-    <string name="accesso_in_corso">Accesso in corso...</string>
+    <string name="accesso_in_corso">Accesso in corso…</string>
     <string name="nessuna">Nessuna</string>
     <string name="giornaliera">Giornaliera</string>
     <string name="settimanale">Settimanale</string>
@@ -63,4 +63,5 @@
     <string name="apri_chiudi_calendario">Apri o chiudi il calendario</string>
     <string name="vai_a_oggi">Vai alla data di oggi</string>
     <string name="appuntamento">Appuntamento</string>
+    <string name="espandi_unità_tempo">Espandi elenco unità di tempo</string>
 </resources>
