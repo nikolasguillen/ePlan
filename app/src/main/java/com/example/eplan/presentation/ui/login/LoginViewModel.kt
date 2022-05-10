@@ -90,8 +90,8 @@ constructor(
                 }
             }.launchIn(viewModelScope)
         } else {
-            usernameError.value = "Questo campo non può essere vuoto"
-            passwordError.value = "Questo campo non può essere vuoto"
+            if (username.isBlank()) usernameError.value = "Questo campo non può essere vuoto" else usernameError.value = null
+            if (password.isBlank()) passwordError.value = "Questo campo non può essere vuoto" else passwordError.value = null
         }
     }
 
@@ -107,7 +107,7 @@ constructor(
 
             dataState.error?.let { error ->
                 Log.e(TAG, "getCredentialsFromCache: $error")
-                this.message.value = "Credenziali non trovate nella cache, si prega di reinserirle"
+                this.message.value = error
             }
         }.launchIn(viewModelScope)
     }

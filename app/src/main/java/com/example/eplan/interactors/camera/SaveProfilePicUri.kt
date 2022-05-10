@@ -29,6 +29,8 @@ constructor(
 
     private suspend fun getSaveUriResponse(uri: Uri) {
         val username = userDao.getUsername()
-        userDao.saveImageUri(username = username, uri = uri.toString())
+        if (username != null) {
+            userDao.saveImageUri(username = username, uri = uri.toString())
+        }
     }
 }

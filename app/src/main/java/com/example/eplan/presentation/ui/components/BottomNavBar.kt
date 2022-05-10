@@ -1,6 +1,8 @@
 package com.example.eplan.presentation.ui.components
 
 import androidx.compose.foundation.layout.navigationBarsPadding
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
@@ -28,7 +30,7 @@ fun BottomNavBar(navController: NavHostController, items: List<BottomNavBarItems
                 },
                 icon = {
                     Icon(
-                        painterResource(id = item.icon),
+                        painter = painterResource(id = item.icon),
                         contentDescription = item.title
                     )
                 },

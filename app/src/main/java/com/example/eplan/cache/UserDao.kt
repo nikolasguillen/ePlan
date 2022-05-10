@@ -25,8 +25,8 @@ interface UserDao {
     suspend fun getImageUri(): String
 
     @Query("SELECT username FROM users")
-    suspend fun getUsername(): String
+    suspend fun getUsername(): String?
 
     @Query("SELECT password FROM users")
-    suspend fun getPassword(): String
+    suspend fun getPassword(): String?
 }
