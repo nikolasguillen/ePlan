@@ -56,15 +56,9 @@ constructor(
     }
 
     fun onTriggerEvent(event: LoginEvent) {
-        viewModelScope.launch {
-            try {
-                when (event) {
-                    is LoginAttemptEvent -> {
-                        login(username.value, password.value)
-                    }
-                }
-            } catch (e: Exception) {
-                Log.e("ActivityListViewModel", "onTriggerEvent: Exception $e, ${e.cause}")
+        when (event) {
+            is LoginAttemptEvent -> {
+                login(username.value, password.value)
             }
         }
     }

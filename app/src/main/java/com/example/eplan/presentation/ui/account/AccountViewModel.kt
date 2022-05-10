@@ -46,7 +46,7 @@ constructor(
                     }
                 }
             } catch (e: Exception) {
-                Log.e("ActivityListViewModel", "onTriggerEvent: Exception $e, ${e.cause}")
+                Log.e("AccountViewModel", "onTriggerEvent: Exception $e, ${e.cause}")
             }
         }
     }
