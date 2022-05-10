@@ -64,4 +64,12 @@
     <string name="vai_a_oggi">Vai alla data di oggi</string>
     <string name="appuntamento">Appuntamento</string>
     <string name="espandi_unità_tempo">Espandi elenco unità di tempo</string>
+    <string name="pianificazione">Pianificazione</string>
+    <string name="sottotitolo_pianificazione">Non blocca l\'orario e non viene esportato</string>
+    <string name="contabilizza_intervento">Contabilizza come intervento</string>
+    <string name="invita_anche">Invita anche:</string>
+    <string name="attiva_promemoria">Attiva promemoria</string>
+    <string name="avviso_email">Avvisami tramite email</string>
+    <string name="preavviso">Con un preavviso di:</string>
+    <string name="scegli_invitati">Scegli chi invitare</string>
 </resources>

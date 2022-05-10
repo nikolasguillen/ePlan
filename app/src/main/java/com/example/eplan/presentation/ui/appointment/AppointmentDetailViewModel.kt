@@ -2,6 +2,7 @@ package com.example.eplan.presentation.ui.appointment
 
 import android.util.Log
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
@@ -31,7 +32,7 @@ const val STATE_KEY_APPOINTMENT = "appointment.state.appointmentId.key"
 class AppointmentDetailViewModel
 @Inject
 constructor(
-    private val getToken: GetToken,
+    getToken: GetToken,
     private val getAppointmentById: GetAppointmentById,
     private val updateAppointment: UpdateAppointment,
     private val validateActivityId: ValidateActivityId,
@@ -43,7 +44,11 @@ constructor(
     private var initialState: MutableState<Appointment?> = mutableStateOf(null)
     var appointment: MutableState<Appointment?> = mutableStateOf(null)
         private set
-    val temporaryInvitedList = mutableListOf<User>()
+
+    /* Variabili necessarie per non dover direttamente modificare l'appuntamento
+    * mentre aggiungo/rimuovo invitati dalla form */
+    private val invitedListBackup = mutableStateListOf<User>()
+    private val tempInvitedList = mutableStateListOf<User>()
 
     init {
         getToken(getToken = getToken, onTokenRetrieved = { onCreation() })
@@ -78,14 +83,14 @@ constructor(
     private fun createAppointmentManually(date: LocalDate) {
         initialState.value = Appointment(date = date, periodicityEnd = date)
         appointment.value = Appointment(date = date, periodicityEnd = date)
-        resetTemporaryInvitedList()
+        appointment.value?.invited?.let {
+            invitedListBackup.addAll(it)
+            tempInvitedList.addAll(it)
+        }
     }
 
-    private fun resetTemporaryInvitedList() {
-        temporaryInvitedList.clear()
-        appointment.value?.invited?.forEach {
-            temporaryInvitedList.add(it)
-        }
+    fun isUserInvited(user: User): Boolean {
+        return tempInvitedList.contains(user)
     }
 
     fun onFormEvent(event: AppointmentFormEvent) {
@@ -106,24 +111,25 @@ constructor(
                 appointment.value = appointment.value?.copy(intervention = event.selected)
             }
             is AddInvited -> {
-                val tempList = mutableListOf<User>()
-                appointment.value?.invited?.forEach {
-                    tempList.add(it)
-                }
-                tempList.add(event.invited)
-                appointment.value = appointment.value?.copy(invited = tempList)
+                tempInvitedList.add(event.invited)
+//                }
             }
             is RemoveInvited -> {
-                val tempList = mutableListOf<User>()
-                appointment.value?.invited?.forEach {
-                    tempList.add(it)
-                }
-                tempList.remove(event.invited)
-                appointment.value = appointment.value?.copy(invited = tempList)
+                tempInvitedList.remove(event.invited)
             }
-            is ConfirmInvitedList -> {}
+            is ConfirmInvitedList -> {
+                val confirmedList = mutableListOf<User>()
+                confirmedList.addAll(tempInvitedList)
+                appointment.value = appointment.value?.copy(invited = confirmedList)
+                invitedListBackup.clear()
+                invitedListBackup.addAll(tempInvitedList)
+            }
             is DismissInvitedList -> {
-                appointment.value = appointment.value?.copy(invited = temporaryInvitedList)
+                val restoredList = mutableListOf<User>()
+                restoredList.addAll(invitedListBackup)
+                appointment.value = appointment.value?.copy(invited = restoredList)
+                tempInvitedList.clear()
+                tempInvitedList.addAll(invitedListBackup)
             }
             is MemoChanged -> {
                 appointment.value = appointment.value?.copy(memo = event.selected)
