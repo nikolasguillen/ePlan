@@ -5,24 +5,20 @@ import com.example.eplan.cache.UserDao
 import com.example.eplan.domain.data.DataState
 import com.example.eplan.presentation.util.TAG
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
 
 class GetToken(
     private val userDao: UserDao
 ) {
     fun execute(): Flow<DataState<String>> = flow {
-        try {
-            emit(DataState.loading())
 
-            val token = getTokenFromCache()
+        emit(DataState.loading())
 
-            emit(DataState.success(token))
+        val token = getTokenFromCache()
 
-        } catch (e: Exception) {
-            Log.e(TAG, "execute: ${e.message}")
-            emit(DataState.error(e.message?: "Errore sconosciuto"))
-        }
-    }
+        emit(DataState.success(token))
+    }.catch { emit(DataState.error(it.message ?: "Errore sconosciuto")) }
 
     private suspend fun getTokenFromCache(): String {
         return userDao.getUserToken()

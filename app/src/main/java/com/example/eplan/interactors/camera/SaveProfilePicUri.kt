@@ -4,6 +4,7 @@ import android.net.Uri
 import com.example.eplan.cache.UserDao
 import com.example.eplan.domain.data.DataState
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
 import java.lang.Exception
 import javax.inject.Inject
@@ -16,16 +17,13 @@ constructor(
     fun execute(
         imageUri: Uri
     ): Flow<DataState<Unit>> = flow {
-        try {
-            emit(DataState.loading())
 
-            val response = getSaveUriResponse(uri = imageUri)
+        emit(DataState.loading())
 
-            emit(DataState.success(response))
-        } catch (e: Exception) {
-            emit(DataState.error(e.message ?: "Errore sconosciuto"))
-        }
-    }
+        val response = getSaveUriResponse(uri = imageUri)
+
+        emit(DataState.success(response))
+    }.catch { emit(DataState.error(it.message ?: "Errore sconosciuto")) }
 
     private suspend fun getSaveUriResponse(uri: Uri) {
         val username = userDao.getUsername()

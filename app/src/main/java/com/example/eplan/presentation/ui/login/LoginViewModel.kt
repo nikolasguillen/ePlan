@@ -107,7 +107,7 @@ constructor(
 
             dataState.error?.let { error ->
                 Log.e(TAG, "getCredentialsFromCache: $error")
-                this.message.value = error
+                message.value = error
             }
         }.launchIn(viewModelScope)
     }

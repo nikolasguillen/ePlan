@@ -6,6 +6,7 @@ import com.example.eplan.network.services.InterventionService
 import com.example.eplan.network.model.InterventionDtoMapper
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 
@@ -19,18 +20,14 @@ constructor(
         token: String,
         intervention: Intervention
     ): Flow<DataState<Boolean>> = flow {
-        try {
-            emit(DataState.loading())
+        emit(DataState.loading())
 
-            //TODO controlla che ci sia connessione internet
-            sendIntervention(token = token, intervention = intervention)
-            delay(2000)
+        //TODO controlla che ci sia connessione internet
+        sendIntervention(token = token, intervention = intervention)
+        delay(2000)
 
-            emit(DataState.success(true))
-        } catch (e: Exception) {
-            emit(DataState.error(e.message ?: "Errore sconosciuto"))
-        }
-    }
+        emit(DataState.success(true))
+    }.catch { emit(DataState.error(it.message ?: "Errore sconosciuto")) }
 
     private suspend fun sendIntervention(
         token: String,

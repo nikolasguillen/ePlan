@@ -6,6 +6,7 @@ import com.example.eplan.network.model.AppointmentDtoMapper
 import com.example.eplan.network.services.AppointmentService
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
 import java.lang.Exception
 import javax.inject.Inject
@@ -20,18 +21,15 @@ constructor(
         token: String,
         appointment: Appointment
     ): Flow<DataState<Boolean>> = flow {
-        try {
-            emit(DataState.loading())
 
-            // TODO controlla che ci sia connessione a internet
-            sendAppointment(token = token, appointment = appointment)
-            delay(1000)
+        emit(DataState.loading())
 
-            emit(DataState.success(true))
-        } catch (e: Exception) {
-            emit(DataState.error(e.message ?: "Errore sconosciuto"))
-        }
-    }
+        // TODO controlla che ci sia connessione a internet
+        sendAppointment(token = token, appointment = appointment)
+        delay(1000)
+
+        emit(DataState.success(true))
+    }.catch { emit(DataState.error(it.message ?: "Errore sconosciuto")) }
 
     private suspend fun sendAppointment(
         token: String,
