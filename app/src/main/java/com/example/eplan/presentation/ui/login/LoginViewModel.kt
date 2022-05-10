@@ -111,7 +111,7 @@ constructor(
                 onTriggerEvent(LoginAttemptEvent)
             }
 
-            dataState.error?.let {error ->
+            dataState.error?.let { error ->
                 Log.e(TAG, "getCredentialsFromCache: $error")
                 this.message.value = "Credenziali non trovate nella cache, si prega di reinserirle"
             }

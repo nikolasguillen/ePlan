@@ -61,6 +61,7 @@ fun LoginScreen(
                         onValueChange = { viewModel.username.value = it },
                         placeholder = { Text(text = stringResource(R.string.username)) },
                         isError = viewModel.usernameError.value != null,
+                        singleLine = true,
                         modifier = Modifier.fillMaxWidth()
                     )
                     if (viewModel.usernameError.value != null) {
@@ -94,6 +95,7 @@ fun LoginScreen(
                             }
                         },
                         isError = viewModel.passwordError.value != null,
+                        singleLine = true,
                         modifier = Modifier.fillMaxWidth()
                     )
                     if (viewModel.passwordError.value != null) {
