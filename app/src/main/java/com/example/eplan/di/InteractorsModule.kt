@@ -14,7 +14,7 @@ import com.example.eplan.interactors.interventionDetail.UpdateIntervention
 import com.example.eplan.interactors.workActivityDetail.ValidateDescription
 import com.example.eplan.interactors.workActivityDetail.ValidateTime
 import com.example.eplan.interactors.interventionList.DayChangeIntervention
-import com.example.eplan.interactors.workActivityDetail.ValidateActivityId
+import com.example.eplan.interactors.workActivityDetail.ValidateActivity
 import com.example.eplan.network.model.AppointmentDtoMapper
 import com.example.eplan.network.model.InterventionDtoMapper
 import com.example.eplan.network.services.AppointmentService
@@ -72,8 +72,8 @@ object InteractorsModule {
 
     @ViewModelScoped
     @Provides
-    fun provideValidateActivityId(): ValidateActivityId {
-        return ValidateActivityId()
+    fun provideValidateActivityId(): ValidateActivity {
+        return ValidateActivity()
 
     }
     @ViewModelScoped

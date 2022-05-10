@@ -15,6 +15,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import com.example.eplan.R
@@ -41,41 +42,74 @@ fun AppointmentDetail(
         var showInvitedDialog by remember { mutableStateOf(false) }
         var showPeriodicityDialog by remember { mutableStateOf(false) }
 
-        OutlinedTextField(
-            value = appointment.activityName,
-            onValueChange = { viewModel.onFormEvent(ActivityNameChanged(it)) },
-            label = { Text(text = stringResource(id = R.string.attivita)) },
-            modifier = Modifier.fillMaxWidth()
-        )
-        OutlinedTextField(
-            value = appointment.description,
-            onValueChange = { viewModel.onFormEvent(DescriptionChanged(it)) },
-            label = { Text(text = stringResource(id = R.string.descrizione)) },
-            modifier = Modifier.fillMaxWidth()
-        )
+        Column {
+            OutlinedTextField(
+                value = appointment.activityName,
+                onValueChange = { viewModel.onFormEvent(ActivityNameChanged(it)) },
+                label = { Text(text = stringResource(id = R.string.attivita)) },
+                modifier = Modifier.fillMaxWidth()
+            )
+            if (appointment.activityIdError != null) {
+                Text(
+                    text = appointment.activityIdError,
+                    color = MaterialTheme.colorScheme.error,
+                    style = MaterialTheme.typography.labelMedium,
+                    textAlign = TextAlign.End,
+                    modifier = Modifier.fillMaxWidth()
+                )
+            }
+        }
+        Column {
+            OutlinedTextField(
+                value = appointment.description,
+                onValueChange = { viewModel.onFormEvent(DescriptionChanged(it)) },
+                label = { Text(text = stringResource(id = R.string.descrizione)) },
+                modifier = Modifier.fillMaxWidth()
+            )
+            if (appointment.descriptionError != null) {
+                Text(
+                    text = appointment.descriptionError,
+                    color = MaterialTheme.colorScheme.error,
+                    style = MaterialTheme.typography.labelMedium,
+                    textAlign = TextAlign.End,
+                    modifier = Modifier.fillMaxWidth()
+                )
+            }
+        }
         Row(modifier = Modifier.fillMaxWidth()) {
             CustomDateButton(
                 date = appointment.date,
                 onDateSelected = { viewModel.onFormEvent(DateChanged(it)) }
             )
         }
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween
-        ) {
-            CustomTimeButton(
-                time = appointment.start.toString(),
-                label = stringResource(id = R.string.ora_inizio),
-                onClick = { viewModel.onFormEvent(StartChanged(it)) },
-                modifier = Modifier.weight(4F)
-            )
-            Spacer(modifier = Modifier.weight(1F))
-            CustomTimeButton(
-                time = appointment.end.toString(),
-                label = stringResource(id = R.string.ora_inizio),
-                onClick = { viewModel.onFormEvent(EndChanged(it)) },
-                modifier = Modifier.weight(4F)
-            )
+        Column {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                CustomTimeButton(
+                    time = appointment.start.toString(),
+                    label = stringResource(id = R.string.ora_inizio),
+                    onClick = { viewModel.onFormEvent(StartChanged(it)) },
+                    modifier = Modifier.weight(4F)
+                )
+                Spacer(modifier = Modifier.weight(1F))
+                CustomTimeButton(
+                    time = appointment.end.toString(),
+                    label = stringResource(id = R.string.ora_inizio),
+                    onClick = { viewModel.onFormEvent(EndChanged(it)) },
+                    modifier = Modifier.weight(4F)
+                )
+            }
+            if (appointment.timeError != null) {
+                Text(
+                    text = appointment.timeError,
+                    color = MaterialTheme.colorScheme.error,
+                    style = MaterialTheme.typography.labelMedium,
+                    textAlign = TextAlign.End,
+                    modifier = Modifier.fillMaxWidth()
+                )
+            }
         }
         Row(
             verticalAlignment = Alignment.CenterVertically,

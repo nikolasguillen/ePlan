@@ -11,7 +11,7 @@ import com.example.eplan.domain.model.User
 import com.example.eplan.interactors.GetToken
 import com.example.eplan.interactors.appointmentDetail.GetAppointmentById
 import com.example.eplan.interactors.appointmentDetail.UpdateAppointment
-import com.example.eplan.interactors.workActivityDetail.ValidateActivityId
+import com.example.eplan.interactors.workActivityDetail.ValidateActivity
 import com.example.eplan.interactors.workActivityDetail.ValidateDescription
 import com.example.eplan.interactors.workActivityDetail.ValidateTime
 import com.example.eplan.presentation.ui.ValidationEvent
@@ -35,7 +35,7 @@ constructor(
     getToken: GetToken,
     private val getAppointmentById: GetAppointmentById,
     private val updateAppointment: UpdateAppointment,
-    private val validateActivityId: ValidateActivityId,
+    private val validateActivity: ValidateActivity,
     private val validateDescription: ValidateDescription,
     private val validateTime: ValidateTime,
     private val savedStateHandle: SavedStateHandle
@@ -166,19 +166,19 @@ constructor(
         appointment.value?.let {
             // TODO quando arrivo qua devo aver già popolato la mappa di attività (id, nome)
             // TODO implementare controllo su data impostata nella periodicità > data appuntamento
-            val activityIdResult = validateActivityId.execute(it.activityId, listOf())
+            val activityResult = validateActivity.execute(it.activityName, mapOf())
             val descriptionResult = validateDescription.execute(it.description)
             val timeResult = validateTime.execute(it.start, it.end)
 
             val hasErrors = listOf(
-                activityIdResult,
+                activityResult,
                 descriptionResult,
                 timeResult
             ).any { result -> !result.successful }
 
             if (hasErrors) {
                 appointment.value = appointment.value?.copy(
-                    activityIdError = activityIdResult.errorMessage,
+                    activityIdError = activityResult.errorMessage,
                     descriptionError = descriptionResult.errorMessage,
                     timeError = timeResult.errorMessage
                 )

@@ -1,15 +1,15 @@
 package com.example.eplan.interactors.workActivityDetail
 
-class ValidateActivityId {
+class ValidateActivity {
 
-    fun execute(activityId: String, activityIdList: List<String>): ValidationResult {
-        if (activityId.isBlank()) {
+    fun execute(activityName: String, activitiesMap: Map<String, String>): ValidationResult {
+        if (activityName.isBlank()) {
             return ValidationResult(
                 successful = false,
                 errorMessage = "Seleziona un'attività"
             )
         }
-        if (activityIdList.contains(activityId)) {
+        if (!activitiesMap.containsValue(activityName)) {
             return ValidationResult(
                 successful = false,
                 errorMessage = "L'attività selezionata non è valida"
