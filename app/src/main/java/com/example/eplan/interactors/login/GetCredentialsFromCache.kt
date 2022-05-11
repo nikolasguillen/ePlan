@@ -26,7 +26,6 @@ constructor(
                 }
             }
         }
-
     }.catch { emit(DataState.error(it.message ?: "Errore sconosciuto")) }
 
     private suspend fun getCredentials(
