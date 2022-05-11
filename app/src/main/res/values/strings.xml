@@ -72,4 +72,6 @@
     <string name="avviso_email">Avvisami tramite email</string>
     <string name="preavviso">Con un preavviso di:</string>
     <string name="scegli_invitati">Scegli chi invitare</string>
+    <string name="statistiche_ore">Statistiche ore</string>
+    <string name="tema">Tema</string>
 </resources>

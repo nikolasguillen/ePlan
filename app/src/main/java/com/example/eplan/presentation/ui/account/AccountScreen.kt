@@ -1,33 +1,26 @@
 package com.example.eplan.presentation.ui.account
 
-import android.media.ThumbnailUtils
 import android.net.Uri
-import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.Orientation
+import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AccountCircle
-import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.Info
-import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.core.graphics.drawable.toIcon
-import androidx.core.net.toFile
 import coil.compose.rememberAsyncImagePainter
 import com.example.eplan.R
-import com.example.eplan.presentation.ui.camera.CameraView
-import com.example.eplan.presentation.util.TAG
 import com.example.eplan.presentation.util.spacing
 import com.google.accompanist.permissions.*
 
@@ -42,7 +35,7 @@ fun AccountScreen(
     navigateToCamera: () -> Unit,
     toProfile: () -> Unit,
     toSettings: () -> Unit,
-    toAppInfo: () -> Unit,
+    toWorkTimeStats: () -> Unit,
     logout: () -> Unit
 ) {
     // Camera permission state
@@ -72,10 +65,12 @@ fun AccountScreen(
         },
         content = {
             Column(
-                modifier = Modifier.padding(
-                    bottom = it.calculateBottomPadding(),
-                    top = it.calculateTopPadding()
-                )
+                modifier = Modifier
+                    .padding(
+                        bottom = it.calculateBottomPadding(),
+                        top = it.calculateTopPadding()
+                    )
+                    .scrollable(state = rememberScrollState(), orientation = Orientation.Vertical)
             ) {
                 val rowModifier = Modifier.fillMaxWidth()
                 val textModifier = Modifier.padding(
@@ -146,15 +141,15 @@ fun AccountScreen(
                     verticalAlignment = Alignment.CenterVertically,
                     modifier = rowModifier
                         .fillMaxWidth()
-                        .clickable { toAppInfo() }) {
+                        .clickable { toWorkTimeStats() }) {
                     Icon(
-                        imageVector = Icons.Filled.Info,
-                        contentDescription = stringResource(R.string.app_info),
+                        imageVector = Icons.Filled.Leaderboard,
+                        contentDescription = stringResource(R.string.statistiche_ore),
                         modifier = iconModifier
                     )
                     Spacer(modifier = Modifier.width(MaterialTheme.spacing.medium))
                     Text(
-                        text = stringResource(R.string.app_info),
+                        text = stringResource(R.string.statistiche_ore),
                         style = MaterialTheme.typography.headlineMedium,
                         modifier = textModifier
                     )
@@ -165,7 +160,7 @@ fun AccountScreen(
                     modifier = rowModifier
                         .clickable { logout() }) {
                     Icon(
-                        painter = painterResource(id = R.drawable.ic_baseline_exit_to_app_24),
+                        imageVector = Icons.Filled.ExitToApp,
                         contentDescription = stringResource(R.string.logout),
                         modifier = iconModifier
                     )
@@ -179,36 +174,4 @@ fun AccountScreen(
             }
         }
     )
-}
-
-@OptIn(ExperimentalPermissionsApi::class)
-@Composable
-private fun FeatureThatRequiresCameraPermission(cameraPermissionState: PermissionState) {
-
-
-    when (cameraPermissionState.status) {
-        // If the camera permission is granted, then show screen with the feature enabled
-        PermissionStatus.Granted -> {
-            Text("Camera permission Granted")
-        }
-        is PermissionStatus.Denied -> {
-            Column {
-                val textToShow = if (cameraPermissionState.status.shouldShowRationale) {
-                    // If the user has denied the permission but the rationale can be shown,
-                    // then gently explain why the app requires this permission
-                    "The camera is important for this app. Please grant the permission."
-                } else {
-                    // If it's the first time the user lands on this feature, or the user
-                    // doesn't want to be asked again for this permission, explain that the
-                    // permission is required
-                    "Camera permission required for this feature to be available. " +
-                            "Please grant the permission"
-                }
-                Text(textToShow)
-                Button(onClick = { cameraPermissionState.launchPermissionRequest() }) {
-                    Text("Request permission")
-                }
-            }
-        }
-    }
 }

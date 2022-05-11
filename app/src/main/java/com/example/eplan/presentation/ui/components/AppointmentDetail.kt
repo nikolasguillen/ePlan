@@ -310,7 +310,15 @@ fun AppointmentDetail(
                                 Row(
                                     horizontalArrangement = Arrangement.SpaceBetween,
                                     verticalAlignment = Alignment.CenterVertically,
-                                    modifier = Modifier.fillMaxWidth()
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .clickable {
+                                            if (viewModel.isUserInvited(user)) {
+                                                viewModel.onFormEvent(RemoveInvited(user))
+                                            } else {
+                                                viewModel.onFormEvent(AddInvited(user))
+                                            }
+                                        }
                                 ) {
                                     Text(
                                         text = user.fullName,
@@ -387,6 +395,12 @@ fun AppointmentDetail(
                                         showPeriodicityDialog = false
                                     }
                             ) {
+                                RadioButton(
+                                    selected = it == appointment.periodicity,
+                                    onClick = {
+                                        viewModel.onFormEvent(PeriodicityChanged(it))
+                                        showPeriodicityDialog = false
+                                    })
                                 Text(
                                     text = it.getName(context),
                                     modifier = Modifier.padding(MaterialTheme.spacing.medium)
