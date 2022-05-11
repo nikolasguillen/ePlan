@@ -1,6 +1,7 @@
 package com.example.eplan.presentation.ui.theme
 
 import android.os.Build
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
@@ -73,7 +74,7 @@ private val DarkThemeColors = darkColorScheme(
 
 @Composable
 fun AppTheme(
-    darkTheme: Boolean = isSystemInDarkTheme(),
+    darkTheme: Boolean = isNightMode(),
     content: @Composable () -> Unit
 ) {
     val dynamic = Build.VERSION.SDK_INT >= Build.VERSION_CODES.S
@@ -96,5 +97,14 @@ fun AppTheme(
             colorScheme = colorScheme,
             typography = AppTypography
         )
+    }
+}
+
+@Composable
+private fun isNightMode(): Boolean {
+    return when (AppCompatDelegate.getDefaultNightMode()) {
+        AppCompatDelegate.MODE_NIGHT_NO -> false
+        AppCompatDelegate.MODE_NIGHT_YES -> true
+        else -> isSystemInDarkTheme()
     }
 }

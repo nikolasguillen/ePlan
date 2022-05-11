@@ -17,4 +17,6 @@ sealed class Screen(val route: String, val name: String) {
     object Account: Screen(route = "account", name = "Account")
 
     object Camera: Screen(route = "camera", name = "Camera")
+
+    object Settings: Screen(route = "settings", name = "Settings")
 }

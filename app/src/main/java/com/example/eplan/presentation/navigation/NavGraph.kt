@@ -38,6 +38,8 @@ import com.example.eplan.presentation.ui.interventionList.InterventionListScreen
 import com.example.eplan.presentation.ui.interventionList.InterventionListViewModel
 import com.example.eplan.presentation.ui.interventionRecord.InterventionRecordScreen
 import com.example.eplan.presentation.ui.interventionRecord.InterventionRecordViewModel
+import com.example.eplan.presentation.ui.settings.SettingsScreen
+import com.example.eplan.presentation.ui.settings.SettingsViewModel
 import java.time.LocalDate
 
 @ExperimentalComposeUiApi
@@ -184,7 +186,7 @@ fun NavGraph(navController: NavHostController) {
                         navigateToCamera = { navController.navigate(Screen.Camera.route) },
                         toProfile = {},
                         toWorkTimeStats = {},
-                        toSettings = {},
+                        toSettings = { navController.navigate(Screen.Settings.route) },
                         logout = {
                             viewModel.onTriggerEvent(AccountEvent.Logout)
                             navController.popBackStack(
@@ -217,6 +219,10 @@ fun NavGraph(navController: NavHostController) {
                             navController.popBackStack()
                         }
                     )
+                }
+                composable(route = Screen.Settings.route) {
+                    val viewModel = hiltViewModel<SettingsViewModel>()
+                    SettingsScreen(viewModel = viewModel)
                 }
             }
         }
