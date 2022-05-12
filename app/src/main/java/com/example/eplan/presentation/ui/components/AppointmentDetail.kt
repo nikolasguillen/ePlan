@@ -12,6 +12,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
@@ -286,11 +287,7 @@ fun AppointmentDetail(
                 Surface(
                     shape = MaterialTheme.shapes.large,
                     modifier = Modifier
-                        .padding(
-                            horizontal = MaterialTheme.spacing.medium,
-                            vertical = MaterialTheme.spacing.extraLarge
-                        )
-                        .fillMaxWidth()
+                        .widthIn(max = LocalConfiguration.current.screenWidthDp.dp.times(0.8F))
                         .wrapContentHeight()
                 ) {
                     Column(
@@ -299,12 +296,11 @@ fun AppointmentDetail(
                     ) {
                         Text(
                             text = stringResource(R.string.scegli_invitati),
-                            style = MaterialTheme.typography.titleLarge,
+                            style = MaterialTheme.typography.headlineSmall,
                             modifier = Modifier.padding(horizontal = MaterialTheme.spacing.medium)
                         )
                         LazyColumn(
-                            verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.small),
-                            modifier = Modifier.heightIn(max = 500.dp)
+                            modifier = Modifier.heightIn(max = LocalConfiguration.current.screenHeightDp.dp.times(0.65F))
                         ) {
                             items(users) { user ->
                                 Row(
@@ -375,36 +371,66 @@ fun AppointmentDetail(
                 Surface(
                     shape = MaterialTheme.shapes.large,
                     modifier = Modifier
-                        .padding(
-                            horizontal = MaterialTheme.spacing.medium,
-                            vertical = MaterialTheme.spacing.extraLarge
-                        )
-                        .fillMaxWidth()
+                        .widthIn(max = LocalConfiguration.current.screenWidthDp.dp.times(0.8F))
                         .wrapContentHeight()
                 ) {
-                    LazyColumn(
-                        verticalArrangement = Arrangement.SpaceEvenly
+                    Column(
+                        modifier = Modifier.padding(
+                            top = MaterialTheme.spacing.medium,
+                            bottom = MaterialTheme.spacing.small
+                        )
                     ) {
-                        items(Periodicity.values()) {
-                            Row(
-                                verticalAlignment = Alignment.CenterVertically,
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .clickable {
-                                        viewModel.onFormEvent(PeriodicityChanged(it))
-                                        showPeriodicityDialog = false
-                                    }
-                            ) {
-                                RadioButton(
-                                    selected = it == appointment.periodicity,
-                                    onClick = {
-                                        viewModel.onFormEvent(PeriodicityChanged(it))
-                                        showPeriodicityDialog = false
-                                    })
-                                Text(
-                                    text = it.getName(context),
-                                    modifier = Modifier.padding(MaterialTheme.spacing.medium)
+                        Row(
+                            horizontalArrangement = Arrangement.Start,
+                            verticalAlignment = Alignment.CenterVertically,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(
+                                    start = MaterialTheme.spacing.medium,
+                                    bottom = MaterialTheme.spacing.medium,
+                                    end = MaterialTheme.spacing.medium
                                 )
+                        ) {
+                            Text(
+                                text = stringResource(R.string.scegli_periodicità),
+                                style = MaterialTheme.typography.headlineSmall
+                            )
+                        }
+                        LazyColumn(
+                            verticalArrangement = Arrangement.SpaceEvenly
+                        ) {
+                            items(Periodicity.values()) {
+                                Row(
+                                    verticalAlignment = Alignment.CenterVertically,
+                                    horizontalArrangement = Arrangement.Start,
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .clickable {
+                                            viewModel.onFormEvent(PeriodicityChanged(it))
+                                            showPeriodicityDialog = false
+                                        }
+                                ) {
+                                    RadioButton(
+                                        selected = it == appointment.periodicity,
+                                        onClick = {
+                                            viewModel.onFormEvent(PeriodicityChanged(it))
+                                            showPeriodicityDialog = false
+                                        })
+                                    Text(
+                                        text = it.getName(context)
+                                    )
+                                }
+                            }
+                        }
+                        Row(
+                            horizontalArrangement = Arrangement.End,
+                            verticalAlignment = Alignment.CenterVertically,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(horizontal = MaterialTheme.spacing.medium)
+                        ) {
+                            TextButton(onClick = { showPeriodicityDialog = false }) {
+                                Text(text = stringResource(id = R.string.annulla))
                             }
                         }
                     }

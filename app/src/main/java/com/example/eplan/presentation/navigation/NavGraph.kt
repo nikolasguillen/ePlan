@@ -222,7 +222,10 @@ fun NavGraph(navController: NavHostController) {
                 }
                 composable(route = Screen.Settings.route) {
                     val viewModel = hiltViewModel<SettingsViewModel>()
-                    SettingsScreen(viewModel = viewModel)
+                    SettingsScreen(
+                        viewModel = viewModel,
+                        onBackPressed = navController::popBackStack
+                    )
                 }
             }
         }

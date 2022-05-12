@@ -10,7 +10,9 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import com.example.eplan.R
 import com.example.eplan.presentation.util.spacing
@@ -18,7 +20,8 @@ import com.example.eplan.presentation.util.spacing
 @ExperimentalMaterial3Api
 @Composable
 fun SettingsScreen(
-    viewModel: SettingsViewModel
+    viewModel: SettingsViewModel,
+    onBackPressed: () -> Unit
 ) {
 
     var showThemeDialog by remember { mutableStateOf(false) }
@@ -29,7 +32,8 @@ fun SettingsScreen(
                 title = { Text(text = stringResource(id = R.string.impostazioni)) },
                 navigationIcon = {
                     IconButton(
-                        onClick = { /*TODO*/ }) {
+                        onClick = { onBackPressed() }
+                    ) {
                         Icon(
                             imageVector = Icons.Filled.ArrowBack,
                             contentDescription = stringResource(id = R.string.torna_indietro)
@@ -46,7 +50,11 @@ fun SettingsScreen(
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(horizontal = MaterialTheme.spacing.medium)
+                        .padding(
+                            start = MaterialTheme.spacing.medium,
+                            top = MaterialTheme.spacing.medium,
+                            end = MaterialTheme.spacing.medium
+                        )
                 ) {
                     Text(
                         text = "Opzioni di visualizzazione",
@@ -87,7 +95,9 @@ fun SettingsScreen(
         Dialog(onDismissRequest = { showThemeDialog = false }) {
             Surface(
                 shape = MaterialTheme.shapes.large,
-                modifier = Modifier.padding(MaterialTheme.spacing.large)
+                modifier = Modifier.widthIn(
+                    max = LocalConfiguration.current.screenWidthDp.dp.times(0.8F)
+                )
             ) {
                 Column(
                     modifier = Modifier.padding(
@@ -107,7 +117,7 @@ fun SettingsScreen(
                             )
                     ) {
                         Text(
-                            text = "Scegli tema",
+                            text = stringResource(R.string.scegli_tema),
                             style = MaterialTheme.typography.headlineSmall
                         )
                     }
@@ -122,17 +132,13 @@ fun SettingsScreen(
                                     showThemeDialog = false
                                 }
                         ) {
-                            Icon(
-                                imageVector = if (viewModel.currentThemeMode == it.name) Icons.Filled.RadioButtonChecked else Icons.Filled.RadioButtonUnchecked,
-                                contentDescription = "Check",
-                                modifier = Modifier.padding(
-                                    horizontal = MaterialTheme.spacing.medium,
-                                    vertical = MaterialTheme.spacing.small
-                                )
-                            )
-                            Text(
-                                text = it.name
-                            )
+                            RadioButton(
+                                selected = viewModel.currentThemeMode == it.name,
+                                onClick = {
+                                    viewModel.onTriggerEvent(it.event)
+                                    showThemeDialog = false
+                                })
+                            Text(text = it.name)
                         }
                     }
                     Row(

@@ -74,4 +74,6 @@
     <string name="scegli_invitati">Scegli chi invitare</string>
     <string name="statistiche_ore">Statistiche ore</string>
     <string name="tema">Tema</string>
+    <string name="scegli_periodicità">Scegli periodicità</string>
+    <string name="scegli_tema">Scegli tema</string>
 </resources>
