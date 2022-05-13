@@ -280,85 +280,55 @@ fun AppointmentDetail(
         if (showInvitedDialog) {
             //TODO questa lista di gente andrà presa da una chiamata al server
             val users = mutableListOf<User>()
-            for (i in 1..10) {
+            for (i in 1..20) {
                 users.add(User(id = i.toString(), fullName = "Utente $i"))
             }
-            Dialog(onDismissRequest = { showInvitedDialog = false }) {
-                Surface(
-                    shape = MaterialTheme.shapes.large,
-                    modifier = Modifier
-                        .widthIn(max = LocalConfiguration.current.screenWidthDp.dp.times(0.8F))
-                        .wrapContentHeight()
-                ) {
-                    Column(
-                        verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.medium),
-                        modifier = Modifier.padding(vertical = MaterialTheme.spacing.medium)
-                    ) {
-                        Text(
-                            text = stringResource(R.string.scegli_invitati),
-                            style = MaterialTheme.typography.headlineSmall,
-                            modifier = Modifier.padding(horizontal = MaterialTheme.spacing.medium)
+            CustomDialog(
+                title = stringResource(id = R.string.scegli_invitati),
+                onDismissRequest = {
+                    viewModel.onFormEvent(DismissInvitedList)
+                    showInvitedDialog = false
+                },
+                onConfirmationRequest = {
+                    viewModel.onFormEvent(ConfirmInvitedList)
+                    showInvitedDialog = false
+                }) {
+                LazyColumn(
+                    modifier = Modifier.heightIn(
+                        max = LocalConfiguration.current.screenHeightDp.dp.times(
+                            0.65F
                         )
-                        LazyColumn(
-                            modifier = Modifier.heightIn(max = LocalConfiguration.current.screenHeightDp.dp.times(0.65F))
-                        ) {
-                            items(users) { user ->
-                                Row(
-                                    horizontalArrangement = Arrangement.SpaceBetween,
-                                    verticalAlignment = Alignment.CenterVertically,
-                                    modifier = Modifier
-                                        .fillMaxWidth()
-                                        .clickable {
-                                            if (viewModel.isUserInvited(user)) {
-                                                viewModel.onFormEvent(RemoveInvited(user))
-                                            } else {
-                                                viewModel.onFormEvent(AddInvited(user))
-                                            }
-                                        }
-                                ) {
-                                    Text(
-                                        text = user.fullName,
-                                        modifier = Modifier.padding(start = MaterialTheme.spacing.medium)
-                                    )
-                                    Checkbox(
-                                        checked = viewModel.isUserInvited(user),
-                                        onCheckedChange = {
-                                            if (viewModel.isUserInvited(user)) {
-                                                viewModel.onFormEvent(RemoveInvited(user))
-                                            } else {
-                                                viewModel.onFormEvent(AddInvited(user))
-                                            }
-                                        },
-                                        modifier = Modifier.padding(end = MaterialTheme.spacing.small)
-                                    )
-                                }
-                            }
-                        }
+                    )
+                ) {
+                    items(users) { user ->
                         Row(
-                            horizontalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.medium),
+                            horizontalArrangement = Arrangement.SpaceBetween,
                             verticalAlignment = Alignment.CenterVertically,
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .padding(horizontal = MaterialTheme.spacing.medium)
+                                .clickable {
+                                    if (viewModel.isUserInvited(user)) {
+                                        viewModel.onFormEvent(RemoveInvited(user))
+                                    } else {
+                                        viewModel.onFormEvent(AddInvited(user))
+                                    }
+                                }
                         ) {
-                            Button(
-                                onClick = {
-                                    viewModel.onFormEvent(DismissInvitedList)
-                                    showInvitedDialog = false
+                            Text(
+                                text = user.fullName,
+                                modifier = Modifier.padding(start = MaterialTheme.spacing.medium)
+                            )
+                            Checkbox(
+                                checked = viewModel.isUserInvited(user),
+                                onCheckedChange = {
+                                    if (viewModel.isUserInvited(user)) {
+                                        viewModel.onFormEvent(RemoveInvited(user))
+                                    } else {
+                                        viewModel.onFormEvent(AddInvited(user))
+                                    }
                                 },
-                                modifier = Modifier.weight(1F)
-                            ) {
-                                Text(text = stringResource(id = R.string.annulla))
-                            }
-                            Button(
-                                onClick = {
-                                    viewModel.onFormEvent(ConfirmInvitedList)
-                                    showInvitedDialog = false
-                                },
-                                modifier = Modifier.weight(1F)
-                            ) {
-                                Text(text = stringResource(id = R.string.conferma))
-                            }
+                                modifier = Modifier.padding(end = MaterialTheme.spacing.small)
+                            )
                         }
                     }
                 }
@@ -367,71 +337,32 @@ fun AppointmentDetail(
 
         /* Dialog periodicità */
         if (showPeriodicityDialog) {
-            Dialog(onDismissRequest = { showPeriodicityDialog = false }) {
-                Surface(
-                    shape = MaterialTheme.shapes.large,
-                    modifier = Modifier
-                        .widthIn(max = LocalConfiguration.current.screenWidthDp.dp.times(0.8F))
-                        .wrapContentHeight()
+            CustomDialog(
+                title = stringResource(id = R.string.scegli_periodicità),
+                onDismissRequest = { showPeriodicityDialog = false }) {
+                LazyColumn(
+                    verticalArrangement = Arrangement.SpaceEvenly
                 ) {
-                    Column(
-                        modifier = Modifier.padding(
-                            top = MaterialTheme.spacing.medium,
-                            bottom = MaterialTheme.spacing.small
-                        )
-                    ) {
+                    items(Periodicity.values()) {
                         Row(
+                            verticalAlignment = Alignment.CenterVertically,
                             horizontalArrangement = Arrangement.Start,
-                            verticalAlignment = Alignment.CenterVertically,
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .padding(
-                                    start = MaterialTheme.spacing.medium,
-                                    bottom = MaterialTheme.spacing.medium,
-                                    end = MaterialTheme.spacing.medium
-                                )
-                        ) {
-                            Text(
-                                text = stringResource(R.string.scegli_periodicità),
-                                style = MaterialTheme.typography.headlineSmall
-                            )
-                        }
-                        LazyColumn(
-                            verticalArrangement = Arrangement.SpaceEvenly
-                        ) {
-                            items(Periodicity.values()) {
-                                Row(
-                                    verticalAlignment = Alignment.CenterVertically,
-                                    horizontalArrangement = Arrangement.Start,
-                                    modifier = Modifier
-                                        .fillMaxWidth()
-                                        .clickable {
-                                            viewModel.onFormEvent(PeriodicityChanged(it))
-                                            showPeriodicityDialog = false
-                                        }
-                                ) {
-                                    RadioButton(
-                                        selected = it == appointment.periodicity,
-                                        onClick = {
-                                            viewModel.onFormEvent(PeriodicityChanged(it))
-                                            showPeriodicityDialog = false
-                                        })
-                                    Text(
-                                        text = it.getName(context)
-                                    )
+                                .clickable {
+                                    viewModel.onFormEvent(PeriodicityChanged(it))
+                                    showPeriodicityDialog = false
                                 }
-                            }
-                        }
-                        Row(
-                            horizontalArrangement = Arrangement.End,
-                            verticalAlignment = Alignment.CenterVertically,
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(horizontal = MaterialTheme.spacing.medium)
                         ) {
-                            TextButton(onClick = { showPeriodicityDialog = false }) {
-                                Text(text = stringResource(id = R.string.annulla))
-                            }
+                            RadioButton(
+                                selected = it == appointment.periodicity,
+                                onClick = {
+                                    viewModel.onFormEvent(PeriodicityChanged(it))
+                                    showPeriodicityDialog = false
+                                })
+                            Text(
+                                text = it.getName(context)
+                            )
                         }
                     }
                 }

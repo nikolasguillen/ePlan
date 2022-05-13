@@ -2,6 +2,8 @@ package com.example.eplan.presentation.ui.settings
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.*
@@ -13,6 +15,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import com.example.eplan.R
+import com.example.eplan.presentation.ui.components.CustomDialog
 import com.example.eplan.presentation.util.spacing
 
 @ExperimentalMaterial3Api
@@ -23,6 +26,7 @@ fun SettingsScreen(
 ) {
 
     var showThemeDialog by remember { mutableStateOf(false) }
+    val themeStates = viewModel.themeStates
 
     Scaffold(
         topBar = {
@@ -90,65 +94,29 @@ fun SettingsScreen(
     )
 
     if (showThemeDialog) {
-        Dialog(onDismissRequest = { showThemeDialog = false }) {
-            Surface(
-                shape = MaterialTheme.shapes.large,
-                modifier = Modifier.widthIn(
-                    max = LocalConfiguration.current.screenWidthDp.dp.times(0.8F)
-                )
-            ) {
-                Column(
-                    modifier = Modifier.padding(
-                        top = MaterialTheme.spacing.medium,
-                        bottom = MaterialTheme.spacing.small
-                    )
-                ) {
+        CustomDialog(
+            title = stringResource(id = R.string.scegli_tema),
+            onDismissRequest = { showThemeDialog = false }
+        ) {
+            LazyColumn {
+                items(themeStates) {
                     Row(
                         horizontalArrangement = Arrangement.Start,
                         verticalAlignment = Alignment.CenterVertically,
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(
-                                start = MaterialTheme.spacing.medium,
-                                bottom = MaterialTheme.spacing.medium,
-                                end = MaterialTheme.spacing.medium
-                            )
+                            .clickable {
+                                viewModel.onTriggerEvent(it.event)
+                                showThemeDialog = false
+                            }
                     ) {
-                        Text(
-                            text = stringResource(R.string.scegli_tema),
-                            style = MaterialTheme.typography.headlineSmall
-                        )
-                    }
-                    viewModel.themeStates.forEach {
-                        Row(
-                            horizontalArrangement = Arrangement.Start,
-                            verticalAlignment = Alignment.CenterVertically,
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .clickable {
-                                    viewModel.onTriggerEvent(it.event)
-                                    showThemeDialog = false
-                                }
-                        ) {
-                            RadioButton(
-                                selected = viewModel.currentThemeMode == it.name,
-                                onClick = {
-                                    viewModel.onTriggerEvent(it.event)
-                                    showThemeDialog = false
-                                })
-                            Text(text = it.name)
-                        }
-                    }
-                    Row(
-                        horizontalArrangement = Arrangement.End,
-                        verticalAlignment = Alignment.CenterVertically,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(horizontal = MaterialTheme.spacing.medium)
-                    ) {
-                        TextButton(onClick = { showThemeDialog = false }) {
-                            Text(text = stringResource(id = R.string.annulla))
-                        }
+                        RadioButton(
+                            selected = viewModel.currentThemeMode == it.name,
+                            onClick = {
+                                viewModel.onTriggerEvent(it.event)
+                                showThemeDialog = false
+                            })
+                        Text(text = it.name)
                     }
                 }
             }

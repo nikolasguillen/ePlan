@@ -43,7 +43,7 @@ fun WorkActivityDetail(
     val retrieving = viewModel.retrieving
     val sending = viewModel.sending
     val keyboardController = LocalSoftwareKeyboardController.current
-    val backDialog = remember { mutableStateOf(false) }
+    val showBackDialog = remember { mutableStateOf(false) }
     val context = LocalContext.current
     val snackBarHostState = remember { SnackbarHostState() }
 
@@ -71,7 +71,7 @@ fun WorkActivityDetail(
                 navigationIcon = {
                     IconButton(onClick = {
                         if (viewModel.checkChanges()) {
-                            backDialog.value = true
+                            showBackDialog.value = true
                         } else {
                             onBackPressed()
                             keyboardController?.hide()
@@ -110,7 +110,7 @@ fun WorkActivityDetail(
         content = { paddingValues ->
             BackHandler(enabled = true) {
                 if (viewModel.checkChanges()) {
-                    backDialog.value = true
+                    showBackDialog.value = true
                 } else {
                     onBackPressed()
                     keyboardController?.hide()
@@ -149,15 +149,15 @@ fun WorkActivityDetail(
                 }
             }
 
-            if (backDialog.value) {
+            if (showBackDialog.value) {
                 AlertDialog(
                     onDismissRequest = {
-                        backDialog.value = false
+                        showBackDialog.value = false
                     },
                     title = { Text(text = stringResource(R.string.chiudi_senza_salvare)) },
                     confirmButton = {
                         TextButton(onClick = {
-                            backDialog.value = false
+                            showBackDialog.value = false
                             onBackPressed()
                         }
                         ) {
@@ -166,7 +166,7 @@ fun WorkActivityDetail(
                     },
                     dismissButton = {
                         TextButton(onClick = {
-                            backDialog.value = false
+                            showBackDialog.value = false
                         }
                         ) {
                             Text(text = stringResource(R.string.annulla))
