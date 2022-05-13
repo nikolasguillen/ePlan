@@ -29,6 +29,12 @@ constructor(
 
     private var userToken = USER_TOKEN
     var imageUri: Uri = Uri.EMPTY
+    val accountItems = listOf(
+        AccountItems.Settings,
+        AccountItems.TimeStats,
+        AccountItems.VacationRequest,
+        AccountItems.Logout
+    )
 
     init {
         getToken()
