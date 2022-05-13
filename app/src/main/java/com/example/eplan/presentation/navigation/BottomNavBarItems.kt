@@ -1,9 +1,16 @@
 package com.example.eplan.presentation.navigation
 
-import com.example.eplan.R
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.DateRange
+import androidx.compose.material.icons.filled.NoteAdd
+import androidx.compose.material.icons.filled.Save
+import androidx.compose.material.icons.outlined.DateRange
+import androidx.compose.material.icons.outlined.NoteAdd
+import androidx.compose.material.icons.outlined.Save
+import androidx.compose.ui.graphics.vector.ImageVector
 
-sealed class BottomNavBarItems(var route: String, var icon: Int, var title: String) {
-    object Home : BottomNavBarItems("interventionList", R.drawable.ic_baseline_note_add_24, "Foglio ore")
-    object Appointments : BottomNavBarItems("appointmentList", R.drawable.ic_baseline_date_range_24, "Appuntamenti")
-    object Save : BottomNavBarItems("save", R.drawable.ic_baseline_save_24, "Salva")
+sealed class BottomNavBarItems(var route: String, var inactiveIcon: ImageVector, var activeIcon: ImageVector, var title: String) {
+    object Home : BottomNavBarItems("interventionList", Icons.Outlined.NoteAdd, Icons.Filled.NoteAdd, "Foglio ore")
+    object Appointments : BottomNavBarItems("appointmentList", Icons.Outlined.DateRange, Icons.Filled.DateRange, "Appuntamenti")
+    object Save : BottomNavBarItems("save", Icons.Outlined.Save, Icons.Filled.Save, "Salva")
 }

@@ -24,7 +24,7 @@ fun BottomSaveBar(onClick: () -> Unit) {
                 onClick = { onClick() },
                 icon = {
                     Icon(
-                        painterResource(id = item.icon),
+                        imageVector = item.activeIcon,
                         contentDescription = item.title,
                         tint = MaterialTheme.colorScheme.onSecondary
                     )

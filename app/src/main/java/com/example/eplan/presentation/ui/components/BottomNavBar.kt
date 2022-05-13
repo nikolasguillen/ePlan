@@ -1,15 +1,13 @@
 package com.example.eplan.presentation.ui.components
 
+import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.layout.navigationBarsPadding
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.painterResource
 import androidx.navigation.NavHostController
 import com.example.eplan.presentation.navigation.BottomNavBarItems
 import com.example.eplan.presentation.util.getCurrentRoute
@@ -30,7 +28,7 @@ fun BottomNavBar(navController: NavHostController, items: List<BottomNavBarItems
                 },
                 icon = {
                     Icon(
-                        painter = painterResource(id = item.icon),
+                        imageVector = if (currentRoute == item.route) item.activeIcon else item.inactiveIcon,
                         contentDescription = item.title
                     )
                 },
