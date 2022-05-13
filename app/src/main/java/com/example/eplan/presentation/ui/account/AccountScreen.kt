@@ -35,9 +35,7 @@ fun AccountScreen(
     viewModel: AccountViewModel,
     onBackPressed: () -> Unit,
     navigateToCamera: () -> Unit,
-    toProfile: () -> Unit,
-    toSettings: () -> Unit,
-    toWorkTimeStats: () -> Unit,
+    onListItemClick: (String) -> Unit,
     logout: () -> Unit
 ) {
     // Camera permission state
@@ -64,6 +62,14 @@ fun AccountScreen(
                             contentDescription = stringResource(R.string.torna_indietro)
                         )
                     }
+                },
+                actions = {
+                    IconButton(onClick = logout) {
+                        Icon(
+                            imageVector = Icons.Filled.ExitToApp,
+                            contentDescription = stringResource(id = R.string.logout)
+                        )
+                    }
                 }
             )
         },
@@ -74,18 +80,13 @@ fun AccountScreen(
                     top = it.calculateTopPadding()
                 )
             ) {
-                val textModifier = Modifier.padding(
-                    end = MaterialTheme.spacing.medium,
-                    top = MaterialTheme.spacing.small,
-                    bottom = MaterialTheme.spacing.small
-                )
-
                 item {
                     Row(
                         horizontalArrangement = Arrangement.Start,
                         verticalAlignment = Alignment.CenterVertically,
-                        modifier = rowModifier
-                            .clickable { toProfile() }) {
+                        modifier = Modifier
+                            .fillMaxWidth()
+                    ) {
                         Image(
                             painter = if (viewModel.imageUri != Uri.EMPTY) {
                                 rememberAsyncImagePainter(model = viewModel.imageUri)
@@ -117,7 +118,11 @@ fun AccountScreen(
                         Text(
                             text = stringResource(R.string.profilo),
                             style = MaterialTheme.typography.headlineMedium,
-                            modifier = textModifier
+                            modifier = Modifier.padding(
+                                end = MaterialTheme.spacing.medium,
+                                top = MaterialTheme.spacing.small,
+                                bottom = MaterialTheme.spacing.small
+                            )
                         )
                     }
                 }
@@ -127,17 +132,25 @@ fun AccountScreen(
                         verticalAlignment = Alignment.CenterVertically,
                         modifier = Modifier
                             .fillMaxWidth()
-                            .clickable { toSettings() }) {
+                            .clickable { onListItemClick(it.route) }) {
                         Icon(
-                            imageVector = Icons.Filled.Settings,
+                            imageVector = it.icon,
                             contentDescription = stringResource(it.nameResId),
-                            modifier = iconModifier
+                            modifier = Modifier.padding(
+                                start = MaterialTheme.spacing.medium,
+                                top = MaterialTheme.spacing.small,
+                                bottom = MaterialTheme.spacing.small
+                            )
                         )
                         Spacer(modifier = Modifier.width(MaterialTheme.spacing.medium))
                         Text(
                             text = stringResource(it.nameResId),
-                            style = MaterialTheme.typography.headlineMedium,
-                            modifier = textModifier
+                            style = MaterialTheme.typography.headlineSmall,
+                            modifier = Modifier.padding(
+                                end = MaterialTheme.spacing.medium,
+                                top = MaterialTheme.spacing.small,
+                                bottom = MaterialTheme.spacing.small
+                            )
                         )
                     }
                 }

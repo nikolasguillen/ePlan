@@ -184,9 +184,7 @@ fun NavGraph(navController: NavHostController) {
                         viewModel = viewModel,
                         onBackPressed = navController::popBackStack,
                         navigateToCamera = { navController.navigate(Screen.Camera.route) },
-                        toProfile = {},
-                        toWorkTimeStats = {},
-                        toSettings = { navController.navigate(Screen.Settings.route) },
+                        onListItemClick = { navController.navigate(it) },
                         logout = {
                             viewModel.onTriggerEvent(AccountEvent.Logout)
                             navController.popBackStack(

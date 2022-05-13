@@ -32,8 +32,7 @@ constructor(
     val accountItems = listOf(
         AccountItems.Settings,
         AccountItems.TimeStats,
-        AccountItems.VacationRequest,
-        AccountItems.Logout
+        AccountItems.VacationRequest
     )
 
     init {
