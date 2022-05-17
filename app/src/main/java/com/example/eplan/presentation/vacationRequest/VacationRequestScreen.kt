@@ -1,6 +1,9 @@
 package com.example.eplan.presentation.vacationRequest
 
 import android.widget.CalendarView
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
@@ -17,9 +20,10 @@ import java.time.Instant
 import java.util.*
 
 @ExperimentalMaterial3Api
-@Preview
 @Composable
-fun VacationRequestScreen() {
+fun VacationRequestScreen(
+    viewModel: VacationRequestViewModel
+) {
     Scaffold(
         topBar = {
             SmallTopAppBar(title = { Text(text = "Richiesta ferie") }, navigationIcon = {
@@ -64,11 +68,23 @@ fun VacationRequestScreen() {
                     .fillMaxWidth()
                     .padding(top = MaterialTheme.spacing.medium)
             ) {
-                Column() {
-                    Text(text = "Dal", style = MaterialTheme.typography.headlineMedium)
+                AnimatedVisibility(
+                    visible = viewModel.startDate.value != null,
+                    enter = fadeIn(),
+                    exit = fadeOut()
+                ) {
+                    Column() {
+                        Text(text = "Dal", style = MaterialTheme.typography.headlineMedium)
+                    }
                 }
-                Column() {
-                    Text(text = "Al", style = MaterialTheme.typography.headlineMedium)
+                AnimatedVisibility(
+                    visible = viewModel.endDate.value != null,
+                    enter = fadeIn(),
+                    exit = fadeOut()
+                ) {
+                    Column() {
+                        Text(text = "Al", style = MaterialTheme.typography.headlineMedium)
+                    }
                 }
             }
         }
