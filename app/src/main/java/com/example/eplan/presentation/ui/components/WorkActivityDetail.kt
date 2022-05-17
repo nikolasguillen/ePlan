@@ -23,6 +23,7 @@ import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.window.Dialog
 import com.example.eplan.R
+import com.example.eplan.presentation.navigation.BottomNavBarItems
 import com.example.eplan.presentation.ui.ValidationEvent
 import com.example.eplan.presentation.ui.WorkActivityDetailViewModel
 import com.example.eplan.presentation.ui.appointment.AppointmentDetailViewModel
@@ -98,7 +99,8 @@ fun WorkActivityDetail(
             )
         },
         bottomBar = {
-            BottomSaveBar(
+            BottomSingleActionBar(
+                item = BottomNavBarItems.Save,
                 onClick = {
                     if (!retrieving) {
                         onSavePressed()
