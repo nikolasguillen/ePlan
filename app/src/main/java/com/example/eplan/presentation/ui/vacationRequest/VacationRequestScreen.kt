@@ -11,7 +11,9 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.viewinterop.AndroidView
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.eplan.presentation.navigation.BottomNavBarItems
 import com.example.eplan.presentation.ui.components.BottomSingleActionBar
 import com.example.eplan.presentation.util.spacing
@@ -23,6 +25,7 @@ import java.util.*
 fun VacationRequestScreen(
     viewModel: VacationRequestViewModel
 ) {
+
     Scaffold(
         topBar = {
             SmallTopAppBar(title = { Text(text = "Richiesta ferie") }, navigationIcon = {

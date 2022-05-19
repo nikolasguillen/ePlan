@@ -99,7 +99,7 @@ fun AccountScreen(
                                 .padding(
                                     start = MaterialTheme.spacing.medium,
                                     top = MaterialTheme.spacing.small,
-                                    bottom = MaterialTheme.spacing.small
+                                    bottom = MaterialTheme.spacing.medium
                                 )
                                 .size(MaterialTheme.spacing.extraLarge)
                                 .clip(CircleShape)
@@ -117,11 +117,11 @@ fun AccountScreen(
                         Spacer(modifier = Modifier.width(MaterialTheme.spacing.medium))
                         Text(
                             text = stringResource(R.string.profilo),
-                            style = MaterialTheme.typography.headlineMedium,
+                            style = MaterialTheme.typography.headlineLarge,
                             modifier = Modifier.padding(
                                 end = MaterialTheme.spacing.medium,
                                 top = MaterialTheme.spacing.small,
-                                bottom = MaterialTheme.spacing.small
+                                bottom = MaterialTheme.spacing.medium
                             )
                         )
                     }
@@ -145,7 +145,7 @@ fun AccountScreen(
                         Spacer(modifier = Modifier.width(MaterialTheme.spacing.medium))
                         Text(
                             text = stringResource(it.nameResId),
-                            style = MaterialTheme.typography.headlineSmall,
+                            style = MaterialTheme.typography.headlineMedium,
                             modifier = Modifier.padding(
                                 end = MaterialTheme.spacing.medium,
                                 top = MaterialTheme.spacing.small,
