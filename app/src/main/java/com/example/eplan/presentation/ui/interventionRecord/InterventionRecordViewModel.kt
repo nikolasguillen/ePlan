@@ -11,6 +11,7 @@ import javax.inject.Inject
 const val STATE_KEY_START = "intervention.state.start.key"
 const val STATE_KEY_END = "intervention.state.end.key"
 const val STATE_KEY_ISRECORDING = "intervention.state.isrecording.key"
+const val BLANK_TIME = "--:--"
 
 @HiltViewModel
 class InterventionRecordViewModel
@@ -21,8 +22,8 @@ constructor(
 
     private val isRecording = mutableStateOf(false)
     private val isOver = mutableStateOf(false)
-    val start = mutableStateOf("--:--")
-    val end = mutableStateOf("--:--")
+    val start = mutableStateOf(BLANK_TIME)
+    val end = mutableStateOf(BLANK_TIME)
 
     init {
         savedStateHandle.get<Boolean>(STATE_KEY_ISRECORDING)?.let {
@@ -63,7 +64,7 @@ constructor(
     fun reset() {
         isRecording.value = false
         isOver.value = false
-        start.value = "--:--"
-        end.value = "--:--"
+        start.value = BLANK_TIME
+        end.value = BLANK_TIME
     }
 }

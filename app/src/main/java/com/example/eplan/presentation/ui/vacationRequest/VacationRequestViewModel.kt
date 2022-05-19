@@ -1,4 +1,4 @@
-package com.example.eplan.presentation.vacationRequest
+package com.example.eplan.presentation.ui.vacationRequest
 
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf

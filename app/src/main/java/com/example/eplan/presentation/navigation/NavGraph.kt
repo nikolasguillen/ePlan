@@ -40,8 +40,8 @@ import com.example.eplan.presentation.ui.interventionRecord.InterventionRecordSc
 import com.example.eplan.presentation.ui.interventionRecord.InterventionRecordViewModel
 import com.example.eplan.presentation.ui.settings.SettingsScreen
 import com.example.eplan.presentation.ui.settings.SettingsViewModel
-import com.example.eplan.presentation.vacationRequest.VacationRequestScreen
-import com.example.eplan.presentation.vacationRequest.VacationRequestViewModel
+import com.example.eplan.presentation.ui.vacationRequest.VacationRequestScreen
+import com.example.eplan.presentation.ui.vacationRequest.VacationRequestViewModel
 import java.time.LocalDate
 
 @ExperimentalComposeUiApi

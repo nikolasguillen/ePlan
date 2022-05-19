@@ -16,6 +16,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
@@ -63,8 +64,17 @@ fun CollapsibleCalendar(
                     modifier = Modifier.rotate(rotation)
                 )
             }
-            IconButton(onClick = { onDayChange(LocalDate.now().toString()) }) {
-                Icon(imageVector = Icons.Filled.Today, contentDescription = stringResource(R.string.vai_a_oggi))
+            IconButton(
+                onClick = { onDayChange(LocalDate.now().toString()) },
+                colors = IconButtonDefaults.iconButtonColors(
+                    containerColor = Color.Transparent,
+                    contentColor = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+            ) {
+                Icon(
+                    imageVector = Icons.Filled.Today,
+                    contentDescription = stringResource(R.string.vai_a_oggi)
+                )
             }
         }
         AnimatedVisibility(visible = calendarVisibility.value) {
