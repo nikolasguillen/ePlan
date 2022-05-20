@@ -20,7 +20,7 @@ fun BottomNavBar(navController: NavHostController, items: List<BottomNavBarItems
     NavigationBar(modifier = Modifier.navigationBarsPadding()) {
         items.forEach { item ->
             NavigationBarItem(
-                selected =  currentRoute == item.route,
+                selected = currentRoute == item.route,
                 onClick = {
                     if (currentRoute != item.route) {
                         navController.navigate(item.route)

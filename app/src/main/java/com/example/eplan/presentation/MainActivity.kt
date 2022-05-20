@@ -78,17 +78,26 @@ class MainActivity : AppCompatActivity() {
                             contains("list", true) -> {
                                 window.navigationBarColor =
                                     SurfaceColors.SURFACE_2.getColor(this@MainActivity)
-                                systemUiController.navigationBarDarkContentEnabled = !isSystemInDarkTheme()
+                                systemUiController.navigationBarDarkContentEnabled =
+                                    !isSystemInDarkTheme()
                             }
                             contains("details", true) -> {
                                 window.navigationBarColor =
                                     MaterialTheme.colorScheme.primary.toArgb()
-                                systemUiController.navigationBarDarkContentEnabled = isSystemInDarkTheme()
+                                systemUiController.navigationBarDarkContentEnabled =
+                                    isSystemInDarkTheme()
+                            }
+                            contains("vacationRequest", true) -> {
+                                window.navigationBarColor =
+                                    MaterialTheme.colorScheme.primary.toArgb()
+                                systemUiController.navigationBarDarkContentEnabled =
+                                    isSystemInDarkTheme()
                             }
                             else -> {
                                 window.navigationBarColor =
                                     MaterialTheme.colorScheme.surface.toArgb()
-                                systemUiController.navigationBarDarkContentEnabled = !isSystemInDarkTheme()
+                                systemUiController.navigationBarDarkContentEnabled =
+                                    !isSystemInDarkTheme()
                             }
                         }
                     }

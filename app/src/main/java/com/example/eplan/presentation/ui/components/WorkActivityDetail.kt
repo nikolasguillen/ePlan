@@ -1,10 +1,8 @@
 package com.example.eplan.presentation.ui.components
 
 import androidx.activity.compose.BackHandler
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
+import androidx.compose.animation.*
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
@@ -99,14 +97,20 @@ fun WorkActivityDetail(
             )
         },
         bottomBar = {
-            BottomSingleActionBar(
-                item = BottomNavBarItems.Save,
-                onClick = {
-                    if (!retrieving) {
-                        onSavePressed()
+            AnimatedVisibility(
+                visible = !retrieving,
+                enter = fadeIn() + slideInVertically(initialOffsetY = { it }),
+                exit = slideOutVertically(targetOffsetY = { it }) + fadeOut()
+            ) {
+                BottomSingleActionBar(
+                    item = BottomNavBarItems.Save,
+                    onClick = {
+                        if (!retrieving) {
+                            onSavePressed()
+                        }
                     }
-                }
-            )
+                )
+            }
         },
         snackbarHost = { SnackbarHost(hostState = snackBarHostState) },
         content = { paddingValues ->
@@ -125,8 +129,7 @@ fun WorkActivityDetail(
                     .padding(
                         start = MaterialTheme.spacing.medium,
                         end = MaterialTheme.spacing.medium,
-                        top = paddingValues.calculateTopPadding(),
-                        bottom = paddingValues.calculateBottomPadding()
+                        top = paddingValues.calculateTopPadding()
                     )
                     .verticalScroll(rememberScrollState()),
                 verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.medium)
@@ -137,9 +140,11 @@ fun WorkActivityDetail(
                     when (viewModel) {
                         is InterventionDetailViewModel -> {
                             InterventionDetail(viewModel = viewModel)
+                            Box(modifier = Modifier.height(paddingValues.calculateBottomPadding()))
                         }
                         is AppointmentDetailViewModel -> {
                             AppointmentDetail(viewModel = viewModel)
+                            Box(modifier = Modifier.height(paddingValues.calculateBottomPadding()))
                         }
                     }
                 }
