@@ -54,13 +54,16 @@ fun VacationRequestScreen(
                 )
             }
             AndroidView(
-                modifier = Modifier.fillMaxWidth(), factory = {
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(bottom = MaterialTheme.spacing.medium),
+                factory = {
                     CalendarView(it).apply {
                         this.date = Date.from(Instant.now()).time
                     }
                 })
             Row() {
-                Button(onClick = { /*TODO*/ }) {
+                FilledTonalButton(onClick = { /*TODO*/ }) {
                     Text(text = "Conferma data selezionata")
                 }
             }
