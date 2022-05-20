@@ -27,10 +27,13 @@ fun BottomNavBar(navController: NavHostController, items: List<BottomNavBarItems
                     }
                 },
                 icon = {
-                    Icon(
-                        imageVector = if (currentRoute == item.route) item.activeIcon else item.inactiveIcon,
-                        contentDescription = item.title
-                    )
+                    Crossfade(targetState = currentRoute == item.route) {
+                        if (it) {
+                            Icon(imageVector = item.activeIcon, contentDescription = item.title)
+                        } else {
+                            Icon(imageVector = item.inactiveIcon, contentDescription = item.title)
+                        }
+                    }
                 },
                 label = { Text(text = item.title) }
             )
