@@ -27,13 +27,18 @@ import com.example.eplan.presentation.util.spacing
 @Composable
 fun LoginScreen(
     viewModel: LoginViewModel,
-    onLoginAttempted: () -> Unit
+    onLoginAttempted: () -> Unit,
+    onSuccessfulLogin: () -> Unit
 ) {
 
-    val error = viewModel.successfulLoginAttempt
+    val successfulLogin by viewModel.successfulLoginAttempt.collectAsState()
     val loading = viewModel.loading
     val activity = LocalContext.current as Activity
     var passwordVisibility by remember { mutableStateOf(false) }
+
+    LaunchedEffect(key1 = successfulLogin) {
+        if (successfulLogin) onSuccessfulLogin()
+    }
 
     Scaffold { paddingValues ->
         BackHandler(enabled = true) {
@@ -52,7 +57,7 @@ fun LoginScreen(
                     .padding(MaterialTheme.spacing.large)
                     .fillMaxWidth()
             ) {
-                if (!error.value) {
+                if (!successfulLogin) {
                     Text(text = viewModel.message.value, color = Color.Red)
                 }
                 Column(verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.extraSmall)) {

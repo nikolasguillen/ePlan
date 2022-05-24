@@ -31,8 +31,8 @@ import java.time.LocalTime
 @ExperimentalMaterial3Api
 @Composable
 fun InterventionRecordScreen(
-    onSave: (String) -> Unit,
-    viewModel: InterventionRecordViewModel
+    viewModel: InterventionRecordViewModel,
+    onSave: (String) -> Unit
 ) {
     val composition by rememberLottieComposition(spec = LottieCompositionSpec.RawRes(R.raw.walking_turkey))
     val start = viewModel.start.value
@@ -40,7 +40,7 @@ fun InterventionRecordScreen(
     val showReset = remember { mutableStateOf(false) }
 
     Scaffold(
-        content = {
+        content = { paddingValues ->
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.SpaceBetween,
@@ -48,6 +48,7 @@ fun InterventionRecordScreen(
                     .fillMaxSize()
                     .background(MaterialTheme.colorScheme.surface)
                     .padding(bottom = bottomNavPadding, top = 150.dp)
+                    .padding(paddingValues)
             ) {
                 Row(
                     horizontalArrangement = Arrangement.SpaceBetween,

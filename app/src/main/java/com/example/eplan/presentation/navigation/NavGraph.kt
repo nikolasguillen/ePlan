@@ -59,13 +59,12 @@ fun NavGraph(navController: NavHostController) {
                 val viewModel = hiltViewModel<LoginViewModel>()
                 LoginScreen(
                     viewModel = viewModel,
-                    onLoginAttempted = { viewModel.onTriggerEvent(LoginAttemptEvent) }
+                    onLoginAttempted = { viewModel.onTriggerEvent(LoginAttemptEvent) },
+                    onSuccessfulLogin = {
+                        navController.popBackStack()
+                        navController.navigate(InterventionGraph.route)
+                    }
                 )
-                if (viewModel.successfulLoginAttempt.value) {
-                    navController.popBackStack()
-                    navController.navigate(InterventionGraph.route)
-                    viewModel.successfulLoginAttempt.value = false
-                }
             }
 
             navigation(
