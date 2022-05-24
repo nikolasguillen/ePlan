@@ -13,17 +13,22 @@ import com.example.eplan.presentation.navigation.BottomNavBarItems
 import com.example.eplan.presentation.util.getCurrentRoute
 
 @Composable
-fun BottomNavBar(navController: NavHostController, items: List<BottomNavBarItems>) {
+fun BottomNavBar(
+    currentRoute: String,
+    items: List<BottomNavBarItems>,
+    onNavigate: (String) -> Unit
+) {
 
-    val currentRoute = getCurrentRoute(navController = navController)
+//    val currentRoute = getCurrentRoute(navController = navController)
 
-    NavigationBar(modifier = Modifier.navigationBarsPadding()) {
+    NavigationBar {
         items.forEach { item ->
             NavigationBarItem(
                 selected = currentRoute == item.route,
                 onClick = {
                     if (currentRoute != item.route) {
-                        navController.navigate(item.route)
+                        onNavigate(item.route)
+//                        navController.navigate(item.route)
                     }
                 },
                 icon = {

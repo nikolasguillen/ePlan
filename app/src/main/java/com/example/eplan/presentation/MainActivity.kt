@@ -62,7 +62,6 @@ class MainActivity : AppCompatActivity() {
                 val currentRoute = getCurrentRoute(navController = navController)
                 val systemUiController = rememberSystemUiController()
                 val useDarkIcons = !isSystemInDarkTheme()
-                var bottomBarState by rememberSaveable { mutableStateOf(false) }
                 DynamicColors.applyToActivityIfAvailable(this)
 
                 SideEffect {
@@ -103,38 +102,7 @@ class MainActivity : AppCompatActivity() {
                     }
                 }
 
-                Scaffold(
-                    modifier = Modifier.navigationBarsPadding(),
-                    bottomBar = {
-
-                        val items = listOf(
-                            BottomNavBarItems.Home,
-                            BottomNavBarItems.Appointments
-                        )
-
-                        bottomBarState = when (currentRoute) {
-                            (BottomNavBarItems.Home.route) -> {
-                                true
-                            }
-                            (BottomNavBarItems.Appointments.route) -> {
-                                true
-                            }
-                            else -> {
-                                false
-                            }
-                        }
-
-                        AnimatedVisibility(
-                            visible = bottomBarState,
-                            enter = fadeIn() + slideInVertically(initialOffsetY = { it }),
-                            exit = slideOutVertically(targetOffsetY = { it }) + fadeOut()
-                        ) {
-                            if (bottomBarState) {
-                                BottomNavBar(navController = navController, items = items)
-                            }
-                        }
-                    }
-                ) {
+                Scaffold {
                     NavGraph(navController = navController)
                 }
             }
