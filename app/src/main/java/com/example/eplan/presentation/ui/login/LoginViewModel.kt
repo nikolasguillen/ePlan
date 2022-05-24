@@ -72,6 +72,9 @@ constructor(
         message.value = ""
 
         if (username.isNotBlank() && password.isNotBlank()) {
+            usernameError.value = null
+            passwordError.value = null
+
             loginAttempt.execute(username = username, password = password).onEach { dataState ->
 
                 loading.value = dataState.loading

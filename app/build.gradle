@@ -35,6 +35,7 @@ android {
     buildTypes {
         release {
             minifyEnabled false
+            shrinkResources false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
@@ -87,8 +88,8 @@ dependencies {
     implementation("com.google.dagger:hilt-android:$hilt_version")
     kapt("com.google.dagger:hilt-android-compiler:$hilt_version")
 
-    def hilt_lifecycle_viewmodel = "1.0.0-alpha03"
-    implementation "androidx.hilt:hilt-lifecycle-viewmodel:$hilt_lifecycle_viewmodel"
+    def hilt_lifecycle_viewModel = "1.0.0-alpha03"
+    implementation "androidx.hilt:hilt-lifecycle-viewmodel:$hilt_lifecycle_viewModel"
 
     def hilt_navigation = "1.0.0"
     implementation("androidx.hilt:hilt-navigation-compose:$hilt_navigation")
@@ -156,4 +157,9 @@ dependencies {
 
     // Jetpack Compose Integration
     implementation("androidx.navigation:navigation-compose:$nav_version")
+
+    // Leak Canary
+    // debugImplementation because LeakCanary should only run in debug builds.
+    def leak_canary_version = "2.9.1"
+    debugImplementation "com.squareup.leakcanary:leakcanary-android:$leak_canary_version"
 }

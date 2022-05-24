@@ -19,11 +19,6 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.window.Dialog
-import androidx.compose.ui.window.DialogProperties
-import com.airbnb.lottie.compose.LottieAnimation
-import com.airbnb.lottie.compose.LottieCompositionSpec
-import com.airbnb.lottie.compose.LottieConstants
-import com.airbnb.lottie.compose.rememberLottieComposition
 import com.example.eplan.R
 import com.example.eplan.presentation.util.spacing
 
@@ -40,11 +35,16 @@ fun LoginScreen(
     val activity = LocalContext.current as Activity
     var passwordVisibility by remember { mutableStateOf(false) }
 
-    Scaffold {
+    Scaffold { paddingValues ->
         BackHandler(enabled = true) {
             activity.finish()
         }
-        Box(contentAlignment = Alignment.Center, modifier = Modifier.fillMaxSize()) {
+        Box(
+            contentAlignment = Alignment.Center,
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(paddingValues)
+        ) {
             Column(
                 verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.small),
                 horizontalAlignment = Alignment.CenterHorizontally,
