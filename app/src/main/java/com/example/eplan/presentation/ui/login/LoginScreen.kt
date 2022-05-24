@@ -19,6 +19,7 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.window.Dialog
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.eplan.R
 import com.example.eplan.presentation.util.spacing
 
@@ -26,7 +27,7 @@ import com.example.eplan.presentation.util.spacing
 @ExperimentalMaterial3Api
 @Composable
 fun LoginScreen(
-    viewModel: LoginViewModel,
+    viewModel: LoginViewModel = hiltViewModel(),
     onLoginAttempted: () -> Unit,
     onSuccessfulLogin: () -> Unit
 ) {
@@ -36,8 +37,10 @@ fun LoginScreen(
     val activity = LocalContext.current as Activity
     var passwordVisibility by remember { mutableStateOf(false) }
 
-    LaunchedEffect(key1 = successfulLogin) {
-        if (successfulLogin) onSuccessfulLogin()
+    LaunchedEffect(key1 = true) {
+        viewModel.successfulLoginAttempt.collect {
+            if (it) onSuccessfulLogin()
+        }
     }
 
     Scaffold { paddingValues ->

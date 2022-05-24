@@ -130,7 +130,7 @@ fun NavGraph(navController: NavHostController) {
                 }
             }
 
-            /** Sezione appuntamenti **/
+            /* Sezione appuntamenti */
             navigation(
                 startDestination = AppointmentGraph.startDestination,
                 route = AppointmentGraph.route
@@ -174,7 +174,7 @@ fun NavGraph(navController: NavHostController) {
                 }
             }
 
-            /** Sezione account **/
+            /* Sezione account */
             navigation(
                 startDestination = AccountGraph.startDestination,
                 route = AccountGraph.route
