@@ -1,11 +1,16 @@
 package com.example.eplan.presentation.ui.vacationRequest
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.Crossfade
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Done
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -51,10 +56,13 @@ fun VacationRequestScreen(
         ) {
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.extraSmall)
+                verticalArrangement = Arrangement.Center
             ) {
                 Text(text = "Tipo di richiesta", style = MaterialTheme.typography.labelLarge)
-                Row(horizontalArrangement = Arrangement.spacedBy((-1).dp)) {
+                Row(
+                    horizontalArrangement = Arrangement.spacedBy((-1).dp),
+                    modifier = Modifier.fillMaxWidth()
+                ) {
                     Surface(
                         color = if (viewModel.singleDayVacancy) MaterialTheme.colorScheme.secondaryContainer else MaterialTheme.colorScheme.surface,
                         shape = RoundedCornerShape(
@@ -74,14 +82,39 @@ fun VacationRequestScreen(
                                 )
                             )
                             .clickable {
-                                viewModel.singleDayVacancy = !viewModel.singleDayVacancy
+                                viewModel.singleDayVacancy = true
                             }
+                            .fillMaxWidth()
+                            .weight(1f)
                     ) {
-                        Text(
-                            text = "Giornata",
-                            style = MaterialTheme.typography.labelLarge,
-                            modifier = Modifier.padding(MaterialTheme.spacing.medium)
-                        )
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.Center,
+                            modifier = Modifier
+                                .padding(vertical = MaterialTheme.spacing.medium)
+                                .height(MaterialTheme.typography.labelLarge.lineHeight.value.dp)
+                        ) {
+                            AnimatedVisibility(
+                                visible = viewModel.singleDayVacancy,
+                                enter = fadeIn(),
+                                exit = fadeOut()
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Filled.Done,
+                                    contentDescription = ""
+                                )
+                            }
+                            Spacer(
+                                modifier = Modifier.size(
+                                    width = MaterialTheme.spacing.small,
+                                    height = MaterialTheme.spacing.default
+                                )
+                            )
+                            Text(
+                                text = "Giornata",
+                                style = MaterialTheme.typography.labelLarge
+                            )
+                        }
                     }
                     Surface(
                         color = if (!viewModel.singleDayVacancy) MaterialTheme.colorScheme.secondaryContainer else MaterialTheme.colorScheme.surface,
@@ -102,14 +135,39 @@ fun VacationRequestScreen(
                                 )
                             )
                             .clickable {
-                                viewModel.singleDayVacancy = !viewModel.singleDayVacancy
+                                viewModel.singleDayVacancy = false
                             }
+                            .fillMaxWidth()
+                            .weight(1f)
                     ) {
-                        Text(
-                            text = "Periodo",
-                            style = MaterialTheme.typography.labelLarge,
-                            modifier = Modifier.padding(MaterialTheme.spacing.medium)
-                        )
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.Center,
+                            modifier = Modifier
+                                .padding(vertical = MaterialTheme.spacing.medium)
+                                .height(MaterialTheme.typography.labelLarge.lineHeight.value.dp)
+                        ) {
+                            AnimatedVisibility(
+                                visible = !viewModel.singleDayVacancy,
+                                enter = fadeIn(),
+                                exit = fadeOut()
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Filled.Done,
+                                    contentDescription = ""
+                                )
+                            }
+                            Spacer(
+                                modifier = Modifier.size(
+                                    width = MaterialTheme.spacing.small,
+                                    height = MaterialTheme.spacing.default
+                                )
+                            )
+                            Text(
+                                text = "Periodo",
+                                style = MaterialTheme.typography.labelLarge
+                            )
+                        }
                     }
                 }
             }
