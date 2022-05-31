@@ -1,9 +1,7 @@
 package com.example.eplan.presentation.ui.vacationRequest
 
-import androidx.compose.animation.AnimatedVisibility
+import androidx.activity.compose.BackHandler
 import androidx.compose.animation.Crossfade
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -13,39 +11,70 @@ import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Done
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.clipToBounds
-import androidx.compose.ui.graphics.RectangleShape
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
+import com.example.eplan.R
 import com.example.eplan.presentation.navigation.BottomNavBarItems
 import com.example.eplan.presentation.ui.components.BottomSingleActionBar
 import com.example.eplan.presentation.ui.components.CustomDateButton
+import com.example.eplan.presentation.ui.vacationRequest.VacationRequestEvent.RequestEvent
 import com.example.eplan.presentation.util.fromDateToLocalDate
 import com.example.eplan.presentation.util.spacing
+import kotlinx.coroutines.flow.collect
 
 @ExperimentalMaterial3Api
 @Composable
 fun VacationRequestScreen(
-    viewModel: VacationRequestViewModel
+    viewModel: VacationRequestViewModel,
+    onRequestSent: () -> Unit,
+    onBackPressed: () -> Unit
 ) {
+
+    val context = LocalContext.current
+    val snackBarHostState = remember { SnackbarHostState() }
+
+    LaunchedEffect(key1 = context) {
+        viewModel.validationEvents.collect { error ->
+            snackBarHostState.showSnackbar(message = error)
+        }
+    }
+
     Scaffold(
         topBar = {
-            SmallTopAppBar(title = { Text(text = "Richiesta ferie") }, navigationIcon = {
-                IconButton(onClick = { /*TODO*/ }) {
-                    Icon(imageVector = Icons.Filled.ArrowBack, contentDescription = "")
-                }
-            })
+            SmallTopAppBar(
+                title = { Text(text = stringResource(id = R.string.richiesta_ferie)) },
+                navigationIcon = {
+                    IconButton(onClick = { onBackPressed() }) {
+                        Icon(
+                            imageVector = Icons.Filled.ArrowBack,
+                            contentDescription = stringResource(
+                                id = R.string.indietro
+                            )
+                        )
+                    }
+                })
         },
         bottomBar = {
             BottomSingleActionBar(
                 item = BottomNavBarItems.Send,
-                onClick = {}
+                onClick = {
+                    onRequestSent()
+                }
             )
-        }) { paddingValues ->
+        },
+        snackbarHost = { SnackbarHost(hostState = snackBarHostState) }
+    ) { paddingValues ->
+
+        BackHandler {
+            onBackPressed()
+        }
+
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.medium),
@@ -58,7 +87,10 @@ fun VacationRequestScreen(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Center
             ) {
-                Text(text = "Tipo di richiesta", style = MaterialTheme.typography.labelLarge)
+                Text(
+                    text = stringResource(R.string.tipo_richiesta),
+                    style = MaterialTheme.typography.labelLarge
+                )
                 Spacer(modifier = Modifier.height(MaterialTheme.spacing.small))
                 Row(
                     horizontalArrangement = Arrangement.spacedBy((-1).dp),
@@ -100,7 +132,7 @@ fun VacationRequestScreen(
                                     Box(modifier = Modifier.size(Icons.Filled.Done.defaultWidth)) {
                                         Icon(
                                             imageVector = Icons.Filled.Done,
-                                            contentDescription = ""
+                                            contentDescription = stringResource(id = R.string.giornata)
                                         )
                                     }
                                 } else {
@@ -111,7 +143,7 @@ fun VacationRequestScreen(
                                 modifier = Modifier.width(MaterialTheme.spacing.extraSmall)
                             )
                             Text(
-                                text = "Giornata",
+                                text = stringResource(R.string.giornata),
                                 style = MaterialTheme.typography.labelLarge
                             )
                             Spacer(
@@ -156,7 +188,7 @@ fun VacationRequestScreen(
                                     Box(modifier = Modifier.size(Icons.Filled.Done.defaultWidth)) {
                                         Icon(
                                             imageVector = Icons.Filled.Done,
-                                            contentDescription = ""
+                                            contentDescription = stringResource(id = R.string.periodo)
                                         )
                                     }
                                 } else {
@@ -167,7 +199,7 @@ fun VacationRequestScreen(
                                 modifier = Modifier.width(MaterialTheme.spacing.extraSmall)
                             )
                             Text(
-                                text = "Periodo",
+                                text = stringResource(R.string.periodo),
                                 style = MaterialTheme.typography.labelLarge
                             )
                             Spacer(
@@ -179,22 +211,34 @@ fun VacationRequestScreen(
                 }
             }
             if (viewModel.singleDayVacancy) {
-                Text(text = "Seleziona la giornata", style = MaterialTheme.typography.headlineMedium)
+                Text(
+                    text = stringResource(R.string.seleziona_giornata),
+                    style = MaterialTheme.typography.headlineMedium
+                )
                 CustomDateButton(
                     date = viewModel.singleDate.value,
-                    onDateSelected = { date -> viewModel.singleDate.value = fromDateToLocalDate(date) })
+                    onDateSelected = { date ->
+                        viewModel.singleDate.value = fromDateToLocalDate(date)
+                    })
             } else {
-                Text(text = "Scegli data inizio", style = MaterialTheme.typography.headlineMedium)
+                Text(
+                    text = stringResource(R.string.scegli_data_inizio),
+                    style = MaterialTheme.typography.headlineMedium
+                )
                 CustomDateButton(
                     date = viewModel.startDate.value,
-                    onDateSelected = { date -> viewModel.startDate.value = fromDateToLocalDate(date) })
+                    onDateSelected = { date ->
+                        viewModel.startDate.value = fromDateToLocalDate(date)
+                    })
                 Text(
-                    text = "Scegli data fine",
+                    text = stringResource(R.string.scegli_data_fine),
                     style = MaterialTheme.typography.headlineMedium
                 )
                 CustomDateButton(
                     date = viewModel.endDate.value,
-                    onDateSelected = { date -> viewModel.endDate.value = fromDateToLocalDate(date) })
+                    onDateSelected = { date ->
+                        viewModel.endDate.value = fromDateToLocalDate(date)
+                    })
             }
         }
     }

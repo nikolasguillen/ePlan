@@ -41,6 +41,8 @@ import com.example.eplan.presentation.ui.interventionRecord.InterventionRecordSc
 import com.example.eplan.presentation.ui.interventionRecord.InterventionRecordViewModel
 import com.example.eplan.presentation.ui.settings.SettingsScreen
 import com.example.eplan.presentation.ui.settings.SettingsViewModel
+import com.example.eplan.presentation.ui.vacationRequest.VacationRequestEvent
+import com.example.eplan.presentation.ui.vacationRequest.VacationRequestEvent.RequestEvent
 import com.example.eplan.presentation.ui.vacationRequest.VacationRequestScreen
 import com.example.eplan.presentation.ui.vacationRequest.VacationRequestViewModel
 import java.time.LocalDate
@@ -52,7 +54,9 @@ fun NavGraph(navController: NavHostController) {
     NavHost(
         navController = navController,
         startDestination = LoginGraph.route,
-        modifier = Modifier.statusBarsPadding().navigationBarsPadding()
+        modifier = Modifier
+            .statusBarsPadding()
+            .navigationBarsPadding()
     ) {
 
         navigation(startDestination = LoginGraph.startDestination, route = LoginGraph.route) {
@@ -229,7 +233,16 @@ fun NavGraph(navController: NavHostController) {
                 }
                 composable(route = Screen.VacationRequest.route) {
                     val viewModel = hiltViewModel<VacationRequestViewModel>()
-                    VacationRequestScreen(viewModel = viewModel)
+                    VacationRequestScreen(
+                        viewModel = viewModel,
+                        onRequestSent = {
+                            viewModel.onTriggerEvent(RequestEvent)
+                            if (viewModel.successfulVacationRequest.value == true) {
+                                navController.popBackStack()
+                            }
+                        },
+                        onBackPressed = navController::popBackStack
+                    )
                 }
             }
         }

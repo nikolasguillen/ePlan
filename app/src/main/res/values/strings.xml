@@ -77,6 +77,13 @@
     <string name="scegli_periodicità">Scegli periodicità</string>
     <string name="scegli_tema">Scegli tema</string>
     <string name="opzioni_visualizzazione">Opzioni di visualizzazione</string>
-    <string name="richiesta_ferie">Richiedi ferie</string>
+    <string name="richiedi_ferie">Richiedi ferie</string>
     <string name="doppio_tap_per_uscire">Premi ancora il tasto Indietro per uscire dall\'app</string>
+    <string name="richiesta_ferie">Richiesta ferie</string>
+    <string name="tipo_richiesta">Tipo di richiesta</string>
+    <string name="giornata">Giornata</string>
+    <string name="periodo">Periodo</string>
+    <string name="seleziona_giornata">Seleziona la giornata</string>
+    <string name="scegli_data_inizio">Scegli data inizio</string>
+    <string name="scegli_data_fine">Scegli data fine</string>
 </resources>
