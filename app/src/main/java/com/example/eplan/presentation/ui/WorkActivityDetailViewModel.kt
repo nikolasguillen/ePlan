@@ -13,8 +13,6 @@ import kotlinx.coroutines.flow.receiveAsFlow
 
 abstract class WorkActivityDetailViewModel : EplanViewModel() {
 
-    var sending by mutableStateOf(false)
-        protected set
     protected val validationEventChannel = Channel<ValidationEvent>()
     val validationEvents = validationEventChannel.receiveAsFlow()
 

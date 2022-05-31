@@ -5,6 +5,7 @@ import com.example.eplan.network.services.LoginService
 import com.example.eplan.network.services.InterventionService
 import com.example.eplan.network.model.InterventionDtoMapper
 import com.example.eplan.network.services.AppointmentService
+import com.example.eplan.network.services.VacationRequestService
 import com.google.gson.GsonBuilder
 import dagger.Module
 import dagger.Provides
@@ -20,7 +21,7 @@ object NetworkModule {
 
     private const val URL = "https://gest.eplanweb.com/api/"
 
-    /** Providers per interventi **/
+    /* Providers per interventi */
 
     @Singleton
     @Provides
@@ -38,7 +39,7 @@ object NetworkModule {
             .create(InterventionService::class.java)
     }
 
-    /** Providers per login **/
+    /* Providers per login */
 
     @Singleton
     @Provides
@@ -50,7 +51,7 @@ object NetworkModule {
             .create(LoginService::class.java)
     }
 
-    /** Providers per appuntamenti **/
+    /* Providers per appuntamenti */
 
     @Singleton
     @Provides
@@ -66,5 +67,17 @@ object NetworkModule {
             .addConverterFactory(GsonConverterFactory.create(GsonBuilder().create()))
             .build()
             .create(AppointmentService::class.java)
+    }
+
+    /* Provider per richiesta ferie */
+
+    @Singleton
+    @Provides
+    fun provideVacationRequestService(): VacationRequestService {
+        return Retrofit.Builder()
+            .baseUrl(URL)
+            .addConverterFactory(GsonConverterFactory.create(GsonBuilder().create()))
+            .build()
+            .create(VacationRequestService::class.java)
     }
 }

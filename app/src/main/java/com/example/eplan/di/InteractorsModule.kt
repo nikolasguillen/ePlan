@@ -14,12 +14,14 @@ import com.example.eplan.interactors.interventionDetail.UpdateIntervention
 import com.example.eplan.interactors.workActivityDetail.ValidateDescription
 import com.example.eplan.interactors.workActivityDetail.ValidateTime
 import com.example.eplan.interactors.interventionList.DayChangeIntervention
+import com.example.eplan.interactors.vacationRequest.RequestVacation
 import com.example.eplan.interactors.workActivityDetail.ValidateActivity
 import com.example.eplan.network.model.AppointmentDtoMapper
 import com.example.eplan.network.model.InterventionDtoMapper
 import com.example.eplan.network.services.AppointmentService
 import com.example.eplan.network.services.LoginService
 import com.example.eplan.network.services.InterventionService
+import com.example.eplan.network.services.VacationRequestService
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -30,7 +32,7 @@ import dagger.hilt.android.scopes.ViewModelScoped
 @InstallIn(ViewModelComponent::class)
 object InteractorsModule {
 
-    /** Provider degli interactors degli interventi **/
+    /* Provider degli interactors degli interventi */
 
     @ViewModelScoped
     @Provides
@@ -68,7 +70,7 @@ object InteractorsModule {
         )
     }
 
-    /** Provider dei validatori delle form **/
+    /* Provider dei validatori delle form */
 
     @ViewModelScoped
     @Provides
@@ -88,7 +90,7 @@ object InteractorsModule {
         return ValidateTime()
     }
 
-    /** Interactors login **/
+    /* Interactors login */
 
     @ViewModelScoped
     @Provides
@@ -102,7 +104,7 @@ object InteractorsModule {
         )
     }
 
-    /** Provider dello user token **/
+    /* Provider dello user token */
 
     @ViewModelScoped
     @Provides
@@ -112,7 +114,7 @@ object InteractorsModule {
         return GetToken(userDao = userDao)
     }
 
-    /** Provider immagine profilo TODO cancellarli **/
+    /* Provider immagine profilo TODO cancellarli **/
     @ViewModelScoped
     @Provides
     fun provideSaveProfilePicUri(
@@ -137,7 +139,7 @@ object InteractorsModule {
         return GetCredentialsFromCache(userDao = userDao)
     }
 
-    /** Provider degli interactors degli appuntamenti **/
+    /* Provider degli interactors degli appuntamenti */
 
     @ViewModelScoped
     @Provides
@@ -164,5 +166,15 @@ object InteractorsModule {
         mapper: AppointmentDtoMapper
     ): DayChangeAppointment {
         return DayChangeAppointment(service = service, mapper = mapper)
+    }
+
+    /* Provider degli interactors della richiesta ferie */
+
+    @ViewModelScoped
+    @Provides
+    fun provideRequestVacation(
+        service: VacationRequestService
+    ): RequestVacation {
+        return RequestVacation(service = service)
     }
 }

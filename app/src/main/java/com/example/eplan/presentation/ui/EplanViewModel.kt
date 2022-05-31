@@ -16,6 +16,8 @@ open class EplanViewModel : ViewModel() {
 
     protected var query = ""
     protected var userToken = USER_TOKEN
+    var sending by mutableStateOf(false)
+        protected set
     var retrieving by mutableStateOf(false)
         protected set
 
