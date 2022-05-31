@@ -48,6 +48,4 @@ class InterventionDtoMapper : DomainMapper<InterventionDto, Intervention> {
     fun fromDomainList(initial: List<Intervention>): List<InterventionDto> {
         return initial.map { mapFromDomainModel(it) }
     }
-
-
 }

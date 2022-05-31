@@ -21,4 +21,6 @@ sealed class Screen(val route: String, val name: String) {
     object Settings: Screen(route = "settings", name = "Settings")
 
     object VacationRequest: Screen(route = "vacationRequest", name = "Vacation request")
+
+    object TimeStats: Screen(route = "timeStats", name = "Time stats")
 }

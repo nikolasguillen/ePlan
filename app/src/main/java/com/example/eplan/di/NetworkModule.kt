@@ -1,11 +1,9 @@
 package com.example.eplan.di
 
 import com.example.eplan.network.model.AppointmentDtoMapper
-import com.example.eplan.network.services.LoginService
-import com.example.eplan.network.services.InterventionService
 import com.example.eplan.network.model.InterventionDtoMapper
-import com.example.eplan.network.services.AppointmentService
-import com.example.eplan.network.services.VacationRequestService
+import com.example.eplan.network.model.TimeStatsDtoMapper
+import com.example.eplan.network.services.*
 import com.google.gson.GsonBuilder
 import dagger.Module
 import dagger.Provides
@@ -79,5 +77,23 @@ object NetworkModule {
             .addConverterFactory(GsonConverterFactory.create(GsonBuilder().create()))
             .build()
             .create(VacationRequestService::class.java)
+    }
+
+    /* Provider per statistiche */
+
+    @Singleton
+    @Provides
+    fun provideTimeStatsService(): TimeStatsService {
+        return Retrofit.Builder()
+            .baseUrl(URL)
+            .addConverterFactory(GsonConverterFactory.create(GsonBuilder().create()))
+            .build()
+            .create(TimeStatsService::class.java)
+    }
+
+    @Singleton
+    @Provides
+    fun provideTimeStatsDtoMapper(): TimeStatsDtoMapper {
+        return TimeStatsDtoMapper()
     }
 }

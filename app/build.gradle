@@ -162,4 +162,7 @@ dependencies {
     // debugImplementation because LeakCanary should only run in debug builds.
     def leak_canary_version = "2.9.1"
     debugImplementation "com.squareup.leakcanary:leakcanary-android:$leak_canary_version"
+
+    // Month and year picker
+    implementation 'com.github.DogusTeknoloji:compose-date-picker:1.0.1'
 }

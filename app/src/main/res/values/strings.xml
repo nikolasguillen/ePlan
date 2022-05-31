@@ -86,4 +86,5 @@
     <string name="seleziona_giornata">Seleziona la giornata</string>
     <string name="scegli_data_inizio">Scegli data inizio</string>
     <string name="scegli_data_fine">Scegli data fine</string>
+    <string name="aggiorna">Aggiorna</string>
 </resources>

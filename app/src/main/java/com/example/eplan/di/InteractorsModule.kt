@@ -14,14 +14,13 @@ import com.example.eplan.interactors.interventionDetail.UpdateIntervention
 import com.example.eplan.interactors.workActivityDetail.ValidateDescription
 import com.example.eplan.interactors.workActivityDetail.ValidateTime
 import com.example.eplan.interactors.interventionList.DayChangeIntervention
+import com.example.eplan.interactors.timeStats.GetTimeStats
 import com.example.eplan.interactors.vacationRequest.RequestVacation
 import com.example.eplan.interactors.workActivityDetail.ValidateActivity
 import com.example.eplan.network.model.AppointmentDtoMapper
 import com.example.eplan.network.model.InterventionDtoMapper
-import com.example.eplan.network.services.AppointmentService
-import com.example.eplan.network.services.LoginService
-import com.example.eplan.network.services.InterventionService
-import com.example.eplan.network.services.VacationRequestService
+import com.example.eplan.network.model.TimeStatsDtoMapper
+import com.example.eplan.network.services.*
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -176,5 +175,16 @@ object InteractorsModule {
         service: VacationRequestService
     ): RequestVacation {
         return RequestVacation(service = service)
+    }
+
+    /* Provider degli interactors delle statistiche */
+
+    @ViewModelScoped
+    @Provides
+    fun provideGetTimeStats(
+        service: TimeStatsService,
+        mapper: TimeStatsDtoMapper
+    ): GetTimeStats {
+        return GetTimeStats(service = service, mapper = mapper)
     }
 }

@@ -41,11 +41,15 @@ import com.example.eplan.presentation.ui.interventionRecord.InterventionRecordSc
 import com.example.eplan.presentation.ui.interventionRecord.InterventionRecordViewModel
 import com.example.eplan.presentation.ui.settings.SettingsScreen
 import com.example.eplan.presentation.ui.settings.SettingsViewModel
+import com.example.eplan.presentation.ui.timeStats.TimeStatsScreen
+import com.example.eplan.presentation.ui.timeStats.TimeStatsViewModel
 import com.example.eplan.presentation.ui.vacationRequest.VacationRequestEvent
 import com.example.eplan.presentation.ui.vacationRequest.VacationRequestEvent.RequestEvent
 import com.example.eplan.presentation.ui.vacationRequest.VacationRequestScreen
 import com.example.eplan.presentation.ui.vacationRequest.VacationRequestViewModel
 import java.time.LocalDate
+import java.time.temporal.WeekFields
+import java.util.*
 
 @ExperimentalComposeUiApi
 @ExperimentalMaterial3Api
@@ -230,6 +234,10 @@ fun NavGraph(navController: NavHostController) {
                         viewModel = viewModel,
                         onBackPressed = navController::popBackStack
                     )
+                }
+                composable(route = Screen.TimeStats.route) {
+                    val viewModel = hiltViewModel<TimeStatsViewModel>()
+                    TimeStatsScreen(viewModel = viewModel)
                 }
                 composable(route = Screen.VacationRequest.route) {
                     val viewModel = hiltViewModel<VacationRequestViewModel>()
