@@ -5,7 +5,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.SavedStateHandle
-import androidx.lifecycle.ViewModel
 import com.example.eplan.presentation.ui.EplanViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import java.time.LocalDate
@@ -19,9 +18,9 @@ constructor(
 ) : EplanViewModel() {
 
     var singleDayVacancy by mutableStateOf(true)
-    val startDate: MutableState<LocalDate> = mutableStateOf(LocalDate.now())
-    val endDate: MutableState<LocalDate> = mutableStateOf(LocalDate.now())
-    val selectedDate: MutableState<LocalDate?> = mutableStateOf(null)
+    val singleDate = mutableStateOf(LocalDate.now())
+    val startDate = mutableStateOf(LocalDate.now())
+    val endDate = mutableStateOf(LocalDate.now())
 
     init {
 

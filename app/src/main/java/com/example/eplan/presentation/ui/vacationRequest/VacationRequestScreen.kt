@@ -59,6 +59,7 @@ fun VacationRequestScreen(
                 verticalArrangement = Arrangement.Center
             ) {
                 Text(text = "Tipo di richiesta", style = MaterialTheme.typography.labelLarge)
+                Spacer(modifier = Modifier.height(MaterialTheme.spacing.small))
                 Row(
                     horizontalArrangement = Arrangement.spacedBy((-1).dp),
                     modifier = Modifier.fillMaxWidth()
@@ -91,29 +92,32 @@ fun VacationRequestScreen(
                             verticalAlignment = Alignment.CenterVertically,
                             horizontalArrangement = Arrangement.Center,
                             modifier = Modifier
-                                .padding(vertical = MaterialTheme.spacing.medium)
+                                .padding(MaterialTheme.spacing.medium)
                                 .height(MaterialTheme.typography.labelLarge.lineHeight.value.dp)
                         ) {
-                            AnimatedVisibility(
-                                visible = viewModel.singleDayVacancy,
-                                enter = fadeIn(),
-                                exit = fadeOut()
-                            ) {
-                                Icon(
-                                    imageVector = Icons.Filled.Done,
-                                    contentDescription = ""
-                                )
+                            Crossfade(targetState = viewModel.singleDayVacancy) {
+                                if (it) {
+                                    Box(modifier = Modifier.size(Icons.Filled.Done.defaultWidth)) {
+                                        Icon(
+                                            imageVector = Icons.Filled.Done,
+                                            contentDescription = ""
+                                        )
+                                    }
+                                } else {
+                                    Box(modifier = Modifier.size(Icons.Filled.Done.defaultWidth))
+                                }
                             }
                             Spacer(
-                                modifier = Modifier.size(
-                                    width = MaterialTheme.spacing.small,
-                                    height = MaterialTheme.spacing.default
-                                )
+                                modifier = Modifier.width(MaterialTheme.spacing.extraSmall)
                             )
                             Text(
                                 text = "Giornata",
                                 style = MaterialTheme.typography.labelLarge
                             )
+                            Spacer(
+                                modifier = Modifier.width(MaterialTheme.spacing.extraSmall)
+                            )
+                            Box(modifier = Modifier.size(Icons.Filled.Done.defaultWidth))
                         }
                     }
                     Surface(
@@ -144,44 +148,54 @@ fun VacationRequestScreen(
                             verticalAlignment = Alignment.CenterVertically,
                             horizontalArrangement = Arrangement.Center,
                             modifier = Modifier
-                                .padding(vertical = MaterialTheme.spacing.medium)
+                                .padding(MaterialTheme.spacing.medium)
                                 .height(MaterialTheme.typography.labelLarge.lineHeight.value.dp)
                         ) {
-                            AnimatedVisibility(
-                                visible = !viewModel.singleDayVacancy,
-                                enter = fadeIn(),
-                                exit = fadeOut()
-                            ) {
-                                Icon(
-                                    imageVector = Icons.Filled.Done,
-                                    contentDescription = ""
-                                )
+                            Crossfade(targetState = !viewModel.singleDayVacancy) {
+                                if (it) {
+                                    Box(modifier = Modifier.size(Icons.Filled.Done.defaultWidth)) {
+                                        Icon(
+                                            imageVector = Icons.Filled.Done,
+                                            contentDescription = ""
+                                        )
+                                    }
+                                } else {
+                                    Box(modifier = Modifier.size(Icons.Filled.Done.defaultWidth))
+                                }
                             }
                             Spacer(
-                                modifier = Modifier.size(
-                                    width = MaterialTheme.spacing.small,
-                                    height = MaterialTheme.spacing.default
-                                )
+                                modifier = Modifier.width(MaterialTheme.spacing.extraSmall)
                             )
                             Text(
                                 text = "Periodo",
                                 style = MaterialTheme.typography.labelLarge
                             )
+                            Spacer(
+                                modifier = Modifier.width(MaterialTheme.spacing.extraSmall)
+                            )
+                            Box(modifier = Modifier.size(Icons.Filled.Done.defaultWidth))
                         }
                     }
                 }
             }
-            Text(text = "Scegli data inizio", style = MaterialTheme.typography.headlineMedium)
-            CustomDateButton(
-                date = viewModel.startDate.value,
-                onDateSelected = { date -> viewModel.startDate.value = fromDateToLocalDate(date) })
-            Text(
-                text = "Scegli data fine (opzionale)",
-                style = MaterialTheme.typography.headlineMedium
-            )
-            CustomDateButton(
-                date = viewModel.endDate.value,
-                onDateSelected = { date -> viewModel.endDate.value = fromDateToLocalDate(date) })
+            if (viewModel.singleDayVacancy) {
+                Text(text = "Seleziona la giornata", style = MaterialTheme.typography.headlineMedium)
+                CustomDateButton(
+                    date = viewModel.singleDate.value,
+                    onDateSelected = { date -> viewModel.singleDate.value = fromDateToLocalDate(date) })
+            } else {
+                Text(text = "Scegli data inizio", style = MaterialTheme.typography.headlineMedium)
+                CustomDateButton(
+                    date = viewModel.startDate.value,
+                    onDateSelected = { date -> viewModel.startDate.value = fromDateToLocalDate(date) })
+                Text(
+                    text = "Scegli data fine",
+                    style = MaterialTheme.typography.headlineMedium
+                )
+                CustomDateButton(
+                    date = viewModel.endDate.value,
+                    onDateSelected = { date -> viewModel.endDate.value = fromDateToLocalDate(date) })
+            }
         }
     }
 }
