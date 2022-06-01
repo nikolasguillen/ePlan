@@ -9,7 +9,10 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.compose.animation.*
 import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.navigationBarsPadding
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -70,7 +73,6 @@ class MainActivity : AppCompatActivity() {
                         darkIcons = useDarkIcons
                     )
                 }
-
                 currentRoute?.let {
                     with(it) {
                         when {
@@ -101,10 +103,7 @@ class MainActivity : AppCompatActivity() {
                         }
                     }
                 }
-
-                Scaffold {
-                    NavGraph(navController = navController)
-                }
+                NavGraph(navController = navController)
             }
         }
     }

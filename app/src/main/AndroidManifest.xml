@@ -18,7 +18,7 @@
         <activity
             android:name=".presentation.MainActivity"
             android:label="ePlan"
-            android:windowSoftInputMode="adjustPan"
+            android:windowSoftInputMode="adjustResize"
             android:theme="@style/Theme.EPlan"
             android:exported="true">
             <intent-filter>

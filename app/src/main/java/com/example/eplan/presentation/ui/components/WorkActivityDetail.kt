@@ -28,8 +28,9 @@ import com.example.eplan.presentation.ui.appointment.AppointmentDetailViewModel
 import com.example.eplan.presentation.ui.intervention.InterventionDetailViewModel
 import com.example.eplan.presentation.util.spacing
 
-@ExperimentalMaterial3Api
+@OptIn(ExperimentalLayoutApi::class)
 @ExperimentalComposeUiApi
+@ExperimentalMaterial3Api
 @Composable
 fun WorkActivityDetail(
     viewModel: WorkActivityDetailViewModel,
@@ -126,11 +127,10 @@ fun WorkActivityDetail(
             Column(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(
-                        start = MaterialTheme.spacing.medium,
-                        end = MaterialTheme.spacing.medium,
-                        top = paddingValues.calculateTopPadding()
-                    )
+                    .padding(horizontal = MaterialTheme.spacing.medium)
+                    .padding(paddingValues)
+                    .consumedWindowInsets(paddingValues)
+                    .imePadding()
                     .verticalScroll(rememberScrollState()),
                 verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.medium)
             ) {
@@ -140,11 +140,9 @@ fun WorkActivityDetail(
                     when (viewModel) {
                         is InterventionDetailViewModel -> {
                             InterventionDetail(viewModel = viewModel)
-                            Box(modifier = Modifier.height(paddingValues.calculateBottomPadding()))
                         }
                         is AppointmentDetailViewModel -> {
                             AppointmentDetail(viewModel = viewModel)
-                            Box(modifier = Modifier.height(paddingValues.calculateBottomPadding()))
                         }
                     }
                 }

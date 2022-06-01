@@ -1,7 +1,6 @@
 package com.example.eplan.presentation.navigation
 
-import androidx.compose.foundation.layout.navigationBarsPadding
-import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.foundation.layout.*
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
@@ -58,9 +57,7 @@ fun NavGraph(navController: NavHostController) {
     NavHost(
         navController = navController,
         startDestination = LoginGraph.route,
-        modifier = Modifier
-            .statusBarsPadding()
-            .navigationBarsPadding()
+        modifier = Modifier.systemBarsPadding()
     ) {
 
         navigation(startDestination = LoginGraph.startDestination, route = LoginGraph.route) {
