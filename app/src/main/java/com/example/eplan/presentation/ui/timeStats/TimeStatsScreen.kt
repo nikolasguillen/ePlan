@@ -19,6 +19,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.eplan.R
 import com.example.eplan.presentation.ui.timeStats.TimeStatsEvent.GetStats
@@ -103,13 +104,16 @@ fun TimeStatsScreen(
                                 it.date.dayOfWeek.getDisplayName(TextStyle.FULL, Locale.ITALIAN)
                                     .replaceFirstChar { it.uppercase() }
                             } ${it.date.dayOfMonth}",
-                            style = MaterialTheme.typography.headlineSmall
+                            style = MaterialTheme.typography.headlineSmall,
+                            modifier = Modifier.weight(1F)
                         )
-                        Row() {
+                        Row(modifier = Modifier.weight(1F)) {
                             Box(
+                                contentAlignment = Alignment.Center,
                                 modifier = Modifier
                                     .background(MaterialTheme.colorScheme.primary)
                                     .padding(MaterialTheme.spacing.small)
+                                    .weight(0.25F)
                             ) {
                                 Text(
                                     text = it.standardTime.toString(),
@@ -117,9 +121,11 @@ fun TimeStatsScreen(
                                 )
                             }
                             Box(
+                                contentAlignment = Alignment.Center,
                                 modifier = Modifier
                                     .background(MaterialTheme.colorScheme.primaryContainer)
                                     .padding(MaterialTheme.spacing.small)
+                                    .weight(0.25F)
                             ) {
                                 Text(
                                     text = it.overtime.toString(),
@@ -127,9 +133,11 @@ fun TimeStatsScreen(
                                 )
                             }
                             Box(
+                                contentAlignment = Alignment.Center,
                                 modifier = Modifier
                                     .background(MaterialTheme.colorScheme.errorContainer)
                                     .padding(MaterialTheme.spacing.small)
+                                    .weight(0.25F)
                             ) {
                                 Text(
                                     text = it.vacation.toString(),
@@ -137,9 +145,11 @@ fun TimeStatsScreen(
                                 )
                             }
                             Box(
+                                contentAlignment = Alignment.Center,
                                 modifier = Modifier
                                     .background(MaterialTheme.colorScheme.tertiaryContainer)
                                     .padding(MaterialTheme.spacing.small)
+                                    .weight(0.25F)
                             ) {
                                 Text(
                                     text = it.disease.toString(),
