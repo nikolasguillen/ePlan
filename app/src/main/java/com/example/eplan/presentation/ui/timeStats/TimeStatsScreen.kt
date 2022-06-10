@@ -1,6 +1,8 @@
 package com.example.eplan.presentation.ui.timeStats
 
+import androidx.compose.foundation.Indication
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -16,6 +18,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
@@ -87,82 +90,74 @@ fun TimeStatsScreen(
                 horizontalArrangement = Arrangement.Center,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(MaterialTheme.spacing.medium)
+                    .padding(
+                        horizontal = MaterialTheme.spacing.medium
+                    )
             ) {
-                TextButton(onClick = { showDialog = true }) {
-                    Text(text = "${
-                        viewModel.date.month.getDisplayName(TextStyle.FULL, Locale.ITALIAN)
-                            .replaceFirstChar { it.uppercase() }
-                    } ${viewModel.date.year}",
-                    style = MaterialTheme.typography.headlineMedium)
+                Box(modifier = Modifier
+                    .clip(MaterialTheme.shapes.extraLarge)
+                    .clickable { showDialog = true }
+                ) {
+                    Text(
+                        text = "${
+                            viewModel.date.month.getDisplayName(TextStyle.FULL, Locale.ITALIAN)
+                                .replaceFirstChar { it.uppercase() }
+                        } ${viewModel.date.year}",
+                        style = MaterialTheme.typography.headlineMedium,
+                        fontWeight = FontWeight.Bold,
+                        modifier = Modifier.padding(MaterialTheme.spacing.small)
+                    )
                 }
             }
             LazyColumn(
                 modifier = Modifier.fillMaxSize()
             ) {
+                item {
+
+                }
                 items(viewModel.stats) {
                     Row(
                         horizontalArrangement = Arrangement.SpaceBetween,
-                        modifier = Modifier.fillMaxWidth()
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = MaterialTheme.spacing.medium)
                     ) {
-                        Text(
-                            text = "${
-                                it.date.dayOfWeek.getDisplayName(TextStyle.SHORT, Locale.ITALIAN)
-                                    .replaceFirstChar { it.uppercase() }
-                            } ${it.date.dayOfMonth}",
-                            style = MaterialTheme.typography.headlineSmall,
-                            modifier = Modifier.weight(1F)
-                        )
-                        Row(modifier = Modifier.weight(1F)) {
-                            Box(
-                                contentAlignment = Alignment.Center,
-                                modifier = Modifier
-                                    .background(MaterialTheme.colorScheme.primary)
-                                    .padding(MaterialTheme.spacing.small)
-                                    .weight(0.25F)
-                            ) {
-                                Text(
-                                    text = it.standardTime.toString(),
-                                    color = MaterialTheme.colorScheme.onPrimary
-                                )
-                            }
-                            Box(
-                                contentAlignment = Alignment.Center,
-                                modifier = Modifier
-                                    .background(MaterialTheme.colorScheme.errorContainer)
-                                    .padding(MaterialTheme.spacing.small)
-                                    .weight(0.25F)
-                            ) {
-                                Text(
-                                    text = it.overtime.toString(),
-                                    color = MaterialTheme.colorScheme.onErrorContainer
-                                )
-                            }
-                            Box(
-                                contentAlignment = Alignment.Center,
-                                modifier = Modifier
-                                    .background(MaterialTheme.colorScheme.primaryContainer)
-                                    .padding(MaterialTheme.spacing.small)
-                                    .weight(0.25F)
-                            ) {
-                                Text(
-                                    text = it.vacation.toString(),
-                                    color = MaterialTheme.colorScheme.onPrimaryContainer
-                                )
-                            }
-                            Box(
-                                contentAlignment = Alignment.Center,
-                                modifier = Modifier
-                                    .background(MaterialTheme.colorScheme.tertiaryContainer)
-                                    .padding(MaterialTheme.spacing.small)
-                                    .weight(0.25F)
-                            ) {
-                                Text(
-                                    text = it.disease.toString(),
-                                    color = MaterialTheme.colorScheme.onTertiaryContainer
-                                )
-                            }
+                        Column(
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            verticalArrangement = Arrangement.Center
+                        ) {
+                            Text(
+                                text = it.date.dayOfMonth.toString(),
+                                style = MaterialTheme.typography.labelLarge
+                            )
+                            Text(
+                                text = it.date.month.getDisplayName(
+                                    TextStyle.SHORT,
+                                    Locale.ITALIAN
+                                ).uppercase(),
+                                style = MaterialTheme.typography.bodySmall
+                            )
                         }
+                        Text(
+                            text = it.date.dayOfWeek.getDisplayName(
+                                TextStyle.SHORT,
+                                Locale.ITALIAN
+                            ).uppercase(),
+                            style = MaterialTheme.typography.labelLarge
+
+                        )
+                        Text(
+                            text = it.standardTime.toString()
+                        )
+                        Text(
+                            text = it.overtime.toString()
+                        )
+                        Text(
+                            text = it.vacation.toString()
+                        )
+                        Text(
+                            text = it.disease.toString()
+                        )
                     }
                     Divider(
                         color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.3F),
