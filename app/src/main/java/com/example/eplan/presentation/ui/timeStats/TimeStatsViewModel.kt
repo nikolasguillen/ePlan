@@ -17,6 +17,7 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.receiveAsFlow
 import java.time.LocalDate
 import javax.inject.Inject
+import kotlin.random.Random
 
 @HiltViewModel
 class TimeStatsViewModel
@@ -34,8 +35,8 @@ constructor(
     val validationEvents = validationEventChannel.receiveAsFlow()
 
     init {
-        for (i in 1..30) {
-            stats.add(TimeStats(LocalDate.of(2022, 6, i), i, i, i, i))
+        for (i in 1..date.lengthOfMonth()) {
+            stats.add(TimeStats(LocalDate.of(date.year, date.month, i), Random.nextInt(10), 0, 0, 0))
         }
         getToken(getToken = getToken, onTokenRetrieved = { onTriggerEvent(GetStats) })
     }

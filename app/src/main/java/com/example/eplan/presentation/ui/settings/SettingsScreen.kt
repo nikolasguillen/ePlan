@@ -43,55 +43,54 @@ fun SettingsScreen(
                     }
                 }
             )
-        },
-        content = { paddingValues ->
-            Column(
-                verticalArrangement = Arrangement.Center,
-                modifier = Modifier.padding(top = paddingValues.calculateTopPadding())
+        }
+    ) { paddingValues ->
+        Column(
+            verticalArrangement = Arrangement.Center,
+            modifier = Modifier.padding(top = paddingValues.calculateTopPadding())
+        ) {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(
+                        start = MaterialTheme.spacing.medium,
+                        top = MaterialTheme.spacing.medium,
+                        end = MaterialTheme.spacing.medium
+                    )
             ) {
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(
-                            start = MaterialTheme.spacing.medium,
-                            top = MaterialTheme.spacing.medium,
-                            end = MaterialTheme.spacing.medium
-                        )
-                ) {
-                    Text(
-                        text = stringResource(R.string.opzioni_visualizzazione),
-                        style = MaterialTheme.typography.labelLarge,
-                        color = MaterialTheme.colorScheme.primary
+                Text(
+                    text = stringResource(R.string.opzioni_visualizzazione),
+                    style = MaterialTheme.typography.labelLarge,
+                    color = MaterialTheme.colorScheme.primary
+                )
+            }
+            Row(
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clickable { showThemeDialog = true }) {
+                Text(
+                    text = stringResource(R.string.tema),
+                    style = MaterialTheme.typography.bodyLarge,
+                    modifier = Modifier.padding(
+                        start = MaterialTheme.spacing.medium,
+                        top = MaterialTheme.spacing.medium,
+                        bottom = MaterialTheme.spacing.medium
                     )
-                }
-                Row(
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .clickable { showThemeDialog = true }) {
-                    Text(
-                        text = stringResource(R.string.tema),
-                        style = MaterialTheme.typography.bodyLarge,
-                        modifier = Modifier.padding(
-                            start = MaterialTheme.spacing.medium,
-                            top = MaterialTheme.spacing.medium,
-                            bottom = MaterialTheme.spacing.medium
-                        )
+                )
+                Text(
+                    text = viewModel.currentThemeMode,
+                    style = MaterialTheme.typography.bodyLarge,
+                    modifier = Modifier.padding(
+                        end = MaterialTheme.spacing.medium,
+                        top = MaterialTheme.spacing.medium,
+                        bottom = MaterialTheme.spacing.medium
                     )
-                    Text(
-                        text = viewModel.currentThemeMode,
-                        style = MaterialTheme.typography.bodyLarge,
-                        modifier = Modifier.padding(
-                            end = MaterialTheme.spacing.medium,
-                            top = MaterialTheme.spacing.medium,
-                            bottom = MaterialTheme.spacing.medium
-                        )
-                    )
-                }
+                )
             }
         }
-    )
+    }
 
     if (showThemeDialog) {
         CustomDialog(
