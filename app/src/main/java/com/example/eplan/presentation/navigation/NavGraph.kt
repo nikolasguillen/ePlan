@@ -234,7 +234,10 @@ fun NavGraph(navController: NavHostController) {
                 }
                 composable(route = Screen.TimeStats.route) {
                     val viewModel = hiltViewModel<TimeStatsViewModel>()
-                    TimeStatsScreen(viewModel = viewModel)
+                    TimeStatsScreen(
+                        viewModel = viewModel,
+                        onBackPressed = navController::popBackStack
+                    )
                 }
                 composable(route = Screen.VacationRequest.route) {
                     val viewModel = hiltViewModel<VacationRequestViewModel>()

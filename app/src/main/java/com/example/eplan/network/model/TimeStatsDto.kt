@@ -8,14 +8,14 @@ data class TimeStatsDto(
     var date: String,
 
     @SerializedName("ore_normali")
-    var standardTime: Int,
+    var standardTime: Double,
 
     @SerializedName("straordinari")
-    var overtime: Int,
+    var overtime: Double,
 
     @SerializedName("ferie_permessi")
-    var vacation: Int,
+    var vacation: Double,
 
     @SerializedName("malattia")
-    var disease: Int
+    var disease: Double
 )

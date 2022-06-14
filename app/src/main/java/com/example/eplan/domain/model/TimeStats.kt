@@ -4,8 +4,8 @@ import java.time.LocalDate
 
 data class TimeStats(
     val date: LocalDate,
-    val standardTime: Int,
-    val overtime: Int,
-    val vacation: Int,
-    val disease: Int
+    val standardTime: Double,
+    val overtime: Double,
+    val vacation: Double,
+    val disease: Double
 )
