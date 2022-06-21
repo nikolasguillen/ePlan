@@ -33,7 +33,7 @@ constructor(
         token: String,
         intervention: Intervention
     ) {
-        service.updateActivity(
+        service.updateIntervention(
             token = token,
             interventionDto = mapper.mapFromDomainModel(intervention)
         )

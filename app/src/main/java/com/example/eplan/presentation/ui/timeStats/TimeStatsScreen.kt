@@ -8,7 +8,6 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Autorenew
-import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -18,12 +17,9 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.ParagraphStyle
-import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import com.dt.composedatepicker.ComposeCalendar
@@ -70,7 +66,7 @@ fun TimeStatsScreen(
                     IconButton(onClick = { showLegendDialog = true }) {
                         Icon(
                             imageVector = Icons.Outlined.Info,
-                            contentDescription = stringResource(id = R.string.legenda)
+                            contentDescription = stringResource(id = R.string.apri_legenda)
                         )
                     }
                     IconButton(onClick = { viewModel.onTriggerEvent(GetStats) }) {
@@ -103,7 +99,7 @@ fun TimeStatsScreen(
                 ) {
                     Text(
                         text = "${
-                            viewModel.date.month.getDisplayName(TextStyle.FULL, Locale.ITALIAN)
+                            viewModel.date.month.getDisplayName(TextStyle.FULL, Locale.getDefault())
                                 .replaceFirstChar { it.uppercase() }
                         } ${viewModel.date.year}",
                         style = MaterialTheme.typography.headlineMedium,
@@ -132,7 +128,7 @@ fun TimeStatsScreen(
                                 .background(MaterialTheme.colorScheme.primary)
                         ) {
                             Text(
-                                text = "Settimana ${statsPairs.first}",
+                                text = stringResource(R.string.settimana) + " " + statsPairs.first,
                                 style = MaterialTheme.typography.headlineSmall,
                                 color = MaterialTheme.colorScheme.onPrimary,
                                 fontWeight = FontWeight.Bold,
@@ -270,7 +266,7 @@ fun TimeStatsScreen(
                                         )
                                 ) {
                                     Text(
-                                        text = "Ricontrolla le ore!",
+                                        text = stringResource(R.string.controlla_ore),
                                         style = MaterialTheme.typography.labelSmall,
                                         color = MaterialTheme.colorScheme.error,
                                         textAlign = TextAlign.End
@@ -295,11 +291,11 @@ fun TimeStatsScreen(
                                 .padding(MaterialTheme.spacing.small)
                         ) {
                             Text(
-                                text = "Bilancio settimanale: ${
-                                    viewModel.getWeekTotalHours(
-                                        statsPairs.first
-                                    )
-                                } ore",
+                                text = stringResource(R.string.bilancio_settimanale) + ": " + viewModel.getWeekTotalHours(
+                                    statsPairs.first
+                                ) + stringResource(
+                                    id = R.string.ore
+                                ).replaceFirstChar { it.lowercase() },
                                 style = MaterialTheme.typography.labelLarge,
                                 color = MaterialTheme.colorScheme.onTertiary,
                                 maxLines = 1
@@ -341,7 +337,7 @@ fun TimeStatsScreen(
                         Text(text = stringResource(id = R.string.ok_conf))
                     }
                 },
-                title = { Text(text = "Legenda") },
+                title = { Text(text = stringResource(id = R.string.legenda)) },
                 text = {
                     Column(
                         verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.small),

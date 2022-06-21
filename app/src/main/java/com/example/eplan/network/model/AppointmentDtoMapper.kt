@@ -15,8 +15,8 @@ class AppointmentDtoMapper : DomainMapper<AppointmentDto, Appointment> {
         val endDateTime = dateTimeParser(model.end)
 
         return Appointment(
-            id = model.idAppuntamento,
-            activityId = model.idAttivita,
+            id = model.appointmentId,
+            activityId = model.activityId,
             title = model.title,
             description = removeHtmlBreak(model.description),
             date = startDateTime.first,
@@ -39,8 +39,8 @@ class AppointmentDtoMapper : DomainMapper<AppointmentDto, Appointment> {
         val endDateTime = "${domainModel.date} ${domainModel.end}"
 
         return AppointmentDto(
-            idAppuntamento = domainModel.id,
-            idAttivita = domainModel.activityId,
+            appointmentId = domainModel.id,
+            activityId = domainModel.activityId,
             title = domainModel.title,
             description = domainModel.description,
             start = startDateTime,

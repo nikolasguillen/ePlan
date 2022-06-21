@@ -9,6 +9,7 @@ import com.example.eplan.domain.model.Intervention
 import com.example.eplan.interactors.GetToken
 import com.example.eplan.interactors.interventionDetail.GetInterventionById
 import com.example.eplan.interactors.interventionDetail.UpdateIntervention
+import com.example.eplan.interactors.workActivityDetail.GetActivitiesList
 import com.example.eplan.interactors.workActivityDetail.ValidateActivity
 import com.example.eplan.interactors.workActivityDetail.ValidateDescription
 import com.example.eplan.interactors.workActivityDetail.ValidateTime
@@ -34,6 +35,7 @@ constructor(
     getToken: GetToken,
     private val getInterventionById: GetInterventionById,
     private val updateIntervention: UpdateIntervention,
+    private val getActivitiesList: GetActivitiesList,
     private val validateActivity: ValidateActivity,
     private val validateDescription: ValidateDescription,
     private val validateTime: ValidateTime,

@@ -16,7 +16,9 @@ import com.example.eplan.interactors.workActivityDetail.ValidateTime
 import com.example.eplan.interactors.interventionList.DayChangeIntervention
 import com.example.eplan.interactors.timeStats.GetTimeStats
 import com.example.eplan.interactors.vacationRequest.RequestVacation
+import com.example.eplan.interactors.workActivityDetail.GetActivitiesList
 import com.example.eplan.interactors.workActivityDetail.ValidateActivity
+import com.example.eplan.network.model.ActivityDtoMapper
 import com.example.eplan.network.model.AppointmentDtoMapper
 import com.example.eplan.network.model.InterventionDtoMapper
 import com.example.eplan.network.model.TimeStatsDtoMapper
@@ -186,5 +188,16 @@ object InteractorsModule {
         mapper: TimeStatsDtoMapper
     ): GetTimeStats {
         return GetTimeStats(service = service, mapper = mapper)
+    }
+
+    /* Provider degli interactors delle attività */
+
+    @ViewModelScoped
+    @Provides
+    fun provideGetActivitiesList(
+        service: ActivityService,
+        mapper: ActivityDtoMapper
+    ): GetActivitiesList {
+        return GetActivitiesList(service = service, mapper = mapper)
     }
 }

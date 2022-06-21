@@ -35,7 +35,7 @@ constructor(
         id: String
     ): Intervention {
         return mapper.mapToDomainModel(
-            service.getActivity(
+            service.getIntervention(
                 token = token,
                 id = id
             )

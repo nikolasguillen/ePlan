@@ -6,10 +6,10 @@ import com.google.gson.annotations.SerializedName
 data class AppointmentDto(
 
     @SerializedName("id_appuntamenti")
-    var idAppuntamento: String,
+    var appointmentId: String,
 
     @SerializedName("id_attivita")
-    var idAttivita: String,
+    var activityId: String,
 
     @SerializedName("title")
     var title: String,

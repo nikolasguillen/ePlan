@@ -1,5 +1,6 @@
 package com.example.eplan.di
 
+import com.example.eplan.network.model.ActivityDtoMapper
 import com.example.eplan.network.model.AppointmentDtoMapper
 import com.example.eplan.network.model.InterventionDtoMapper
 import com.example.eplan.network.model.TimeStatsDtoMapper
@@ -95,5 +96,23 @@ object NetworkModule {
     @Provides
     fun provideTimeStatsDtoMapper(): TimeStatsDtoMapper {
         return TimeStatsDtoMapper()
+    }
+
+    /* Provider per le attività dell'utente */
+
+    @Singleton
+    @Provides
+    fun providActivityService(): ActivityService {
+        return Retrofit.Builder()
+            .baseUrl(URL)
+            .addConverterFactory(GsonConverterFactory.create(GsonBuilder().create()))
+            .build()
+            .create(ActivityService::class.java)
+    }
+
+    @Singleton
+    @Provides
+    fun provideActivityDtoMapper(): ActivityDtoMapper {
+        return ActivityDtoMapper()
     }
 }

@@ -35,7 +35,7 @@ constructor(
         query: String
     ): List<Intervention> {
         return mapper.toDomainList(
-            service.getDayActivities(
+            service.getDayInterventions(
                 token = token,
                 start = query,
                 end = query

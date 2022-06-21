@@ -87,6 +87,10 @@
     <string name="scegli_data_inizio">Scegli data inizio</string>
     <string name="scegli_data_fine">Scegli data fine</string>
     <string name="aggiorna">Aggiorna</string>
-    <string name="legenda">Apri legenda</string>
+    <string name="apri_legenda">Apri legenda</string>
     <string name="capito">Capito</string>
+    <string name="settimana">Settimana</string>
+    <string name="controlla_ore">Ricontrolla le ore!</string>
+    <string name="bilancio_settimanale">Bilancio settimanale</string>
+    <string name="legenda">Legenda</string>
 </resources>
