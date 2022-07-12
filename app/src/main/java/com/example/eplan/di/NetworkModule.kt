@@ -102,7 +102,7 @@ object NetworkModule {
 
     @Singleton
     @Provides
-    fun providActivityService(): ActivityService {
+    fun provideActivityService(): ActivityService {
         return Retrofit.Builder()
             .baseUrl(URL)
             .addConverterFactory(GsonConverterFactory.create(GsonBuilder().create()))

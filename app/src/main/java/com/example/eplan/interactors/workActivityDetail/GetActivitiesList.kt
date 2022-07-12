@@ -1,9 +1,11 @@
 package com.example.eplan.interactors.workActivityDetail
 
+import android.util.Log
 import com.example.eplan.domain.data.DataState
 import com.example.eplan.domain.model.Activity
 import com.example.eplan.network.model.ActivityDtoMapper
 import com.example.eplan.network.services.ActivityService
+import com.example.eplan.presentation.util.TAG
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
@@ -29,6 +31,7 @@ constructor(
     private suspend fun getActivitiesFromNetwork(
         token: String
     ): List<Activity> {
+        Log.d(TAG, service.getUserActivities(token).toString())
         return mapper.toDomainList(service.getUserActivities(token = token))
     }
 }

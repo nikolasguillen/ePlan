@@ -2,9 +2,11 @@ package com.example.eplan.presentation.ui.intervention
 
 import android.util.Log
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
+import com.example.eplan.domain.model.Activity
 import com.example.eplan.domain.model.Intervention
 import com.example.eplan.interactors.GetToken
 import com.example.eplan.interactors.interventionDetail.GetInterventionById
@@ -46,6 +48,9 @@ constructor(
     var intervention: MutableState<Intervention?> = mutableStateOf(null)
         private set
 
+    var activitiesList = mutableStateListOf<Activity?>(null)
+        private set
+
     init {
         getToken(getToken = getToken, onTokenRetrieved = { onCreation() })
     }
@@ -80,6 +85,7 @@ constructor(
                     start = LocalTime.parse(start),
                     end = LocalTime.parse(end)
                 )
+                getActivitiesList()
             }
         } else {
             onTriggerEvent(GetInterventionEvent(id = id))
@@ -162,6 +168,7 @@ constructor(
             dataState.data?.let { newIntervention ->
                 initialState.value = newIntervention
                 intervention.value = newIntervention
+                getActivitiesList()
             }
 
             dataState.error?.let { error ->
@@ -196,6 +203,23 @@ constructor(
             //TODO
         }
         savedStateHandle.remove<String>(STATE_KEY_INTERVENTION_ID)
+    }
+
+    private fun getActivitiesList() {
+        Log.d(TAG, userToken)
+        getActivitiesList.execute(token = userToken).onEach { dataState ->
+
+            dataState.data?.let { result ->
+                this.activitiesList.clear()
+                this.activitiesList.addAll(result)
+                Log.d(TAG, this.activitiesList.toString())
+            }
+
+            dataState.error?.let { error ->
+                Log.e(TAG, "getActivitiesList (Intervention Detail): $error")
+                validationEventChannel.send(ValidationEvent.RetrieveError(error = error))
+            }
+        }.launchIn(viewModelScope)
     }
 
     override fun changeQuery(query: String) {
