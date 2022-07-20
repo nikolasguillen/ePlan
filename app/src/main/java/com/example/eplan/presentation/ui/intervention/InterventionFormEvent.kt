@@ -5,6 +5,7 @@ import java.util.*
 
 sealed class InterventionFormEvent {
     data class ActivityNameChanged(val name: String): InterventionFormEvent()
+    data class ActivityIdChanged(val id: String): InterventionFormEvent()
     data class DescriptionChanged(val description: String): InterventionFormEvent()
     data class DateChanged(val date: Date): InterventionFormEvent()
     data class StartChanged(val time: LocalTime): InterventionFormEvent()

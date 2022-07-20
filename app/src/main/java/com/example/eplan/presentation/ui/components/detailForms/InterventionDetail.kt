@@ -1,4 +1,4 @@
-package com.example.eplan.presentation.ui.components
+package com.example.eplan.presentation.ui.components.detailForms
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -16,6 +16,9 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import com.example.eplan.R
+import com.example.eplan.presentation.ui.components.ActivitySelectorScreen
+import com.example.eplan.presentation.ui.components.CustomDateButton
+import com.example.eplan.presentation.ui.components.CustomTimeButton
 import com.example.eplan.presentation.ui.intervention.InterventionDetailViewModel
 import com.example.eplan.presentation.ui.intervention.InterventionFormEvent.*
 import com.example.eplan.presentation.util.spacing
@@ -24,21 +27,16 @@ import com.example.eplan.presentation.util.spacing
 @ExperimentalComposeUiApi
 @Composable
 fun InterventionDetail(
-    viewModel: InterventionDetailViewModel
+    viewModel: InterventionDetailViewModel,
+    onActivitySelectionClick: () -> Unit
 ) {
 
     val keyboardController = LocalSoftwareKeyboardController.current
-    // TODO sistemare
-    var show by remember { mutableStateOf(false) }
-
-    if (show) {
-        Activity(activities = viewModel.activitiesList.toList())
-    }
 
     viewModel.intervention.value?.let { intervention ->
         Row(modifier = Modifier.fillMaxWidth()) {
             Card(modifier = Modifier
-                .clickable { show = true }
+                .clickable { onActivitySelectionClick() }
                 .fillMaxWidth()
                 .wrapContentHeight()) {
                 Text(

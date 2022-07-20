@@ -1,4 +1,4 @@
-package com.example.eplan.presentation.ui.components
+package com.example.eplan.presentation.ui.components.detailForms
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -18,13 +18,15 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.window.Dialog
 import com.example.eplan.R
 import com.example.eplan.domain.model.User
 import com.example.eplan.domain.util.Periodicity
 import com.example.eplan.domain.util.WarningUnit
 import com.example.eplan.presentation.ui.appointment.AppointmentDetailViewModel
 import com.example.eplan.presentation.ui.appointment.AppointmentFormEvent.*
+import com.example.eplan.presentation.ui.components.CustomDateButton
+import com.example.eplan.presentation.ui.components.CustomDialog
+import com.example.eplan.presentation.ui.components.CustomTimeButton
 import com.example.eplan.presentation.util.spacing
 
 @ExperimentalMaterial3Api

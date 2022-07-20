@@ -9,10 +9,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.outlined.Delete
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.*
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -26,8 +23,11 @@ import com.example.eplan.presentation.ui.ValidationEvent
 import com.example.eplan.presentation.ui.WorkActivityDetailViewModel
 import com.example.eplan.presentation.ui.appointment.AppointmentDetailViewModel
 import com.example.eplan.presentation.ui.components.*
+import com.example.eplan.presentation.ui.components.detailForms.AppointmentDetail
+import com.example.eplan.presentation.ui.components.detailForms.InterventionDetail
 import com.example.eplan.presentation.ui.components.placeholders.PlaceholderDetails
 import com.example.eplan.presentation.ui.intervention.InterventionDetailViewModel
+import com.example.eplan.presentation.ui.intervention.InterventionFormEvent
 import com.example.eplan.presentation.util.spacing
 
 @OptIn(ExperimentalLayoutApi::class)
@@ -48,6 +48,7 @@ fun WorkActivityDetail(
     val showBackDialog = remember { mutableStateOf(false) }
     val context = LocalContext.current
     val snackBarHostState = remember { SnackbarHostState() }
+    var showActivitySearch by remember { mutableStateOf(false) }
 
     LaunchedEffect(key1 = context) {
         viewModel.validationEvents.collect { event ->
@@ -66,57 +67,66 @@ fun WorkActivityDetail(
         }
     }
 
-    Scaffold(
-        topBar = {
-            MediumTopAppBar(
-                title = { Text(text = stringResource(id = topBarTitleResID)) },
-                navigationIcon = {
-                    IconButton(onClick = {
-                        if (viewModel.checkChanges()) {
-                            showBackDialog.value = true
-                        } else {
-                            onBackPressed()
-                            keyboardController?.hide()
+    if (showActivitySearch) {
+        ActivitySelectorScreen(
+            activities = (viewModel as InterventionDetailViewModel).activitiesList.toList(),
+            selectedActivityId = viewModel.intervention.value?.activityId,
+            onActivitySelected = { viewModel.onFormEvent(InterventionFormEvent.ActivityIdChanged(it)) },
+            searchQuery = viewModel.activitySearchQuery,
+            onQueryChange = { query -> viewModel.activitySearchQuery = query },
+            onBackPressed = { showActivitySearch = false })
+    } else {
+        Scaffold(
+            topBar = {
+                MediumTopAppBar(
+                    title = { Text(text = stringResource(id = topBarTitleResID)) },
+                    navigationIcon = {
+                        IconButton(onClick = {
+                            if (viewModel.checkChanges()) {
+                                showBackDialog.value = true
+                            } else {
+                                onBackPressed()
+                                keyboardController?.hide()
+                            }
+                        }) {
+                            Icon(
+                                imageVector = Icons.Filled.ArrowBack,
+                                contentDescription = stringResource(R.string.indietro)
+                            )
                         }
-                    }) {
-                        Icon(
-                            imageVector = Icons.Filled.ArrowBack,
-                            contentDescription = stringResource(R.string.indietro)
-                        )
-                    }
-                },
-                actions = {
-                    IconButton(
-                        onClick = { onDeletePressed() },
-                        enabled = !retrieving
-                    ) {
-                        Icon(
-                            imageVector = Icons.Outlined.Delete,
-                            tint = if (retrieving) MaterialTheme.colorScheme.tertiary else Color.Red,
-                            contentDescription = stringResource(R.string.elimina_commessa)
-                        )
-                    }
-                }
-            )
-        },
-        bottomBar = {
-            AnimatedVisibility(
-                visible = !retrieving,
-                enter = fadeIn() + slideInVertically(initialOffsetY = { it }),
-                exit = slideOutVertically(targetOffsetY = { it }) + fadeOut()
-            ) {
-                BottomSingleActionBar(
-                    item = BottomNavBarItems.Save,
-                    onClick = {
-                        if (!retrieving) {
-                            onSavePressed()
+                    },
+                    actions = {
+                        IconButton(
+                            onClick = { onDeletePressed() },
+                            enabled = !retrieving
+                        ) {
+                            Icon(
+                                imageVector = Icons.Outlined.Delete,
+                                tint = if (retrieving) MaterialTheme.colorScheme.tertiary else Color.Red,
+                                contentDescription = stringResource(R.string.elimina_commessa)
+                            )
                         }
                     }
                 )
-            }
-        },
-        snackbarHost = { SnackbarHost(hostState = snackBarHostState) },
-        content = { paddingValues ->
+            },
+            bottomBar = {
+                AnimatedVisibility(
+                    visible = !retrieving,
+                    enter = fadeIn() + slideInVertically(initialOffsetY = { it }),
+                    exit = slideOutVertically(targetOffsetY = { it }) + fadeOut()
+                ) {
+                    BottomSingleActionBar(
+                        item = BottomNavBarItems.Save,
+                        onClick = {
+                            if (!retrieving) {
+                                onSavePressed()
+                            }
+                        }
+                    )
+                }
+            },
+            snackbarHost = { SnackbarHost(hostState = snackBarHostState) }
+        ) { paddingValues ->
             BackHandler(enabled = true) {
                 if (viewModel.checkChanges()) {
                     showBackDialog.value = true
@@ -141,7 +151,10 @@ fun WorkActivityDetail(
                 } else {
                     when (viewModel) {
                         is InterventionDetailViewModel -> {
-                            InterventionDetail(viewModel = viewModel)
+                            InterventionDetail(
+                                viewModel = viewModel,
+                                onActivitySelectionClick = { showActivitySearch = true }
+                            )
                         }
                         is AppointmentDetailViewModel -> {
                             AppointmentDetail(viewModel = viewModel)
@@ -182,5 +195,5 @@ fun WorkActivityDetail(
                 )
             }
         }
-    )
+    }
 }

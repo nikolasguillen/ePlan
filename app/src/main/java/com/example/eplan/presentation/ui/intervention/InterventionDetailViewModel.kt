@@ -1,9 +1,7 @@
 package com.example.eplan.presentation.ui.intervention
 
 import android.util.Log
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.mutableStateListOf
-import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.*
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import com.example.eplan.domain.model.Activity
@@ -51,6 +49,8 @@ constructor(
 
     var activitiesList = mutableStateListOf<Activity?>(null)
         private set
+
+    var activitySearchQuery by mutableStateOf("")
 
     init {
         getToken(getToken = getToken, onTokenRetrieved = { getActivitiesList() })
@@ -106,6 +106,9 @@ constructor(
         when (event) {
             is ActivityNameChanged -> {
                 intervention.value = intervention.value?.copy(activityName = event.name)
+            }
+            is ActivityIdChanged -> {
+                intervention.value = intervention.value?.copy(activityId = event.id, activityName = activitiesList.first { it!!.id == event.id }!!.name)
             }
             is DescriptionChanged -> {
                 intervention.value = intervention.value?.copy(description = event.description)
