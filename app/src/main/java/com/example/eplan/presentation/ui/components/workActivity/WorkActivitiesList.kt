@@ -1,4 +1,4 @@
-package com.example.eplan.presentation.ui.components
+package com.example.eplan.presentation.ui.components.workActivity
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.fillMaxSize
@@ -16,6 +16,8 @@ import com.example.eplan.domain.model.Appointment
 import com.example.eplan.domain.model.Intervention
 import com.example.eplan.domain.model.WorkActivity
 import com.example.eplan.presentation.navigation.Screen
+import com.example.eplan.presentation.ui.components.AnimationEmptyList
+import com.example.eplan.presentation.ui.components.placeholders.PlaceholderCard
 import com.example.eplan.presentation.util.spacing
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState

@@ -1,4 +1,4 @@
-package com.example.eplan.presentation.ui.components
+package com.example.eplan.presentation.ui.components.workActivity
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
@@ -12,7 +12,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.style.TextOverflow
-import com.example.eplan.domain.model.Intervention
 import com.example.eplan.domain.model.WorkActivity
 import com.example.eplan.presentation.util.spacing
 

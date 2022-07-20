@@ -25,7 +25,6 @@ constructor(
 
         // TODO controlla che ci sia connessione a internet
         val intervention = getInterventionFromNetwork(token = token, id = id)
-        delay(300)
 
         emit(DataState.success(intervention))
     }.catch { emit(DataState.error(it.message ?: "Errore sconosciuto")) }

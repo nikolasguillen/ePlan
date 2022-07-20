@@ -1,7 +1,6 @@
 package com.example.eplan.presentation.ui.appointmentList
 
 import android.app.Activity
-import android.widget.Toast
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
@@ -12,7 +11,6 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.navigation.NavHostController
 import com.example.eplan.R
 import com.example.eplan.presentation.navigation.BottomNavBarItems
 import com.example.eplan.presentation.navigation.NestedNavGraphs
@@ -20,8 +18,7 @@ import com.example.eplan.presentation.navigation.Screen
 import com.example.eplan.presentation.ui.components.BottomNavBar
 import com.example.eplan.presentation.ui.components.CollapsibleCalendar
 import com.example.eplan.presentation.ui.components.TopBar
-import com.example.eplan.presentation.ui.components.WorkActivitiesList
-import com.example.eplan.presentation.util.bottomNavPadding
+import com.example.eplan.presentation.ui.components.workActivity.WorkActivitiesList
 import kotlinx.coroutines.launch
 import java.time.LocalDate
 

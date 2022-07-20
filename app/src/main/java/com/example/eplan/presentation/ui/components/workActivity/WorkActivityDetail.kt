@@ -1,4 +1,4 @@
-package com.example.eplan.presentation.ui.components
+package com.example.eplan.presentation.ui.components.workActivity
 
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.*
@@ -25,6 +25,8 @@ import com.example.eplan.presentation.navigation.BottomNavBarItems
 import com.example.eplan.presentation.ui.ValidationEvent
 import com.example.eplan.presentation.ui.WorkActivityDetailViewModel
 import com.example.eplan.presentation.ui.appointment.AppointmentDetailViewModel
+import com.example.eplan.presentation.ui.components.*
+import com.example.eplan.presentation.ui.components.placeholders.PlaceholderDetails
 import com.example.eplan.presentation.ui.intervention.InterventionDetailViewModel
 import com.example.eplan.presentation.util.spacing
 

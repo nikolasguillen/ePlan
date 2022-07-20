@@ -20,6 +20,7 @@ import com.example.eplan.presentation.ui.WorkActivityDetailViewModel
 import com.example.eplan.presentation.ui.intervention.InterventionDetailEvent.*
 import com.example.eplan.presentation.ui.intervention.InterventionFormEvent.*
 import com.example.eplan.presentation.util.TAG
+import com.example.eplan.presentation.util.USER_TOKEN
 import com.example.eplan.presentation.util.fromDateToLocalDate
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.launchIn
@@ -52,7 +53,7 @@ constructor(
         private set
 
     init {
-        getToken(getToken = getToken, onTokenRetrieved = { onCreation() })
+        getToken(getToken = getToken, onTokenRetrieved = { getActivitiesList() })
     }
 
     fun onTriggerEvent(event: InterventionDetailEvent) {
@@ -85,7 +86,6 @@ constructor(
                     start = LocalTime.parse(start),
                     end = LocalTime.parse(end)
                 )
-                getActivitiesList()
             }
         } else {
             onTriggerEvent(GetInterventionEvent(id = id))
@@ -166,9 +166,13 @@ constructor(
             retrieving = dataState.loading
 
             dataState.data?.let { newIntervention ->
+                val activity = activitiesList.firstOrNull { it?.id == newIntervention.activityId }
                 initialState.value = newIntervention
                 intervention.value = newIntervention
-                getActivitiesList()
+                if (activity != null) {
+                    initialState.value = initialState.value?.copy(activityName = activity.name)
+                    intervention.value = intervention.value?.copy(activityName = activity.name)
+                }
             }
 
             dataState.error?.let { error ->
@@ -206,13 +210,13 @@ constructor(
     }
 
     private fun getActivitiesList() {
-        Log.d(TAG, userToken)
         getActivitiesList.execute(token = userToken).onEach { dataState ->
+            retrieving = dataState.loading
 
             dataState.data?.let { result ->
                 this.activitiesList.clear()
                 this.activitiesList.addAll(result)
-                Log.d(TAG, this.activitiesList.toString())
+                onCreation()
             }
 
             dataState.error?.let { error ->

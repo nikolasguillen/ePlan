@@ -1,4 +1,4 @@
-package com.example.eplan.presentation.ui.components
+package com.example.eplan.presentation.ui.components.placeholders
 
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Column

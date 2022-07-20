@@ -31,7 +31,6 @@ constructor(
     private suspend fun getActivitiesFromNetwork(
         token: String
     ): List<Activity> {
-        Log.d(TAG, service.getUserActivities(token).toString())
         return mapper.toDomainList(service.getUserActivities(token = token))
     }
 }
