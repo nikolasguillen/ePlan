@@ -49,7 +49,7 @@ fun InterventionDetail(
                     )
                 )
                 Text(
-                    text = intervention.activityName,
+                    text = if (intervention.activityName == "") "Premi per selezionare un'attività" else intervention.activityName,
                     overflow = TextOverflow.Ellipsis,
                     fontWeight = FontWeight.Bold,
                     modifier = Modifier

@@ -67,132 +67,134 @@ fun WorkActivityDetail(
         }
     }
 
-    if (showActivitySearch) {
-        ActivitySelectorScreen(
-            activities = (viewModel as InterventionDetailViewModel).activitiesList.toList(),
-            selectedActivityId = viewModel.intervention.value?.activityId,
-            onActivitySelected = { viewModel.onFormEvent(InterventionFormEvent.ActivityIdChanged(it)) },
-            searchQuery = viewModel.activitySearchQuery,
-            onQueryChange = { query -> viewModel.activitySearchQuery = query },
-            onBackPressed = { showActivitySearch = false })
-    } else {
-        Scaffold(
-            topBar = {
-                MediumTopAppBar(
-                    title = { Text(text = stringResource(id = topBarTitleResID)) },
-                    navigationIcon = {
-                        IconButton(onClick = {
-                            if (viewModel.checkChanges()) {
-                                showBackDialog.value = true
-                            } else {
-                                onBackPressed()
-                                keyboardController?.hide()
+    Crossfade(targetState = showActivitySearch) {
+        if (it) {
+                ActivitySelectorScreen(
+                    activities = (viewModel as InterventionDetailViewModel).activitiesList.toList(),
+                    selectedActivityId = viewModel.intervention.value?.activityId,
+                    onActivitySelected = { viewModel.onFormEvent(InterventionFormEvent.ActivityIdChanged(it)) },
+                    searchQuery = viewModel.activitySearchQuery,
+                    onQueryChange = { query -> viewModel.activitySearchQuery = query },
+                    onBackPressed = { showActivitySearch = false })
+        } else {
+            Scaffold(
+                topBar = {
+                    MediumTopAppBar(
+                        title = { Text(text = stringResource(id = topBarTitleResID)) },
+                        navigationIcon = {
+                            IconButton(onClick = {
+                                if (viewModel.checkChanges()) {
+                                    showBackDialog.value = true
+                                } else {
+                                    onBackPressed()
+                                    keyboardController?.hide()
+                                }
+                            }) {
+                                Icon(
+                                    imageVector = Icons.Filled.ArrowBack,
+                                    contentDescription = stringResource(R.string.indietro)
+                                )
                             }
-                        }) {
-                            Icon(
-                                imageVector = Icons.Filled.ArrowBack,
-                                contentDescription = stringResource(R.string.indietro)
-                            )
+                        },
+                        actions = {
+                            IconButton(
+                                onClick = { onDeletePressed() },
+                                enabled = !retrieving
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Outlined.Delete,
+                                    tint = if (retrieving) MaterialTheme.colorScheme.tertiary else Color.Red,
+                                    contentDescription = stringResource(R.string.elimina_commessa)
+                                )
+                            }
                         }
-                    },
-                    actions = {
-                        IconButton(
-                            onClick = { onDeletePressed() },
-                            enabled = !retrieving
-                        ) {
-                            Icon(
-                                imageVector = Icons.Outlined.Delete,
-                                tint = if (retrieving) MaterialTheme.colorScheme.tertiary else Color.Red,
-                                contentDescription = stringResource(R.string.elimina_commessa)
-                            )
+                    )
+                },
+                bottomBar = {
+                    AnimatedVisibility(
+                        visible = !retrieving,
+                        enter = fadeIn() + slideInVertically(initialOffsetY = { it }),
+                        exit = slideOutVertically(targetOffsetY = { it }) + fadeOut()
+                    ) {
+                        BottomSingleActionBar(
+                            item = BottomNavBarItems.Save,
+                            onClick = {
+                                if (!retrieving) {
+                                    onSavePressed()
+                                }
+                            }
+                        )
+                    }
+                },
+                snackbarHost = { SnackbarHost(hostState = snackBarHostState) }
+            ) { paddingValues ->
+                BackHandler(enabled = true) {
+                    if (viewModel.checkChanges()) {
+                        showBackDialog.value = true
+                    } else {
+                        onBackPressed()
+                        keyboardController?.hide()
+                    }
+                }
+
+                Column(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(horizontal = MaterialTheme.spacing.medium)
+                        .padding(paddingValues)
+                        .consumedWindowInsets(paddingValues)
+                        .imePadding()
+                        .verticalScroll(rememberScrollState()),
+                    verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.medium)
+                ) {
+                    if (retrieving) {
+                        PlaceholderDetails()
+                    } else {
+                        when (viewModel) {
+                            is InterventionDetailViewModel -> {
+                                InterventionDetail(
+                                    viewModel = viewModel,
+                                    onActivitySelectionClick = { showActivitySearch = true }
+                                )
+                            }
+                            is AppointmentDetailViewModel -> {
+                                AppointmentDetail(viewModel = viewModel)
+                            }
                         }
                     }
-                )
-            },
-            bottomBar = {
-                AnimatedVisibility(
-                    visible = !retrieving,
-                    enter = fadeIn() + slideInVertically(initialOffsetY = { it }),
-                    exit = slideOutVertically(targetOffsetY = { it }) + fadeOut()
-                ) {
-                    BottomSingleActionBar(
-                        item = BottomNavBarItems.Save,
-                        onClick = {
-                            if (!retrieving) {
-                                onSavePressed()
+                }
+
+                if (sending) {
+                    Dialog(onDismissRequest = {}) {
+                        SendAnimation()
+                    }
+                }
+
+                if (showBackDialog.value) {
+                    AlertDialog(
+                        onDismissRequest = {
+                            showBackDialog.value = false
+                        },
+                        title = { Text(text = stringResource(R.string.chiudi_senza_salvare)) },
+                        confirmButton = {
+                            TextButton(onClick = {
+                                showBackDialog.value = false
+                                onBackPressed()
+                            }
+                            ) {
+                                Text(text = stringResource(R.string.conferma))
+                            }
+                        },
+                        dismissButton = {
+                            TextButton(onClick = {
+                                showBackDialog.value = false
+                            }
+                            ) {
+                                Text(text = stringResource(R.string.annulla))
                             }
                         }
                     )
                 }
-            },
-            snackbarHost = { SnackbarHost(hostState = snackBarHostState) }
-        ) { paddingValues ->
-            BackHandler(enabled = true) {
-                if (viewModel.checkChanges()) {
-                    showBackDialog.value = true
-                } else {
-                    onBackPressed()
-                    keyboardController?.hide()
-                }
-            }
-
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(horizontal = MaterialTheme.spacing.medium)
-                    .padding(paddingValues)
-                    .consumedWindowInsets(paddingValues)
-                    .imePadding()
-                    .verticalScroll(rememberScrollState()),
-                verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.medium)
-            ) {
-                if (retrieving) {
-                    PlaceholderDetails()
-                } else {
-                    when (viewModel) {
-                        is InterventionDetailViewModel -> {
-                            InterventionDetail(
-                                viewModel = viewModel,
-                                onActivitySelectionClick = { showActivitySearch = true }
-                            )
-                        }
-                        is AppointmentDetailViewModel -> {
-                            AppointmentDetail(viewModel = viewModel)
-                        }
-                    }
-                }
-            }
-
-            if (sending) {
-                Dialog(onDismissRequest = {}) {
-                    SendAnimation()
-                }
-            }
-
-            if (showBackDialog.value) {
-                AlertDialog(
-                    onDismissRequest = {
-                        showBackDialog.value = false
-                    },
-                    title = { Text(text = stringResource(R.string.chiudi_senza_salvare)) },
-                    confirmButton = {
-                        TextButton(onClick = {
-                            showBackDialog.value = false
-                            onBackPressed()
-                        }
-                        ) {
-                            Text(text = stringResource(R.string.conferma))
-                        }
-                    },
-                    dismissButton = {
-                        TextButton(onClick = {
-                            showBackDialog.value = false
-                        }
-                        ) {
-                            Text(text = stringResource(R.string.annulla))
-                        }
-                    }
-                )
             }
         }
     }
