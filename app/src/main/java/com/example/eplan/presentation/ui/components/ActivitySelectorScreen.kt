@@ -1,5 +1,6 @@
 package com.example.eplan.presentation.ui.components
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -41,6 +42,7 @@ fun ActivitySelectorScreen(
             )
         }
     ) { paddingValues ->
+        BackHandler { onBackPressed() }
         Column(
             modifier = Modifier
                 .fillMaxSize()
