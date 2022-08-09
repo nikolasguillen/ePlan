@@ -40,7 +40,7 @@ fun InterventionDetail(
                 .fillMaxWidth()
                 .wrapContentHeight()) {
                 Text(
-                    text = "Attività",
+                    text = stringResource(id = R.string.attivita),
                     style = MaterialTheme.typography.labelMedium,
                     fontWeight = FontWeight.Normal,
                     modifier = Modifier.padding(

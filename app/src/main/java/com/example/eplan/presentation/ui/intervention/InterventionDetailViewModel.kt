@@ -18,7 +18,6 @@ import com.example.eplan.presentation.ui.WorkActivityDetailViewModel
 import com.example.eplan.presentation.ui.intervention.InterventionDetailEvent.*
 import com.example.eplan.presentation.ui.intervention.InterventionFormEvent.*
 import com.example.eplan.presentation.util.TAG
-import com.example.eplan.presentation.util.USER_TOKEN
 import com.example.eplan.presentation.util.fromDateToLocalDate
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.launchIn
@@ -231,6 +230,6 @@ constructor(
 
     override fun changeQuery(query: String) {
         this.query = query
-        savedStateHandle.set(STATE_KEY_INTERVENTION_ID, query)
+        savedStateHandle[STATE_KEY_INTERVENTION_ID] = query
     }
 }
