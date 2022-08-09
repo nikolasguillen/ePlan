@@ -1,4 +1,4 @@
-package com.example.eplan.presentation.ui.components
+package com.example.eplan.presentation.ui.components.uiElements
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*

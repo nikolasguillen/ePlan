@@ -15,7 +15,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import com.example.eplan.R
-import com.example.eplan.presentation.ui.components.CustomDialog
+import com.example.eplan.presentation.ui.components.uiElements.CustomDialog
 import com.example.eplan.presentation.util.spacing
 
 @ExperimentalMaterial3Api

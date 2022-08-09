@@ -1,4 +1,4 @@
-package com.example.eplan.presentation.ui.components
+package com.example.eplan.presentation.ui.components.animations
 
 import android.os.Build.VERSION.SDK_INT
 import androidx.compose.foundation.Image

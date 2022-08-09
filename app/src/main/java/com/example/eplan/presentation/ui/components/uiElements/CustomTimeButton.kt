@@ -1,4 +1,4 @@
-package com.example.eplan.presentation.ui.components
+package com.example.eplan.presentation.ui.components.uiElements
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
@@ -12,6 +12,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import com.example.eplan.presentation.ui.components.uiElements.TimePicker
 import com.example.eplan.presentation.util.spacing
 import com.vanpra.composematerialdialogs.rememberMaterialDialogState
 import java.time.LocalTime

@@ -18,7 +18,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import com.example.eplan.R
 import com.example.eplan.presentation.ui.components.ActivitySelectorScreen
 import com.example.eplan.presentation.ui.components.CustomDateButton
-import com.example.eplan.presentation.ui.components.CustomTimeButton
+import com.example.eplan.presentation.ui.components.uiElements.CustomTimeButton
 import com.example.eplan.presentation.ui.intervention.InterventionDetailViewModel
 import com.example.eplan.presentation.ui.intervention.InterventionFormEvent.*
 import com.example.eplan.presentation.util.spacing

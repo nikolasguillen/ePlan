@@ -1,4 +1,4 @@
-package com.example.eplan.presentation.ui.components
+package com.example.eplan.presentation.ui.components.animations
 
 import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable

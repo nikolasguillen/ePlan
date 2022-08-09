@@ -16,7 +16,7 @@ import com.example.eplan.domain.model.Appointment
 import com.example.eplan.domain.model.Intervention
 import com.example.eplan.domain.model.WorkActivity
 import com.example.eplan.presentation.navigation.Screen
-import com.example.eplan.presentation.ui.components.AnimationEmptyList
+import com.example.eplan.presentation.ui.components.animations.AnimationEmptyList
 import com.example.eplan.presentation.ui.components.placeholders.PlaceholderCard
 import com.example.eplan.presentation.util.spacing
 import com.google.accompanist.swiperefresh.SwipeRefresh

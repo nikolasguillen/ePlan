@@ -25,8 +25,8 @@ import com.example.eplan.domain.util.WarningUnit
 import com.example.eplan.presentation.ui.appointment.AppointmentDetailViewModel
 import com.example.eplan.presentation.ui.appointment.AppointmentFormEvent.*
 import com.example.eplan.presentation.ui.components.CustomDateButton
-import com.example.eplan.presentation.ui.components.CustomDialog
-import com.example.eplan.presentation.ui.components.CustomTimeButton
+import com.example.eplan.presentation.ui.components.uiElements.CustomDialog
+import com.example.eplan.presentation.ui.components.uiElements.CustomTimeButton
 import com.example.eplan.presentation.util.spacing
 
 @ExperimentalMaterial3Api

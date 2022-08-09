@@ -1,4 +1,4 @@
-package com.example.eplan.presentation.ui.components
+package com.example.eplan.presentation.ui.components.uiElements
 
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable

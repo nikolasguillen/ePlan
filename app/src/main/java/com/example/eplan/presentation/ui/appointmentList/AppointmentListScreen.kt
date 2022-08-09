@@ -17,7 +17,7 @@ import com.example.eplan.presentation.navigation.NestedNavGraphs
 import com.example.eplan.presentation.navigation.Screen
 import com.example.eplan.presentation.ui.components.BottomNavBar
 import com.example.eplan.presentation.ui.components.CollapsibleCalendar
-import com.example.eplan.presentation.ui.components.TopBar
+import com.example.eplan.presentation.ui.components.uiElements.TopBar
 import com.example.eplan.presentation.ui.components.workActivity.WorkActivitiesList
 import kotlinx.coroutines.launch
 import java.time.LocalDate

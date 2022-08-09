@@ -1,4 +1,4 @@
-package com.example.eplan.presentation.ui.components
+package com.example.eplan.presentation.ui.components.uiElements
 
 import android.text.format.DateFormat
 import android.view.ContextThemeWrapper

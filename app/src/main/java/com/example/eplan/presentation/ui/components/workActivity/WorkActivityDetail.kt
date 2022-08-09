@@ -23,6 +23,7 @@ import com.example.eplan.presentation.ui.ValidationEvent
 import com.example.eplan.presentation.ui.WorkActivityDetailViewModel
 import com.example.eplan.presentation.ui.appointment.AppointmentDetailViewModel
 import com.example.eplan.presentation.ui.components.*
+import com.example.eplan.presentation.ui.components.animations.SendAnimation
 import com.example.eplan.presentation.ui.components.detailForms.AppointmentDetail
 import com.example.eplan.presentation.ui.components.detailForms.InterventionDetail
 import com.example.eplan.presentation.ui.components.placeholders.PlaceholderDetails
