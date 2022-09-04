@@ -1,16 +1,16 @@
 package com.example.eplan.presentation.ui.appointment
 
 import android.util.Log
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.mutableStateListOf
-import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.*
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
+import com.example.eplan.domain.model.Activity
 import com.example.eplan.domain.model.Appointment
 import com.example.eplan.domain.model.User
 import com.example.eplan.interactors.GetToken
 import com.example.eplan.interactors.appointmentDetail.GetAppointmentById
 import com.example.eplan.interactors.appointmentDetail.UpdateAppointment
+import com.example.eplan.interactors.workActivityDetail.GetActivitiesList
 import com.example.eplan.interactors.workActivityDetail.ValidateActivity
 import com.example.eplan.interactors.workActivityDetail.ValidateDescription
 import com.example.eplan.interactors.workActivityDetail.ValidateTime
@@ -18,6 +18,7 @@ import com.example.eplan.presentation.ui.ValidationEvent
 import com.example.eplan.presentation.ui.WorkActivityDetailViewModel
 import com.example.eplan.presentation.ui.appointment.AppointmentDetailEvent.*
 import com.example.eplan.presentation.ui.appointment.AppointmentFormEvent.*
+import com.example.eplan.presentation.ui.intervention.InterventionFormEvent
 import com.example.eplan.presentation.util.TAG
 import com.example.eplan.presentation.util.fromDateToLocalDate
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -35,6 +36,7 @@ constructor(
     getToken: GetToken,
     private val getAppointmentById: GetAppointmentById,
     private val updateAppointment: UpdateAppointment,
+    private val getActivitiesList: GetActivitiesList,
     private val validateActivity: ValidateActivity,
     private val validateDescription: ValidateDescription,
     private val validateTime: ValidateTime,
@@ -50,8 +52,13 @@ constructor(
     private val invitedListBackup = mutableStateListOf<User>()
     private val tempInvitedList = mutableStateListOf<User>()
 
+    var activitiesList = mutableStateListOf<Activity?>(null)
+        private set
+
+    var activitySearchQuery by mutableStateOf("")
+
     init {
-        getToken(getToken = getToken, onTokenRetrieved = { onCreation() })
+        getToken(getToken = getToken, onTokenRetrieved = { getActivitiesList() })
     }
 
     fun onTriggerEvent(event: AppointmentDetailEvent) {
@@ -97,6 +104,9 @@ constructor(
         when (event) {
             is ActivityNameChanged -> {
                 appointment.value = appointment.value?.copy(activityName = event.name)
+            }
+            is ActivityIdChanged -> {
+                appointment.value = appointment.value?.copy(activityId = event.id, activityName = activitiesList.first { it!!.id == event.id }!!.name)
             }
             is DateChanged -> {
                 appointment.value = appointment.value?.copy(date = fromDateToLocalDate(event.date))
@@ -229,6 +239,23 @@ constructor(
             //TODO
         }
         savedStateHandle.remove<String>(STATE_KEY_APPOINTMENT)
+    }
+
+    private fun getActivitiesList() {
+        getActivitiesList.execute(token = userToken).onEach { dataState ->
+            retrieving = dataState.loading
+
+            dataState.data?.let { result ->
+                this.activitiesList.clear()
+                this.activitiesList.addAll(result)
+                onCreation()
+            }
+
+            dataState.error?.let { error ->
+                Log.e(TAG, "getActivitiesList (Appointment detail): $error")
+                validationEventChannel.send(ValidationEvent.RetrieveError(error = error))
+            }
+        }.launchIn(viewModelScope)
     }
 
     override fun changeQuery(query: String) {

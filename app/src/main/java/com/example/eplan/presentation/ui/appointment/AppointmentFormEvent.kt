@@ -3,11 +3,13 @@ package com.example.eplan.presentation.ui.appointment
 import com.example.eplan.domain.model.User
 import com.example.eplan.domain.util.Periodicity
 import com.example.eplan.domain.util.WarningUnit
+import com.example.eplan.presentation.ui.intervention.InterventionFormEvent
 import java.time.LocalTime
 import java.util.*
 
 sealed class AppointmentFormEvent {
     data class ActivityNameChanged(val name: String): AppointmentFormEvent()
+    data class ActivityIdChanged(val id: String): AppointmentFormEvent()
     data class DescriptionChanged(val description: String): AppointmentFormEvent()
     data class DateChanged(val date: Date): AppointmentFormEvent()
     data class StartChanged(val time: LocalTime): AppointmentFormEvent()

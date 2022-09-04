@@ -40,7 +40,7 @@ fun InterventionDetail(
                 .fillMaxWidth()
                 .wrapContentHeight()) {
                 Text(
-                    text = "Attività",
+                    text = stringResource(id = R.string.attivita),
                     style = MaterialTheme.typography.labelMedium,
                     fontWeight = FontWeight.Normal,
                     modifier = Modifier.padding(
@@ -49,7 +49,7 @@ fun InterventionDetail(
                     )
                 )
                 Text(
-                    text = if (intervention.activityName == "") "Premi per selezionare un'attività" else intervention.activityName,
+                    text = if (intervention.activityName == "") stringResource(R.string.premi_selezionare_attivita) else intervention.activityName,
                     overflow = TextOverflow.Ellipsis,
                     fontWeight = FontWeight.Bold,
                     modifier = Modifier
