@@ -11,6 +11,7 @@ import androidx.compose.ui.unit.dp
 import com.example.eplan.R
 import com.example.eplan.presentation.util.spacing
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TopBar(title: String, navigate: () -> Unit) {
     SmallTopAppBar(

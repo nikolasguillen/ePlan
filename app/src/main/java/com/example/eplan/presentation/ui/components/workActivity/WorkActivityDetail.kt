@@ -22,6 +22,7 @@ import com.example.eplan.presentation.navigation.BottomNavBarItems
 import com.example.eplan.presentation.ui.ValidationEvent
 import com.example.eplan.presentation.ui.WorkActivityDetailViewModel
 import com.example.eplan.presentation.ui.appointment.AppointmentDetailViewModel
+import com.example.eplan.presentation.ui.appointment.AppointmentFormEvent
 import com.example.eplan.presentation.ui.components.*
 import com.example.eplan.presentation.ui.components.animations.SendAnimation
 import com.example.eplan.presentation.ui.components.detailForms.AppointmentDetail
@@ -68,15 +69,40 @@ fun WorkActivityDetail(
         }
     }
 
-    Crossfade(targetState = showActivitySearch) {
-        if (it) {
-                ActivitySelectorScreen(
-                    activities = (viewModel as InterventionDetailViewModel).activitiesList.toList(),
-                    selectedActivityId = viewModel.intervention.value?.activityId,
-                    onActivitySelected = { viewModel.onFormEvent(InterventionFormEvent.ActivityIdChanged(it)) },
-                    searchQuery = viewModel.activitySearchQuery,
-                    onQueryChange = { query -> viewModel.activitySearchQuery = query },
-                    onBackPressed = { showActivitySearch = false })
+    Crossfade(targetState = showActivitySearch) { showSearchScreen ->
+        if (showSearchScreen) {
+            when (viewModel) {
+                is InterventionDetailViewModel -> {
+                    ActivitySelectorScreen(
+                        activities = viewModel.activitiesList.toList(),
+                        selectedActivityId = viewModel.intervention.value?.activityId,
+                        onActivitySelected = {
+                            viewModel.onFormEvent(
+                                InterventionFormEvent.ActivityIdChanged(
+                                    it
+                                )
+                            )
+                        },
+                        searchQuery = viewModel.activitySearchQuery,
+                        onQueryChange = { query -> viewModel.activitySearchQuery = query },
+                        onBackPressed = { showActivitySearch = false })
+                }
+                is AppointmentDetailViewModel -> {
+                    ActivitySelectorScreen(
+                        activities = viewModel.activitiesList.toList(),
+                        selectedActivityId = viewModel.appointment.value?.activityId,
+                        onActivitySelected = {
+                            viewModel.onFormEvent(
+                                AppointmentFormEvent.ActivityIdChanged(
+                                    it
+                                )
+                            )
+                        },
+                        searchQuery = viewModel.activitySearchQuery,
+                        onQueryChange = { query -> viewModel.activitySearchQuery = query },
+                        onBackPressed = { showActivitySearch = false })
+                }
+            }
         } else {
             Scaffold(
                 topBar = {
@@ -159,7 +185,9 @@ fun WorkActivityDetail(
                                 )
                             }
                             is AppointmentDetailViewModel -> {
-                                AppointmentDetail(viewModel = viewModel)
+                                AppointmentDetail(
+                                    viewModel = viewModel,
+                                    onActivitySelectionClick = { showActivitySearch = true })
                             }
                         }
                     }

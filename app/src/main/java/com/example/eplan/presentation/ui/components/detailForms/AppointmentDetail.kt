@@ -15,8 +15,10 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.example.eplan.R
 import com.example.eplan.domain.model.User
@@ -32,7 +34,8 @@ import com.example.eplan.presentation.util.spacing
 @ExperimentalMaterial3Api
 @Composable
 fun AppointmentDetail(
-    viewModel: AppointmentDetailViewModel
+    viewModel: AppointmentDetailViewModel,
+    onActivitySelectionClick: () -> Unit
 ) {
     viewModel.appointment.value?.let { appointment ->
 
@@ -45,6 +48,30 @@ fun AppointmentDetail(
         var showInvitedDialog by remember { mutableStateOf(false) }
         var showPeriodicityDialog by remember { mutableStateOf(false) }
 
+        Row(modifier = Modifier.fillMaxWidth()) {
+            Card(modifier = Modifier
+                .clickable { onActivitySelectionClick() }
+                .fillMaxWidth()
+                .wrapContentHeight()) {
+                Text(
+                    text = stringResource(id = R.string.attivita),
+                    style = MaterialTheme.typography.labelMedium,
+                    fontWeight = FontWeight.Normal,
+                    modifier = Modifier.padding(
+                        horizontal = MaterialTheme.spacing.medium,
+                        vertical = MaterialTheme.spacing.small
+                    )
+                )
+                Text(
+                    text = if (appointment.activityName == "") stringResource(id = R.string.premi_selezionare_attivita) else appointment.activityName,
+                    overflow = TextOverflow.Ellipsis,
+                    fontWeight = FontWeight.Bold,
+                    modifier = Modifier
+                        .padding(horizontal = MaterialTheme.spacing.medium)
+                        .padding(bottom = MaterialTheme.spacing.medium)
+                )
+            }
+        }
         Column {
             OutlinedTextField(
                 value = appointment.activityName,
