@@ -30,8 +30,7 @@ fun SettingsScreen(
 
     Scaffold(
         topBar = {
-            SmallTopAppBar(
-                title = { Text(text = stringResource(id = R.string.impostazioni)) },
+            TopAppBar(title = { Text(text = stringResource(id = R.string.impostazioni)) },
                 navigationIcon = {
                     IconButton(
                         onClick = { onBackPressed() }
@@ -104,16 +103,16 @@ fun SettingsScreen(
                         verticalAlignment = Alignment.CenterVertically,
                         modifier = Modifier
                             .fillMaxWidth()
-                            .clickable {
-                                viewModel.onTriggerEvent(it.event)
-                                showThemeDialog = false
-                            }
+//                            .clickable {
+//                                showThemeDialog = false
+//                                viewModel.onTriggerEvent(it.event)
+//                            }
                     ) {
                         RadioButton(
                             selected = viewModel.currentThemeMode == it.name,
                             onClick = {
-                                viewModel.onTriggerEvent(it.event)
                                 showThemeDialog = false
+                                viewModel.onTriggerEvent(it.event)
                             })
                         Text(text = it.name)
                     }

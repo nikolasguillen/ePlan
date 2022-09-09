@@ -173,12 +173,12 @@ constructor(
     }
 
     private fun submitData() {
-        appointment.value?.let {
+        appointment.value?.let { appointment ->
             // TODO quando arrivo qua devo aver già popolato la mappa di attività (id, nome)
             // TODO implementare controllo su data impostata nella periodicità > data appuntamento
-            val activityResult = validateActivity.execute(it.activityName, mapOf())
-            val descriptionResult = validateDescription.execute(it.description)
-            val timeResult = validateTime.execute(it.start, it.end)
+            val activityResult = validateActivity.execute(appointment.activityName, activitiesList.map { it?.name ?: ""})
+            val descriptionResult = validateDescription.execute(appointment.description)
+            val timeResult = validateTime.execute(appointment.start, appointment.end)
 
             val hasErrors = listOf(
                 activityResult,
@@ -187,7 +187,7 @@ constructor(
             ).any { result -> !result.successful }
 
             if (hasErrors) {
-                appointment.value = appointment.value?.copy(
+                this.appointment.value = this.appointment.value?.copy(
                     activityIdError = activityResult.errorMessage,
                     descriptionError = descriptionResult.errorMessage,
                     timeError = timeResult.errorMessage

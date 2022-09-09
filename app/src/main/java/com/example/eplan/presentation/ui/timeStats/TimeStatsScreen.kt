@@ -51,8 +51,7 @@ fun TimeStatsScreen(
 
     Scaffold(
         topBar = {
-            SmallTopAppBar(
-                title = { Text(text = "Statistiche ore") },
+            TopAppBar(title = { Text(text = "Statistiche ore") },
                 navigationIcon = {
                     IconButton(
                         onClick = { onBackPressed() }) {
@@ -75,8 +74,7 @@ fun TimeStatsScreen(
                             contentDescription = stringResource(id = R.string.aggiorna)
                         )
                     }
-                }
-            )
+                })
         },
         snackbarHost = { SnackbarHost(hostState = snackBarHostState) }
     ) { paddingValues ->

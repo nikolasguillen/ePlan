@@ -34,7 +34,7 @@ fun InterventionDetail(
     val keyboardController = LocalSoftwareKeyboardController.current
 
     viewModel.intervention.value?.let { intervention ->
-        Row(modifier = Modifier.fillMaxWidth()) {
+        Column {
             Card(modifier = Modifier
                 .clickable { onActivitySelectionClick() }
                 .fillMaxWidth()
@@ -55,6 +55,15 @@ fun InterventionDetail(
                     modifier = Modifier
                         .padding(horizontal = MaterialTheme.spacing.medium)
                         .padding(bottom = MaterialTheme.spacing.medium)
+                )
+            }
+            if (intervention.activityIdError != null) {
+                Text(
+                    text = intervention.activityIdError,
+                    color = MaterialTheme.colorScheme.error,
+                    style = MaterialTheme.typography.labelMedium,
+                    textAlign = TextAlign.End,
+                    modifier = Modifier.fillMaxWidth()
                 )
             }
         }

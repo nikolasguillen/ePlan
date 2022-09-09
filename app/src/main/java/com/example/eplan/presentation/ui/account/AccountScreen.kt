@@ -51,8 +51,8 @@ fun AccountScreen(
 
     Scaffold(
         topBar = {
-            SmallTopAppBar(
-//              TODO cambiare nome dinamicamente
+            TopAppBar(
+                //TODO cambiare nome dinamicamente
                 title = { stringResource(id = R.string.account) },
                 navigationIcon = {
                     IconButton(

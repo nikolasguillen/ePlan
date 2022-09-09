@@ -48,7 +48,7 @@ fun AppointmentDetail(
         var showInvitedDialog by remember { mutableStateOf(false) }
         var showPeriodicityDialog by remember { mutableStateOf(false) }
 
-        Row(modifier = Modifier.fillMaxWidth()) {
+        Column {
             Card(modifier = Modifier
                 .clickable { onActivitySelectionClick() }
                 .fillMaxWidth()
@@ -71,14 +71,6 @@ fun AppointmentDetail(
                         .padding(bottom = MaterialTheme.spacing.medium)
                 )
             }
-        }
-        Column {
-            OutlinedTextField(
-                value = appointment.activityName,
-                onValueChange = { viewModel.onFormEvent(ActivityNameChanged(it)) },
-                label = { Text(text = stringResource(id = R.string.attivita)) },
-                modifier = Modifier.fillMaxWidth()
-            )
             if (appointment.activityIdError != null) {
                 Text(
                     text = appointment.activityIdError,

@@ -47,8 +47,7 @@ fun VacationRequestScreen(
 
     Scaffold(
         topBar = {
-            SmallTopAppBar(
-                title = { Text(text = stringResource(id = R.string.richiesta_ferie)) },
+            TopAppBar(title = { Text(text = stringResource(id = R.string.richiesta_ferie)) },
                 navigationIcon = {
                     IconButton(onClick = { onBackPressed() }) {
                         Icon(

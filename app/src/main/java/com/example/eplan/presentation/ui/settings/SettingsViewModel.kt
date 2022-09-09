@@ -2,6 +2,7 @@ package com.example.eplan.presentation.ui.settings
 
 import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatDelegate.*
+import androidx.compose.runtime.MutableState
 import androidx.lifecycle.ViewModel
 import com.example.eplan.presentation.util.THEME_STATE_KEY
 import dagger.hilt.android.lifecycle.HiltViewModel

@@ -139,11 +139,11 @@ constructor(
     }
 
     private fun submitData() {
-        intervention.value?.let {
+        intervention.value?.let { intervention ->
             // TODO quando arrivo qua devo aver già popolato la mappa di attività (id, nome)
-            val activityResult = validateActivity.execute(it.activityName, mapOf())
-            val descriptionResult = validateDescription.execute(it.description)
-            val timeResult = validateTime.execute(it.start, it.end)
+            val activityResult = validateActivity.execute(intervention.activityName, activitiesList.map { it?.name ?: ""})
+            val descriptionResult = validateDescription.execute(intervention.description)
+            val timeResult = validateTime.execute(intervention.start, intervention.end)
 
             val hasErrors = listOf(
                 activityResult,
@@ -152,7 +152,7 @@ constructor(
             ).any { result -> !result.successful }
 
             if (hasErrors) {
-                intervention.value = intervention.value?.copy(
+                this.intervention.value = this.intervention.value?.copy(
                     activityIdError = activityResult.errorMessage,
                     descriptionError = descriptionResult.errorMessage,
                     timeError = timeResult.errorMessage
