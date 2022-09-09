@@ -103,10 +103,10 @@ fun SettingsScreen(
                         verticalAlignment = Alignment.CenterVertically,
                         modifier = Modifier
                             .fillMaxWidth()
-//                            .clickable {
-//                                showThemeDialog = false
-//                                viewModel.onTriggerEvent(it.event)
-//                            }
+                            .clickable {
+                                showThemeDialog = false
+                                viewModel.onTriggerEvent(it.event)
+                            }
                     ) {
                         RadioButton(
                             selected = viewModel.currentThemeMode == it.name,
