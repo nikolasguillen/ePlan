@@ -45,7 +45,7 @@ fun InterventionListScreen(
     val selectedDate = remember { mutableStateOf(LocalDate.parse(date)) }
     var isExpanded by remember { mutableStateOf(false) }
     val context = LocalContext.current
-    var backPressedTime:Long = 0
+    var backPressedTime: Long = 0
     val snackBarHostState = remember { SnackbarHostState() }
     val scope = rememberCoroutineScope()
 
@@ -77,7 +77,7 @@ fun InterventionListScreen(
                 }
             )
         },
-        snackbarHost = { SnackbarHost(hostState = snackBarHostState)}
+        snackbarHost = { SnackbarHost(hostState = snackBarHostState) }
     ) {
         BackHandler {
             if (backPressedTime + 2000 > System.currentTimeMillis()) {
@@ -89,7 +89,12 @@ fun InterventionListScreen(
             }
             backPressedTime = System.currentTimeMillis()
         }
-        Column(modifier = Modifier.padding(top = it.calculateTopPadding())) {
+        Column(
+            modifier = Modifier.padding(
+                top = it.calculateTopPadding(),
+                bottom = it.calculateBottomPadding()
+            )
+        ) {
             CollapsibleCalendar(
                 calendarVisibility = calendarVisibility,
                 date = date,

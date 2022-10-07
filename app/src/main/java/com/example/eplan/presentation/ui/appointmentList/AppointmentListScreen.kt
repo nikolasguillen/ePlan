@@ -78,7 +78,12 @@ fun AppointmentListScreen(
             }
             backPressedTime = System.currentTimeMillis()
         }
-        Column(modifier = Modifier.padding(top = it.calculateTopPadding())) {
+        Column(
+            modifier = Modifier.padding(
+                top = it.calculateTopPadding(),
+                bottom = it.calculateBottomPadding()
+            )
+        ) {
             CollapsibleCalendar(
                 calendarVisibility = calendarVisibility,
                 date = date,

@@ -1,8 +1,6 @@
 package com.example.eplan.presentation.ui.components.workActivity
 
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -39,10 +37,7 @@ fun WorkActivitiesList(
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier
                 .fillMaxSize()
-                .padding(
-                    horizontal = MaterialTheme.spacing.medium,
-                    vertical = MaterialTheme.spacing.small
-                )
+                .padding(horizontal = MaterialTheme.spacing.medium)
         ) {
             when (isRefreshing) {
                 true -> {
@@ -57,6 +52,9 @@ fun WorkActivitiesList(
                         }
                     } else {
                         items(workActivities) { workActivity ->
+                            if (workActivities.indexOf(workActivity) == 0) {
+                                Spacer(modifier = Modifier.height(height = MaterialTheme.spacing.small))
+                            }
                             WorkActivityCard(
                                 workActivity = workActivity,
                                 onClick = {
@@ -66,6 +64,9 @@ fun WorkActivitiesList(
                                     )
                                 }
                             )
+                            if (workActivities.indexOf(workActivity) == workActivities.lastIndex) {
+                                Spacer(modifier = Modifier.height(height = MaterialTheme.spacing.small))
+                            }
                         }
                     }
                 }
