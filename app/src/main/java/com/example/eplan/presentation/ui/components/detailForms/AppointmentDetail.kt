@@ -26,7 +26,7 @@ import com.example.eplan.domain.util.Periodicity
 import com.example.eplan.domain.util.WarningUnit
 import com.example.eplan.presentation.ui.appointment.AppointmentDetailViewModel
 import com.example.eplan.presentation.ui.appointment.AppointmentFormEvent.*
-import com.example.eplan.presentation.ui.components.CustomDateButton
+import com.example.eplan.presentation.ui.components.uiElements.CustomDateButton
 import com.example.eplan.presentation.ui.components.uiElements.CustomDialog
 import com.example.eplan.presentation.ui.components.uiElements.CustomTimeButton
 import com.example.eplan.presentation.util.spacing
@@ -110,14 +110,14 @@ fun AppointmentDetail(
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 CustomTimeButton(
-                    time = appointment.start.toString(),
+                    time = appointment.start,
                     label = stringResource(id = R.string.ora_inizio),
                     onClick = { viewModel.onFormEvent(StartChanged(it)) },
                     modifier = Modifier.weight(4F)
                 )
                 Spacer(modifier = Modifier.weight(1F))
                 CustomTimeButton(
-                    time = appointment.end.toString(),
+                    time = appointment.end,
                     label = stringResource(id = R.string.ora_inizio),
                     onClick = { viewModel.onFormEvent(EndChanged(it)) },
                     modifier = Modifier.weight(4F)

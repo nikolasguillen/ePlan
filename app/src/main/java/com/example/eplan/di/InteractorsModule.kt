@@ -1,23 +1,23 @@
 package com.example.eplan.di
 
-import com.example.eplan.cache.UserDao
+import com.example.eplan.domain.preferences.Preferences
 import com.example.eplan.interactors.GetProfilePicUri
 import com.example.eplan.interactors.GetToken
 import com.example.eplan.interactors.appointmentDetail.GetAppointmentById
 import com.example.eplan.interactors.appointmentDetail.UpdateAppointment
 import com.example.eplan.interactors.appointmentList.DayChangeAppointment
 import com.example.eplan.interactors.camera.SaveProfilePicUri
-import com.example.eplan.interactors.login.GetCredentialsFromCache
-import com.example.eplan.interactors.login.LoginAttempt
 import com.example.eplan.interactors.interventionDetail.GetInterventionById
 import com.example.eplan.interactors.interventionDetail.UpdateIntervention
-import com.example.eplan.interactors.workActivityDetail.ValidateDescription
-import com.example.eplan.interactors.workActivityDetail.ValidateTime
 import com.example.eplan.interactors.interventionList.DayChangeIntervention
+import com.example.eplan.interactors.login.GetCredentialsFromCache
+import com.example.eplan.interactors.login.LoginAttempt
 import com.example.eplan.interactors.timeStats.GetTimeStats
 import com.example.eplan.interactors.vacationRequest.RequestVacation
 import com.example.eplan.interactors.workActivityDetail.GetActivitiesList
 import com.example.eplan.interactors.workActivityDetail.ValidateActivity
+import com.example.eplan.interactors.workActivityDetail.ValidateDescription
+import com.example.eplan.interactors.workActivityDetail.ValidateTime
 import com.example.eplan.network.model.ActivityDtoMapper
 import com.example.eplan.network.model.AppointmentDtoMapper
 import com.example.eplan.network.model.InterventionDtoMapper
@@ -79,6 +79,7 @@ object InteractorsModule {
         return ValidateActivity()
 
     }
+
     @ViewModelScoped
     @Provides
     fun provideValidateDescription(): ValidateDescription {
@@ -97,11 +98,11 @@ object InteractorsModule {
     @Provides
     fun provideLoginResponse(
         service: LoginService,
-        userDao: UserDao
+        preferences: Preferences
     ): LoginAttempt {
         return LoginAttempt(
             service = service,
-            userDao = userDao
+            preferences = preferences
         )
     }
 
@@ -110,34 +111,34 @@ object InteractorsModule {
     @ViewModelScoped
     @Provides
     fun provideUserToken(
-        userDao: UserDao
+        preferences: Preferences
     ): GetToken {
-        return GetToken(userDao = userDao)
+        return GetToken(preferences = preferences)
     }
 
     /* Provider immagine profilo TODO cancellarli **/
     @ViewModelScoped
     @Provides
     fun provideSaveProfilePicUri(
-        userDao: UserDao
+        preferences: Preferences
     ): SaveProfilePicUri {
-        return SaveProfilePicUri(userDao = userDao)
+        return SaveProfilePicUri(preferences = preferences)
     }
 
     @ViewModelScoped
     @Provides
     fun provideGetProfilePicUri(
-        userDao: UserDao
+        preferences: Preferences
     ): GetProfilePicUri {
-        return GetProfilePicUri(userDao = userDao)
+        return GetProfilePicUri(preferences = preferences)
     }
 
     @ViewModelScoped
     @Provides
     fun provideGetCredentialsFromCache(
-        userDao: UserDao
+        preferences: Preferences
     ): GetCredentialsFromCache {
-        return GetCredentialsFromCache(userDao = userDao)
+        return GetCredentialsFromCache(preferences = preferences)
     }
 
     /* Provider degli interactors degli appuntamenti */

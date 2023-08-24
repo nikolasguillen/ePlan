@@ -1,6 +1,6 @@
 package com.example.eplan.presentation.navigation
 
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
@@ -14,22 +14,22 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import androidx.navigation.navigation
 import com.example.eplan.R
-import com.example.eplan.presentation.navigation.NestedNavGraphs.*
+import com.example.eplan.presentation.navigation.NestedNavGraphs.AccountGraph
+import com.example.eplan.presentation.navigation.NestedNavGraphs.AppointmentGraph
+import com.example.eplan.presentation.navigation.NestedNavGraphs.InterventionGraph
+import com.example.eplan.presentation.navigation.NestedNavGraphs.LoginGraph
 import com.example.eplan.presentation.ui.account.AccountEvent
 import com.example.eplan.presentation.ui.account.AccountScreen
 import com.example.eplan.presentation.ui.account.AccountViewModel
 import com.example.eplan.presentation.ui.appointment.AppointmentDetailEvent
-import com.example.eplan.presentation.ui.appointment.AppointmentDetailViewModel
 import com.example.eplan.presentation.ui.appointment.AppointmentDetailScreen
+import com.example.eplan.presentation.ui.appointment.AppointmentDetailViewModel
 import com.example.eplan.presentation.ui.appointment.AppointmentFormEvent
 import com.example.eplan.presentation.ui.appointmentList.AppointmentListScreen
 import com.example.eplan.presentation.ui.appointmentList.AppointmentListViewModel
 import com.example.eplan.presentation.ui.camera.CameraEvent
 import com.example.eplan.presentation.ui.camera.CameraScreen
 import com.example.eplan.presentation.ui.camera.CameraViewModel
-import com.example.eplan.presentation.ui.login.LoginEvent.LoginAttemptEvent
-import com.example.eplan.presentation.ui.login.LoginScreen
-import com.example.eplan.presentation.ui.login.LoginViewModel
 import com.example.eplan.presentation.ui.intervention.InterventionDetailEvent.DeleteInterventionEvent
 import com.example.eplan.presentation.ui.intervention.InterventionDetailViewModel
 import com.example.eplan.presentation.ui.intervention.InterventionDetailsScreen
@@ -38,29 +38,32 @@ import com.example.eplan.presentation.ui.interventionList.InterventionListScreen
 import com.example.eplan.presentation.ui.interventionList.InterventionListViewModel
 import com.example.eplan.presentation.ui.interventionRecord.InterventionRecordScreen
 import com.example.eplan.presentation.ui.interventionRecord.InterventionRecordViewModel
+import com.example.eplan.presentation.ui.login.LoginEvent.LoginAttemptEvent
+import com.example.eplan.presentation.ui.login.LoginScreen
+import com.example.eplan.presentation.ui.login.LoginViewModel
 import com.example.eplan.presentation.ui.settings.SettingsScreen
 import com.example.eplan.presentation.ui.settings.SettingsViewModel
 import com.example.eplan.presentation.ui.timeStats.TimeStatsScreen
 import com.example.eplan.presentation.ui.timeStats.TimeStatsViewModel
-import com.example.eplan.presentation.ui.vacationRequest.VacationRequestEvent
 import com.example.eplan.presentation.ui.vacationRequest.VacationRequestEvent.RequestEvent
 import com.example.eplan.presentation.ui.vacationRequest.VacationRequestScreen
 import com.example.eplan.presentation.ui.vacationRequest.VacationRequestViewModel
 import java.time.LocalDate
-import java.time.temporal.WeekFields
-import java.util.*
 
 @ExperimentalComposeUiApi
 @ExperimentalMaterial3Api
 @Composable
-fun NavGraph(navController: NavHostController) {
+fun NavGraph(navController: NavHostController, shouldShowLogin: Boolean) {
     NavHost(
         navController = navController,
         startDestination = LoginGraph.route,
         modifier = Modifier.systemBarsPadding()
     ) {
 
-        navigation(startDestination = LoginGraph.startDestination, route = LoginGraph.route) {
+        navigation(
+            startDestination = if (shouldShowLogin) LoginGraph.startDestination else InterventionGraph.startDestination,
+            route = LoginGraph.route
+        ) {
             composable(route = Screen.Login.route) {
                 val viewModel = hiltViewModel<LoginViewModel>()
                 LoginScreen(

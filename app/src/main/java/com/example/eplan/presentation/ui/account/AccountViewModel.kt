@@ -1,14 +1,12 @@
 package com.example.eplan.presentation.ui.account
 
-import android.content.SharedPreferences
 import android.net.Uri
 import android.util.Log
 import androidx.lifecycle.viewModelScope
-import com.example.eplan.cache.UserDao
+import com.example.eplan.domain.preferences.Preferences
 import com.example.eplan.interactors.GetProfilePicUri
 import com.example.eplan.interactors.GetToken
 import com.example.eplan.presentation.ui.EplanViewModel
-import com.example.eplan.presentation.util.STAY_LOGGED
 import com.example.eplan.presentation.util.TAG
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.launchIn
@@ -22,8 +20,7 @@ class AccountViewModel
 constructor(
     getToken: GetToken,
     private val getProfilePicUri: GetProfilePicUri,
-    private val userDao: UserDao,
-    private val sharedPreferences: SharedPreferences
+    private val preferences: Preferences
 ) : EplanViewModel() {
 
     var imageUri: Uri = Uri.EMPTY
@@ -44,6 +41,7 @@ constructor(
                     is AccountEvent.GetUriEvent -> {
                         getImageUri()
                     }
+
                     is AccountEvent.Logout -> {
                         logout()
                     }
@@ -67,8 +65,9 @@ constructor(
         }.launchIn(viewModelScope)
     }
 
-    private suspend fun logout() {
-        sharedPreferences.edit().putBoolean(STAY_LOGGED, false).apply()
-        userDao.deleteAllUsers()
+    private fun logout() {
+        preferences.deleteShouldShowLogin()
+        preferences.deleteUsername()
+        preferences.deleteToken()
     }
 }

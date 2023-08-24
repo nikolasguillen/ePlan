@@ -1,10 +1,11 @@
-package com.example.eplan.presentation.ui.components
+package com.example.eplan.presentation.ui.components.uiElements
 
-import androidx.compose.foundation.layout.navigationBarsPadding
-import androidx.compose.material3.*
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.NavigationBar
+import androidx.compose.material3.NavigationBarItem
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.painterResource
 import com.example.eplan.presentation.navigation.BottomNavBarItems
 
 @Composable
@@ -12,7 +13,7 @@ fun BottomSingleActionBar(item: BottomNavBarItems, onClick: () -> Unit) {
 
     NavigationBar(
         containerColor = MaterialTheme.colorScheme.primary,
-        modifier = Modifier.navigationBarsPadding()
+//        modifier = Modifier.navigationBarsPadding()
     ) {
         NavigationBarItem(
             selected = false,

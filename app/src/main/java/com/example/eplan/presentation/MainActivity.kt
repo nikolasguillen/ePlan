@@ -9,27 +9,16 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.compose.animation.*
 import androidx.compose.foundation.isSystemInDarkTheme
-import androidx.compose.foundation.layout.imePadding
-import androidx.compose.foundation.layout.navigationBarsPadding
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.SideEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.ExperimentalComposeUiApi
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.core.view.WindowCompat
 import androidx.navigation.compose.rememberNavController
-import com.example.eplan.presentation.navigation.BottomNavBarItems
+import com.example.eplan.domain.preferences.Preferences
 import com.example.eplan.presentation.navigation.NavGraph
-import com.example.eplan.presentation.ui.components.BottomNavBar
 import com.example.eplan.presentation.ui.theme.AppTheme
 import com.example.eplan.presentation.util.THEME_STATE_KEY
 import com.example.eplan.presentation.util.getCurrentRoute
@@ -45,6 +34,9 @@ class MainActivity : AppCompatActivity() {
 
     @Inject
     lateinit var sharedPreferences: SharedPreferences
+
+    @Inject
+    lateinit var encryptedSharedPreferences: Preferences
 
     @RequiresApi(Build.VERSION_CODES.S)
     @OptIn(ExperimentalMaterial3Api::class)
@@ -82,18 +74,21 @@ class MainActivity : AppCompatActivity() {
                                 systemUiController.navigationBarDarkContentEnabled =
                                     !isSystemInDarkTheme()
                             }
+
                             contains("details", true) -> {
                                 window.navigationBarColor =
                                     MaterialTheme.colorScheme.primary.toArgb()
                                 systemUiController.navigationBarDarkContentEnabled =
                                     isSystemInDarkTheme()
                             }
+
                             contains("vacationRequest", true) -> {
                                 window.navigationBarColor =
                                     MaterialTheme.colorScheme.primary.toArgb()
                                 systemUiController.navigationBarDarkContentEnabled =
                                     isSystemInDarkTheme()
                             }
+
                             else -> {
                                 window.navigationBarColor =
                                     MaterialTheme.colorScheme.surface.toArgb()
@@ -103,7 +98,7 @@ class MainActivity : AppCompatActivity() {
                         }
                     }
                 }
-                NavGraph(navController = navController)
+                NavGraph(navController = navController, shouldShowLogin = encryptedSharedPreferences.loadShouldShowLogin())
             }
         }
     }

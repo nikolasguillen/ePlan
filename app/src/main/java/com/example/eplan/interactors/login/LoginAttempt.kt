@@ -1,22 +1,20 @@
 package com.example.eplan.interactors.login
 
-import com.example.eplan.cache.UserDao
-import com.example.eplan.cache.model.UserEntity
 import com.example.eplan.domain.data.DataState
-import com.example.eplan.network.services.LoginService
+import com.example.eplan.domain.preferences.Preferences
 import com.example.eplan.network.model.CredentialsDto
+import com.example.eplan.network.services.LoginService
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
-import java.lang.Exception
 import javax.inject.Inject
 
 class LoginAttempt
 @Inject
 constructor(
     private val service: LoginService,
-    private val userDao: UserDao
+    private val preferences: Preferences
 ) {
     fun execute(
         username: String,
@@ -26,7 +24,8 @@ constructor(
         emit(DataState.loading())
 
         // TODO controlla che ci sia connessione a internet
-        val response = getLoginResponse(username = username, password = password)
+        val response =
+            getLoginResponse(username = username, password = password, preferences = preferences)
         delay(300)
 
         emit(DataState.success(response))
@@ -34,16 +33,13 @@ constructor(
 
     private suspend fun getLoginResponse(
         username: String,
-        password: String
+        password: String,
+        preferences: Preferences
     ): Pair<Int, String> {
         val response = service.login(CredentialsDto(username = username, password = password))
-        userDao.insertUser(
-            UserEntity(
-                username = username,
-                password = password,
-                token = response.message
-            )
-        )
+        preferences.saveUsername(username = username)
+        preferences.saveToken(token = response.message)
+
         return Pair(response.statusCode, response.message)
     }
 }

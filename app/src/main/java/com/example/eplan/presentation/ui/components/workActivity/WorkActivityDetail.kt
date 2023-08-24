@@ -28,6 +28,7 @@ import com.example.eplan.presentation.ui.components.animations.SendAnimation
 import com.example.eplan.presentation.ui.components.detailForms.AppointmentDetail
 import com.example.eplan.presentation.ui.components.detailForms.InterventionDetail
 import com.example.eplan.presentation.ui.components.placeholders.PlaceholderDetails
+import com.example.eplan.presentation.ui.components.uiElements.BottomSingleActionBar
 import com.example.eplan.presentation.ui.intervention.InterventionDetailViewModel
 import com.example.eplan.presentation.ui.intervention.InterventionFormEvent
 import com.example.eplan.presentation.util.spacing
@@ -58,9 +59,11 @@ fun WorkActivityDetail(
                 is ValidationEvent.UpdateSuccess -> {
                     onBackPressed()
                 }
+
                 is ValidationEvent.SubmitError -> {
                     snackBarHostState.showSnackbar(message = event.error)
                 }
+
                 is ValidationEvent.RetrieveError -> {
                     snackBarHostState.showSnackbar(message = "${event.error}\nTorno indietro...")
                     onBackPressed()
@@ -69,7 +72,7 @@ fun WorkActivityDetail(
         }
     }
 
-    Crossfade(targetState = showActivitySearch) { showSearchScreen ->
+    Crossfade(targetState = showActivitySearch, label = "FormDetail") { showSearchScreen ->
         if (showSearchScreen) {
             when (viewModel) {
                 is InterventionDetailViewModel -> {
@@ -87,6 +90,7 @@ fun WorkActivityDetail(
                         onQueryChange = { query -> viewModel.activitySearchQuery = query },
                         onBackPressed = { showActivitySearch = false })
                 }
+
                 is AppointmentDetailViewModel -> {
                     ActivitySelectorScreen(
                         activities = viewModel.activitiesList.toList(),
@@ -153,7 +157,8 @@ fun WorkActivityDetail(
                         )
                     }
                 },
-                snackbarHost = { SnackbarHost(hostState = snackBarHostState) }
+                snackbarHost = { SnackbarHost(hostState = snackBarHostState) },
+                modifier = Modifier.imePadding()
             ) { paddingValues ->
                 BackHandler(enabled = true) {
                     if (viewModel.checkChanges()) {
@@ -169,8 +174,8 @@ fun WorkActivityDetail(
                         .fillMaxSize()
                         .padding(horizontal = MaterialTheme.spacing.medium)
                         .padding(paddingValues)
-                        .consumedWindowInsets(paddingValues)
-                        .imePadding()
+                        .consumeWindowInsets(paddingValues)
+                        .systemBarsPadding()
                         .verticalScroll(rememberScrollState()),
                     verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.medium)
                 ) {
@@ -184,6 +189,7 @@ fun WorkActivityDetail(
                                     onActivitySelectionClick = { showActivitySearch = true }
                                 )
                             }
+
                             is AppointmentDetailViewModel -> {
                                 AppointmentDetail(
                                     viewModel = viewModel,
@@ -215,9 +221,10 @@ fun WorkActivityDetail(
                             }
                         },
                         dismissButton = {
-                            TextButton(onClick = {
-                                showBackDialog.value = false
-                            }
+                            TextButton(
+                                onClick = {
+                                    showBackDialog.value = false
+                                }
                             ) {
                                 Text(text = stringResource(R.string.annulla))
                             }

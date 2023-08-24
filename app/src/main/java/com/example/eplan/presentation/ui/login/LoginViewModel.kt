@@ -29,8 +29,8 @@ constructor(
     private val sharedPreferences: SharedPreferences
 ) : ViewModel() {
 
-    val username = mutableStateOf("")
-    val password = mutableStateOf("")
+    val username = mutableStateOf("n.guillen")
+    val password = mutableStateOf("0FeZbLUO")
     var usernameError: MutableState<String?> = mutableStateOf(null)
     var passwordError: MutableState<String?> = mutableStateOf(null)
     private val statusCode = mutableStateOf(0)
@@ -104,8 +104,6 @@ constructor(
             loading.value = dataState.loading
 
             dataState.data?.let { credentials ->
-                username.value = credentials.first
-                password.value = credentials.second
                 onTriggerEvent(LoginAttemptEvent)
             }
 

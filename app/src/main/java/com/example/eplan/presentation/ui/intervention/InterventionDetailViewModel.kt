@@ -1,7 +1,11 @@
 package com.example.eplan.presentation.ui.intervention
 
 import android.util.Log
-import androidx.compose.runtime.*
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import com.example.eplan.domain.model.Activity
@@ -15,10 +19,19 @@ import com.example.eplan.interactors.workActivityDetail.ValidateDescription
 import com.example.eplan.interactors.workActivityDetail.ValidateTime
 import com.example.eplan.presentation.ui.ValidationEvent
 import com.example.eplan.presentation.ui.WorkActivityDetailViewModel
-import com.example.eplan.presentation.ui.intervention.InterventionDetailEvent.*
-import com.example.eplan.presentation.ui.intervention.InterventionFormEvent.*
+import com.example.eplan.presentation.ui.intervention.InterventionDetailEvent.DeleteInterventionEvent
+import com.example.eplan.presentation.ui.intervention.InterventionDetailEvent.GetInterventionEvent
+import com.example.eplan.presentation.ui.intervention.InterventionDetailEvent.UpdateInterventionEvent
+import com.example.eplan.presentation.ui.intervention.InterventionFormEvent.ActivityIdChanged
+import com.example.eplan.presentation.ui.intervention.InterventionFormEvent.ActivityNameChanged
+import com.example.eplan.presentation.ui.intervention.InterventionFormEvent.DateChanged
+import com.example.eplan.presentation.ui.intervention.InterventionFormEvent.DescriptionChanged
+import com.example.eplan.presentation.ui.intervention.InterventionFormEvent.EndChanged
+import com.example.eplan.presentation.ui.intervention.InterventionFormEvent.KmChanged
+import com.example.eplan.presentation.ui.intervention.InterventionFormEvent.MovingTimeChanged
+import com.example.eplan.presentation.ui.intervention.InterventionFormEvent.StartChanged
+import com.example.eplan.presentation.ui.intervention.InterventionFormEvent.Submit
 import com.example.eplan.presentation.util.TAG
-import com.example.eplan.presentation.util.fromDateToLocalDate
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -61,9 +74,11 @@ constructor(
                 changeQuery(event.id)
                 getIntervention()
             }
+
             is UpdateInterventionEvent -> {
                 updateIntervention()
             }
+
             is DeleteInterventionEvent -> {
                 deleteIntervention()
             }
@@ -106,28 +121,39 @@ constructor(
             is ActivityNameChanged -> {
                 intervention.value = intervention.value?.copy(activityName = event.name)
             }
+
             is ActivityIdChanged -> {
-                intervention.value = intervention.value?.copy(activityId = event.id, activityName = activitiesList.first { it!!.id == event.id }!!.name)
+                intervention.value = intervention.value?.copy(
+                    activityId = event.id,
+                    activityName = activitiesList.first { it!!.id == event.id }!!.name
+                )
             }
+
             is DescriptionChanged -> {
                 intervention.value = intervention.value?.copy(description = event.description)
             }
+
             is DateChanged -> {
                 intervention.value =
-                    intervention.value?.copy(date = fromDateToLocalDate(event.date))
+                    intervention.value?.copy(date = event.date)
             }
+
             is StartChanged -> {
                 intervention.value = intervention.value?.copy(start = event.time)
             }
+
             is EndChanged -> {
                 intervention.value = intervention.value?.copy(end = event.time)
             }
+
             is MovingTimeChanged -> {
                 intervention.value = intervention.value?.copy(movingTime = event.time)
             }
+
             is KmChanged -> {
                 intervention.value = intervention.value?.copy(km = event.km)
             }
+
             is Submit -> {
                 submitData()
             }
@@ -141,7 +167,9 @@ constructor(
     private fun submitData() {
         intervention.value?.let { intervention ->
             // TODO quando arrivo qua devo aver già popolato la mappa di attività (id, nome)
-            val activityResult = validateActivity.execute(intervention.activityName, activitiesList.map { it?.name ?: ""})
+            val activityResult = validateActivity.execute(
+                intervention.activityName,
+                activitiesList.map { it?.name ?: "" })
             val descriptionResult = validateDescription.execute(intervention.description)
             val timeResult = validateTime.execute(intervention.start, intervention.end)
 

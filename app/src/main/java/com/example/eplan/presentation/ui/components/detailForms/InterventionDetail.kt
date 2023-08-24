@@ -16,8 +16,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import com.example.eplan.R
-import com.example.eplan.presentation.ui.components.ActivitySelectorScreen
-import com.example.eplan.presentation.ui.components.CustomDateButton
+import com.example.eplan.presentation.ui.components.uiElements.CustomDateButton
 import com.example.eplan.presentation.ui.components.uiElements.CustomTimeButton
 import com.example.eplan.presentation.ui.intervention.InterventionDetailViewModel
 import com.example.eplan.presentation.ui.intervention.InterventionFormEvent.*
@@ -101,7 +100,7 @@ fun InterventionDetail(
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 CustomTimeButton(
-                    time = intervention.start.toString(),
+                    time = intervention.start,
                     label = stringResource(R.string.ora_inizio),
                     onClick = { time ->
                         viewModel.onFormEvent(StartChanged(time))
@@ -110,7 +109,7 @@ fun InterventionDetail(
                 )
                 Spacer(modifier = Modifier.weight(1F))
                 CustomTimeButton(
-                    time = intervention.end.toString(),
+                    time = intervention.end,
                     label = stringResource(R.string.ora_fine),
                     onClick = { time ->
                         viewModel.onFormEvent(EndChanged(time))

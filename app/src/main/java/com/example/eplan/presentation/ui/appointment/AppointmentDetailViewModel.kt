@@ -1,7 +1,11 @@
 package com.example.eplan.presentation.ui.appointment
 
 import android.util.Log
-import androidx.compose.runtime.*
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import com.example.eplan.domain.model.Activity
@@ -16,11 +20,28 @@ import com.example.eplan.interactors.workActivityDetail.ValidateDescription
 import com.example.eplan.interactors.workActivityDetail.ValidateTime
 import com.example.eplan.presentation.ui.ValidationEvent
 import com.example.eplan.presentation.ui.WorkActivityDetailViewModel
-import com.example.eplan.presentation.ui.appointment.AppointmentDetailEvent.*
-import com.example.eplan.presentation.ui.appointment.AppointmentFormEvent.*
-import com.example.eplan.presentation.ui.intervention.InterventionFormEvent
+import com.example.eplan.presentation.ui.appointment.AppointmentDetailEvent.DeleteAppointmentEvent
+import com.example.eplan.presentation.ui.appointment.AppointmentDetailEvent.GetAppointmentEvent
+import com.example.eplan.presentation.ui.appointment.AppointmentDetailEvent.UpdateAppointmentEvent
+import com.example.eplan.presentation.ui.appointment.AppointmentFormEvent.ActivityIdChanged
+import com.example.eplan.presentation.ui.appointment.AppointmentFormEvent.ActivityNameChanged
+import com.example.eplan.presentation.ui.appointment.AppointmentFormEvent.AddInvited
+import com.example.eplan.presentation.ui.appointment.AppointmentFormEvent.ConfirmInvitedList
+import com.example.eplan.presentation.ui.appointment.AppointmentFormEvent.DateChanged
+import com.example.eplan.presentation.ui.appointment.AppointmentFormEvent.DescriptionChanged
+import com.example.eplan.presentation.ui.appointment.AppointmentFormEvent.DismissInvitedList
+import com.example.eplan.presentation.ui.appointment.AppointmentFormEvent.EndChanged
+import com.example.eplan.presentation.ui.appointment.AppointmentFormEvent.InterventionChanged
+import com.example.eplan.presentation.ui.appointment.AppointmentFormEvent.MemoChanged
+import com.example.eplan.presentation.ui.appointment.AppointmentFormEvent.PeriodicityChanged
+import com.example.eplan.presentation.ui.appointment.AppointmentFormEvent.PeriodicityEndChanged
+import com.example.eplan.presentation.ui.appointment.AppointmentFormEvent.PlanningChanged
+import com.example.eplan.presentation.ui.appointment.AppointmentFormEvent.RemoveInvited
+import com.example.eplan.presentation.ui.appointment.AppointmentFormEvent.StartChanged
+import com.example.eplan.presentation.ui.appointment.AppointmentFormEvent.Submit
+import com.example.eplan.presentation.ui.appointment.AppointmentFormEvent.WarningTimeChanged
+import com.example.eplan.presentation.ui.appointment.AppointmentFormEvent.WarningUnitChanged
 import com.example.eplan.presentation.util.TAG
-import com.example.eplan.presentation.util.fromDateToLocalDate
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -67,9 +88,11 @@ constructor(
                 changeQuery(event.id)
                 getAppointment()
             }
+
             is UpdateAppointmentEvent -> {
                 updateAppointment()
             }
+
             is DeleteAppointmentEvent -> {
                 deleteAppointment()
             }
@@ -105,28 +128,39 @@ constructor(
             is ActivityNameChanged -> {
                 appointment.value = appointment.value?.copy(activityName = event.name)
             }
+
             is ActivityIdChanged -> {
-                appointment.value = appointment.value?.copy(activityId = event.id, activityName = activitiesList.first { it!!.id == event.id }!!.name)
+                appointment.value = appointment.value?.copy(
+                    activityId = event.id,
+                    activityName = activitiesList.first { it!!.id == event.id }!!.name
+                )
             }
+
             is DateChanged -> {
-                appointment.value = appointment.value?.copy(date = fromDateToLocalDate(event.date))
+                appointment.value = appointment.value?.copy(date = event.date)
             }
+
             is DescriptionChanged -> {
                 appointment.value = appointment.value?.copy(description = event.description)
             }
+
             is EndChanged -> {
                 appointment.value = appointment.value?.copy(end = event.time)
             }
+
             is InterventionChanged -> {
                 appointment.value = appointment.value?.copy(intervention = event.selected)
             }
+
             is AddInvited -> {
                 tempInvitedList.add(event.invited)
 //                }
             }
+
             is RemoveInvited -> {
                 tempInvitedList.remove(event.invited)
             }
+
             is ConfirmInvitedList -> {
                 val confirmedList = mutableListOf<User>()
                 confirmedList.addAll(tempInvitedList)
@@ -134,6 +168,7 @@ constructor(
                 invitedListBackup.clear()
                 invitedListBackup.addAll(tempInvitedList)
             }
+
             is DismissInvitedList -> {
                 val restoredList = mutableListOf<User>()
                 restoredList.addAll(invitedListBackup)
@@ -141,27 +176,35 @@ constructor(
                 tempInvitedList.clear()
                 tempInvitedList.addAll(invitedListBackup)
             }
+
             is MemoChanged -> {
                 appointment.value = appointment.value?.copy(memo = event.selected)
             }
+
             is PeriodicityChanged -> {
                 appointment.value = appointment.value?.copy(periodicity = event.periodicity)
             }
+
             is PeriodicityEndChanged -> {
-                appointment.value = appointment.value?.copy(periodicityEnd = fromDateToLocalDate(event.date))
+                appointment.value = appointment.value?.copy(periodicityEnd = event.date)
             }
+
             is PlanningChanged -> {
                 appointment.value = appointment.value?.copy(planning = event.selected)
             }
+
             is StartChanged -> {
                 appointment.value = appointment.value?.copy(start = event.time)
             }
+
             is WarningTimeChanged -> {
                 appointment.value = appointment.value?.copy(warningTime = event.warningTime)
             }
+
             is WarningUnitChanged -> {
                 appointment.value = appointment.value?.copy(warningUnit = event.warningUnit)
             }
+
             Submit -> {
                 submitData()
             }
@@ -176,7 +219,9 @@ constructor(
         appointment.value?.let { appointment ->
             // TODO quando arrivo qua devo aver già popolato la mappa di attività (id, nome)
             // TODO implementare controllo su data impostata nella periodicità > data appuntamento
-            val activityResult = validateActivity.execute(appointment.activityName, activitiesList.map { it?.name ?: ""})
+            val activityResult = validateActivity.execute(
+                appointment.activityName,
+                activitiesList.map { it?.name ?: "" })
             val descriptionResult = validateDescription.execute(appointment.description)
             val timeResult = validateTime.execute(appointment.start, appointment.end)
 
