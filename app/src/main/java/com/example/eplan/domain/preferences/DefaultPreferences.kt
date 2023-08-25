@@ -21,22 +21,6 @@ class DefaultPreferences(
             .apply()
     }
 
-    override fun saveShouldShowLogin(shouldShowLogin: Boolean) {
-        encryptedSharedPref.edit()
-            .putBoolean(Preferences.KEY_SHOULD_SHOW_LOGIN, shouldShowLogin)
-            .apply()
-    }
-
-    override fun loadShouldShowLogin(): Boolean {
-        return encryptedSharedPref.getBoolean(Preferences.KEY_SHOULD_SHOW_LOGIN, true)
-    }
-
-    override fun deleteShouldShowLogin() {
-        encryptedSharedPref.edit()
-            .remove(Preferences.KEY_SHOULD_SHOW_LOGIN)
-            .apply()
-    }
-
     override fun saveUsername(username: String) {
         encryptedSharedPref.edit()
             .putString(Preferences.KEY_USERNAME, username)

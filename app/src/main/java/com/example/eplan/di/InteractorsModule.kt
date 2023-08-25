@@ -1,5 +1,6 @@
 package com.example.eplan.di
 
+import android.content.SharedPreferences
 import com.example.eplan.domain.preferences.Preferences
 import com.example.eplan.interactors.GetProfilePicUri
 import com.example.eplan.interactors.GetToken
@@ -12,6 +13,7 @@ import com.example.eplan.interactors.interventionDetail.UpdateIntervention
 import com.example.eplan.interactors.interventionList.DayChangeIntervention
 import com.example.eplan.interactors.login.GetCredentialsFromCache
 import com.example.eplan.interactors.login.LoginAttempt
+import com.example.eplan.interactors.login.RefreshToken
 import com.example.eplan.interactors.timeStats.GetTimeStats
 import com.example.eplan.interactors.vacationRequest.RequestVacation
 import com.example.eplan.interactors.workActivityDetail.GetActivitiesList
@@ -28,6 +30,7 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.components.ViewModelComponent
 import dagger.hilt.android.scopes.ViewModelScoped
+import javax.inject.Singleton
 
 @Module
 @InstallIn(ViewModelComponent::class)
@@ -200,5 +203,19 @@ object InteractorsModule {
         mapper: ActivityDtoMapper
     ): GetActivitiesList {
         return GetActivitiesList(service = service, mapper = mapper)
+    }
+
+    @Singleton
+    @Provides
+    fun provideRefreshToken(
+        service: RefreshTokenService,
+        encryptedPreferences: Preferences,
+        sharedPreferences: SharedPreferences
+    ): RefreshToken {
+        return RefreshToken(
+            service = service,
+            encryptedPreferences = encryptedPreferences,
+            sharedPreferences = sharedPreferences
+        )
     }
 }

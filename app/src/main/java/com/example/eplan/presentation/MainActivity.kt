@@ -3,14 +3,15 @@ package com.example.eplan.presentation
 import android.content.SharedPreferences
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.compose.setContent
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
-import androidx.compose.animation.*
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.SideEffect
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.graphics.Color
@@ -18,14 +19,19 @@ import androidx.compose.ui.graphics.toArgb
 import androidx.core.view.WindowCompat
 import androidx.navigation.compose.rememberNavController
 import com.example.eplan.domain.preferences.Preferences
+import com.example.eplan.interactors.login.RefreshToken
+import com.example.eplan.network.services.RefreshTokenService
 import com.example.eplan.presentation.navigation.NavGraph
 import com.example.eplan.presentation.ui.theme.AppTheme
+import com.example.eplan.presentation.util.STAY_LOGGED
+import com.example.eplan.presentation.util.TAG
 import com.example.eplan.presentation.util.THEME_STATE_KEY
 import com.example.eplan.presentation.util.getCurrentRoute
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.google.android.material.color.DynamicColors
 import com.google.android.material.elevation.SurfaceColors
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.onEach
 import javax.inject.Inject
 
 @ExperimentalComposeUiApi
@@ -38,6 +44,9 @@ class MainActivity : AppCompatActivity() {
     @Inject
     lateinit var encryptedSharedPreferences: Preferences
 
+    @Inject
+    lateinit var refreshToken: RefreshToken
+
     @RequiresApi(Build.VERSION_CODES.S)
     @OptIn(ExperimentalMaterial3Api::class)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -46,7 +55,26 @@ class MainActivity : AppCompatActivity() {
         WindowCompat.setDecorFitsSystemWindows(window, false)
 
         setContent {
+
+            LaunchedEffect(key1 = Unit) {
+                refreshToken.execute().onEach { dataState ->
+                    dataState.data?.let {
+                        if (it.first.toString().startsWith("2")) {
+                            encryptedSharedPreferences.saveToken(token = it.second)
+                        } else {
+                            encryptedSharedPreferences.deleteToken()
+                            encryptedSharedPreferences.deleteUsername()
+                            encryptedSharedPreferences.deleteProfilePicUri()
+                            sharedPreferences.edit().putBoolean(STAY_LOGGED, false).apply()
+                        }
+                    }
+                }
+            }
+
+            Log.d(TAG, encryptedSharedPreferences.loadToken().toString() + " " + sharedPreferences.getBoolean(STAY_LOGGED, false))
+
             AppTheme {
+
                 val mode = sharedPreferences.getInt(
                     THEME_STATE_KEY,
                     AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM
@@ -65,6 +93,7 @@ class MainActivity : AppCompatActivity() {
                         darkIcons = useDarkIcons
                     )
                 }
+
                 currentRoute?.let {
                     with(it) {
                         when {
@@ -98,7 +127,13 @@ class MainActivity : AppCompatActivity() {
                         }
                     }
                 }
-                NavGraph(navController = navController, shouldShowLogin = encryptedSharedPreferences.loadShouldShowLogin())
+
+                NavGraph(
+                    navController = navController,
+                    shouldShowLogin = !sharedPreferences.getBoolean(
+                        STAY_LOGGED, false
+                    )
+                )
             }
         }
     }

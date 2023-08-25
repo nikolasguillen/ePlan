@@ -56,12 +56,12 @@ import java.time.LocalDate
 fun NavGraph(navController: NavHostController, shouldShowLogin: Boolean) {
     NavHost(
         navController = navController,
-        startDestination = LoginGraph.route,
+        startDestination = if (shouldShowLogin) LoginGraph.route else InterventionGraph.route,
         modifier = Modifier.systemBarsPadding()
     ) {
 
         navigation(
-            startDestination = if (shouldShowLogin) LoginGraph.startDestination else InterventionGraph.startDestination,
+            startDestination = LoginGraph.startDestination,
             route = LoginGraph.route
         ) {
             composable(route = Screen.Login.route) {
@@ -75,186 +75,186 @@ fun NavGraph(navController: NavHostController, shouldShowLogin: Boolean) {
                     }
                 )
             }
+        }
 
-            navigation(
-                startDestination = InterventionGraph.startDestination,
-                route = InterventionGraph.route
-            ) {
+        navigation(
+            startDestination = InterventionGraph.startDestination,
+            route = InterventionGraph.route
+        ) {
 
-                val selectedDate = mutableStateOf(LocalDate.now())
+            val selectedDate = mutableStateOf(LocalDate.now())
 
-                composable(route = Screen.InterventionList.route) {
-                    val viewModel = hiltViewModel<InterventionListViewModel>()
-                    InterventionListScreen(
-                        viewModel = viewModel,
-                        onNavigate = navController::navigate,
-                    )
-                }
-
-                composable(route = Screen.InterventionRecord.route) {
-                    val viewModel = hiltViewModel<InterventionRecordViewModel>()
-                    InterventionRecordScreen(
-                        viewModel = viewModel,
-                        onSave = {
-                            navController.popBackStack()
-                            navController.navigate(it)
-                        }
-                    )
-                }
-
-                composable(
-                    route = Screen.InterventionDetails.route + "/?activityId={activityId}&date={date}&start={start}&end={end}",
-                    arguments = listOf(
-                        navArgument("activityId") {
-                            type = NavType.StringType
-                            nullable = true
-                        },
-                        navArgument("date") {
-                            type = NavType.StringType
-                            defaultValue = selectedDate.value.toString()
-                        },
-                        navArgument("start") {
-                            type = NavType.StringType
-                            nullable = true
-                        },
-                        navArgument("end") {
-                            type = NavType.StringType
-                            nullable = true
-                        }
-                    )
-                ) {
-                    val viewModel = hiltViewModel<InterventionDetailViewModel>()
-                    InterventionDetailsScreen(
-                        viewModel = viewModel,
-                        topBarTitleResID = R.string.intervento,
-                        onSavePressed = {
-                            viewModel.onFormEvent(InterventionFormEvent.Submit)
-                        },
-                        onBackPressed = navController::popBackStack,
-                        onDeletePressed = {
-                            viewModel.onTriggerEvent(DeleteInterventionEvent)
-                            navController.popBackStack()
-                        }
-                    )
-                }
+            composable(route = Screen.InterventionList.route) {
+                val viewModel = hiltViewModel<InterventionListViewModel>()
+                InterventionListScreen(
+                    viewModel = viewModel,
+                    onNavigate = navController::navigate,
+                )
             }
 
-            /* Sezione appuntamenti */
-            navigation(
-                startDestination = AppointmentGraph.startDestination,
-                route = AppointmentGraph.route
-            ) {
-
-                val selectedDate = mutableStateOf(LocalDate.now())
-
-                composable(route = Screen.AppointmentList.route) {
-                    val viewModel = hiltViewModel<AppointmentListViewModel>()
-                    AppointmentListScreen(
-                        viewModel = viewModel,
-                        onNavigate = navController::navigate
-                    )
-                }
-                composable(
-                    route = Screen.AppointmentDetails.route + "/?appointmentId={appointmentId}&date={date}",
-                    arguments = listOf(
-                        navArgument("appointmentId") {
-                            type = NavType.StringType
-                            nullable = true
-                        },
-                        navArgument("date") {
-                            type = NavType.StringType
-                            defaultValue = selectedDate.value.toString()
-                        }
-                    )
-                ) {
-                    val viewModel = hiltViewModel<AppointmentDetailViewModel>()
-                    AppointmentDetailScreen(
-                        viewModel = viewModel,
-                        topBarTitleResID = R.string.appuntamento,
-                        onSavePressed = {
-                            viewModel.onFormEvent(AppointmentFormEvent.Submit)
-                        },
-                        onBackPressed = navController::popBackStack,
-                        onDeletePressed = {
-                            viewModel.onTriggerEvent(AppointmentDetailEvent.DeleteAppointmentEvent)
-                            navController.popBackStack()
-                        }
-                    )
-                }
+            composable(route = Screen.InterventionRecord.route) {
+                val viewModel = hiltViewModel<InterventionRecordViewModel>()
+                InterventionRecordScreen(
+                    viewModel = viewModel,
+                    onSave = {
+                        navController.popBackStack()
+                        navController.navigate(it)
+                    }
+                )
             }
 
-            /* Sezione account */
-            navigation(
-                startDestination = AccountGraph.startDestination,
-                route = AccountGraph.route
+            composable(
+                route = Screen.InterventionDetails.route + "/?activityId={activityId}&date={date}&start={start}&end={end}",
+                arguments = listOf(
+                    navArgument("activityId") {
+                        type = NavType.StringType
+                        nullable = true
+                    },
+                    navArgument("date") {
+                        type = NavType.StringType
+                        defaultValue = selectedDate.value.toString()
+                    },
+                    navArgument("start") {
+                        type = NavType.StringType
+                        nullable = true
+                    },
+                    navArgument("end") {
+                        type = NavType.StringType
+                        nullable = true
+                    }
+                )
             ) {
-                composable(route = Screen.Account.route) {
-                    val viewModel = hiltViewModel<AccountViewModel>()
-                    AccountScreen(
-                        viewModel = viewModel,
-                        onBackPressed = navController::popBackStack,
-                        navigateToCamera = { navController.navigate(Screen.Camera.route) },
-                        onListItemClick = { navController.navigate(it) },
-                        logout = {
-                            viewModel.onTriggerEvent(AccountEvent.Logout)
-                            navController.popBackStack(
-                                route = AccountGraph.startDestination,
-                                inclusive = true
-                            )
-                            navController.popBackStack(
-                                route = AppointmentGraph.startDestination,
-                                inclusive = true
-                            )
-                            navController.popBackStack(
-                                route = InterventionGraph.startDestination,
-                                inclusive = true
-                            )
-                            navController.popBackStack(
-                                route = LoginGraph.startDestination,
-                                inclusive = true
-                            )
-                            navController.navigate(route = LoginGraph.startDestination)
-                        }
-                    )
-                }
-                composable(route = Screen.Camera.route) {
-                    val viewModel = hiltViewModel<CameraViewModel>()
-                    CameraScreen(
-                        viewModel = viewModel,
-                        onBackPressed = navController::popBackStack,
-                        onImageSelected = {
-                            viewModel.onTriggerEvent(CameraEvent.SaveUriInCache)
+                val viewModel = hiltViewModel<InterventionDetailViewModel>()
+                InterventionDetailsScreen(
+                    viewModel = viewModel,
+                    topBarTitleResID = R.string.intervento,
+                    onSavePressed = {
+                        viewModel.onFormEvent(InterventionFormEvent.Submit)
+                    },
+                    onBackPressed = navController::popBackStack,
+                    onDeletePressed = {
+                        viewModel.onTriggerEvent(DeleteInterventionEvent)
+                        navController.popBackStack()
+                    }
+                )
+            }
+        }
+
+        /* Sezione appuntamenti */
+        navigation(
+            startDestination = AppointmentGraph.startDestination,
+            route = AppointmentGraph.route
+        ) {
+
+            val selectedDate = mutableStateOf(LocalDate.now())
+
+            composable(route = Screen.AppointmentList.route) {
+                val viewModel = hiltViewModel<AppointmentListViewModel>()
+                AppointmentListScreen(
+                    viewModel = viewModel,
+                    onNavigate = navController::navigate
+                )
+            }
+            composable(
+                route = Screen.AppointmentDetails.route + "/?appointmentId={appointmentId}&date={date}",
+                arguments = listOf(
+                    navArgument("appointmentId") {
+                        type = NavType.StringType
+                        nullable = true
+                    },
+                    navArgument("date") {
+                        type = NavType.StringType
+                        defaultValue = selectedDate.value.toString()
+                    }
+                )
+            ) {
+                val viewModel = hiltViewModel<AppointmentDetailViewModel>()
+                AppointmentDetailScreen(
+                    viewModel = viewModel,
+                    topBarTitleResID = R.string.appuntamento,
+                    onSavePressed = {
+                        viewModel.onFormEvent(AppointmentFormEvent.Submit)
+                    },
+                    onBackPressed = navController::popBackStack,
+                    onDeletePressed = {
+                        viewModel.onTriggerEvent(AppointmentDetailEvent.DeleteAppointmentEvent)
+                        navController.popBackStack()
+                    }
+                )
+            }
+        }
+
+        /* Sezione account */
+        navigation(
+            startDestination = AccountGraph.startDestination,
+            route = AccountGraph.route
+        ) {
+            composable(route = Screen.Account.route) {
+                val viewModel = hiltViewModel<AccountViewModel>()
+                AccountScreen(
+                    viewModel = viewModel,
+                    onBackPressed = navController::popBackStack,
+                    navigateToCamera = { navController.navigate(Screen.Camera.route) },
+                    onListItemClick = { navController.navigate(it) },
+                    logout = {
+                        viewModel.onTriggerEvent(AccountEvent.Logout)
+                        navController.popBackStack(
+                            route = AccountGraph.startDestination,
+                            inclusive = true
+                        )
+                        navController.popBackStack(
+                            route = AppointmentGraph.startDestination,
+                            inclusive = true
+                        )
+                        navController.popBackStack(
+                            route = InterventionGraph.startDestination,
+                            inclusive = true
+                        )
+                        navController.popBackStack(
+                            route = LoginGraph.startDestination,
+                            inclusive = true
+                        )
+                        navController.navigate(route = LoginGraph.startDestination)
+                    }
+                )
+            }
+            composable(route = Screen.Camera.route) {
+                val viewModel = hiltViewModel<CameraViewModel>()
+                CameraScreen(
+                    viewModel = viewModel,
+                    onBackPressed = navController::popBackStack,
+                    onImageSelected = {
+                        viewModel.onTriggerEvent(CameraEvent.SaveUriInCache)
+                        navController.popBackStack()
+                    }
+                )
+            }
+            composable(route = Screen.Settings.route) {
+                val viewModel = hiltViewModel<SettingsViewModel>()
+                SettingsScreen(
+                    viewModel = viewModel,
+                    onBackPressed = navController::popBackStack
+                )
+            }
+            composable(route = Screen.TimeStats.route) {
+                val viewModel = hiltViewModel<TimeStatsViewModel>()
+                TimeStatsScreen(
+                    viewModel = viewModel,
+                    onBackPressed = navController::popBackStack
+                )
+            }
+            composable(route = Screen.VacationRequest.route) {
+                val viewModel = hiltViewModel<VacationRequestViewModel>()
+                VacationRequestScreen(
+                    viewModel = viewModel,
+                    onRequestSent = {
+                        viewModel.onTriggerEvent(RequestEvent)
+                        if (viewModel.successfulVacationRequest.value == true) {
                             navController.popBackStack()
                         }
-                    )
-                }
-                composable(route = Screen.Settings.route) {
-                    val viewModel = hiltViewModel<SettingsViewModel>()
-                    SettingsScreen(
-                        viewModel = viewModel,
-                        onBackPressed = navController::popBackStack
-                    )
-                }
-                composable(route = Screen.TimeStats.route) {
-                    val viewModel = hiltViewModel<TimeStatsViewModel>()
-                    TimeStatsScreen(
-                        viewModel = viewModel,
-                        onBackPressed = navController::popBackStack
-                    )
-                }
-                composable(route = Screen.VacationRequest.route) {
-                    val viewModel = hiltViewModel<VacationRequestViewModel>()
-                    VacationRequestScreen(
-                        viewModel = viewModel,
-                        onRequestSent = {
-                            viewModel.onTriggerEvent(RequestEvent)
-                            if (viewModel.successfulVacationRequest.value == true) {
-                                navController.popBackStack()
-                            }
-                        },
-                        onBackPressed = navController::popBackStack
-                    )
-                }
+                    },
+                    onBackPressed = navController::popBackStack
+                )
             }
         }
     }

@@ -115,4 +115,14 @@ object NetworkModule {
     fun provideActivityDtoMapper(): ActivityDtoMapper {
         return ActivityDtoMapper()
     }
+
+    @Singleton
+    @Provides
+    fun provideRefreshTokenService(): RefreshTokenService {
+        return Retrofit.Builder()
+            .baseUrl(URL)
+            .addConverterFactory(GsonConverterFactory.create(GsonBuilder().create()))
+            .build()
+            .create(RefreshTokenService::class.java)
+    }
 }
