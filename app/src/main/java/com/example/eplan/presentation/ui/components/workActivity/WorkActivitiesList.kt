@@ -1,43 +1,29 @@
 package com.example.eplan.presentation.ui.components.workActivity
 
-import androidx.compose.animation.core.animateFloat
-import androidx.compose.animation.core.updateTransition
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.WifiOff
 import androidx.compose.material.pullrefresh.PullRefreshIndicator
 import androidx.compose.material.pullrefresh.pullRefresh
 import androidx.compose.material.pullrefresh.rememberPullRefreshState
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -50,7 +36,7 @@ import com.example.eplan.presentation.ui.components.animations.AnimationEmptyLis
 import com.example.eplan.presentation.ui.components.placeholders.PlaceholderCard
 import com.example.eplan.presentation.util.spacing
 
-@OptIn(ExperimentalMaterialApi::class, ExperimentalFoundationApi::class)
+@OptIn(ExperimentalMaterialApi::class)
 @ExperimentalMaterial3Api
 @Composable
 fun WorkActivitiesList(
@@ -71,7 +57,6 @@ fun WorkActivitiesList(
         LazyColumn(
             verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.small),
             horizontalAlignment = Alignment.CenterHorizontally,
-            contentPadding = PaddingValues(vertical = MaterialTheme.spacing.small),
             modifier = Modifier
                 .fillMaxSize()
                 .padding(horizontal = MaterialTheme.spacing.medium)
@@ -90,54 +75,28 @@ fun WorkActivitiesList(
                         }
                     } else {
                         groupedActivities.forEach { (hour, workActivities) ->
-                            item(key = hour) {
-
-                                var areItemsExpanded by rememberSaveable { mutableStateOf(true) }
-                                val transition =
-                                    updateTransition(
-                                        targetState = areItemsExpanded,
-                                        label = "Add button rotation"
-                                    )
-                                val rotation: Float by transition.animateFloat(label = "Add button rotation") { state ->
-                                    if (state) 0F else -180F
+                            item {
+                                Text(
+                                    text = "$hour:00",
+                                    style = MaterialTheme.typography.labelLarge,
+                                    modifier = Modifier.padding(top = MaterialTheme.spacing.medium)
+                                )
+                            }
+                            items(workActivities) { workActivity ->
+                                if (workActivities.indexOf(workActivity) == 0) {
+                                    Spacer(modifier = Modifier.height(height = MaterialTheme.spacing.small))
                                 }
-                                Column(
-                                    horizontalAlignment = Alignment.CenterHorizontally,
-                                    modifier = Modifier.fillMaxWidth()
-                                ) {
-                                    TextButton(
-                                        onClick = {
-                                            areItemsExpanded = areItemsExpanded.not()
-                                        },
-                                        colors = ButtonDefaults.textButtonColors(contentColor = MaterialTheme.colorScheme.onSurfaceVariant)
-                                    ) {
-                                        Text(
-                                            text = "$hour:00",
-                                            style = MaterialTheme.typography.labelLarge
-                                        )
-                                        Icon(
-                                            imageVector = Icons.Filled.KeyboardArrowDown,
-                                            contentDescription = null,
-                                            modifier = Modifier.rotate(rotation)
-                                        )
-                                    }
-                                    workActivities.forEachIndexed { index, workActivity ->
-                                        WorkActivityCard(
+                                WorkActivityCard(
+                                    workActivity = workActivity,
+                                    onClick = {
+                                        onClick(
                                             workActivity = workActivity,
-                                            onClick = {
-                                                onClick(
-                                                    workActivity = workActivity,
-                                                    onNavigateToActivityDetailScreen = onNavigateToActivityDetailScreen
-                                                )
-                                            },
-                                            isExpanded = areItemsExpanded,
-                                            modifier = Modifier.animateItemPlacement()
+                                            onNavigateToActivityDetailScreen = onNavigateToActivityDetailScreen
                                         )
-
-                                        if (index != workActivities.lastIndex) {
-                                            Spacer(modifier = Modifier.height(MaterialTheme.spacing.medium))
-                                        }
                                     }
+                                )
+                                if (workActivities.indexOf(workActivity) == workActivities.lastIndex) {
+                                    Spacer(modifier = Modifier.height(height = MaterialTheme.spacing.small))
                                 }
                             }
                         }
@@ -157,18 +116,11 @@ fun WorkActivitiesList(
                 Image(
                     imageVector = Icons.Filled.WifiOff,
                     contentDescription = null,
-                    colorFilter = ColorFilter.tint(
-                        color = MaterialTheme.colorScheme.onSurface.copy(
-                            alpha = 0.8F
-                        )
-                    ),
+                    colorFilter = ColorFilter.tint(color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.8F)),
                     modifier = Modifier.size(100.dp)
                 )
                 Spacer(modifier = Modifier.height(MaterialTheme.spacing.medium))
-                Text(
-                    text = stringResource(id = R.string.connessione_assente),
-                    style = MaterialTheme.typography.bodyLarge
-                )
+                Text(text = stringResource(id = R.string.connessione_assente), style = MaterialTheme.typography.bodyLarge)
             }
         }
 
