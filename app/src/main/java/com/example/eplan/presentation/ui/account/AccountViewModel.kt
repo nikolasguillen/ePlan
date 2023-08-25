@@ -27,6 +27,7 @@ constructor(
 ) : EplanViewModel() {
 
     var imageUri: Uri = Uri.EMPTY
+    val username = encryptedPreferences.loadUsername()
     val accountItems = listOf(
         AccountItems.Settings,
         AccountItems.TimeStats,

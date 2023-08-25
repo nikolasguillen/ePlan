@@ -37,9 +37,6 @@ import com.example.eplan.presentation.util.spacing
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.rememberPermissionState
 
-const val name = "Nikolas"
-// TODO prendere nome dal DB?
-
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalPermissionsApi::class)
 @Composable
 fun AccountScreen(
@@ -127,7 +124,7 @@ fun AccountScreen(
                         )
                         Spacer(modifier = Modifier.width(MaterialTheme.spacing.medium))
                         Text(
-                            text = stringResource(R.string.profilo),
+                            text = viewModel.username ?: stringResource(R.string.profilo),
                             style = MaterialTheme.typography.headlineLarge,
                             modifier = Modifier.padding(
                                 end = MaterialTheme.spacing.medium,
