@@ -38,8 +38,9 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.example.eplan.R
-import com.example.eplan.presentation.navigation.BottomNavBarItems
-import com.example.eplan.presentation.ui.components.uiElements.BottomSingleActionBar
+import com.example.eplan.presentation.navigation.BottomNavBarItem
+import com.example.eplan.presentation.navigation.BottomNavbarAction
+import com.example.eplan.presentation.ui.components.uiElements.BottomActionBar
 import com.example.eplan.presentation.ui.components.uiElements.CustomDateButton
 import com.example.eplan.presentation.util.spacing
 
@@ -75,11 +76,13 @@ fun VacationRequestScreen(
                 })
         },
         bottomBar = {
-            BottomSingleActionBar(
-                item = BottomNavBarItems.Send,
-                onClick = {
-                    onRequestSent()
-                }
+            BottomActionBar(
+                actions = listOf(
+                    BottomNavbarAction(
+                        item = BottomNavBarItem.Send,
+                        onClick = onRequestSent
+                    )
+                )
             )
         },
         snackbarHost = { SnackbarHost(hostState = snackBarHostState) }

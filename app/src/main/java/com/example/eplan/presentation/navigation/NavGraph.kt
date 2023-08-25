@@ -48,6 +48,7 @@ import com.example.eplan.presentation.ui.timeStats.TimeStatsViewModel
 import com.example.eplan.presentation.ui.vacationRequest.VacationRequestEvent.RequestEvent
 import com.example.eplan.presentation.ui.vacationRequest.VacationRequestScreen
 import com.example.eplan.presentation.ui.vacationRequest.VacationRequestViewModel
+import java.time.Duration
 import java.time.LocalDate
 
 @ExperimentalComposeUiApi
@@ -128,8 +129,21 @@ fun NavGraph(navController: NavHostController, shouldShowLogin: Boolean) {
                 InterventionDetailsScreen(
                     viewModel = viewModel,
                     topBarTitleResID = R.string.intervento,
-                    onSavePressed = {
+                    onSaveAndClosePressed = {
                         viewModel.onFormEvent(InterventionFormEvent.Submit)
+                    },
+                    onSaveAndContinuePressed = {
+                        viewModel.onFormEvent(InterventionFormEvent.Submit)
+
+                        val newInterventionStartTime = viewModel.intervention.value?.end
+                        navController.popBackStack()
+                        navController.navigate(
+                            "${Screen.InterventionDetails.route}/?date=${selectedDate.value}&start=${newInterventionStartTime}&end=${
+                                newInterventionStartTime?.plus(
+                                    Duration.ofMinutes(15L)
+                                )
+                            }"
+                        )
                     },
                     onBackPressed = navController::popBackStack,
                     onDeletePressed = {

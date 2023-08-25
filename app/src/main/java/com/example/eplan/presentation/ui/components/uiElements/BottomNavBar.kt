@@ -1,25 +1,19 @@
-package com.example.eplan.presentation.ui.components
+package com.example.eplan.presentation.ui.components.uiElements
 
 import androidx.compose.animation.Crossfade
-import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.navigation.NavHostController
-import com.example.eplan.presentation.navigation.BottomNavBarItems
-import com.example.eplan.presentation.util.getCurrentRoute
+import com.example.eplan.presentation.navigation.BottomNavBarItem
 
 @Composable
 fun BottomNavBar(
     currentRoute: String,
-    items: List<BottomNavBarItems>,
+    items: List<BottomNavBarItem>,
     onNavigate: (String) -> Unit
 ) {
-
-//    val currentRoute = getCurrentRoute(navController = navController)
 
     NavigationBar {
         items.forEach { item ->
@@ -28,11 +22,10 @@ fun BottomNavBar(
                 onClick = {
                     if (currentRoute != item.route) {
                         onNavigate(item.route)
-//                        navController.navigate(item.route)
                     }
                 },
                 icon = {
-                    Crossfade(targetState = currentRoute == item.route) {
+                    Crossfade(targetState = currentRoute == item.route, label = "IconCrossFade") {
                         if (it) {
                             Icon(imageVector = item.activeIcon, contentDescription = item.title)
                         } else {

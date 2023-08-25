@@ -12,10 +12,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import com.example.eplan.R
-import com.example.eplan.presentation.navigation.BottomNavBarItems
+import com.example.eplan.presentation.navigation.BottomNavBarItem
 import com.example.eplan.presentation.navigation.NestedNavGraphs
 import com.example.eplan.presentation.navigation.Screen
-import com.example.eplan.presentation.ui.components.BottomNavBar
+import com.example.eplan.presentation.ui.components.uiElements.BottomNavBar
 import com.example.eplan.presentation.ui.components.CollapsibleCalendar
 import com.example.eplan.presentation.ui.components.uiElements.TopBar
 import com.example.eplan.presentation.ui.components.workActivity.WorkActivitiesList
@@ -48,7 +48,7 @@ fun AppointmentListScreen(
         bottomBar = {
             BottomNavBar(
                 currentRoute = Screen.AppointmentList.route,
-                items = listOf(BottomNavBarItems.Home, BottomNavBarItems.Appointments),
+                items = listOf(BottomNavBarItem.Home, BottomNavBarItem.Appointments),
                 onNavigate = onNavigate
             )
         },

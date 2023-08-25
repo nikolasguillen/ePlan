@@ -18,7 +18,8 @@ import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.window.Dialog
 import com.example.eplan.R
-import com.example.eplan.presentation.navigation.BottomNavBarItems
+import com.example.eplan.presentation.navigation.BottomNavBarItem
+import com.example.eplan.presentation.navigation.BottomNavbarAction
 import com.example.eplan.presentation.ui.ValidationEvent
 import com.example.eplan.presentation.ui.WorkActivityDetailViewModel
 import com.example.eplan.presentation.ui.appointment.AppointmentDetailViewModel
@@ -28,12 +29,11 @@ import com.example.eplan.presentation.ui.components.animations.SendAnimation
 import com.example.eplan.presentation.ui.components.detailForms.AppointmentDetail
 import com.example.eplan.presentation.ui.components.detailForms.InterventionDetail
 import com.example.eplan.presentation.ui.components.placeholders.PlaceholderDetails
-import com.example.eplan.presentation.ui.components.uiElements.BottomSingleActionBar
+import com.example.eplan.presentation.ui.components.uiElements.BottomActionBar
 import com.example.eplan.presentation.ui.intervention.InterventionDetailViewModel
 import com.example.eplan.presentation.ui.intervention.InterventionFormEvent
 import com.example.eplan.presentation.util.spacing
 
-@OptIn(ExperimentalLayoutApi::class)
 @ExperimentalComposeUiApi
 @ExperimentalMaterial3Api
 @Composable
@@ -41,7 +41,8 @@ fun WorkActivityDetail(
     viewModel: WorkActivityDetailViewModel,
     topBarTitleResID: Int,
     onBackPressed: () -> Unit,
-    onSavePressed: () -> Unit,
+    onSaveAndClose: () -> Unit,
+    onSaveAndContinue: (() -> Unit)? = null,
     onDeletePressed: () -> Unit
 ) {
 
@@ -57,7 +58,7 @@ fun WorkActivityDetail(
         viewModel.validationEvents.collect { event ->
             when (event) {
                 is ValidationEvent.UpdateSuccess -> {
-                    onBackPressed()
+                    if (onSaveAndContinue != null) onBackPressed()
                 }
 
                 is ValidationEvent.SubmitError -> {
@@ -147,12 +148,37 @@ fun WorkActivityDetail(
                         enter = fadeIn() + slideInVertically(initialOffsetY = { it }),
                         exit = slideOutVertically(targetOffsetY = { it }) + fadeOut()
                     ) {
-                        BottomSingleActionBar(
-                            item = BottomNavBarItems.Save,
-                            onClick = {
-                                if (!retrieving) {
-                                    onSavePressed()
-                                }
+                        BottomActionBar(
+                            actions = if (viewModel is InterventionDetailViewModel) {
+                                listOf(
+                                    BottomNavbarAction(
+                                        item = BottomNavBarItem.SaveAndClose,
+                                        onClick = {
+                                            if (!retrieving) {
+                                                onSaveAndClose()
+                                            }
+                                        }
+                                    ),
+                                    BottomNavbarAction(
+                                        item = BottomNavBarItem.SaveAndContinue,
+                                        onClick = {
+                                            if (!retrieving) {
+                                                onSaveAndContinue?.invoke()
+                                            }
+                                        }
+                                    )
+                                )
+                            } else {
+                                listOf(
+                                    BottomNavbarAction(
+                                        item = BottomNavBarItem.Save,
+                                        onClick = {
+                                            if (!retrieving) {
+                                                onSaveAndClose()
+                                            }
+                                        }
+                                    )
+                                )
                             }
                         )
                     }

@@ -19,7 +19,7 @@ fun AppointmentDetailScreen(
         viewModel = viewModel,
         topBarTitleResID = topBarTitleResID,
         onBackPressed = onBackPressed,
-        onSavePressed = onSavePressed,
+        onSaveAndClose = onSavePressed,
         onDeletePressed = onDeletePressed
     )
 }

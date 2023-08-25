@@ -12,14 +12,16 @@ fun InterventionDetailsScreen(
     viewModel: InterventionDetailViewModel,
     topBarTitleResID: Int,
     onBackPressed: () -> Unit,
-    onSavePressed: () -> Unit,
+    onSaveAndClosePressed: () -> Unit,
+    onSaveAndContinuePressed: () -> Unit = {},
     onDeletePressed: () -> Unit
 ) {
     WorkActivityDetail(
         viewModel = viewModel,
         topBarTitleResID = topBarTitleResID,
         onBackPressed = onBackPressed,
-        onSavePressed = onSavePressed,
+        onSaveAndClose = onSaveAndClosePressed,
+        onSaveAndContinue = onSaveAndContinuePressed,
         onDeletePressed = onDeletePressed
     )
 }
