@@ -20,6 +20,7 @@ fun AppointmentDetailScreen(
         topBarTitleResID = topBarTitleResID,
         onBackPressed = onBackPressed,
         onSaveAndClose = onSavePressed,
-        onDeletePressed = onDeletePressed
+        onDeletePressed = onDeletePressed,
+        shouldShowMissingConnectionWarning = viewModel.isConnectionAvailable.not() && viewModel.appointment.value == null
     )
 }

@@ -8,6 +8,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
+import com.example.eplan.R
 import com.example.eplan.domain.model.Activity
 import com.example.eplan.domain.model.Intervention
 import com.example.eplan.interactors.GetToken
@@ -17,6 +18,7 @@ import com.example.eplan.interactors.workActivityDetail.GetActivitiesList
 import com.example.eplan.interactors.workActivityDetail.ValidateActivity
 import com.example.eplan.interactors.workActivityDetail.ValidateDescription
 import com.example.eplan.interactors.workActivityDetail.ValidateTime
+import com.example.eplan.presentation.BaseApplication
 import com.example.eplan.presentation.ui.ValidationEvent
 import com.example.eplan.presentation.ui.WorkActivityDetailViewModel
 import com.example.eplan.presentation.ui.intervention.InterventionDetailEvent.DeleteInterventionEvent
@@ -35,6 +37,7 @@ import com.example.eplan.presentation.util.TAG
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.launch
 import java.time.LocalDate
 import java.time.LocalTime
 import javax.inject.Inject
@@ -46,6 +49,7 @@ class InterventionDetailViewModel
 @Inject
 constructor(
     getToken: GetToken,
+    private val context: BaseApplication,
     private val getInterventionById: GetInterventionById,
     private val updateIntervention: UpdateIntervention,
     private val getActivitiesList: GetActivitiesList,
@@ -192,43 +196,55 @@ constructor(
     }
 
     private fun getIntervention() {
-        getInterventionById.execute(token = userToken, id = query).onEach { dataState ->
-            retrieving = dataState.loading
+        isConnectionAvailable = isConnectionAvailable(context = context)
 
-            dataState.data?.let { newIntervention ->
-                val activity = activitiesList.firstOrNull { it?.id == newIntervention.activityId }
-                initialState.value = newIntervention
-                intervention.value = newIntervention
-                if (activity != null) {
-                    initialState.value = initialState.value?.copy(activityName = activity.name)
-                    intervention.value = intervention.value?.copy(activityName = activity.name)
+        if (isConnectionAvailable) {
+            getInterventionById.execute(token = userToken, id = query).onEach { dataState ->
+                retrieving = dataState.loading
+
+                dataState.data?.let { newIntervention ->
+                    val activity =
+                        activitiesList.firstOrNull { it?.id == newIntervention.activityId }
+                    initialState.value = newIntervention
+                    intervention.value = newIntervention
+                    if (activity != null) {
+                        initialState.value = initialState.value?.copy(activityName = activity.name)
+                        intervention.value = intervention.value?.copy(activityName = activity.name)
+                    }
                 }
-            }
 
-            dataState.error?.let { error ->
-                Log.e(TAG, "getIntervention: $error")
-                validationEventChannel.send(ValidationEvent.RetrieveError(error = error))
-            }
-        }.launchIn(viewModelScope)
+                dataState.error?.let { error ->
+                    Log.e(TAG, "getIntervention: $error")
+                    validationEventChannel.send(ValidationEvent.RetrieveError(error = error))
+                }
+            }.launchIn(viewModelScope)
+        }
     }
 
     private fun updateIntervention() {
-        intervention.value?.let {
-            updateIntervention.execute(token = userToken, intervention = it)
-                .onEach { dataState ->
-                    sending = dataState.loading
+        isConnectionAvailable = isConnectionAvailable(context = context)
 
-                    dataState.data?.let { result ->
-                        if (result) {
-                            validationEventChannel.send(ValidationEvent.UpdateSuccess)
+        if (isConnectionAvailable) {
+            intervention.value?.let {
+                updateIntervention.execute(token = userToken, intervention = it)
+                    .onEach { dataState ->
+                        sending = dataState.loading
+
+                        dataState.data?.let { result ->
+                            if (result) {
+                                validationEventChannel.send(ValidationEvent.UpdateSuccess)
+                            }
                         }
-                    }
 
-                    dataState.error?.let { error ->
-                        Log.e(TAG, "updateIntervention: $error")
-                        validationEventChannel.send(ValidationEvent.SubmitError(error = error))
-                    }
-                }.launchIn(viewModelScope)
+                        dataState.error?.let { error ->
+                            Log.e(TAG, "updateIntervention: $error")
+                            validationEventChannel.send(ValidationEvent.SubmitError(error = error))
+                        }
+                    }.launchIn(viewModelScope)
+            }
+        } else {
+            sending = false
+            viewModelScope.launch { validationEventChannel.send(ValidationEvent.NoConnection) }
         }
     }
 
@@ -240,20 +256,24 @@ constructor(
     }
 
     private fun getActivitiesList() {
-        getActivitiesList.execute(token = userToken).onEach { dataState ->
-            retrieving = dataState.loading
+        isConnectionAvailable = isConnectionAvailable(context = context)
 
-            dataState.data?.let { result ->
-                this.activitiesList.clear()
-                this.activitiesList.addAll(result)
-                onCreation()
-            }
+        if (isConnectionAvailable) {
+            getActivitiesList.execute(token = userToken).onEach { dataState ->
+                retrieving = dataState.loading
 
-            dataState.error?.let { error ->
-                Log.e(TAG, "getActivitiesList (Intervention Detail): $error")
-                validationEventChannel.send(ValidationEvent.RetrieveError(error = error))
-            }
-        }.launchIn(viewModelScope)
+                dataState.data?.let { result ->
+                    this.activitiesList.clear()
+                    this.activitiesList.addAll(result)
+                    onCreation()
+                }
+
+                dataState.error?.let { error ->
+                    Log.e(TAG, "getActivitiesList (Intervention Detail): $error")
+                    validationEventChannel.send(ValidationEvent.RetrieveError(error = error))
+                }
+            }.launchIn(viewModelScope)
+        }
     }
 
     override fun changeQuery(query: String) {

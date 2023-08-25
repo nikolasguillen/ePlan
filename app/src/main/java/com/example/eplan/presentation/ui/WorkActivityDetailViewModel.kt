@@ -1,5 +1,8 @@
 package com.example.eplan.presentation.ui
 
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
 
@@ -12,6 +15,9 @@ abstract class WorkActivityDetailViewModel : EplanViewModel() {
 
     protected val validationEventChannel = Channel<ValidationEvent>()
     val validationEvents = validationEventChannel.receiveAsFlow()
+
+    var isConnectionAvailable by mutableStateOf(true)
+        protected set
 
     abstract fun checkChanges(): Boolean
 

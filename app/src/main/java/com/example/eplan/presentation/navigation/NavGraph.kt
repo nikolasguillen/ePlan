@@ -6,6 +6,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
@@ -55,6 +56,9 @@ import java.time.LocalDate
 @ExperimentalMaterial3Api
 @Composable
 fun NavGraph(navController: NavHostController, shouldShowLogin: Boolean) {
+
+    val context = LocalContext.current
+
     NavHost(
         navController = navController,
         startDestination = if (shouldShowLogin) LoginGraph.route else InterventionGraph.route,
@@ -135,15 +139,17 @@ fun NavGraph(navController: NavHostController, shouldShowLogin: Boolean) {
                     onSaveAndContinuePressed = {
                         viewModel.onFormEvent(InterventionFormEvent.Submit)
 
-                        val newInterventionStartTime = viewModel.intervention.value?.end
-                        navController.popBackStack()
-                        navController.navigate(
-                            "${Screen.InterventionDetails.route}/?date=${selectedDate.value}&start=${newInterventionStartTime}&end=${
-                                newInterventionStartTime?.plus(
-                                    Duration.ofMinutes(15L)
-                                )
-                            }"
-                        )
+                        if(viewModel.isConnectionAvailable(context = context)) {
+                            val newInterventionStartTime = viewModel.intervention.value?.end
+                            navController.popBackStack()
+                            navController.navigate(
+                                "${Screen.InterventionDetails.route}/?date=${selectedDate.value}&start=${newInterventionStartTime}&end=${
+                                    newInterventionStartTime?.plus(
+                                        Duration.ofMinutes(15L)
+                                    )
+                                }"
+                            )
+                        }
                     },
                     onBackPressed = navController::popBackStack,
                     onDeletePressed = {

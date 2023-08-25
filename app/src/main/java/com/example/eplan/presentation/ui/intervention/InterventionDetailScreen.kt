@@ -22,7 +22,8 @@ fun InterventionDetailsScreen(
         onBackPressed = onBackPressed,
         onSaveAndClose = onSaveAndClosePressed,
         onSaveAndContinue = onSaveAndContinuePressed,
-        onDeletePressed = onDeletePressed
+        onDeletePressed = onDeletePressed,
+        shouldShowMissingConnectionWarning = viewModel.isConnectionAvailable.not() && viewModel.intervention.value == null
     )
 }
 

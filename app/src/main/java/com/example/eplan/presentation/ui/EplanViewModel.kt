@@ -50,7 +50,7 @@ open class EplanViewModel : ViewModel() {
         }.launchIn(viewModelScope)
     }
 
-    protected fun isConnectionAvailable(context: Context): Boolean {
+    fun isConnectionAvailable(context: Context): Boolean {
         val connectivityManager =
             context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
         val network = connectivityManager.activeNetwork ?: return false
