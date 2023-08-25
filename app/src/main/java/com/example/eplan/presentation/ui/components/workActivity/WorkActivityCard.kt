@@ -1,5 +1,6 @@
 package com.example.eplan.presentation.ui.components.workActivity
 
+import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -20,31 +21,47 @@ import com.example.eplan.presentation.util.spacing
 fun WorkActivityCard(
     workActivity: WorkActivity,
     onClick: () -> Unit,
+    modifier: Modifier = Modifier,
+    isExpanded: Boolean = true
 ) {
     Card(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .clip(MaterialTheme.shapes.medium)
             .clickable(onClick = onClick)
+            .animateContentSize()
     ) {
-        Column(modifier = Modifier.padding(MaterialTheme.spacing.medium)) {
+        Column(
+            modifier = Modifier.padding(
+                horizontal = MaterialTheme.spacing.medium,
+                vertical = if (isExpanded) MaterialTheme.spacing.medium else MaterialTheme.spacing.small
+            )
+        ) {
             Text(
                 text = workActivity.title.replaceFirstChar { it.uppercase() },
                 style = MaterialTheme.typography.titleMedium,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis
             )
-            if (workActivity.description.isNotBlank()) {
+            if (isExpanded) {
+                if (workActivity.description.isNotBlank()) {
+                    Text(
+                        text = workActivity.description.replaceFirstChar { it.uppercase() },
+                        style = MaterialTheme.typography.bodyMedium,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis,
+                        modifier = Modifier.padding(bottom = MaterialTheme.spacing.extraSmall)
+                    )
+                }
                 Text(
-                    text = workActivity.description.replaceFirstChar { it.uppercase() },
-                    style = MaterialTheme.typography.bodyMedium,
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis,
-                    modifier = Modifier.padding(bottom = MaterialTheme.spacing.extraSmall)
+                    text = workActivity.start.toString(),
+                    style = MaterialTheme.typography.labelSmall
+                )
+                Text(
+                    text = workActivity.end.toString(),
+                    style = MaterialTheme.typography.labelSmall
                 )
             }
-            Text(text = workActivity.start.toString(), style = MaterialTheme.typography.labelSmall)
-            Text(text = workActivity.end.toString(), style = MaterialTheme.typography.labelSmall)
         }
     }
 }
