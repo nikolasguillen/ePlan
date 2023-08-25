@@ -8,7 +8,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
-import com.example.eplan.R
 import com.example.eplan.domain.model.Activity
 import com.example.eplan.domain.model.Intervention
 import com.example.eplan.interactors.GetToken
@@ -21,9 +20,7 @@ import com.example.eplan.interactors.workActivityDetail.ValidateTime
 import com.example.eplan.presentation.BaseApplication
 import com.example.eplan.presentation.ui.ValidationEvent
 import com.example.eplan.presentation.ui.WorkActivityDetailViewModel
-import com.example.eplan.presentation.ui.intervention.InterventionDetailEvent.DeleteInterventionEvent
-import com.example.eplan.presentation.ui.intervention.InterventionDetailEvent.GetInterventionEvent
-import com.example.eplan.presentation.ui.intervention.InterventionDetailEvent.UpdateInterventionEvent
+import com.example.eplan.presentation.ui.intervention.InterventionDetailEvent.*
 import com.example.eplan.presentation.ui.intervention.InterventionFormEvent.ActivityIdChanged
 import com.example.eplan.presentation.ui.intervention.InterventionFormEvent.ActivityNameChanged
 import com.example.eplan.presentation.ui.intervention.InterventionFormEvent.DateChanged
@@ -85,6 +82,10 @@ constructor(
 
             is DeleteInterventionEvent -> {
                 deleteIntervention()
+            }
+
+            is RefreshInterventionEvent -> {
+                getActivitiesList()
             }
         }
     }

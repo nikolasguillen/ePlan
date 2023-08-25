@@ -20,9 +20,7 @@ import com.example.eplan.interactors.workActivityDetail.ValidateDescription
 import com.example.eplan.interactors.workActivityDetail.ValidateTime
 import com.example.eplan.presentation.ui.ValidationEvent
 import com.example.eplan.presentation.ui.WorkActivityDetailViewModel
-import com.example.eplan.presentation.ui.appointment.AppointmentDetailEvent.DeleteAppointmentEvent
-import com.example.eplan.presentation.ui.appointment.AppointmentDetailEvent.GetAppointmentEvent
-import com.example.eplan.presentation.ui.appointment.AppointmentDetailEvent.UpdateAppointmentEvent
+import com.example.eplan.presentation.ui.appointment.AppointmentDetailEvent.*
 import com.example.eplan.presentation.ui.appointment.AppointmentFormEvent.ActivityIdChanged
 import com.example.eplan.presentation.ui.appointment.AppointmentFormEvent.ActivityNameChanged
 import com.example.eplan.presentation.ui.appointment.AppointmentFormEvent.AddInvited
@@ -95,6 +93,10 @@ constructor(
 
             is DeleteAppointmentEvent -> {
                 deleteAppointment()
+            }
+
+            is RefreshAppointmentEvent -> {
+                getActivitiesList()
             }
         }
     }

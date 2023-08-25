@@ -9,6 +9,8 @@ import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -58,6 +60,7 @@ import com.example.eplan.presentation.navigation.BottomNavBarItem
 import com.example.eplan.presentation.navigation.BottomNavbarAction
 import com.example.eplan.presentation.ui.ValidationEvent
 import com.example.eplan.presentation.ui.WorkActivityDetailViewModel
+import com.example.eplan.presentation.ui.appointment.AppointmentDetailEvent
 import com.example.eplan.presentation.ui.appointment.AppointmentDetailViewModel
 import com.example.eplan.presentation.ui.appointment.AppointmentFormEvent
 import com.example.eplan.presentation.ui.components.ActivitySelectorScreen
@@ -66,6 +69,7 @@ import com.example.eplan.presentation.ui.components.detailForms.AppointmentDetai
 import com.example.eplan.presentation.ui.components.detailForms.InterventionDetail
 import com.example.eplan.presentation.ui.components.placeholders.PlaceholderDetails
 import com.example.eplan.presentation.ui.components.uiElements.BottomActionBar
+import com.example.eplan.presentation.ui.intervention.InterventionDetailEvent
 import com.example.eplan.presentation.ui.intervention.InterventionDetailViewModel
 import com.example.eplan.presentation.ui.intervention.InterventionFormEvent
 import com.example.eplan.presentation.util.spacing
@@ -273,6 +277,11 @@ fun WorkActivityDetail(
                         modifier = Modifier
                             .fillMaxSize()
                             .background(MaterialTheme.colorScheme.surface)
+                            .clickable(
+                                onClick = {},
+                                indication = null,
+                                interactionSource = remember { MutableInteractionSource() }
+                            )
                     ) {
                         Image(
                             imageVector = Icons.Filled.WifiOff,
@@ -289,6 +298,21 @@ fun WorkActivityDetail(
                             text = stringResource(id = R.string.connessione_assente),
                             style = MaterialTheme.typography.bodyLarge
                         )
+                        TextButton(
+                            onClick = {
+                                when (viewModel) {
+                                    is InterventionDetailViewModel -> {
+                                        viewModel.onTriggerEvent(InterventionDetailEvent.RefreshInterventionEvent)
+                                    }
+
+                                    is AppointmentDetailViewModel -> {
+                                        viewModel.onTriggerEvent(AppointmentDetailEvent.RefreshAppointmentEvent)
+                                    }
+                                }
+                            }
+                        ) {
+                            Text(text = stringResource(id = R.string.tocca_per_riprovare))
+                        }
                     }
                 }
 
