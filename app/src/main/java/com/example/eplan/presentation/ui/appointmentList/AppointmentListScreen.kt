@@ -99,7 +99,8 @@ fun AppointmentListScreen(
                 isRefreshing = isRefreshing,
                 onRefresh = {
                     viewModel.onTriggerEvent(AppointmentListEvent.DayChangeEvent(date = date))
-                }
+                },
+                isConnectionAvailable = viewModel.isConnectionAvailable
             )
         }
     }

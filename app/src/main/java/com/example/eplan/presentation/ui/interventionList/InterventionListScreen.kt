@@ -115,7 +115,8 @@ fun InterventionListScreen(
                 isRefreshing = isRefreshing,
                 onRefresh = {
                     viewModel.onTriggerEvent(InterventionListEvent.DayChangeEvent(date = date))
-                }
+                },
+                isConnectionAvailable = viewModel.isConnectionAvailable
             )
         }
 

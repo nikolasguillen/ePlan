@@ -1,19 +1,32 @@
 package com.example.eplan.presentation.ui.components.workActivity
 
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.WifiOff
+import androidx.compose.material.pullrefresh.PullRefreshIndicator
+import androidx.compose.material.pullrefresh.pullRefresh
+import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
 import com.example.eplan.R
 import com.example.eplan.domain.model.Appointment
 import com.example.eplan.domain.model.Intervention
@@ -22,23 +35,24 @@ import com.example.eplan.presentation.navigation.Screen
 import com.example.eplan.presentation.ui.components.animations.AnimationEmptyList
 import com.example.eplan.presentation.ui.components.placeholders.PlaceholderCard
 import com.example.eplan.presentation.util.spacing
-import com.google.accompanist.swiperefresh.SwipeRefresh
-import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 
+@OptIn(ExperimentalMaterialApi::class)
 @ExperimentalMaterial3Api
 @Composable
 fun WorkActivitiesList(
     workActivities: List<WorkActivity>,
     onNavigateToActivityDetailScreen: (String) -> Unit,
     isRefreshing: Boolean,
-    onRefresh: () -> Unit
+    onRefresh: () -> Unit,
+    isConnectionAvailable: Boolean
 ) {
 
     val groupedActivities = workActivities.groupBy { it.start.hour }
+    val pullRefreshState =
+        rememberPullRefreshState(refreshing = isRefreshing, onRefresh = onRefresh)
 
-    SwipeRefresh(
-        state = rememberSwipeRefreshState(isRefreshing = isRefreshing),
-        onRefresh = { onRefresh() }
+    Box(
+        modifier = Modifier.pullRefresh(pullRefreshState)
     ) {
         LazyColumn(
             verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.small),
@@ -90,6 +104,33 @@ fun WorkActivitiesList(
                 }
             }
         }
+
+        if (!isConnectionAvailable && !isRefreshing) {
+            Column(
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally,
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(MaterialTheme.colorScheme.surface)
+            ) {
+                Image(
+                    imageVector = Icons.Filled.WifiOff,
+                    contentDescription = null,
+                    colorFilter = ColorFilter.tint(color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.8F)),
+                    modifier = Modifier.size(100.dp)
+                )
+                Spacer(modifier = Modifier.height(MaterialTheme.spacing.medium))
+                Text(text = stringResource(id = R.string.connessione_assente), style = MaterialTheme.typography.bodyLarge)
+            }
+        }
+
+        PullRefreshIndicator(
+            refreshing = isRefreshing,
+            state = pullRefreshState,
+            modifier = Modifier.align(
+                Alignment.TopCenter
+            )
+        )
     }
 }
 
