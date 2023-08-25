@@ -33,6 +33,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -91,7 +92,7 @@ fun WorkActivitiesList(
                         groupedActivities.forEach { (hour, workActivities) ->
                             item(key = hour) {
 
-                                var areItemsExpanded by remember { mutableStateOf(true) }
+                                var areItemsExpanded by rememberSaveable { mutableStateOf(true) }
                                 val transition =
                                     updateTransition(
                                         targetState = areItemsExpanded,
