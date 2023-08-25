@@ -212,7 +212,8 @@ fun AppointmentDetail(
                 CustomDateButton(
                     date = appointment.periodicityEnd,
                     onDateSelected = { date -> viewModel.onFormEvent(PeriodicityEndChanged(date)) },
-                    showLiteralDate = false
+                    showLiteralDate = false,
+                    enabled = appointment.periodicity != Periodicity.NONE
                 )
             }
         }

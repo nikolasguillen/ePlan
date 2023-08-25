@@ -10,15 +10,11 @@ data class InterventionDto(
     @SerializedName("title")
     var title: String,
 
-    @SerializedName("description")
+    @SerializedName("descrizione")
     var description: String,
 
     @SerializedName("start")
     var start: String,
-
-//    TODO controllare se serve ancora
-//    @SerializedName("durata")
-//    var duration: String,
 
     @SerializedName("id_interventi")
     var id: String,

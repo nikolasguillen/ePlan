@@ -95,7 +95,10 @@ fun LoginScreen(
                         placeholder = { Text(text = stringResource(R.string.username)) },
                         isError = viewModel.usernameError.value != null,
                         singleLine = true,
-                        keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
+                        keyboardOptions = KeyboardOptions(
+                            imeAction = ImeAction.Next,
+                            keyboardType = KeyboardType.Email
+                        ),
                         modifier = Modifier.fillMaxWidth()
                     )
                     if (viewModel.usernameError.value != null) {

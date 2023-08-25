@@ -13,13 +13,11 @@ import com.example.eplan.R
 
 @Composable
 fun SendAnimation() {
-
     val composition by rememberLottieComposition(spec = LottieCompositionSpec.RawRes(R.raw.send))
 
     LottieAnimation(
         composition = composition,
         iterations = LottieConstants.IterateForever,
-        modifier = Modifier
-            .size(size = 200.dp)
+        modifier = Modifier.size(size = 200.dp)
     )
 }

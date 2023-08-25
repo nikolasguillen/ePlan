@@ -11,10 +11,10 @@ data class AppointmentDto(
     @SerializedName("id_attivita")
     var activityId: String,
 
-    @SerializedName("title")
+    @SerializedName("titolo")
     var title: String,
 
-    @SerializedName("description")
+    @SerializedName("descrizione")
     var description: String,
 
     @SerializedName("start")
@@ -26,7 +26,7 @@ data class AppointmentDto(
     @SerializedName("pianificazione")
     var planning: Boolean,
 
-    @SerializedName("contabilizza")
+    @SerializedName("contabilizzato")
     var intervention: Boolean,
 
     @SerializedName("invitati")
@@ -35,13 +35,13 @@ data class AppointmentDto(
     @SerializedName("periodicita")
     var periodicity: String,
 
-    @SerializedName("fine_periodicita")
+    @SerializedName("periodicita_fine")
     var periodicityEnd: String,
 
     @SerializedName("promemoria")
     var memo: Boolean,
 
-    @SerializedName("tipo_promemoria")
+    @SerializedName("promemoria_mezzo")
     var memoType: List<String>,
 
     @SerializedName("preavviso_quantita")

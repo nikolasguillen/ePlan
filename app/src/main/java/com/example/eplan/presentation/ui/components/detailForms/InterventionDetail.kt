@@ -8,6 +8,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -31,6 +32,7 @@ fun InterventionDetail(
 ) {
 
     val keyboardController = LocalSoftwareKeyboardController.current
+    val focusManager = LocalFocusManager.current
 
     viewModel.intervention.value?.let { intervention ->
         Column {
@@ -135,10 +137,7 @@ fun InterventionDetail(
             singleLine = true,
             keyboardOptions = KeyboardOptions.Default.copy(
                 keyboardType = KeyboardType.Number,
-                imeAction = ImeAction.Done
-            ),
-            keyboardActions = KeyboardActions(
-                onDone = { keyboardController?.hide() }
+                imeAction = ImeAction.Next
             )
         )
         OutlinedTextField(
@@ -152,7 +151,10 @@ fun InterventionDetail(
                 imeAction = ImeAction.Done
             ),
             keyboardActions = KeyboardActions(
-                onDone = { keyboardController?.hide() }
+                onDone = {
+                    keyboardController?.hide()
+                    focusManager.clearFocus()
+                }
             )
         )
     }

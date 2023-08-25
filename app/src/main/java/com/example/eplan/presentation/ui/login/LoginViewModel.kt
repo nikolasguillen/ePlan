@@ -4,6 +4,7 @@ import android.content.SharedPreferences
 import android.util.Log
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
@@ -29,11 +30,11 @@ constructor(
     private val sharedPreferences: SharedPreferences
 ) : ViewModel() {
 
-    val username = mutableStateOf("n.guillen")
-    val password = mutableStateOf("0FeZbLUO")
+    val username = mutableStateOf("")
+    val password = mutableStateOf("")
     var usernameError: MutableState<String?> = mutableStateOf(null)
     var passwordError: MutableState<String?> = mutableStateOf(null)
-    private val statusCode = mutableStateOf(0)
+    private val statusCode = mutableIntStateOf(0)
     val message = mutableStateOf("")
     val loading = mutableStateOf(false)
     private val _successfulLoginAttempt = MutableStateFlow(false)
@@ -81,7 +82,7 @@ constructor(
                 loading.value = dataState.loading
 
                 dataState.data?.let { pair ->
-                    statusCode.value = pair.first
+                    statusCode.intValue = pair.first
                     userToken = pair.second
                     _successfulLoginAttempt.value = true
                 }
@@ -103,7 +104,7 @@ constructor(
         getCredentialsFromCache.execute().onEach { dataState ->
             loading.value = dataState.loading
 
-            dataState.data?.let { credentials ->
+            dataState.data?.let {
                 onTriggerEvent(LoginAttemptEvent)
             }
 

@@ -33,9 +33,11 @@ constructor(
         token: String,
         intervention: Intervention
     ) {
+        val dto = mapper.mapFromDomainModel(intervention)
+
         service.updateIntervention(
             token = token,
-            interventionDto = mapper.mapFromDomainModel(intervention)
+            interventionDto = dto
         )
     }
 }

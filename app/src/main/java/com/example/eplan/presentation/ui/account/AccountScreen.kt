@@ -3,14 +3,26 @@ package com.example.eplan.presentation.ui.account
 import android.net.Uri
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.ExitToApp
-import androidx.compose.material3.*
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
@@ -23,7 +35,6 @@ import coil.compose.rememberAsyncImagePainter
 import com.example.eplan.R
 import com.example.eplan.presentation.util.spacing
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
-import com.google.accompanist.permissions.PermissionStatus
 import com.google.accompanist.permissions.rememberPermissionState
 
 const val name = "Nikolas"
@@ -103,16 +114,16 @@ fun AccountScreen(
                                 )
                                 .size(MaterialTheme.spacing.extraLarge)
                                 .clip(CircleShape)
-                                .clickable {
-                                    when (cameraPermissionState.status) {
-                                        PermissionStatus.Granted -> {
-                                            navigateToCamera()
-                                        }
-                                        else -> {
-                                            cameraPermissionState.launchPermissionRequest()
-                                        }
+                            /*.clickable {
+                                when (cameraPermissionState.status) {
+                                    PermissionStatus.Granted -> {
+                                        navigateToCamera()
+                                    }
+                                    else -> {
+                                        cameraPermissionState.launchPermissionRequest()
                                     }
                                 }
+                            }*/
                         )
                         Spacer(modifier = Modifier.width(MaterialTheme.spacing.medium))
                         Text(

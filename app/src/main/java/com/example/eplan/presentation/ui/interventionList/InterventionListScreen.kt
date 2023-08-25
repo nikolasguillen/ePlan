@@ -49,6 +49,10 @@ fun InterventionListScreen(
     val snackBarHostState = remember { SnackbarHostState() }
     val scope = rememberCoroutineScope()
 
+    LaunchedEffect(key1 = Unit) {
+        viewModel.onTriggerEvent(InterventionListEvent.DayChangeEvent(date = date))
+    }
+
     Scaffold(
         topBar = {
             TopBar(

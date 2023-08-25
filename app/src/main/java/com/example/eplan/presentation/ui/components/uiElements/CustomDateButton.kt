@@ -17,6 +17,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.semantics.Role
 import com.example.eplan.presentation.util.spacing
 import com.example.eplan.presentation.util.toLiteralDateParser
 import java.time.Instant
@@ -29,7 +30,8 @@ import java.time.format.DateTimeFormatter
 fun CustomDateButton(
     date: LocalDate,
     onDateSelected: (LocalDate) -> Unit,
-    showLiteralDate: Boolean = true
+    showLiteralDate: Boolean = true,
+    enabled: Boolean = true
 ) {
 
     val showDialog = remember { mutableStateOf(false) }
@@ -42,7 +44,13 @@ fun CustomDateButton(
         modifier = Modifier
             .clip(MaterialTheme.shapes.medium)
             .fillMaxWidth()
-            .clickable { showDialog.value = true }
+            .clickable(
+                enabled = enabled,
+                onClick = {
+                    showDialog.value = true
+                },
+                role = Role.Button
+            )
     )
     {
         Text(
