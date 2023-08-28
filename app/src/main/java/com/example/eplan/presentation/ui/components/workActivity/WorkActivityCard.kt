@@ -24,7 +24,7 @@ import com.example.eplan.presentation.util.spacing
 fun WorkActivityCard(
     workActivity: WorkActivity,
     onClick: () -> Unit,
-    isExpanded: Boolean
+    isCollapsed: Boolean
 ) {
     Card(
         modifier = Modifier
@@ -33,7 +33,30 @@ fun WorkActivityCard(
             .clickable(onClick = onClick)
             .animateContentSize()
     ) {
-        if (isExpanded) {
+        if (isCollapsed) {
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(
+                        vertical = MaterialTheme.spacing.small,
+                        horizontal = MaterialTheme.spacing.medium
+                    )
+            ) {
+                Text(
+                    text = workActivity.title.replaceFirstChar { it.uppercase() },
+                    style = MaterialTheme.typography.titleSmall,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
+                )
+
+                Text(
+                    text = "${workActivity.start} - ${workActivity.end}",
+                    style = MaterialTheme.typography.titleSmall
+                )
+            }
+        } else {
             Column(modifier = Modifier.padding(MaterialTheme.spacing.medium)) {
                 Text(
                     text = workActivity.title.replaceFirstChar { it.uppercase() },
@@ -57,29 +80,6 @@ fun WorkActivityCard(
                 Text(
                     text = workActivity.end.toString(),
                     style = MaterialTheme.typography.labelSmall
-                )
-            }
-        } else {
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceBetween,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(
-                        vertical = MaterialTheme.spacing.small,
-                        horizontal = MaterialTheme.spacing.medium
-                    )
-            ) {
-                Text(
-                    text = workActivity.title.replaceFirstChar { it.uppercase() },
-                    style = MaterialTheme.typography.titleSmall,
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis
-                )
-
-                Text(
-                    text = "${workActivity.start} - ${workActivity.end}",
-                    style = MaterialTheme.typography.titleSmall
                 )
             }
         }

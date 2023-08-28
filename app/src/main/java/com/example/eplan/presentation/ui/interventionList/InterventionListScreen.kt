@@ -127,7 +127,7 @@ fun InterventionListScreen(
                     viewModel.onTriggerEvent(InterventionListEvent.DayChangeEvent(date = date))
                 },
                 isConnectionAvailable = viewModel.isConnectionAvailable,
-                collapsedView = isListCollapsed
+                isListCollapsed = isListCollapsed
             )
         }
 

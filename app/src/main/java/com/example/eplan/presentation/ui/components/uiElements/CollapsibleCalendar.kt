@@ -109,7 +109,7 @@ fun CollapsibleCalendar(
                         modifier = Modifier.tooltipTrigger()
                     ) {
                         Icon(
-                            imageVector = if (isListCollapsed) Icons.Default.UnfoldLess else Icons.Default.UnfoldMore,
+                            imageVector = if (isListCollapsed) Icons.Default.UnfoldMore else Icons.Default.UnfoldLess,
                             contentDescription = stringResource(id = if (isListCollapsed) R.string.espandi_lista else R.string.compatta_lista)
                         )
                     }

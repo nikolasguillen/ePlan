@@ -46,7 +46,7 @@ fun WorkActivitiesList(
     isRefreshing: Boolean,
     onRefresh: () -> Unit,
     isConnectionAvailable: Boolean,
-    collapsedView: Boolean
+    isListCollapsed: Boolean
 ) {
 
     val groupedActivities = workActivities.groupBy { it.start.hour }
@@ -94,7 +94,7 @@ fun WorkActivitiesList(
                                             onNavigateToActivityDetailScreen = onNavigateToActivityDetailScreen
                                         )
                                     },
-                                    isExpanded = collapsedView
+                                    isCollapsed = isListCollapsed
                                 )
                             }
                         }

@@ -115,7 +115,7 @@ fun AppointmentListScreen(
                     viewModel.onTriggerEvent(AppointmentListEvent.DayChangeEvent(date = date))
                 },
                 isConnectionAvailable = viewModel.isConnectionAvailable,
-                collapsedView = isListCollapsed
+                isListCollapsed = isListCollapsed
             )
         }
     }
