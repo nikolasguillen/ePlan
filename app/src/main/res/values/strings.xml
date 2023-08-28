@@ -97,4 +97,6 @@
     <string name="premi_selezionare_attivita">Premi per selezionare un\'attività</string>
     <string name="connessione_assente">Connessione a internet assente.</string>
     <string name="tocca_per_riprovare">Tocca per riprovare.</string>
+    <string name="compatta_lista">Compatta lista attività</string>
+    <string name="espandi_lista">Espandi lista attività</string>
 </resources>

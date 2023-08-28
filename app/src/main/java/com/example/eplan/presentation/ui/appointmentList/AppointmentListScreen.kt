@@ -6,8 +6,19 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Create
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.Icon
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
@@ -15,8 +26,8 @@ import com.example.eplan.R
 import com.example.eplan.presentation.navigation.BottomNavBarItem
 import com.example.eplan.presentation.navigation.NestedNavGraphs
 import com.example.eplan.presentation.navigation.Screen
-import com.example.eplan.presentation.ui.components.uiElements.BottomNavBar
 import com.example.eplan.presentation.ui.components.CollapsibleCalendar
+import com.example.eplan.presentation.ui.components.uiElements.BottomNavBar
 import com.example.eplan.presentation.ui.components.uiElements.TopBar
 import com.example.eplan.presentation.ui.components.workActivity.WorkActivitiesList
 import kotlinx.coroutines.launch
@@ -38,6 +49,7 @@ fun AppointmentListScreen(
     var backPressedTime: Long = 0
     val snackBarHostState = remember { SnackbarHostState() }
     val scope = rememberCoroutineScope()
+    var isListCollapsed by remember { mutableStateOf(false) }
 
     Scaffold(
         topBar = {
@@ -91,7 +103,9 @@ fun AppointmentListScreen(
                     selectedDate.value = LocalDate.parse(date)
                     viewModel.onTriggerEvent(AppointmentListEvent.DayChangeEvent(date = date))
                     calendarVisibility.value = false
-                }
+                },
+                isListCollapsed = isListCollapsed,
+                onCollapseList = { isListCollapsed = !isListCollapsed }
             )
             WorkActivitiesList(
                 workActivities = appointments,
@@ -100,7 +114,8 @@ fun AppointmentListScreen(
                 onRefresh = {
                     viewModel.onTriggerEvent(AppointmentListEvent.DayChangeEvent(date = date))
                 },
-                isConnectionAvailable = viewModel.isConnectionAvailable
+                isConnectionAvailable = viewModel.isConnectionAvailable,
+                collapsedView = isListCollapsed
             )
         }
     }

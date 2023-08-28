@@ -15,7 +15,14 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
@@ -24,7 +31,7 @@ import com.example.eplan.R
 import com.example.eplan.presentation.navigation.BottomNavBarItem
 import com.example.eplan.presentation.navigation.NestedNavGraphs
 import com.example.eplan.presentation.navigation.Screen
-import com.example.eplan.presentation.ui.components.*
+import com.example.eplan.presentation.ui.components.CollapsibleCalendar
 import com.example.eplan.presentation.ui.components.uiElements.BottomNavBar
 import com.example.eplan.presentation.ui.components.uiElements.MultiFloatingActionButton
 import com.example.eplan.presentation.ui.components.uiElements.TopBar
@@ -49,6 +56,7 @@ fun InterventionListScreen(
     var backPressedTime: Long = 0
     val snackBarHostState = remember { SnackbarHostState() }
     val scope = rememberCoroutineScope()
+    var isListCollapsed by remember { mutableStateOf(false) }
 
     LaunchedEffect(key1 = Unit) {
         viewModel.onTriggerEvent(InterventionListEvent.DayChangeEvent(date = date))
@@ -107,7 +115,9 @@ fun InterventionListScreen(
                     selectedDate.value = LocalDate.parse(date)
                     viewModel.onTriggerEvent(InterventionListEvent.DayChangeEvent(date = date))
                     calendarVisibility.value = false
-                }
+                },
+                isListCollapsed = isListCollapsed,
+                onCollapseList = { isListCollapsed = !isListCollapsed }
             )
             WorkActivitiesList(
                 workActivities = interventions,
@@ -116,7 +126,8 @@ fun InterventionListScreen(
                 onRefresh = {
                     viewModel.onTriggerEvent(InterventionListEvent.DayChangeEvent(date = date))
                 },
-                isConnectionAvailable = viewModel.isConnectionAvailable
+                isConnectionAvailable = viewModel.isConnectionAvailable,
+                collapsedView = isListCollapsed
             )
         }
 

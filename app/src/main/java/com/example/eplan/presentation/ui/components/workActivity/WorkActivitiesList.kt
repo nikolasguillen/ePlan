@@ -5,6 +5,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
@@ -44,7 +45,8 @@ fun WorkActivitiesList(
     onNavigateToActivityDetailScreen: (String) -> Unit,
     isRefreshing: Boolean,
     onRefresh: () -> Unit,
-    isConnectionAvailable: Boolean
+    isConnectionAvailable: Boolean,
+    collapsedView: Boolean
 ) {
 
     val groupedActivities = workActivities.groupBy { it.start.hour }
@@ -57,6 +59,7 @@ fun WorkActivitiesList(
         LazyColumn(
             verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.small),
             horizontalAlignment = Alignment.CenterHorizontally,
+            contentPadding = PaddingValues(vertical = MaterialTheme.spacing.small),
             modifier = Modifier
                 .fillMaxSize()
                 .padding(horizontal = MaterialTheme.spacing.medium)
@@ -83,9 +86,6 @@ fun WorkActivitiesList(
                                 )
                             }
                             items(workActivities) { workActivity ->
-                                if (workActivities.indexOf(workActivity) == 0) {
-                                    Spacer(modifier = Modifier.height(height = MaterialTheme.spacing.small))
-                                }
                                 WorkActivityCard(
                                     workActivity = workActivity,
                                     onClick = {
@@ -93,11 +93,9 @@ fun WorkActivitiesList(
                                             workActivity = workActivity,
                                             onNavigateToActivityDetailScreen = onNavigateToActivityDetailScreen
                                         )
-                                    }
+                                    },
+                                    isExpanded = collapsedView
                                 )
-                                if (workActivities.indexOf(workActivity) == workActivities.lastIndex) {
-                                    Spacer(modifier = Modifier.height(height = MaterialTheme.spacing.small))
-                                }
                             }
                         }
                     }
@@ -116,11 +114,18 @@ fun WorkActivitiesList(
                 Image(
                     imageVector = Icons.Filled.WifiOff,
                     contentDescription = null,
-                    colorFilter = ColorFilter.tint(color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.8F)),
+                    colorFilter = ColorFilter.tint(
+                        color = MaterialTheme.colorScheme.onSurface.copy(
+                            alpha = 0.8F
+                        )
+                    ),
                     modifier = Modifier.size(100.dp)
                 )
                 Spacer(modifier = Modifier.height(MaterialTheme.spacing.medium))
-                Text(text = stringResource(id = R.string.connessione_assente), style = MaterialTheme.typography.bodyLarge)
+                Text(
+                    text = stringResource(id = R.string.connessione_assente),
+                    style = MaterialTheme.typography.bodyLarge
+                )
             }
         }
 
