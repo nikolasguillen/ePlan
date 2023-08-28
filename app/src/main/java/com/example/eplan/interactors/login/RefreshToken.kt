@@ -23,7 +23,6 @@ constructor(
         val stayLogged = sharedPreferences.getBoolean(STAY_LOGGED, false)
         val token = encryptedPreferences.loadToken()
 
-        // TODO controlla che ci sia connessione a internet
         if (stayLogged && token != null) {
             val response = getNewTokenResponse(token = token)
             emit(DataState.success(response))

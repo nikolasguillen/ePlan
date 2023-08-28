@@ -8,7 +8,6 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
-import java.lang.Exception
 import javax.inject.Inject
 
 class UpdateAppointment
@@ -24,7 +23,6 @@ constructor(
 
         emit(DataState.loading())
 
-        // TODO controlla che ci sia connessione a internet
         sendAppointment(token = token, appointment = appointment)
         delay(1000)
 

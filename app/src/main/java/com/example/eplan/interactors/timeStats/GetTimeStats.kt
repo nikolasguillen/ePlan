@@ -2,7 +2,6 @@ package com.example.eplan.interactors.timeStats
 
 import com.example.eplan.domain.data.DataState
 import com.example.eplan.domain.model.TimeStats
-import com.example.eplan.network.model.TimeStatsDto
 import com.example.eplan.network.model.TimeStatsDtoMapper
 import com.example.eplan.network.services.TimeStatsService
 import kotlinx.coroutines.delay
@@ -24,7 +23,6 @@ constructor(
     ): Flow<DataState<List<TimeStats>>> = flow {
         emit(DataState.loading())
 
-        //TODO controlla che ci sia connessione a internet
         val timeStats = getTimeStats(token, month, year)
         delay(300)
 

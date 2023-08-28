@@ -2,9 +2,8 @@ package com.example.eplan.interactors.interventionDetail
 
 import com.example.eplan.domain.data.DataState
 import com.example.eplan.domain.model.Intervention
-import com.example.eplan.network.services.InterventionService
 import com.example.eplan.network.model.InterventionDtoMapper
-import kotlinx.coroutines.delay
+import com.example.eplan.network.services.InterventionService
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
@@ -23,7 +22,6 @@ constructor(
 
         emit(DataState.loading())
 
-        // TODO controlla che ci sia connessione a internet
         val intervention = getInterventionFromNetwork(token = token, id = id)
 
         emit(DataState.success(intervention))

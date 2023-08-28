@@ -22,7 +22,6 @@ constructor(
     ): Flow<DataState<Boolean>> = flow {
         emit(DataState.loading())
 
-        //TODO controlla che ci sia connessione internet
         sendIntervention(token = token, intervention = intervention)
         delay(2000)
 

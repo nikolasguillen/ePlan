@@ -27,7 +27,6 @@ constructor(
             endDate = endDate?.toString()
         )
 
-        //TODO controlla che ci sia connessione internet
         sendVacationRequest(token = token, vacationRequestDto = vacationRequestDto)
         delay(300)
 

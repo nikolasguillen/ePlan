@@ -23,7 +23,6 @@ constructor(
 
         emit(DataState.loading())
 
-        // TODO controlla che ci sia connessione a internet
         val interventions = getInterventionsFromNetwork(token = token, query = query)
         delay(300)
 

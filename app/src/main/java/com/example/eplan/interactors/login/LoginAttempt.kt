@@ -23,7 +23,6 @@ constructor(
 
         emit(DataState.loading())
 
-        // TODO controlla che ci sia connessione a internet
         val response =
             getLoginResponse(username = username, password = password, preferences = preferences)
         delay(300)

@@ -1,11 +1,9 @@
 package com.example.eplan.interactors.appointmentList
 
-import android.util.Log
 import com.example.eplan.domain.data.DataState
 import com.example.eplan.domain.model.Appointment
 import com.example.eplan.network.model.AppointmentDtoMapper
 import com.example.eplan.network.services.AppointmentService
-import com.example.eplan.presentation.util.TAG
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
@@ -25,8 +23,6 @@ constructor(
 
         emit(DataState.loading())
 
-        //TODO controlla che ci sia connessione a internet
-        Log.d(TAG, token)
         val appointments = getAppointmentsFromNetwork(token = token, query = query)
         delay(300)
 
