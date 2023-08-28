@@ -174,7 +174,15 @@ fun LoginScreen(
         Spacer(modifier = Modifier.height(MaterialTheme.spacing.small))
 
         Row(
-            verticalAlignment = Alignment.CenterVertically
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier.clickable(
+                enabled = true,
+                onClick = {
+                    viewModel.setAutoLogin(!viewModel.getAutoLogin())
+                },
+                indication = null,
+                interactionSource = remember { MutableInteractionSource() }
+            )
         ) {
             Checkbox(
                 checked = viewModel.getAutoLogin(),
