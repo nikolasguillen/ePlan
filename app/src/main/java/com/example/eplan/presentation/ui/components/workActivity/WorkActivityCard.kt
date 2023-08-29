@@ -24,16 +24,15 @@ import com.example.eplan.presentation.util.spacing
 fun WorkActivityCard(
     workActivity: WorkActivity,
     onClick: () -> Unit,
-    isCollapsed: Boolean
+    isCompact: Boolean
 ) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
             .clip(MaterialTheme.shapes.medium)
             .clickable(onClick = onClick)
-            .animateContentSize()
     ) {
-        if (isCollapsed) {
+        if (isCompact) {
             Row(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceBetween,

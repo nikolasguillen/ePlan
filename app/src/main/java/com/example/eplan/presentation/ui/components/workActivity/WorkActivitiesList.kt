@@ -1,13 +1,16 @@
 package com.example.eplan.presentation.ui.components.workActivity
 
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -37,7 +40,7 @@ import com.example.eplan.presentation.ui.components.animations.AnimationEmptyLis
 import com.example.eplan.presentation.ui.components.placeholders.PlaceholderCard
 import com.example.eplan.presentation.util.spacing
 
-@OptIn(ExperimentalMaterialApi::class)
+@OptIn(ExperimentalMaterialApi::class, ExperimentalFoundationApi::class)
 @ExperimentalMaterial3Api
 @Composable
 fun WorkActivitiesList(
@@ -78,24 +81,62 @@ fun WorkActivitiesList(
                         }
                     } else {
                         groupedActivities.forEach { (hour, workActivities) ->
-                            item {
-                                Text(
-                                    text = "$hour:00",
-                                    style = MaterialTheme.typography.labelLarge,
-                                    modifier = Modifier.padding(top = MaterialTheme.spacing.medium)
-                                )
-                            }
-                            items(workActivities) { workActivity ->
-                                WorkActivityCard(
-                                    workActivity = workActivity,
-                                    onClick = {
-                                        onClick(
-                                            workActivity = workActivity,
-                                            onNavigateToActivityDetailScreen = onNavigateToActivityDetailScreen
+                            stickyHeader {
+                                Row(
+                                    verticalAlignment = Alignment.CenterVertically,
+                                    horizontalArrangement = Arrangement.Center,
+                                    modifier = Modifier
+                                        .background(color = MaterialTheme.colorScheme.surface)
+                                        .fillMaxWidth()
+                                ) {
+                                    Text(
+                                        text = "$hour:00",
+                                        style = MaterialTheme.typography.labelLarge,
+                                        modifier = Modifier.padding(
+                                            top = MaterialTheme.spacing.medium,
+                                            bottom = MaterialTheme.spacing.small
                                         )
-                                    },
-                                    isCollapsed = isListCollapsed
-                                )
+                                    )
+                                }
+                            }
+
+                            /* Devo usare due diverse liste di items perché se ne uso una sola passando 'isListCollapsed' a 'isCompact', al momento del passaggio da visualizzazione compatta
+                            * ad espansa le card che rimangono fuori dalla schermata non si espandono correttamente, rovinando la visualizzazione della lista. */
+
+                            if (isListCollapsed) {
+                                items(
+                                    items = workActivities,
+                                    key = { workActivity -> workActivity.id },
+                                    contentType = { workActivity -> workActivity::class.simpleName.toString() }
+                                ) { workActivity ->
+                                    WorkActivityCard(
+                                        workActivity = workActivity,
+                                        onClick = {
+                                            onClick(
+                                                workActivity = workActivity,
+                                                onNavigateToActivityDetailScreen = onNavigateToActivityDetailScreen
+                                            )
+                                        },
+                                        isCompact = true
+                                    )
+                                }
+                            } else {
+                                items(
+                                    items = workActivities,
+                                    key = { workActivity -> workActivity.id },
+                                    contentType = { workActivity -> workActivity::class.simpleName.toString() }
+                                ) { workActivity ->
+                                    WorkActivityCard(
+                                        workActivity = workActivity,
+                                        onClick = {
+                                            onClick(
+                                                workActivity = workActivity,
+                                                onNavigateToActivityDetailScreen = onNavigateToActivityDetailScreen
+                                            )
+                                        },
+                                        isCompact = false
+                                    )
+                                }
                             }
                         }
                     }
