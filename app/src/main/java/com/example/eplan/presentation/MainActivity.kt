@@ -3,7 +3,6 @@ package com.example.eplan.presentation
 import android.content.SharedPreferences
 import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.compose.setContent
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
@@ -20,11 +19,9 @@ import androidx.core.view.WindowCompat
 import androidx.navigation.compose.rememberNavController
 import com.example.eplan.domain.preferences.Preferences
 import com.example.eplan.interactors.login.RefreshToken
-import com.example.eplan.network.services.RefreshTokenService
 import com.example.eplan.presentation.navigation.NavGraph
 import com.example.eplan.presentation.ui.theme.AppTheme
 import com.example.eplan.presentation.util.STAY_LOGGED
-import com.example.eplan.presentation.util.TAG
 import com.example.eplan.presentation.util.THEME_STATE_KEY
 import com.example.eplan.presentation.util.getCurrentRoute
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
@@ -70,8 +67,6 @@ class MainActivity : AppCompatActivity() {
                     }
                 }
             }
-
-            Log.d(TAG, encryptedSharedPreferences.loadToken().toString() + " " + sharedPreferences.getBoolean(STAY_LOGGED, false))
 
             AppTheme {
 
