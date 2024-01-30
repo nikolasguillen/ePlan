@@ -1,6 +1,5 @@
 package com.example.eplan.presentation.ui.components.workActivity
 
-import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -46,8 +45,11 @@ fun WorkActivityCard(
                 Text(
                     text = workActivity.title.replaceFirstChar { it.uppercase() },
                     style = MaterialTheme.typography.titleSmall,
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis
+                    maxLines = 2,
+                    overflow = TextOverflow.Ellipsis,
+                    modifier = Modifier
+                        .weight(1f)
+                        .padding(end = MaterialTheme.spacing.small)
                 )
 
                 Text(
