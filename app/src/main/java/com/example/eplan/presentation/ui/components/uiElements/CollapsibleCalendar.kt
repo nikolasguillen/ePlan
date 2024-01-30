@@ -19,9 +19,12 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.PlainTooltipBox
+import androidx.compose.material3.PlainTooltip
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
+import androidx.compose.material3.TooltipBox
+import androidx.compose.material3.TooltipDefaults
+import androidx.compose.material3.rememberTooltipState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
@@ -80,16 +83,17 @@ fun CollapsibleCalendar(
                 )
             }
             Row(verticalAlignment = Alignment.CenterVertically) {
-                PlainTooltipBox(
-                    tooltip = { Text(text = stringResource(id = R.string.vai_a_oggi)) }
+                TooltipBox(
+                    positionProvider = TooltipDefaults.rememberPlainTooltipPositionProvider(),
+                    tooltip = { PlainTooltip { Text(text = stringResource(id = R.string.vai_a_oggi)) } },
+                    state = rememberTooltipState()
                 ) {
                     IconButton(
                         onClick = { onDayChange(LocalDate.now().toString()) },
                         colors = IconButtonDefaults.iconButtonColors(
                             containerColor = Color.Transparent,
                             contentColor = MaterialTheme.colorScheme.onSurfaceVariant
-                        ),
-                        modifier = Modifier.tooltipTrigger()
+                        )
                     ) {
                         Icon(
                             imageVector = Icons.Filled.Today,
@@ -97,16 +101,21 @@ fun CollapsibleCalendar(
                         )
                     }
                 }
-                PlainTooltipBox(
-                    tooltip = { Text(text = stringResource(id = if (isListCollapsed) R.string.espandi_lista else R.string.compatta_lista)) }
+                TooltipBox(
+                    positionProvider = TooltipDefaults.rememberPlainTooltipPositionProvider(),
+                    tooltip = {
+                        PlainTooltip {
+                            Text(text = stringResource(id = if (isListCollapsed) R.string.espandi_lista else R.string.compatta_lista))
+                        }
+                    },
+                    state = rememberTooltipState()
                 ) {
                     IconButton(
                         onClick = { onCollapseList() },
                         colors = IconButtonDefaults.iconButtonColors(
                             containerColor = Color.Transparent,
                             contentColor = MaterialTheme.colorScheme.onSurfaceVariant
-                        ),
-                        modifier = Modifier.tooltipTrigger()
+                        )
                     ) {
                         Icon(
                             imageVector = if (isListCollapsed) Icons.Default.UnfoldMore else Icons.Default.UnfoldLess,
