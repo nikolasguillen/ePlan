@@ -139,7 +139,7 @@ fun NavGraph(navController: NavHostController, shouldShowLogin: Boolean) {
                     onSaveAndContinuePressed = {
                         viewModel.onFormEvent(InterventionFormEvent.Submit)
 
-                        if(viewModel.isConnectionAvailable(context = context)) {
+                        if (viewModel.isConnectionAvailable(context = context)) {
                             val newInterventionStartTime = viewModel.intervention.value?.end
                             navController.popBackStack()
                             navController.navigate(
@@ -267,8 +267,8 @@ fun NavGraph(navController: NavHostController, shouldShowLogin: Boolean) {
                 val viewModel = hiltViewModel<VacationRequestViewModel>()
                 VacationRequestScreen(
                     viewModel = viewModel,
-                    onRequestSent = {
-                        viewModel.onTriggerEvent(RequestEvent)
+                    onRequestSent = { startDateMillis, endDateMillis ->
+                        viewModel.onTriggerEvent(RequestEvent(startDateMillis, endDateMillis))
                         if (viewModel.successfulVacationRequest.value == true) {
                             navController.popBackStack()
                         }

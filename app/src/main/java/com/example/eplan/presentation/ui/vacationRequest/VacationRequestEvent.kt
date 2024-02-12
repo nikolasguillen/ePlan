@@ -1,5 +1,5 @@
 package com.example.eplan.presentation.ui.vacationRequest
 
 sealed class VacationRequestEvent {
-    object RequestEvent : VacationRequestEvent()
+    data class RequestEvent(val startDate: Long?, val endDate: Long?) : VacationRequestEvent()
 }

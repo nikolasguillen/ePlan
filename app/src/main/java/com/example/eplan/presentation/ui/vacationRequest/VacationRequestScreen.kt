@@ -1,59 +1,67 @@
 package com.example.eplan.presentation.ui.vacationRequest
 
 import androidx.activity.compose.BackHandler
-import androidx.compose.animation.Crossfade
-import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.Done
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material3.DateRangePicker
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SelectableDates
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.rememberDateRangePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
 import com.example.eplan.R
 import com.example.eplan.presentation.navigation.BottomNavBarItem
 import com.example.eplan.presentation.navigation.BottomNavbarAction
 import com.example.eplan.presentation.ui.components.uiElements.BottomActionBar
-import com.example.eplan.presentation.ui.components.uiElements.CustomDateButton
 import com.example.eplan.presentation.util.spacing
+import java.time.DayOfWeek
+import java.time.Instant
+import java.time.LocalDate
+import java.time.ZoneId
 
 @ExperimentalMaterial3Api
 @Composable
 fun VacationRequestScreen(
     viewModel: VacationRequestViewModel,
-    onRequestSent: () -> Unit,
+    onRequestSent: (startDate: Long?, endDate: Long?) -> Unit,
     onBackPressed: () -> Unit
 ) {
 
     val context = LocalContext.current
     val snackBarHostState = remember { SnackbarHostState() }
+
+    val datePickerState = rememberDateRangePickerState(
+        selectableDates = object : SelectableDates {
+            // Blocks Sunday and Saturday from being selected.
+            override fun isSelectableDate(utcTimeMillis: Long): Boolean {
+                val dayOfWeek = Instant.ofEpochMilli(utcTimeMillis).atZone(ZoneId.of("UTC"))
+                    .toLocalDate().dayOfWeek
+                return dayOfWeek != DayOfWeek.SUNDAY && dayOfWeek != DayOfWeek.SATURDAY
+            }
+
+            // Allow selecting dates from year 2023 forward.
+            override fun isSelectableYear(year: Int): Boolean {
+                return year >= LocalDate.now().year
+            }
+        }
+    )
 
     LaunchedEffect(key1 = context) {
         viewModel.validationEvents.collect { error ->
@@ -67,7 +75,7 @@ fun VacationRequestScreen(
                 navigationIcon = {
                     IconButton(onClick = { onBackPressed() }) {
                         Icon(
-                            imageVector = Icons.Filled.ArrowBack,
+                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                             contentDescription = stringResource(
                                 id = R.string.indietro
                             )
@@ -80,7 +88,12 @@ fun VacationRequestScreen(
                 actions = listOf(
                     BottomNavbarAction(
                         item = BottomNavBarItem.Send,
-                        onClick = onRequestSent
+                        onClick = {
+                            onRequestSent(
+                                datePickerState.selectedStartDateMillis,
+                                datePickerState.selectedEndDateMillis
+                            )
+                        }
                     )
                 )
             )
@@ -88,6 +101,7 @@ fun VacationRequestScreen(
         snackbarHost = { SnackbarHost(hostState = snackBarHostState) }
     ) { paddingValues ->
 
+        datePickerState.selectedStartDateMillis
         BackHandler {
             onBackPressed()
         }
@@ -100,166 +114,12 @@ fun VacationRequestScreen(
                 .padding(MaterialTheme.spacing.medium)
                 .fillMaxWidth()
         ) {
-            Column(
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.Center
-            ) {
-                Text(
-                    text = stringResource(R.string.tipo_richiesta),
-                    style = MaterialTheme.typography.labelLarge
-                )
-                Spacer(modifier = Modifier.height(MaterialTheme.spacing.small))
-                Row(
-                    horizontalArrangement = Arrangement.spacedBy((-1).dp),
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    Surface(
-                        color = if (viewModel.singleDayVacancy) MaterialTheme.colorScheme.secondaryContainer else MaterialTheme.colorScheme.surface,
-                        shape = RoundedCornerShape(
-                            topStartPercent = 50,
-                            bottomStartPercent = 50,
-                            topEndPercent = 0,
-                            bottomEndPercent = 0
-                        ),
-                        border = BorderStroke(1.dp, MaterialTheme.colorScheme.onSurface),
-                        modifier = Modifier
-                            .clip(
-                                RoundedCornerShape(
-                                    topStartPercent = 50,
-                                    bottomStartPercent = 50,
-                                    topEndPercent = 0,
-                                    bottomEndPercent = 0
-                                )
-                            )
-                            .clickable {
-                                viewModel.singleDayVacancy = true
-                            }
-                            .fillMaxWidth()
-                            .weight(1f)
-                    ) {
-                        Row(
-                            verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.Center,
-                            modifier = Modifier
-                                .padding(MaterialTheme.spacing.medium)
-                                .height(MaterialTheme.typography.labelLarge.lineHeight.value.dp)
-                        ) {
-                            Crossfade(targetState = viewModel.singleDayVacancy) {
-                                if (it) {
-                                    Box(modifier = Modifier.size(Icons.Filled.Done.defaultWidth)) {
-                                        Icon(
-                                            imageVector = Icons.Filled.Done,
-                                            contentDescription = stringResource(id = R.string.giornata)
-                                        )
-                                    }
-                                } else {
-                                    Box(modifier = Modifier.size(Icons.Filled.Done.defaultWidth))
-                                }
-                            }
-                            Spacer(
-                                modifier = Modifier.width(MaterialTheme.spacing.extraSmall)
-                            )
-                            Text(
-                                text = stringResource(R.string.giornata),
-                                style = MaterialTheme.typography.labelLarge
-                            )
-                            Spacer(
-                                modifier = Modifier.width(MaterialTheme.spacing.extraSmall)
-                            )
-                            Box(modifier = Modifier.size(Icons.Filled.Done.defaultWidth))
-                        }
-                    }
-                    Surface(
-                        color = if (!viewModel.singleDayVacancy) MaterialTheme.colorScheme.secondaryContainer else MaterialTheme.colorScheme.surface,
-                        shape = RoundedCornerShape(
-                            topStartPercent = 0,
-                            bottomStartPercent = 0,
-                            topEndPercent = 50,
-                            bottomEndPercent = 50
-                        ),
-                        border = BorderStroke(1.dp, MaterialTheme.colorScheme.onSurface),
-                        modifier = Modifier
-                            .clip(
-                                RoundedCornerShape(
-                                    topStartPercent = 0,
-                                    bottomStartPercent = 0,
-                                    topEndPercent = 50,
-                                    bottomEndPercent = 50
-                                )
-                            )
-                            .clickable {
-                                viewModel.singleDayVacancy = false
-                            }
-                            .fillMaxWidth()
-                            .weight(1f)
-                    ) {
-                        Row(
-                            verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.Center,
-                            modifier = Modifier
-                                .padding(MaterialTheme.spacing.medium)
-                                .height(MaterialTheme.typography.labelLarge.lineHeight.value.dp)
-                        ) {
-                            Crossfade(targetState = !viewModel.singleDayVacancy) {
-                                if (it) {
-                                    Box(modifier = Modifier.size(Icons.Filled.Done.defaultWidth)) {
-                                        Icon(
-                                            imageVector = Icons.Filled.Done,
-                                            contentDescription = stringResource(id = R.string.periodo)
-                                        )
-                                    }
-                                } else {
-                                    Box(modifier = Modifier.size(Icons.Filled.Done.defaultWidth))
-                                }
-                            }
-                            Spacer(
-                                modifier = Modifier.width(MaterialTheme.spacing.extraSmall)
-                            )
-                            Text(
-                                text = stringResource(R.string.periodo),
-                                style = MaterialTheme.typography.labelLarge
-                            )
-                            Spacer(
-                                modifier = Modifier.width(MaterialTheme.spacing.extraSmall)
-                            )
-                            Box(modifier = Modifier.size(Icons.Filled.Done.defaultWidth))
-                        }
-                    }
-                }
-            }
-            if (viewModel.singleDayVacancy) {
-                Text(
-                    text = stringResource(R.string.seleziona_giornata),
-                    style = MaterialTheme.typography.headlineMedium
-                )
-                CustomDateButton(
-                    date = viewModel.singleDate.value,
-                    onDateSelected = { date ->
-                        viewModel.singleDate.value = date
-                    }
-                )
-            } else {
-                Text(
-                    text = stringResource(R.string.scegli_data_inizio),
-                    style = MaterialTheme.typography.headlineMedium
-                )
-                CustomDateButton(
-                    date = viewModel.startDate.value,
-                    onDateSelected = { date ->
-                        viewModel.startDate.value = date
-                    }
-                )
-                Text(
-                    text = stringResource(R.string.scegli_data_fine),
-                    style = MaterialTheme.typography.headlineMedium
-                )
-                CustomDateButton(
-                    date = viewModel.endDate.value,
-                    onDateSelected = { date ->
-                        viewModel.endDate.value = date
-                    }
-                )
-            }
+
+            DateRangePicker(
+                state = datePickerState,
+                showModeToggle = false,
+                modifier = Modifier.weight(1f)
+            )
         }
     }
 }
