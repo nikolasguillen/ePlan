@@ -15,7 +15,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.WifiOff
@@ -104,11 +104,11 @@ fun WorkActivitiesList(
                             * ad espansa le card che rimangono fuori dalla schermata non si espandono correttamente, rovinando la visualizzazione della lista. */
 
                             if (isListCollapsed) {
-                                items(
+                                itemsIndexed(
                                     items = workActivities,
-                                    key = { workActivity -> workActivity.id },
-                                    contentType = { workActivity -> workActivity::class.simpleName.toString() }
-                                ) { workActivity ->
+                                    key = { _, workActivity -> workActivity.id },
+                                    contentType = { _, workActivity -> workActivity::class.simpleName.toString() }
+                                ) { index, workActivity ->
                                     WorkActivityCard(
                                         workActivity = workActivity,
                                         onClick = {
@@ -117,15 +117,16 @@ fun WorkActivitiesList(
                                                 onNavigateToActivityDetailScreen = onNavigateToActivityDetailScreen
                                             )
                                         },
-                                        isCompact = true
+                                        isCompact = true,
+                                        isEven = index % 2 == 0
                                     )
                                 }
                             } else {
-                                items(
+                                itemsIndexed(
                                     items = workActivities,
-                                    key = { workActivity -> workActivity.id },
-                                    contentType = { workActivity -> workActivity::class.simpleName.toString() }
-                                ) { workActivity ->
+                                    key = { _, workActivity -> workActivity.id },
+                                    contentType = { _, workActivity -> workActivity::class.simpleName.toString() }
+                                ) { index, workActivity ->
                                     WorkActivityCard(
                                         workActivity = workActivity,
                                         onClick = {
@@ -134,7 +135,8 @@ fun WorkActivitiesList(
                                                 onNavigateToActivityDetailScreen = onNavigateToActivityDetailScreen
                                             )
                                         },
-                                        isCompact = false
+                                        isCompact = false,
+                                        isEven = index % 2 == 0
                                     )
                                 }
                             }

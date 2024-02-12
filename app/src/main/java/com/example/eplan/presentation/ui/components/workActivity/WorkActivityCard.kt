@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -23,9 +24,14 @@ import com.example.eplan.presentation.util.spacing
 fun WorkActivityCard(
     workActivity: WorkActivity,
     onClick: () -> Unit,
-    isCompact: Boolean
+    isCompact: Boolean,
+    isEven: Boolean
 ) {
     Card(
+        colors = CardDefaults.cardColors(
+            containerColor = if (isEven) MaterialTheme.colorScheme.surfaceVariant else MaterialTheme.colorScheme.secondaryContainer,
+            contentColor = if (isEven) MaterialTheme.colorScheme.onSurfaceVariant else MaterialTheme.colorScheme.onSecondaryContainer
+        ),
         modifier = Modifier
             .fillMaxWidth()
             .clip(MaterialTheme.shapes.medium)
