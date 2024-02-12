@@ -99,4 +99,6 @@
     <string name="tocca_per_riprovare">Tocca per riprovare.</string>
     <string name="compatta_lista">Compatta lista attività</string>
     <string name="espandi_lista">Espandi lista attività</string>
+    <string name="attenzione">Attenzione</string>
+    <string name="logout_message">Sei sicuro di voler effettuare il logout?</string>
 </resources>

@@ -1,6 +1,6 @@
 package com.example.eplan.presentation.ui.account
 
 sealed class AccountEvent {
-    object GetUriEvent: AccountEvent()
-    object Logout: AccountEvent()
+    data object GetUriEvent: AccountEvent()
+    data class Logout(val onLogout: () -> Unit): AccountEvent()
 }

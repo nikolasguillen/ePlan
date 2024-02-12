@@ -19,7 +19,7 @@ import com.example.eplan.presentation.navigation.NestedNavGraphs.AccountGraph
 import com.example.eplan.presentation.navigation.NestedNavGraphs.AppointmentGraph
 import com.example.eplan.presentation.navigation.NestedNavGraphs.InterventionGraph
 import com.example.eplan.presentation.navigation.NestedNavGraphs.LoginGraph
-import com.example.eplan.presentation.ui.account.AccountEvent
+import com.example.eplan.presentation.ui.account.AccountEvent.Logout
 import com.example.eplan.presentation.ui.account.AccountScreen
 import com.example.eplan.presentation.ui.account.AccountViewModel
 import com.example.eplan.presentation.ui.appointment.AppointmentDetailEvent
@@ -217,24 +217,27 @@ fun NavGraph(navController: NavHostController, shouldShowLogin: Boolean) {
                     navigateToCamera = { navController.navigate(Screen.Camera.route) },
                     onListItemClick = { navController.navigate(it) },
                     logout = {
-                        viewModel.onTriggerEvent(AccountEvent.Logout)
-                        navController.popBackStack(
-                            route = AccountGraph.startDestination,
-                            inclusive = true
+                        viewModel.onTriggerEvent(
+                            Logout {
+                                navController.popBackStack(
+                                    route = AccountGraph.startDestination,
+                                    inclusive = true
+                                )
+                                navController.popBackStack(
+                                    route = AppointmentGraph.startDestination,
+                                    inclusive = true
+                                )
+                                navController.popBackStack(
+                                    route = InterventionGraph.startDestination,
+                                    inclusive = true
+                                )
+                                navController.popBackStack(
+                                    route = LoginGraph.startDestination,
+                                    inclusive = true
+                                )
+                                navController.navigate(route = LoginGraph.startDestination)
+                            }
                         )
-                        navController.popBackStack(
-                            route = AppointmentGraph.startDestination,
-                            inclusive = true
-                        )
-                        navController.popBackStack(
-                            route = InterventionGraph.startDestination,
-                            inclusive = true
-                        )
-                        navController.popBackStack(
-                            route = LoginGraph.startDestination,
-                            inclusive = true
-                        )
-                        navController.navigate(route = LoginGraph.startDestination)
                     }
                 )
             }

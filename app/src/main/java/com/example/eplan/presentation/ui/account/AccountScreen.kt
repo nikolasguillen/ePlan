@@ -14,14 +14,16 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.ExitToApp
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -29,6 +31,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import coil.compose.rememberAsyncImagePainter
@@ -46,6 +49,9 @@ fun AccountScreen(
     onListItemClick: (String) -> Unit,
     logout: () -> Unit
 ) {
+    val state = viewModel.state
+    val context = LocalContext.current
+
     // Camera permission state
     val cameraPermissionState = rememberPermissionState(
         android.Manifest.permission.CAMERA
@@ -66,7 +72,7 @@ fun AccountScreen(
                     IconButton(
                         onClick = { onBackPressed() }) {
                         Icon(
-                            imageVector = Icons.Filled.ArrowBack,
+                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                             contentDescription = stringResource(R.string.torna_indietro)
                         )
                     }
@@ -81,11 +87,11 @@ fun AccountScreen(
                 }
             )
         },
-        content = {
+        content = { paddingValues ->
             LazyColumn(
                 modifier = Modifier.padding(
-                    bottom = it.calculateBottomPadding(),
-                    top = it.calculateTopPadding()
+                    bottom = paddingValues.calculateBottomPadding(),
+                    top = paddingValues.calculateTopPadding()
                 )
             ) {
                 item {
@@ -162,6 +168,32 @@ fun AccountScreen(
                         )
                     }
                 }
+            }
+
+            state.dialog?.let {
+                AlertDialog(
+                    onDismissRequest = it.onDismiss,
+                    confirmButton = {
+                        TextButton(onClick = it.onConfirm) {
+                            Text(text = it.confirmText.asString(context))
+                        }
+                    },
+                    dismissButton = {
+                        it.dismissText?.let { dismissText ->
+                            TextButton(onClick = it.onDismiss) {
+                                Text(text = dismissText.asString(context))
+                            }
+                        }
+                    },
+                    title = {
+                        it.title?.let { title ->
+                            Text(text = title.asString(context))
+                        }
+                    },
+                    text = {
+                        Text(text = it.message.asString(context))
+                    }
+                )
             }
         }
     )
