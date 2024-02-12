@@ -32,8 +32,7 @@ proguard/
 gen-external-apklibs
 
 
-### Java ###
-*.class
+.idea
 
 # Mobile Tools for Java (J2ME)
 .mtj.tmp/
