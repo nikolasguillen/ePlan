@@ -24,7 +24,7 @@ import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.WifiOff
 import androidx.compose.material.icons.outlined.Delete
 import androidx.compose.material3.AlertDialog
@@ -56,6 +56,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import com.example.eplan.R
+import com.example.eplan.network.util.isConnectionAvailable
 import com.example.eplan.presentation.navigation.BottomNavBarItem
 import com.example.eplan.presentation.navigation.BottomNavbarAction
 import com.example.eplan.presentation.ui.ValidationEvent
@@ -168,7 +169,7 @@ fun WorkActivityDetail(
                                 }
                             }) {
                                 Icon(
-                                    imageVector = Icons.Filled.ArrowBack,
+                                    imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                                     contentDescription = stringResource(R.string.indietro)
                                 )
                             }
@@ -176,7 +177,7 @@ fun WorkActivityDetail(
                         actions = {
                             IconButton(
                                 onClick = { onDeletePressed() },
-                                enabled = !retrieving && !sending && viewModel.isConnectionAvailable,
+                                enabled = !retrieving && !sending && isConnectionAvailable(context),
                                 colors = IconButtonDefaults.iconButtonColors(contentColor = Color.Red)
                             ) {
                                 Icon(

@@ -16,9 +16,6 @@ abstract class WorkActivityDetailViewModel : EplanViewModel() {
     protected val validationEventChannel = Channel<ValidationEvent>()
     val validationEvents = validationEventChannel.receiveAsFlow()
 
-    var isConnectionAvailable by mutableStateOf(true)
-        protected set
-
     abstract fun checkChanges(): Boolean
 
     protected abstract fun changeQuery(query: String)

@@ -21,7 +21,10 @@ import com.example.eplan.network.util.isConnectionAvailable
 import com.example.eplan.presentation.BaseApplication
 import com.example.eplan.presentation.ui.ValidationEvent
 import com.example.eplan.presentation.ui.WorkActivityDetailViewModel
-import com.example.eplan.presentation.ui.intervention.InterventionDetailEvent.*
+import com.example.eplan.presentation.ui.intervention.InterventionDetailEvent.DeleteInterventionEvent
+import com.example.eplan.presentation.ui.intervention.InterventionDetailEvent.GetInterventionEvent
+import com.example.eplan.presentation.ui.intervention.InterventionDetailEvent.RefreshInterventionEvent
+import com.example.eplan.presentation.ui.intervention.InterventionDetailEvent.UpdateInterventionEvent
 import com.example.eplan.presentation.ui.intervention.InterventionFormEvent.ActivityIdChanged
 import com.example.eplan.presentation.ui.intervention.InterventionFormEvent.ActivityNameChanged
 import com.example.eplan.presentation.ui.intervention.InterventionFormEvent.DateChanged
@@ -198,9 +201,7 @@ constructor(
     }
 
     private fun getIntervention() {
-        isConnectionAvailable = isConnectionAvailable(context = context)
-
-        if (isConnectionAvailable) {
+        if (isConnectionAvailable(context = context)) {
             getInterventionById.execute(token = userToken, id = query).onEach { dataState ->
                 retrieving = dataState.loading
 
@@ -224,9 +225,7 @@ constructor(
     }
 
     private fun updateIntervention() {
-        isConnectionAvailable = isConnectionAvailable(context = context)
-
-        if (isConnectionAvailable) {
+        if (isConnectionAvailable(context = context)) {
             intervention.value?.let {
                 updateIntervention.execute(token = userToken, intervention = it)
                     .onEach { dataState ->
@@ -258,9 +257,7 @@ constructor(
     }
 
     private fun getActivitiesList() {
-        isConnectionAvailable = isConnectionAvailable(context = context)
-
-        if (isConnectionAvailable) {
+        if (isConnectionAvailable(context = context)) {
             getActivitiesList.execute(token = userToken).onEach { dataState ->
                 retrieving = dataState.loading
 
