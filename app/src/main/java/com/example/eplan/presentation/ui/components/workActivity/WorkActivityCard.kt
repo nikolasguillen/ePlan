@@ -1,5 +1,7 @@
 package com.example.eplan.presentation.ui.components.workActivity
 
+import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.basicMarquee
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -19,6 +21,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import com.example.eplan.domain.model.WorkActivity
 import com.example.eplan.presentation.util.spacing
 
+@OptIn(ExperimentalFoundationApi::class)
 @ExperimentalMaterial3Api
 @Composable
 fun WorkActivityCard(
@@ -52,10 +55,10 @@ fun WorkActivityCard(
                     text = workActivity.title.replaceFirstChar { it.uppercase() },
                     style = MaterialTheme.typography.titleSmall,
                     maxLines = 2,
-                    overflow = TextOverflow.Ellipsis,
                     modifier = Modifier
                         .weight(1f)
                         .padding(end = MaterialTheme.spacing.small)
+                        .basicMarquee(Int.MAX_VALUE)
                 )
 
                 Text(
@@ -69,7 +72,8 @@ fun WorkActivityCard(
                     text = workActivity.title.replaceFirstChar { it.uppercase() },
                     style = MaterialTheme.typography.titleMedium,
                     maxLines = 1,
-                    overflow = TextOverflow.Ellipsis
+                    overflow = TextOverflow.Ellipsis,
+                    modifier = Modifier.basicMarquee(Int.MAX_VALUE)
                 )
                 if (workActivity.description.isNotBlank()) {
                     Text(
