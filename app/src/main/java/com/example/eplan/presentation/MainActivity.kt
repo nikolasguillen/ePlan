@@ -4,17 +4,18 @@ import android.content.SharedPreferences
 import android.os.Build
 import android.os.Bundle
 import androidx.activity.compose.setContent
+import androidx.activity.enableEdgeToEdge
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.SideEffect
 import androidx.compose.ui.ExperimentalComposeUiApi
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
+import androidx.compose.ui.platform.LocalView
 import androidx.core.view.WindowCompat
 import androidx.navigation.compose.rememberNavController
 import com.example.eplan.domain.preferences.Preferences
@@ -24,7 +25,6 @@ import com.example.eplan.presentation.ui.theme.AppTheme
 import com.example.eplan.presentation.util.STAY_LOGGED
 import com.example.eplan.presentation.util.THEME_STATE_KEY
 import com.example.eplan.presentation.util.getCurrentRoute
-import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.google.android.material.color.DynamicColors
 import com.google.android.material.elevation.SurfaceColors
 import dagger.hilt.android.AndroidEntryPoint
@@ -50,6 +50,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
 
         WindowCompat.setDecorFitsSystemWindows(window, false)
+        this.enableEdgeToEdge()
 
         setContent {
 
@@ -78,15 +79,13 @@ class MainActivity : AppCompatActivity() {
 
                 val navController = rememberNavController()
                 val currentRoute = getCurrentRoute(navController = navController)
-                val systemUiController = rememberSystemUiController()
                 val useDarkIcons = !isSystemInDarkTheme()
                 DynamicColors.applyToActivityIfAvailable(this)
-
                 SideEffect {
-                    systemUiController.setStatusBarColor(
-                        color = Color.Transparent,
-                        darkIcons = useDarkIcons
-                    )
+//                    systemUiController.setStatusBarColor(
+//                        color = Color.Transparent,
+//                        darkIcons = useDarkIcons
+//                    )
                 }
 
                 currentRoute?.let {
@@ -95,29 +94,25 @@ class MainActivity : AppCompatActivity() {
                             contains("list", true) -> {
                                 window.navigationBarColor =
                                     SurfaceColors.SURFACE_2.getColor(this@MainActivity)
-                                systemUiController.navigationBarDarkContentEnabled =
-                                    !isSystemInDarkTheme()
+                                window.statusBarColor = colorScheme.background.toArgb()
+                                WindowCompat.getInsetsController(
+                                    window,
+                                    LocalView.current
+                                ).isAppearanceLightStatusBars = useDarkIcons
                             }
 
                             contains("details", true) -> {
-                                window.navigationBarColor =
-                                    MaterialTheme.colorScheme.primary.toArgb()
-                                systemUiController.navigationBarDarkContentEnabled =
-                                    isSystemInDarkTheme()
+                                window.navigationBarColor = colorScheme.primary.toArgb()
+                                window.statusBarColor = colorScheme.background.toArgb()
                             }
 
                             contains("vacationRequest", true) -> {
-                                window.navigationBarColor =
-                                    MaterialTheme.colorScheme.primary.toArgb()
-                                systemUiController.navigationBarDarkContentEnabled =
-                                    isSystemInDarkTheme()
+                                window.navigationBarColor = colorScheme.primary.toArgb()
+                                window.statusBarColor = colorScheme.background.toArgb()
                             }
 
                             else -> {
-                                window.navigationBarColor =
-                                    MaterialTheme.colorScheme.surface.toArgb()
-                                systemUiController.navigationBarDarkContentEnabled =
-                                    !isSystemInDarkTheme()
+                                window.navigationBarColor = colorScheme.surface.toArgb()
                             }
                         }
                     }
