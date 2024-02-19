@@ -12,7 +12,6 @@ import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.SideEffect
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalView
@@ -81,12 +80,6 @@ class MainActivity : AppCompatActivity() {
                 val currentRoute = getCurrentRoute(navController = navController)
                 val useDarkIcons = !isSystemInDarkTheme()
                 DynamicColors.applyToActivityIfAvailable(this)
-                SideEffect {
-//                    systemUiController.setStatusBarColor(
-//                        color = Color.Transparent,
-//                        darkIcons = useDarkIcons
-//                    )
-                }
 
                 currentRoute?.let {
                     with(it) {
