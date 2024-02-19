@@ -198,6 +198,8 @@ fun LoginScreen(
 
         Button(
             onClick = {
+                focusManager.clearFocus()
+                keyboardController?.hide()
                 onLoginAttempted()
             }
         ) {

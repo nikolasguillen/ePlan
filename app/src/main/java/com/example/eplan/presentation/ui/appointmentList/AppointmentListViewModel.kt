@@ -10,12 +10,17 @@ import androidx.lifecycle.viewModelScope
 import com.example.eplan.domain.model.Appointment
 import com.example.eplan.interactors.GetToken
 import com.example.eplan.interactors.appointmentList.DayChangeAppointment
+import com.example.eplan.network.util.isConnectionAvailable
 import com.example.eplan.presentation.BaseApplication
 import com.example.eplan.presentation.ui.EplanViewModel
 import com.example.eplan.presentation.ui.appointmentList.AppointmentListEvent.DayChangeEvent
 import com.example.eplan.presentation.util.TAG
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import java.time.LocalDate
 import javax.inject.Inject
 
@@ -44,7 +49,7 @@ constructor(
     }
 
     fun onTriggerEvent(event: AppointmentListEvent) {
-        when(event) {
+        when (event) {
             is DayChangeEvent -> {
                 setDate(event.date)
                 dayChange()
@@ -53,9 +58,10 @@ constructor(
     }
 
     private fun onCreation() {
-        savedStateHandle.get<String>(com.example.eplan.presentation.ui.interventionList.STATE_KEY_QUERY)?.let { q ->
-            setDate(q)
-        }
+        savedStateHandle.get<String>(com.example.eplan.presentation.ui.interventionList.STATE_KEY_QUERY)
+            ?.let { q ->
+                setDate(q)
+            }
         dayChange()
     }
 
@@ -63,19 +69,20 @@ constructor(
         isConnectionAvailable = isConnectionAvailable(context = context)
 
         if (isConnectionAvailable) {
-            dayChangeAppointment.execute(token = userToken, query = date.value).onEach { dataState ->
-                _isRefreshing.value = dataState.loading
+            dayChangeAppointment.execute(token = userToken, query = date.value)
+                .onEach { dataState ->
+                    _isRefreshing.value = dataState.loading
 
-                dataState.data?.let { list ->
-                    appointments.clear()
-                    appointments.addAll(list)
-                }
+                    dataState.data?.let { list ->
+                        appointments.clear()
+                        appointments.addAll(list)
+                    }
 
-                dataState.error?.let { error ->
-                    Log.e(TAG, "dayChange (Appointment): $error")
-                    // TODO gestire errori
-                }
-            }.launchIn(viewModelScope)
+                    dataState.error?.let { error ->
+                        Log.e(TAG, "dayChange (Appointment): $error")
+                        // TODO gestire errori
+                    }
+                }.launchIn(viewModelScope)
         } else {
             _isRefreshing.value = false
         }

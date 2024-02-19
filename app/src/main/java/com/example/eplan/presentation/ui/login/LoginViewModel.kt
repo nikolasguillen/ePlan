@@ -89,7 +89,11 @@ constructor(
 
                 dataState.error?.let { error ->
                     Log.e(TAG, "loginAttempt: $error")
-                    message.value = error
+                    if (error == "401") {
+                        message.value = "Credenziali errate"
+                    } else {
+                        message.value = error
+                    }
                     _successfulLoginAttempt.value = false
                     // TODO Gestire errori
                 }

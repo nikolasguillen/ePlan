@@ -15,6 +15,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import androidx.navigation.navigation
 import com.example.eplan.R
+import com.example.eplan.network.util.isConnectionAvailable
 import com.example.eplan.presentation.navigation.NestedNavGraphs.AccountGraph
 import com.example.eplan.presentation.navigation.NestedNavGraphs.AppointmentGraph
 import com.example.eplan.presentation.navigation.NestedNavGraphs.InterventionGraph
@@ -139,7 +140,7 @@ fun NavGraph(navController: NavHostController, shouldShowLogin: Boolean) {
                     onSaveAndContinuePressed = {
                         viewModel.onFormEvent(InterventionFormEvent.Submit)
 
-                        if (viewModel.isConnectionAvailable(context = context)) {
+                        if (isConnectionAvailable(context = context)) {
                             val newInterventionStartTime = viewModel.intervention.value?.end
                             navController.popBackStack()
                             navController.navigate(

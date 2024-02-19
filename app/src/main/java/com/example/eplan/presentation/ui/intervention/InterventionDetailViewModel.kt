@@ -17,6 +17,7 @@ import com.example.eplan.interactors.workActivityDetail.GetActivitiesList
 import com.example.eplan.interactors.workActivityDetail.ValidateActivity
 import com.example.eplan.interactors.workActivityDetail.ValidateDescription
 import com.example.eplan.interactors.workActivityDetail.ValidateTime
+import com.example.eplan.network.util.isConnectionAvailable
 import com.example.eplan.presentation.BaseApplication
 import com.example.eplan.presentation.ui.ValidationEvent
 import com.example.eplan.presentation.ui.WorkActivityDetailViewModel

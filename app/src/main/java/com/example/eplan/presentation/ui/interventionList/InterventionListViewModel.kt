@@ -12,6 +12,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.eplan.domain.model.Intervention
 import com.example.eplan.interactors.GetToken
 import com.example.eplan.interactors.interventionList.DayChangeIntervention
+import com.example.eplan.network.util.isConnectionAvailable
 import com.example.eplan.presentation.BaseApplication
 import com.example.eplan.presentation.ui.EplanViewModel
 import com.example.eplan.presentation.ui.interventionList.InterventionListEvent.DayChangeEvent

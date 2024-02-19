@@ -8,6 +8,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
+import retrofit2.HttpException
 import javax.inject.Inject
 
 class LoginAttempt
@@ -28,7 +29,13 @@ constructor(
         delay(300)
 
         emit(DataState.success(response))
-    }.catch { emit(DataState.error(it.message ?: "Errore sconosciuto")) }
+    }.catch {
+        if (it is HttpException) {
+            emit(DataState.error(it.code().toString()))
+        } else {
+            emit(DataState.error(it.message ?: "Errore sconosciuto"))
+        }
+    }
 
     private suspend fun getLoginResponse(
         username: String,
