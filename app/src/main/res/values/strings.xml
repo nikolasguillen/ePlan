@@ -91,9 +91,9 @@
     <string name="capito">Capito</string>
     <string name="settimana">Settimana</string>
     <string name="controlla_ore">Ricontrolla le ore!</string>
-    <string name="bilancio_settimanale">Bilancio settimanale</string>
+    <string name="bilancio_settimanale">Bilancio settimanale: %1s ore</string>
     <string name="legenda">Legenda</string>
-    <string name="seleziona_attivita">Seleziona attività</string>
+    <string name="seleziona_attivita_per_suggerimenti">Seleziona un\'attività per ricevere suggerimenti.</string>
     <string name="premi_selezionare_attivita">Premi per selezionare un\'attività</string>
     <string name="connessione_assente">Connessione a internet assente.</string>
     <string name="tocca_per_riprovare">Tocca per riprovare.</string>
@@ -101,4 +101,59 @@
     <string name="espandi_lista">Espandi lista attività</string>
     <string name="attenzione">Attenzione</string>
     <string name="logout_message">Sei sicuro di voler effettuare il logout?</string>
+    <string name="foglio_ore_label">Foglio ore</string>
+    <string name="appuntamenti_label">Appuntamenti</string>
+    <string name="salva_label">Salva</string>
+    <string name="salva_e_chiudi_label">Salva e chiudi</string>
+    <string name="salva_e_continua_label">Salva e continua</string>
+    <string name="invia_label">Invia</string>
+    <string name="seleziona_mese_e_anno">Seleziona mese e anno</string>
+    <string name="suggerimenti">Suggerimenti</string>
+    <string name="nessun_suggerimento">Nessun suggerimento disponibile.</string>
+    <string name="sessione_scaduta">Sessione scaduta, effettua nuovamente il login.</string>
+    <string name="campo_obbligatorio">Questo campo non può essere vuoto.</string>
+    <string name="credenziali_errate">Credenziali errate.</string>
+    <string name="token_scaduto">Token non più valido, effettua nuovamente il login</string>
+    <string name="errore_sconosciuto">Errore sconosciuto</string>
+    <string name="validation_seleziona_attivita">Seleziona un\'attività</string>
+    <string name="validation_descrizione_vuota">La descrizione non può essere vuota</string>
+    <string name="validation_orario">L\'ora di fine intervento deve essere successiva a quella di inizio!</string>
+    <string name="seleziona_attivita">Seleziona un\'attività</string>
+    <string name="errore_server_with_args">Impossibile eliminare l\'intervento.\nRisposta del server: %1s</string>
+    <string name="intervento_eliminato">Intervento eliminato con successo!</string>
+    <string name="visualizzazione_giornaliera">Visualizzazione giornaliera</string>
+    <string name="visualizzazione_settimanale">Visualizzazione settimanale</string>
+    <string name="indietro_data">Torna alla data precedente</string>
+    <string name="avanti_data">Vai alla data successiva</string>
+    <string name="tema_scuro">Scuro</string>
+    <string name="tema_chiaro">Chiaro</string>
+    <string name="tema_auto">Predefinito di sistema</string>
+    <string name="orario_lavorativo">Orario lavorativo</string>
+    <string name="suggerimenti_fasce_orarie">Mostra suggerimenti</string>
+    <string name="suggerimenti_fasce_orarie_descrizione">Mostra bottoni tra le fasce orarie per aggiungere nuovi elementi.</string>
+    <string name="totale_ore">Ore totali: %1s</string>
+    <string name="ore_normali">Ore normali: %1s</string>
+    <string name="ore_straordinarie">Straordinari: %1s</string>
+    <string name="ferie">Ferie/permessi: %1s</string>
+    <string name="malattia">Malattia: %1s</string>
+
+    <!-- Tabella statistiche orarie -->
+
+    <string-array name="tabella_stats_header">
+        <item>#</item>
+        <item>G</item>
+        <item>N</item>
+        <item>E</item>
+        <item>P</item>
+        <item>M</item>
+    </string-array>
+
+    <string-array name="tabella_stats_legenda">
+        <item>Numero del giorno</item>
+        <item>Giorno della settimana</item>
+        <item>Ore normali</item>
+        <item>Straordinari</item>
+        <item>Ore di permesso</item>
+        <item>Ore di malattia</item>
+    </string-array>
 </resources>
